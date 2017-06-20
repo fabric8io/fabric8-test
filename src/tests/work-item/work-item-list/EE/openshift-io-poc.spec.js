@@ -9,7 +9,7 @@
  * 
  * beforeEach will set the mode to phone. Any tests requiring a different resolution will must set explicitly. 
  * 
- * @author ldimaggi, nverma
+ * @author ldimaggi, bsutter
  */
 
 var until = protractor.ExpectedConditions;
@@ -26,6 +26,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 describe('openshift.io End-to-End POC test - Scenario - Existing user: ', function () {
   var page, items, browserMode;
 
+  /* Set up for each function */
   beforeEach(function () {
     testSupport.setBrowserMode('desktop');
     // Failed: Error while waiting for Protractor to sync with the page: "window.getAllAngularTestabilities is not a function"
@@ -35,8 +36,16 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 360000;
   });
 
+  /* Tests must reset the browser so that the test can logout/login cleanly */
+  afterEach(function () { 
+    browser.restart();
+  });
+
   /* Simple test for registered user */
   it('should enable a registered user create a space, project, etc. ', function() {
+   
+    /* Protractor must recreate its ExpectedConditions if the browser is restarted */
+    until = protractor.ExpectedConditions;
     
     console.log ("Test for target URL: " + browser.params.target.url)
 
@@ -97,49 +106,27 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
     OpenShiftIoSpaceHomePage.clickTechnologyStack();
-    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton();
-
+    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
     OpenShiftIoSpaceHomePage.clickOkButton();
 
     /* TODO - Trap 'Application Generation Error' here - if found, fail test and exit */
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-
-    /* May 26, 2017 - "no thanks" button removed from the UI */
-    //OpenShiftIoSpaceHomePage.clickNoThanksButton();
-
-     /* May 28, 2017 - UI has changed - this step is not needed */
-    /* Import the code base */
-    //OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
-    //var targetURL = "https://github.com/almightytest/" + spaceTime + ".git";
-    //OpenShiftIoSpaceHomePage.setGitHubRepo(targetURL);
-    //OpenShiftIoSpaceHomePage.clickSyncButton();
-
-    //OpenShiftIoDashboardPage.waitForToastToClose();
-    //OpenShiftIoSpaceHomePage.clickAssociateRepoButton();
     OpenShiftIoDashboardPage.waitForToastToClose();
 
     /* TODO - Create a workspace */
 
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
-    // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-//    var tmpString = "https://openshift.io/almusertest1/" + spaceTime + "/create";
+     //OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
 
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
     browser.get("https://openshift.io/almusertest1/" + spaceTime + "/create");
     
     /* Locate the first codebase */
-    OpenShiftIoSpaceHomePage.clickFirstPipeline();
+    OpenShiftIoSpaceHomePage.clickFirstCodebase();
 
     /* TODO - Verify the workspace in Che - TODO - Create a page object modelk for the Che dashboard */
     browser.get("https://che-almusertest1-che.8a09.starter-us-east-2.openshiftapps.com/dashboard/#/");
-
-    browser.wait(until.elementToBeClickable(element(by.xpath(".//*[@id='dashboardPageContent']/dashboard-last-workspaces"))), constants.LONG_WAIT, 'Failed to find element Che dashboard');
-    element(by.xpath(".//*[@id='dashboardPageContent']/dashboard-last-workspaces")).getText().then(function(text){
-      console.log("Che workspaces = " + text);
-    });
-
-    /* Verify that the pipeline was created */
 
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
@@ -148,16 +135,16 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();
     OpenShiftIoSpaceHomePage.pipelinesPage.getText().then(function(text){
-    //  console.log("Pipelines page = " + text);
+    console.log("Pipelines page = " + text);
 
       /* May 9, 2017 - clicking on a pipeline fails due to this error:
       https://openshift.io/kleinhenz-1/osio-planner/plan/detail/682    *
       /* Example of expected text:
          testmay91494354476064 created a few seconds ago
          Source Repository: https://github.com/almightytest/testmay91494354476064.git
+         -or- 
          No pipeline builds have run for testmay91494354476064.   */
-
-      expect(text).toContain("No pipeline builds have run for " + spaceTime);
+//      expect(text).toContain("No pipeline builds have run for " + spaceTime);
       expect(text).toContain("Source Repository: https://github.com/almightytest/" + spaceTime + ".git");
     });
 
