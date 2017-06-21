@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scenario xmlns="urn:perfcake:scenario:7.0">
+   <run type="iteration" value="${iteration.count:10000}"/>
+   <generator class="DefaultMessageGenerator" threads="${thread.count:10}"/>
+   <sequences>
+      <sequence class="ThreadIdSequence" id="threadId"/>
+      <sequence id="workItemId" class="FileLinesSequence">
+         <property name="fileUrl" value="${workitemid.list}"/>
+      </sequence>
+   </sequences>
+   <sender class="HttpClientSender">
+      <target>http://${server.host}:${server.port}/api/spaces/${workitems.space.id}/workitems/@{workItemId}</target>
+      <property name="method" value="GET"/>
+      <property name="keepConnection" value="false"/>
+      <property name="expectedResponseCodes" value="200"/>
+   </sender>
+   <reporting>
+      <reporter class="PostgresqlMonitorReporter">
+         <property name="dbUser" value="${db.user}"/>
+         <property name="dbPassword" value="${db.password}"/>
+         <property name="dbHost" value="${db.host}"/>
+         <property name="dbPort" value="${db.port}"/>
+         <property name="dbName" value="${db.name}"/>
+         <destination class="ConsoleDestination">
+            <period type="iteration" value="${report.period:100}"/>
+         </destination>
+         <destination class="ChartDestination">
+            <period type="iteration" value="${report.period:100}"/>
+            <property name="name" value="READ DB max transaction time"/>
+            <property name="group" value="read_db"/>
+            <property name="yAxis" value="ms"/>
+            <property name="attributes" value="MaxTransactionTime"/>
+         </destination>
+         <destination class="ChartDestination">
+            <period type="iteration" value="${report.period:100}"/>
+            <property name="name" value="READ DB Activity"/>
+            <property name="group" value="read_db_activity"/>
+            <property name="yAxis" value="# of processes"/>
+            <property name="attributes" value="Active,Idle,IdleInTransaction,Unknown"/>
+         </destination>
+         <destination class="CsvDestination">
+            <period type="iteration" value="${report.period:100}"/>
+            <property name="path" value="${perfcake.scenario}-db.csv"/>
+         </destination>
+      </reporter>
+      <reporter class="ResponseTimeStatsReporter">
+         <property name="minimumEnabled" value="false"/>
+         <property name="maximumEnabled" value="false"/>
+         <property name="windowType" value="iteration"/>
+         <property name="windowSize" value="${report.period:100}"/>
+         <destination class="ChartDestination">
+            <period type="iteration" value="${report.period:100}"/>
+            <property name="name" value="READ Response Time"/>
+            <property name="group" value="read_rt"/>
+            <property name="yAxis" value="Response Time [ms]"/>
+            <property name="attributes" value="Result,Average"/>
+         </destination>
+         <destination class="ConsoleDestination">
+            <period type="iteration" value="${report.period:100}"/>
+         </destination>
+      </reporter>
+      <reporter class="IterationsPerSecondReporter">
+         <destination class="CsvDestination">
+            <period type="iteration" value="${report.period:100}"/>
+            <property name="path" value="${perfcake.scenario}-average-throughput.csv"/>
+         </destination>
+         <destination class="PerfRepoDestination" enabled="${perfrepo.enabled:false}">
+            <period type="percentage" value="100"/>
+            <property name="metric" value="throughput"/>
+            <property name="repositoryUrl" value="perfrepo.mw.lab.eng.bos.redhat.com"/>
+            <property name="authenticationHeader" value="dGVhbXNvYTp0ZWFtc29hMSM="/>
+            <property name="testUID" value="${perfcake.scenario}"/>
+            <property name="tags" value="${perfrepo.tags}"/>
+            <property name="testExecutionName" value="Red Hat Developer Core: ${perfcake.scenario}"/>
+            <property name="reporterResultName" value="Result"/>
+         </destination>
+      </reporter>
+      <reporter class="ClassifyingReporter">
+         <property name="attribute" value="threadId"/>
+         <property name="prefix" value="thread_"/>
+         <destination class="ConsoleDestination">
+            <period type="percentage" value="100"/>
+         </destination>
+         <destination class="CsvDestination">
+            <period type="percentage" value="100"/>
+            <property name="path" value="${perfcake.scenario}-thread-usage.csv"/>
+            <property name="expectedAttributes" value="thread*"/>
+         </destination>
+         <destination class="ChartDestination">
+            <period type="percentage" value="100"/>
+            <property name="yAxis" value="Thread usage [messages]"/>
+            <property name="group" value="read_threads"/>
+            <property name="name" value="READ Thread usage"/>
+            <property name="attributes" value="thread*"/>
+            <property name="type" value="bar"/>
+         </destination>
+      </reporter>
+      <reporter class="ResponseTimeHistogramReporter">
+         <property name="prefix" value="response-time-percentile-"/>
+         <property name="detail" value="1"/>
+         <property name="precision" value="3"/>
+         <property name="maxExpectedValue" value="60000"/>
+         <destination class="ConsoleDestination">
+            <period type="percentage" value="100"/>
+         </destination>
+         <destination class="CsvDestination">
+            <period type="percentage" value="100"/>
+            <property name="path" value="${perfcake.scenario}-response-time-histogram.csv"/>
+            <property name="expectedAttributes" value="response-time-percentile-*"/> 
+         </destination>
+         <destination class="ChartDestination">
+            <period type="percentage" value="100"/>
+            <property name="yAxis" value="HDR Response time [ms]"/>
+            <property name="group" value="read_hdr"/>
+            <property name="name" value="READ Response Time Histogram"/>
+            <property name="attributes" value="response-time-percentile-*"/>
+            <property name="type" value="bar"/>
+         </destination>
+      </reporter>
+   </reporting>
+   <messages>
+      <message content="">
+         <header name="HttpSender" value="GET"/>
+         <header name="Content-Type" value="application/json"/>
+         <header name="Accept" value="application/json"/>
+         <validatorRef id="simplePrintValidator"/>
+         <validatorRef id="printer"/>
+      </message>
+   </messages>
+   <validation enabled="false">
+      <validator id="simplePrintValidator" class="RegExpValidator">
+         <property name="pattern" value=".*test this .* workitem.*"/>
+      </validator>
+      <validator id="printer" class="PrintingValidator"/>
+   </validation>
+</scenario>

@@ -1,0 +1,9 @@
+almighty-core*
+devtools-performance-results/
+httpclient-sender-*.zip
+httpclient-sender/
+perfcake-*-bin.zip
+perfcake-*/
+perfrepo-destination-*.zip
+perfrepo-destination/
+local-maven-repo/
