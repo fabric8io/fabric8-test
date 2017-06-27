@@ -2,7 +2,7 @@ FROM centos:7
 ENV LANG=en_US.utf8
 
 # load the gpg keys
-COPY gpg /gpg
+COPY gpg ../gpg
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -61,7 +61,7 @@ ENV HOME=/home/${FABRIC8_USER_NAME}
 ENV WORKSPACE=$HOME/fabric8-ui
 RUN mkdir $WORKSPACE
 
-COPY . $WORKSPACE
+COPY ../analytics_EE_tests/  $WORKSPACE
 RUN chown -R ${FABRIC8_USER_NAME}:${FABRIC8_USER_NAME} $HOME/*
 
 USER ${FABRIC8_USER_NAME}
