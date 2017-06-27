@@ -8,39 +8,10 @@ cd $WORKSPACE
 
 if [[ "$SERVER_HOST" == "localhost" ]];
 then
-	echo "Need a local server - preparing Docker containers..."
-
-	# Check for docker
-	docker info >> /dev/null
+	bash -c ./start-db.sh
 	[[ $? -ne 0 ]] && exit 1
-
-	# Clean docker containers, volumes, images
-	for i in `docker ps -a -q`; do docker rm -f $i; done
-	for i in `docker volume ls -q`; do docker volume rm $i; done
-	for i in `docker images -q`; do docker rmi $i; done
-
-	# Build the core server that will provide our test client with tokens
-
-	# Download the core
-	rm -rf almighty-core*
-	git clone https://github.com/almighty/almighty-core.git
-	cd almighty-core
-
-	# Run the DB docker image (detached) that the core requires
-	docker run --name db -d -p 5432 -e POSTGRESQL_ADMIN_PASSWORD=mysecretpassword centos/postgresql-95-centos7
-
-	# Cleanup and then build the docker core image
-	make docker-rm
-	sleep 10
-	make docker-start
-	sleep 10
-	make docker-build
-	sleep 10
-	make docker-image-deploy
-	sleep 10
-
-	# Run the docker core image (detached)
-	docker run -p $SERVER_PORT:8080 --name core -d -e ALMIGHTY_LOG_LEVEL=warning -e ALMIGHTY_DEVELOPER_MODE_ENABLED=true -e ALMIGHTY_POSTGRES_HOST=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' db 2>/dev/null) almighty-core-deploy
+	bash -c ./start-core.sh
+	[[ $? -ne 0 ]] && exit 1
 fi
 
 while true;
