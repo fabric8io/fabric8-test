@@ -268,7 +268,7 @@ cat $ZABBIX_REPORT
 if [[ "$ZABBIX_REPORT_ENABLED" -eq "true" ]];
 then
 	echo "Uploading report to zabbix...";
-	zabbix_sender -i $ZABBIX_REPORT -T -z zabbix.devshift.net -p 10051;
+	zabbix_sender -vv -i $ZABBIX_REPORT -T -z zabbix.devshift.net -p 10051;
 fi
 
 # Copy the PerfCake results to the jenkins' workspace to be able to archive
