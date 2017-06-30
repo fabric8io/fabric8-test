@@ -12,7 +12,8 @@
  */
 
 var testSupport = require('../testSupport'),
-    constants = require("../constants");
+    constants = require("../constants"),
+    OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page');
 
 var until = protractor.ExpectedConditions;
 
@@ -352,7 +353,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     this.pipelinesSectionTitle.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: pipelinesSectionTitle");
     });
-    return;
+    return new OpenShiftIoPipelinePage;
   }
 
   get addToSpaceButton () {
