@@ -21,3 +21,4 @@ function define(name, value) {
 
 define("WAIT", 300000);
 define("LONG_WAIT", 60000);
+define("LONGEST_WAIT", 3600000);
