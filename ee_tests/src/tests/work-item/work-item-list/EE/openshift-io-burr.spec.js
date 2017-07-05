@@ -13,6 +13,7 @@
  */
 
 /* Actions to be performed by this EE Demo/Test - As suggested by Burr - June 2017
+  https://vimeo.com/221033408
   Step 1) Login to openshift.io
   Step 2) In OSIO, create new space
   Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults
@@ -173,7 +174,10 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 //      expect(text).toContain("No pipeline builds have run for " + spaceTime);
       expect(text).toContain("Source Repository: https://github.com/osiotest314/" + spaceTime + ".git");
     });
-    OpenShiftIoPipelinePage.clickInputRequiredButton();
+
+//    OpenShiftIoPipelinePage.clickInputRequiredButton();
+    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+
     OpenShiftIoPipelinePage.clickPromoteButton();
 
   /* ----------------------------------------------------------*/
