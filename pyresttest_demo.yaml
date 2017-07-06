@@ -1,0 +1,144 @@
+---
+-   config:
+    -   testset:    "pyresttest poc"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/json',
+          'fixedspacename':  'testspaceruch1',
+          'witypeexperience':   '26787039-b68f-4e28-8814-c2f93be1ef4e',
+          'wititle1':   'WI_1_CREATED_VIA_API_TEST',
+          'widesc1':    'WI_DESCRIPTION  --  1',
+          'widesc2':    'WI_DESCRIPTION  --  2. Edited via APIs'
+          }
+
+-   test:
+    -   name:   "Find a Space"
+    -   url:    {'template':  "/api/search/spaces?q=$fixedspacename"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.0.id'}
+
+-   test:
+    -   name:   "Delete a Space" 
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200, 400]
+
+-   test:
+    -   name:   "Create a new Space"
+    -   url:    "/api/spaces"
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {template: '{"data":{"name":"$fixedspacename","path":"","attributes":{"name":"$fixedspacename"},"type":"spaces","privateSpace":false,"process":{"name":"Scenario Driven Planning","description":"An agile development methodology focused on real-world problems, or Scenarios, described in the language and from the viewpoint of the user. Scenarios deliver particular Value Propositions and are realized via Experiences."},"relationships":{"areas":{"links":{"related":""}},"iterations":{"links":{"related":""}},"owned-by":{"data":{"id":"29f698d6-5c65-4129-9e97-5286cdb18a1c","type":"identities"}}}}}'}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$fixedspacename'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
+
+-   test:
+    -   name:   "Get space collaborators"
+    -   url:    {'template':  "/api/spaces/$spaceid/collaborators"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   extract_test:   {jsonpath_mini: "data.0",  test: "exists"}
+    -   extract_binds:
+        -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
+        -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
+        -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
+        -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
+
+-   test:
+    -   name:   "Get a Space"
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+
+-   test:
+    -   name:   "Create a new Workitem - No Assignee"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {template:  '{"data":{"attributes":{"system.state":"new","system.title":"$wititle1","system.description":"$widesc1"},"relationships":{"baseType":{"data":{"id":"$witypeexperience","type":"workitemtypes"}}},"type":"workitems"}}'}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc1'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   0}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypeexperience'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+        -   extract_test:   {jsonpath_mini: "data.relationships.assignees.data",  test: "not_exists"}
+    -   extract_binds:
+        -   'wiid': {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Update a Workitem - Change Description"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {template:  '{"data":{"id":"$wiid","attributes":{"version":0,"system.description":{"markup":"Markdown","content":"$widesc2"}},"links":{"self":"https://api.openshift.io/api/spaces/$spaceid/workitems/$wiid"},"type":"workitems"}}'}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   1}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypeexperience'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+        -   extract_test:   {jsonpath_mini: "data.relationships.assignees.data",  test: "not_exists"}
+
+-   test:
+    -   name:   "Update a Workitem - Change Assignee"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {template:  '{"data":{"id":"$wiid","attributes":{"version":1},"links":{"self":"https://api.openshift.io/api/spaces/$spaceid/workitems/$wiid"},"type":"workitems","relationships":{"assignees":{"data":[{"id":"$userid","type":"identities"}]}}}}'}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   2}
+        -   compare:    {jsonpath_mini: "data.relationships.assignees.data.0.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypeexperience'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+
+-   test:
+    -   name:   "Update a Workitem - Change State"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {template:  '{"data":{"id":"$wiid","attributes":{"version":2,"system.state":"resolved"},"links":{"self":"https://api.openshift.io/api/spaces/$spaceid/workitems/$wiid"},"type":"workitems"}}'}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "resolved"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   3}
+        -   compare:    {jsonpath_mini: "data.relationships.assignees.data.0.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypeexperience'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+
+-   test:
+    -   name:   "Delete the Space as we are DONE" 
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
