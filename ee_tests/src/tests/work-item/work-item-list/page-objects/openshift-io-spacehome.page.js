@@ -424,7 +424,19 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.id("forge-next-button"));
   }
   clickQuickStartNextButton () {
-    browser.wait(until.elementToBeClickable(this.quickStartNextButton), constants.LONG_WAIT, 'Failed to find element quickStartNextButton');
+    browser.wait(until.elementToBeClickable(this.quickStartNextButton), constants.LONGEST_WAIT, 'Failed to find element quickStartNextButton');
+    this.quickStartNextButton.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartNextButton");
+    });
+    return;
+  }
+
+  get quickStartNextButton2 () {
+    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-next-button']"));
+//    return element(by.id("forge-next-button"));
+  }
+  clickQuickStartNextButton2 () {
+    browser.wait(until.elementToBeClickable(this.quickStartNextButton2), constants.LONGEST_WAIT, 'Failed to find element quickStartNextButton');
     this.quickStartNextButton.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartNextButton");
     });
