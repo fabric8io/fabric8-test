@@ -131,9 +131,9 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoSpaceHomePage = OpenShiftIoDashboardPage.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
-    browser.wait(until.urlContains('https://openshift.io/osiotest314/'+ spaceTime), constants.WAIT);
-    browser.wait(until.urlIs('https://openshift.io/osiotest314/'+ spaceTime), constants.WAIT); 
-    expect(browser.getCurrentUrl()).toEqual('https://openshift.io/osiotest314/'+ spaceTime);
+    browser.wait(until.urlContains('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT);
+    browser.wait(until.urlIs('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT); 
+    expect(browser.getCurrentUrl()).toEqual('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime);
 
     browser.getCurrentUrl().then(function (text) { 
        console.log ('EE POC test - new space URL = ' + text);
@@ -164,7 +164,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get("https://openshift.io/osiotest314/" + spaceTime);
+    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime);
     
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
@@ -178,7 +178,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
          -or- 
          No pipeline builds have run for testmay91494354476064.   */
 //      expect(text).toContain("No pipeline builds have run for " + spaceTime);
-      expect(text).toContain("Source Repository: https://github.com/osiotest314/" + spaceTime + ".git");
+      expect(text).toContain("Source Repository: https://github.com/" + browser.params.login.user + "/" + spaceTime + ".git");
     });
 
 //    OpenShiftIoPipelinePage.clickInputRequiredButton();

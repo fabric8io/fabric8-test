@@ -10,7 +10,19 @@ The goal of this repository is to provide automated tests that can be easily ins
 
 ### End-to-End (EE) tests
 
-The EE tests simulate a user's actions by creating spaces and projects in the UI. To run the tests locally, invoke this script:
+The EE tests simulate a user's actions by creating spaces and projects in the UI. To run the tests locally, execute these commands:
+
+git clone git@github.com:fabric8io/fabric8-test.git
+cd ee_tests
+npm install
+
+And then invoke this script:
 
 sh ./local_run_EE_tests.sh username password http://target-URL-for-your-server
+
+For example:
+
+sh ./local_run_EE_tests.sh username password https://openshift.io
+
+
 
