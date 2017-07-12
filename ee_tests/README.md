@@ -18,11 +18,20 @@ npm install
 
 And then invoke this script:
 
+```
 sh ./local_run_EE_tests.sh username password http://target-URL-for-your-server
+```
 
 For example:
 
+```
 sh ./local_run_EE_tests.sh username password https://openshift.io
+```
 
+By default, Google Chrome browser is used by EE tests via Selenium. If you want
+to use different browser (Firefox for example), set up the following environment
+variable before you start script mentioned above:
 
-
+```
+SELENIUM_BROWSER=firefox
+```
