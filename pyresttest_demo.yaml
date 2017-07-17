@@ -35,6 +35,8 @@
     -   expected_status:    [201]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
         -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$fixedspacename'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
     -   extract_binds:
@@ -48,6 +50,7 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   extract_test:   {jsonpath_mini: "data.0",  test: "exists"}
     -   extract_binds:
         -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
@@ -62,6 +65,7 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
         -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$userid'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
@@ -78,6 +82,7 @@
     -   expected_status:    [201]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
         -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
         -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc1'}}
@@ -97,6 +102,7 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
         -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
         -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
@@ -114,6 +120,7 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
         -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
         -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
@@ -131,6 +138,7 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
         -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "resolved"}
         -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
