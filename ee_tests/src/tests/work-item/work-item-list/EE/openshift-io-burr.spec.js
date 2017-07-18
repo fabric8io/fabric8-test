@@ -149,7 +149,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/5
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/5
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/5
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 4/5
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
 
     OpenShiftIoSpaceHomePage.clickOkButton();
