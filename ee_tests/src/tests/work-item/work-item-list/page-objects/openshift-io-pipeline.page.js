@@ -37,6 +37,10 @@ class OpenShiftIoPipelinePage {
   }
 
   /* Element - by pipeline name - in pipeline list */
+  allPipelineByName (nameString) {
+    var xpathString = ".//a[contains(@class,'card-title') and contains(text(),'" + nameString + "')]/../../..";
+    return element.all(by.xpath(xpathString));
+  }
   pipelineByName (nameString) {
     var xpathString = ".//a[contains(@class,'card-title') and contains(text(),'" + nameString + "')]/../../..";
     return element(by.xpath(xpathString));

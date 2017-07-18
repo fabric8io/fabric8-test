@@ -170,6 +170,10 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
     console.log("Pipelines page = " + text);
 
+    /* Verify that only 1 build pipeline is created */
+    /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
+    expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
+
       /* May 9, 2017 - clicking on a pipeline fails due to this error:
       https://openshift.io/kleinhenz-1/osio-planner/plan/detail/682    *
       /* Example of expected text:
