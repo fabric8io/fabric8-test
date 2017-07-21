@@ -5,6 +5,7 @@
 ## $2 = OpenShift web console token
 ## $3 = github token (must be configured in github web UI to support repo deletion)
 ## $4 = github username
+## $5 = OSIO token
 ##
 ## ex: sh ./local_cleanup2.sh osiotest3142 OPENSHIFT_TOKEN GITHUB_TOKEN osiotest3142
 
@@ -40,6 +41,13 @@ oc delete bc --all -n $1-jenkins
 oc delete imagestream --all -n $1-jenkins
 
 ## Step 4 - Delete Che workspaces - TODO
+
+workspaces=`curl -L --header 'Authorization: Bearer $5' http://che-osiotest3141-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"che","id":"[\w-]+' | sed 's/"che","id":"//g'`
+
+for workspace in $WORKSPACES; 
+do echo "deleting workspace " $workspace ; 
+curl -vLX DELETE -H 'Authorization: Bearer $5' https://che-osiotest3141-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace; 
+done
 
 ## Step 5 - Delete OSIO spaces - TODO
 
