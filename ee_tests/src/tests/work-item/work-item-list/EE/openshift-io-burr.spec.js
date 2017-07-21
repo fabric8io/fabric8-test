@@ -55,6 +55,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page'),
     OpenShiftIoRegistrationPage = require('../page-objects/openshift-io-registration.page'),
     OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page'),
+    OpenShiftIoCodespacePage = require('../page-objects/openshift-io-codespace.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
@@ -194,6 +195,16 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
      Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
 
     /* TODO - Create a workspace */
+
+    /* Start by creating a codebase for the newly created project */
+
+    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
+    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
+    OpenShiftIoCodespacePage = new OpenShiftIoCodespacePage();
+
+
+
+
 
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
