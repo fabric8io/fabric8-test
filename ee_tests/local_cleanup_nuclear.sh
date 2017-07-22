@@ -9,6 +9,24 @@
 ##
 ## ex: sh ./local_cleanup2.sh osiotest3142 OPENSHIFT_TOKEN GITHUB_TOKEN osiotest3142
 
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "This script will delete ALL(!) of the specified user's github repos! YES - ALL OF THEM - there is no recovery!!!"
+echo "This is your only chance to confirm or cancel"
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo "************************** WARNING WARNING WARNING ************************** "
+echo " "
+
+read -p "************* Are you sure? (Yy|Nn)" -n 1 -r
+echo    # (optional) move to a new line
+
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+
 ## Step 1 - Access OpenShift 
 oc login https://api.starter-us-east-2.openshift.com --token=$2
 
@@ -51,4 +69,5 @@ done
 
 ## Step 5 - Delete OSIO spaces - TODO
 
-
+    # do dangerous stuff
+fi
