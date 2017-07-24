@@ -30,9 +30,11 @@ then
 ## Step 1 - Access OpenShift 
 oc login https://api.starter-us-east-2.openshift.com --token=$2
 
-## Step 2 - Delete github repos
-export REPOS=`oc get bc -n $1 | grep -v NAME | cut -d " " -f 1`
-for repo in $REPOS; do echo "deleting repo " $repo ; curl -X DELETE -H "Authorization: token $3" https://api.github.com/repos/$4/$repo; done
+#### Commented out pending resolution of issue related to creating multiple test accounts 
+#### ## Step 2 - Delete github repos
+#### export REPOS=`oc get bc -n $1 | grep -v NAME | cut -d " " -f 1`
+#### for repo in $REPOS; do echo "deleting repo " $repo ; curl -X DELETE -H "Authorization: token $3" https://api.github.com/repos/$4/$repo; done
+#### Commented out pending resolution of issue related to creating multiple test accounts 
 
 ## Step 3 - Delete OpenShift resources
 oc delete bc --all -n $1
@@ -58,7 +60,7 @@ oc delete build --all -n $1-jenkins
 oc delete bc --all -n $1-jenkins
 oc delete imagestream --all -n $1-jenkins
 
-## Step 4 - Delete Che workspaces - TODO
+## Step 4 - Delete Che workspaces
 
 workspaces=`curl -L --header 'Authorization: Bearer $5' http://che-osiotest3141-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"che","id":"[\w-]+' | sed 's/"che","id":"//g'`
 
