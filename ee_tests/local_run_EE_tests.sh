@@ -4,11 +4,13 @@ LOGFILE=$(pwd)/functional_tests.log
 echo Using logfile $LOGFILE 
 
 # Download dependencies
-echo -n Updating Webdriver and Selenium...
-node_modules/protractor/bin/webdriver-manager update
+#echo -n Updating Webdriver and Selenium...
+#node_modules/protractor/bin/webdriver-manager update
+
 # Start selenium server just for this test run
 echo -n Starting Webdriver and Selenium...
-(node_modules/protractor/bin/webdriver-manager start >>$LOGFILE 2>&1 &)
+(webdriver-manager start --versions.chrome 2.29 >>$LOGFILE 2>&1 &)
+
 # Wait for port 4444 to be listening connections
 while ! (nc -w 1 127.0.0.1 4444 </dev/null >/dev/null 2>&1); do sleep 1; done
 echo done.
