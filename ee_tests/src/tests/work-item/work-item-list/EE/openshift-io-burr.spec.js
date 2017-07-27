@@ -89,32 +89,12 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Step 1) Login to openshift.io */
 
     OpenShiftIoRHDLoginPage = page.clickLoginButton();
-    OpenShiftIoGithubLoginPage = OpenShiftIoRHDLoginPage.clickGithubLoginButton();
-    
-    OpenShiftIoGithubLoginPage.clickGithubLoginField();
-    OpenShiftIoGithubLoginPage.typeGithubLoginField(browser.params.login.user); 
-    OpenShiftIoGithubLoginPage.clickGithubPassword();
-    OpenShiftIoGithubLoginPage.typeGithubPassword(browser.params.login.password);   
-    OpenShiftIoDashboardPage = OpenShiftIoGithubLoginPage.clickGithubLoginButton();
 
-    /* Seeing a problem where login is failing on Centos CI */    
-    OpenShiftIoGithubLoginPage.incorrectUsernameOrPassword.isPresent().then(function(result) {
-      if ( result ) {
-        console.log("UNEXPECTED ERROR - INCORRECT USERNAME OR PASSWORD ENTERED"); 
-        console.log ("Username entered = " + browser.params.login.user);
-      } else {
-        //do nothing 
-      }
-    });
-
-    /* This button appears after a large number of logins with the same account */
-    OpenShiftIoGithubLoginPage.authorizeApplicationButton.isPresent().then(function(result) {
-      if ( result ) {
-        OpenShiftIoGithubLoginPage.clickAuthorizeApplicationButton();
-      } else {
-        //do nothing
-      }
-    });
+    OpenShiftIoRHDLoginPage.clickRhdUsernameField();
+    OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
+    OpenShiftIoRHDLoginPage.clickRhdPasswordField();
+    OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
+    OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
@@ -147,9 +127,9 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
     OpenShiftIoSpaceHomePage.clickTechnologyStack();
 
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/5
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/5
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/5
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
 
     OpenShiftIoSpaceHomePage.clickOkButton();
@@ -170,22 +150,19 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
     console.log("Pipelines page = " + text);
 
-    /* Verify that only 1 build pipeline is created */
-    /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-    expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
+      /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
+      /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
+      console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
+      expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
 
-      /* May 9, 2017 - clicking on a pipeline fails due to this error:
-      https://openshift.io/kleinhenz-1/osio-planner/plan/detail/682    *
-      /* Example of expected text:
-         testmay91494354476064 created a few seconds ago
-         Source Repository: https://github.com/almightytest/testmay91494354476064.git
-         -or- 
-         No pipeline builds have run for testmay91494354476064.   */
-//      expect(text).toContain("No pipeline builds have run for " + spaceTime);
+      /* Verify that the source repo is referenced */
       expect(text).toContain("Source Repository: https://github.com/" + browser.params.login.user + "/" + spaceTime + ".git");
     });
 
-//    OpenShiftIoPipelinePage.clickInputRequiredButton();
+    /* If the input require buttons are not displayed, the build has either failed or the build pipeline
+       is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
+    console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
+    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
 
     OpenShiftIoPipelinePage.clickPromoteButton();
@@ -202,10 +179,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
     OpenShiftIoCodespacePage = new OpenShiftIoCodespacePage();
 
-
-
-
-
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
      //OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
@@ -216,7 +189,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Locate the first codebase */
 //    OpenShiftIoSpaceHomePage.clickFirstCodebase();
 
-    /* TODO - Verify the workspace in Che - TODO - Create a page object modelk for the Che dashboard */
+    /* TODO - Verify the workspace in Che - TODO - Create a page object model for the Che dashboard */
 //    browser.get("https://che-almusertest1-che.8a09.starter-us-east-2.openshiftapps.com/dashboard/#/");
 
     /* ----------------------------------------------------------*/
