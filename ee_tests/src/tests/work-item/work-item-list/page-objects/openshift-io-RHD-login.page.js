@@ -13,6 +13,7 @@
 
 var testSupport = require('../testSupport'),
     constants = require("../constants"),
+    OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page'),
     OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page');
 
 var until = protractor.ExpectedConditions;
@@ -115,7 +116,7 @@ class OpenShiftIoRHDLoginPage {
   /* Red Hat Developer Login */
 
   get rhdUsernameField () {
-     return element(by.css(".login-username-field.field"));
+     return element(by.id("username"));
   }
   clickRhdUsernameField () {
      return this.rhdUsernameField.click().then(function(){
@@ -125,6 +126,30 @@ class OpenShiftIoRHDLoginPage {
   }
   typeRhdUsernameField (usernameString) {
      return this.rhdUsernameField.sendKeys(usernameString);
+  }
+
+  get rhdPasswordField () {
+     return element(by.id("password"));
+  }
+  clickRhdPasswordField () {
+     return this.rhdPasswordField.click().then(function(){
+      console.log("OpenShiftIoRHDLoginPage - clicked element:rhdPasswordField");
+    });
+    return;
+  }
+  typeRhdPasswordField (passwordString) {
+     return this.rhdPasswordField.sendKeys(passwordString);
+  }
+
+  get rhdLoginButton () {
+     return element(by.id("kc-login"));
+  }
+  clickRhdLoginButton () {
+    browser.wait(until.presenceOf(this.rhdLoginButton), constants.WAIT, 'Failed to find RHD login');
+    this.rhdLoginButton.click().then(function(){
+      console.log("OpenShiftIoRHDLoginPage - clicked element:rhdLoginButton");
+    });
+    return new OpenShiftIoDashboardPage();
   }
 
 }
