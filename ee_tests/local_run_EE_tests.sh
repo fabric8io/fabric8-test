@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 LOGFILE=$(pwd)/functional_tests.log
 echo Using logfile $LOGFILE 
 
