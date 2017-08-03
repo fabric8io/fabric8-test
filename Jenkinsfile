@@ -27,8 +27,7 @@ fabric8UITestNode{
                             export PATH=node_modules/protractor/bin:$PATH
                             cd fabric8-test/ee_tests &&
                             npm install &&
-                            webdriver-manager update --versions.chrome 2.29 &&
-                            pwd &&
+                            webdriver-manager update --standalone true --versions.chrome 2.29 &&
                             ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                     } 
