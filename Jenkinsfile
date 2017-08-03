@@ -19,7 +19,9 @@ fabric8UITestNode{
         ws {
             container('ui'){
                 stage('E2E test') {
-                    dir("ee_tests") {
+                    sh "git clone https://github.com/fabric8io/fabric8-test.git"
+                        
+                    dir("fabric8-test/ee_tests") {
                         sh """
                         echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
                         npm install
