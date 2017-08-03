@@ -32,7 +32,7 @@ fabric8UITestNode{
                             ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                     } 
-                    archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
+                    archiveArtifacts artifacts: 'target/screenshots/*.*,**/*.log', fingerprint: true
 
                     echo "HERE IS THE TEST LOG!"
                     sh "cat fabric8-test/ee_tests/functional_tests.log"
