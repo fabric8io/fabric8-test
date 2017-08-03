@@ -29,8 +29,7 @@ fabric8UITestNode{
                         webdriver-manager update
                         ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
-                        archive "**/*.log"
-                        archive "target/screenshots/*.*"
+                        archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
                     }
                 }
             }
