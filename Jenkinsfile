@@ -25,7 +25,8 @@ fabric8UITestNode{
                         sh """
                         echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
                         npm install
-                        export PATH=node_modules/protractor/bin:$PATH &&
+                        export PATH=node_modules/protractor/bin:$PATH
+                        webdriver-manager update
                         ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                         archive "**/*.log"
