@@ -19,20 +19,18 @@ fabric8UITestNode{
         ws {
             container('ui'){
                 stage('E2E test') {
-                    git "https://github.com/fabric8io/fabric8-test.git"
-                    
-                    dir("ee_tests") {
-                        sh """
-                            echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
-
-                            export PATH=node_modules/protractor/bin:$PATH
-                            npm install
-                            webdriver-manager update --versions.chrome 2.29
-                            pwd
-                            ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
-                        """
-                        archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
-                    }                    
+                    sh """
+                        git clone https://github.com/fabric8io/fabric8-test.git
+                        echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
+                        
+                        export PATH=node_modules/protractor/bin:$PATH
+                        cd fabric8-test/ee_tests &&
+                        npm install &&
+                        webdriver-manager update --versions.chrome 2.29 &&
+                        pwd &&
+                        ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
+                    """
+                    archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
                 }
             }
         }
