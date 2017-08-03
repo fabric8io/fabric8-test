@@ -19,7 +19,7 @@ fabric8UITestNode{
         ws {
             container('ui'){
                 stage('E2E test') {
-                    try {
+                    catchError {
                         sh """
                             git clone https://github.com/fabric8io/fabric8-test.git
                             echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
@@ -31,11 +31,11 @@ fabric8UITestNode{
                             pwd &&
                             ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
-                    } finally {
-                      archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
-                      echo "test log:"
-                      sh "cat fabric8-test/ee_tests/functional_tests.log"
-                    }
+                    } 
+                    archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
+
+                    echo "HERE IS THE TEST LOG!"
+                    sh "cat fabric8-test/ee_tests/functional_tests.log"
                 }
             }
         }
