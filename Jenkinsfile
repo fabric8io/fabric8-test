@@ -27,7 +27,7 @@ fabric8UITestNode{
                         npm install
                         export PATH=node_modules/protractor/bin:$PATH
                         webdriver-manager update --versions.chrome 2.29
-                        ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
+                        sh ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                         archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
                     }
