@@ -19,7 +19,7 @@ fabric8UITestNode{
         ws {
             container('ui'){
                 stage('E2E test') {
-                    directory("ee_tests") {
+                    dir("ee_tests") {
                         sh """
                         echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
                         npm install
