@@ -31,8 +31,7 @@ fabric8UITestNode{
                         ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                         archiveArtifacts artifacts: ['target/screenshots/*.*', '**/*.log'], fingerprint: true
-                    }
-                }
+typo                }
             }
         }
     }
