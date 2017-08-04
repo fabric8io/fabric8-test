@@ -59,6 +59,10 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
+/* TODO - convert this into a test parameter */
+const GITHUB_NAME = "osiotestmachine";
+
+
 describe('openshift.io End-to-End POC test - Scenario - Existing user: ', function () {
   var page, items, browserMode;
 
@@ -138,6 +142,35 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
 
+  /* ----------------------------------------------------------*/
+  /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
+     Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
+
+    /* TODO - Create a workspace */
+
+    /* Start by creating a codebase for the newly created project */
+
+    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
+   // browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
+   // OpenShiftIoCodespacePage = new OpenShiftIoCodespacePage();
+
+  //  OpenShiftIoCodespacePage.codebaseList.getText().then(function(text){
+  //    console.log("Codebases page = " + text);
+  //  });
+
+//    OpenShiftIoCodespacePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME).getText().then(function(text){
+  //    console.log("Codebase = " + text);
+ //   });
+
+    // OpenShiftIoCodespacePage.clickCreateCodebaseIcon();
+
+
+
+
+    /* TODO - Verify the workspace in Che - TODO - Create a page object model for the Che dashboard */
+//    browser.get("https://che-almusertest1-che.8a09.starter-us-east-2.openshiftapps.com/dashboard/#/");
+
+
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
 
@@ -156,7 +189,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
       expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
 
       /* Verify that the source repo is referenced */
-      expect(text).toContain("Source Repository: https://github.com/" + browser.params.login.user + "/" + spaceTime + ".git");
+      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
     });
 
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
@@ -166,31 +199,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
 
     OpenShiftIoPipelinePage.clickPromoteButton();
-
-  /* ----------------------------------------------------------*/
-  /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
-     Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
-
-    /* TODO - Create a workspace */
-
-    /* Start by creating a codebase for the newly created project */
-
-    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
-    OpenShiftIoCodespacePage = new OpenShiftIoCodespacePage();
-
-    /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
-       Angular bug with Protractor? Navigate directly to the URL instead */
-     //OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-
-    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-//    browser.get("https://openshift.io/almusertest1/" + spaceTime + "/create");
-    
-    /* Locate the first codebase */
-//    OpenShiftIoSpaceHomePage.clickFirstCodebase();
-
-    /* TODO - Verify the workspace in Che - TODO - Create a page object model for the Che dashboard */
-//    browser.get("https://che-almusertest1-che.8a09.starter-us-east-2.openshiftapps.com/dashboard/#/");
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
