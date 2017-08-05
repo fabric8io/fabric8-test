@@ -16,7 +16,7 @@ var testSupport = require('../testSupport'),
 
 var until = protractor.ExpectedConditions;
 
-class OpenShiftIoCodespacePage {
+class OpenShiftIoCodebasePage {
 
   constructor() {
   };
@@ -114,5 +114,5 @@ Create codebase, delete codebase
 
 }
 
-module.exports = OpenShiftIoCodespacePage;
+module.exports = OpenShiftIoCodebasePage;
 

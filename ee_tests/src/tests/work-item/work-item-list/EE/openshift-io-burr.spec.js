@@ -55,7 +55,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page'),
     OpenShiftIoRegistrationPage = require('../page-objects/openshift-io-registration.page'),
     OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page'),
-    OpenShiftIoCodespacePage = require('../page-objects/openshift-io-codespace.page'),
+    OpenShiftIoCodebasePage = require('../page-objects/openshift-io-codebase.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
@@ -73,7 +73,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     // http://stackoverflow.com/questions/38050626/angular-2-with-protractorjs-failed-error-while-waiting-for-protractor-to-sync-w 
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 360000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
   });
 
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -142,35 +142,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
 
-  /* ----------------------------------------------------------*/
-  /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
-     Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
-
-    /* TODO - Create a workspace */
-
-    /* Start by creating a codebase for the newly created project */
-
-    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-   // browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
-   // OpenShiftIoCodespacePage = new OpenShiftIoCodespacePage();
-
-  //  OpenShiftIoCodespacePage.codebaseList.getText().then(function(text){
-  //    console.log("Codebases page = " + text);
-  //  });
-
-//    OpenShiftIoCodespacePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME).getText().then(function(text){
-  //    console.log("Codebase = " + text);
- //   });
-
-    // OpenShiftIoCodespacePage.clickCreateCodebaseIcon();
-
-
-
-
-    /* TODO - Verify the workspace in Che - TODO - Create a page object model for the Che dashboard */
-//    browser.get("https://che-almusertest1-che.8a09.starter-us-east-2.openshiftapps.com/dashboard/#/");
-
-
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
 
@@ -195,10 +166,16 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
        is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
+
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
 
     OpenShiftIoPipelinePage.clickPromoteButton();
+
+  /* ----------------------------------------------------------*/
+  /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
+     Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
