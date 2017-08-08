@@ -24,11 +24,11 @@ fabric8UITestNode{
                             git clone https://github.com/fabric8io/fabric8-test.git
                             echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
 
+                            /usr/bin/Xvfb :99 -screen 0 1024x768x24 & 
                             export PATH=node_modules/protractor/bin:$PATH
                             cd fabric8-test/ee_tests &&
                             npm install &&
                             webdriver-manager update --standalone true --versions.chrome 2.29 &&
-                            /usr/bin/Xvfb :99 -screen 0 1024x768x24 & &&
                             export NODE_ENV=inmemory &&
                             ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
