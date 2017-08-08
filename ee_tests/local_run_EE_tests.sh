@@ -5,6 +5,9 @@ set -x
 LOGFILE=$(pwd)/functional_tests.log
 echo Using logfile $LOGFILE 
 
+# lets make sure we use the local protractor webdriver-manager
+export PATH=node_modules/protractor/bin:$PATH
+
 # Download dependencies
 #echo -n Updating Webdriver and Selenium...
 #node_modules/protractor/bin/webdriver-manager update
