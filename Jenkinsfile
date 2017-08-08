@@ -28,7 +28,9 @@ fabric8UITestNode{
                             cd fabric8-test/ee_tests &&
                             npm install &&
                             webdriver-manager update --standalone true --versions.chrome 2.29 &&
-                            ./cico_run_EE_tests.sh ${username} ${password} ${consoleUrl}
+                            /usr/bin/Xvfb :99 -screen 0 1024x768x24 & &&
+                            export NODE_ENV=inmemory &&
+                            ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
                         """
                     } 
                     archiveArtifacts artifacts: 'target/screenshots/*.*,**/*.log', fingerprint: true
