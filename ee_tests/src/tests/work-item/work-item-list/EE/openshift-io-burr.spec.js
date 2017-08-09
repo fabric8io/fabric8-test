@@ -100,6 +100,19 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
+    /* The user's account is cleaned before the runs. Update the user's tenant, and
+       wait until Che and Jenkins pods are running before starting the test. */
+    OpenShiftIoDashboardPage.clickrightNavigationBar();
+    OpenShiftIoDashboardPage.clickProfile();
+    OpenShiftIoDashboardPage.clickupdateProfileButton();
+    OpenShiftIoDashboardPage.clickupdateTenantButton();
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+
+    /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
+    OpenShiftIoDashboardPage.clickStatusIcon();
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
+
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
 
