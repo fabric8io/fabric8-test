@@ -226,7 +226,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   /* UI Page Section: Right Navigation Bar */
 
   get rightNavigationBar () {
-    return element(by.id("header_rightDropdown"));
+    return element(by.id("header_dropdownToggle2"));
   }
   clickrightNavigationBar () {
     browser.wait(until.elementToBeClickable(this.rightNavigationBar), constants.LONG_WAIT, 'Failed to find element rightNavigationBar');
@@ -297,6 +297,37 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get statusPoweredOff () {
+    return element(by.xpath(".//*[contains(@class,'fa.fa-power-off')]"));
+  }
+
+  get jenkinsStatusPoweredOn () {
+    return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[2]/status-info/span/span[contains(@class,'pficon-ok')]"));
+  }
+
+  get updateProfileButton () {
+    return element(by.xpath(".//button[contains (text(), 'Update Profile')]"));
+  }
+  clickupdateProfileButton () {
+    browser.wait(until.elementToBeClickable(this.updateProfileButton), constants.LONG_WAIT, 'Failed to find element updateProfileButton');
+    this.updateProfileButton.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:updateProfileButton");
+    });
+    return;
+  }
+
+  get updateTenantButton () {
+    return element(by.xpath(".//button[contains (text(), 'Update tenant')]"));
+  }
+  clickupdateTenantButton () {
+    browser.wait(until.elementToBeClickable(this.updateTenantButton), constants.LONG_WAIT, 'Failed to find element updateTenantButton');
+    this.updateTenantButton.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:updateTenantButton");
+    });
+    return;
+  }
+
+
   /* Profile drop down selection */
   get profile () {
 //    return element(by.xpath("//*[@id='header_rightDropdown']//*[contains(@class, 'user-dropdown-menu')]//*[contains(text(),'Profile')]"));
@@ -304,7 +335,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
   clickProfile () {
     browser.wait(until.elementToBeClickable(this.profile), constants.LONG_WAIT, 'Failed to find Profile');
-    this.help.click().then(function(){
+    this.profile.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:profile");
     });
     return;
