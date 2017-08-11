@@ -56,6 +56,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoRegistrationPage = require('../page-objects/openshift-io-registration.page'),
     OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page'),
     OpenShiftIoCodebasePage = require('../page-objects/openshift-io-codebase.page'),
+    OpenShiftIoChePage = require('../page-objects/openshift-io-che.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
@@ -73,7 +74,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     // http://stackoverflow.com/questions/38050626/angular-2-with-protractorjs-failed-error-while-waiting-for-protractor-to-sync-w 
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
   });
 
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -100,7 +101,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
-    /* The user's account is cleaned before the runs. Update the user's tenant, and
+    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
        wait until Che and Jenkins pods are running before starting the test. */
     OpenShiftIoDashboardPage.clickrightNavigationBar();
     OpenShiftIoDashboardPage.clickProfile();
@@ -165,7 +166,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
-    console.log("Pipelines page = " + text);
+    console.log("Pipelines page contents = " + text);
 
       /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
       /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
@@ -186,9 +187,51 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     OpenShiftIoPipelinePage.clickPromoteButton();
 
-  /* ----------------------------------------------------------*/
-  /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
-     Step 6) In OSIO, create Che workspace for project [blocked by 1515]   */
+    /* ----------------------------------------------------------*/
+    /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
+    /* TODO */
+
+    /* Step 6) In OSIO, create Che workspace for project   */
+
+    /* Start by creating a codebase for the newly created project */
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+ 
+    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
+    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
+    OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
+
+    OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
+      console.log("Codebases page contents = " + text);
+    });
+
+    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME).getText().then(function(text){
+      console.log("Codebase = " + text);
+    });
+
+    OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
+    OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
+
+    /* Switch to Che browser tab */
+    browser.sleep(constants.WAIT);
+    browser.getAllWindowHandles().then(function (handles) {
+        browser.switchTo().window(handles[1]);
+        browser.getCurrentUrl().then(function(url) {
+            console.log("Che workspace URL = " + url);
+        });
+    });
+
+    /* Look for the project in the Che navigator */
+    OpenShiftIoChePage.projectRootByName(spaceTime).getText().then(function (text) { 
+       console.log ('EE POC test - projectName = ' + text);
+    });
+    expect(OpenShiftIoChePage.projectRootByName(spaceTime).getText()).toBe(spaceTime);
+
+    /* Switch back to the OSIO page */
+    browser.sleep(constants.WAIT);
+    browser.getAllWindowHandles().then(function (handles) {
+        browser.switchTo().window(handles[0]);
+    });
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
