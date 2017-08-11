@@ -12,7 +12,8 @@
  */
 
 var testSupport = require('../testSupport'),
-    constants = require("../constants");
+    constants = require("../constants"),
+    OpenShiftIoChePage = require('../page-objects/openshift-io-che.page');
 
 var until = protractor.ExpectedConditions;
 
@@ -54,6 +55,17 @@ class OpenShiftIoCodebasePage {
 
   /* Create codebase icon - TODO - have to be able to locate this for a specific codebase */
   
+  get createCodebaseKebab () {
+    return element(by.xpath("//codebases-item-actions/span[contains(@class,'dropdown-kebab-pf')]"));
+  }
+  clickCreateCodebaseKebab () {
+    browser.wait(until.elementToBeClickable(this.createCodebaseKebab), constants.LONGEST_WAIT, 'Failed to find element createCodebaseKebab');
+    this.createCodebaseKebab.click().then(function(){
+      console.log("OpenShiftIoCodebasePage - clicked element: createCodebaseKebab");
+    });
+    return;
+  }
+
   get createCodebaseIcon () {
     return element(by.xpath("//codebases-item-actions/span[contains(@class,'dropdown-kebab-pf')]/ul/li[1]"));
   }
@@ -62,7 +74,7 @@ class OpenShiftIoCodebasePage {
     this.createCodebaseIcon.click().then(function(){
       console.log("OpenShiftIoCodebasePage - clicked element: createCodebaseIcon");
     });
-    return;
+    return new OpenShiftIoChePage();
   }
 
 
