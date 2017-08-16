@@ -19,6 +19,6 @@ function define(name, value) {
     });
 }
 
-define("WAIT", 30000);   /* 30 seconds */
-define("LONG_WAIT", 60000);     /* 60 seconds */
-define("LONGEST_WAIT", 6000000);      /* 10 minutes */
+define("WAIT", 3000);   /* 3 seconds */
+define("LONG_WAIT", 30000);     /* 30 sec */
+define("LONGEST_WAIT", 300000);      /* 5 minutes */
