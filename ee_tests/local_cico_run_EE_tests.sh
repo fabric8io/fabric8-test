@@ -23,16 +23,17 @@ docker exec fabric8-ui-builder npm install
 
 docker exec fabric8-ui-builder wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
 docker exec fabric8-ui-builder tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc login https://api.starter-us-east-2.openshift.com --token=$4
+docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
 
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-che
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-jenkins
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-run
-docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-stage
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc login https://api.starter-us-east-2.openshift.com --token=$4
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-che
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-jenkins
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-run
+#docker exec fabric8-ui-builder openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc delete all,pvc,cm,secrets,sa --all -n $1-stage
 
 # Exec EE tests
-docker exec fabric8-ui-builder ./local_run_EE_tests.sh $1 $2 $3
+docker exec fabric8-ui-builder ./local_run_EE_tests.sh $1 $2 $3 $4
 
 # Test results to archive
 docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/target/ .

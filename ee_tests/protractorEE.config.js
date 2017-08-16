@@ -12,6 +12,7 @@ exports.config = {
     getPageTimeout: 30000,
     seleniumAddress: 'http://localhost:4444/wd/hub',
     specs: ['src/tests/**/EE/*burr*.spec.js'],
+    exclude: ['src/tests/**/EE/*none*.spec.js'],
     jasmineNodeOpts: {
         defaultTimeoutInterval: 60000
     },

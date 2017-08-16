@@ -250,14 +250,16 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
-  get importCodebaseButton () {
-    return this.codebases.element(by.buttonText('Import Codebase'));
+  importCodebaseByName (nameString) {
+    var xpathString = "//app-generator-multiple-selection-label-list/ul/li/label/span[contains(text(),'" + nameString + "')]";
+    browser.wait(until.presenceOf(element(by.xpath(xpathString)), constants.LONGEST_WAIT, 'Failed to find element codebase by name'));
+    return element(by.xpath(xpathString));
   }
 
-  clickImportCodebaseButton () {
-    browser.wait(until.elementToBeClickable(this.importCodebaseButton), constants.LONG_WAIT, 'Failed to find importCodebaseButton Button');
-    return this.importCodebaseButton.click().then(function(){
-      console.log("OpenShiftIoSpaceHomePage - clicked element: importCodebaseButton");
+  clickImportCodebaseByName (nameString) {
+    browser.wait(until.elementToBeClickable(this.importCodebaseByName (nameString), constants.LONG_WAIT, 'Failed to find importCodebaseByName'));
+    return this.importCodebaseByName(nameString).click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: importCodebaseByname");
     });
     return;
   }
@@ -437,7 +439,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
   clickQuickStartNextButton2 () {
     browser.wait(until.elementToBeClickable(this.quickStartNextButton2), constants.LONGEST_WAIT, 'Failed to find element quickStartNextButton');
-    this.quickStartNextButton.click().then(function(){
+    this.quickStartNextButton2.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartNextButton");
     });
     return;
@@ -477,6 +479,20 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     });
     return;
   }
+
+  get importCodebaseButton () {
+//    return this.codebases.element(by.buttonText('Import Codebase'));
+    return element(by.id('importCodeButton'));
+  }
+
+  clickImportCodebaseButton () {
+    browser.wait(until.elementToBeClickable(this.importCodebaseButton), constants.LONG_WAIT, 'Failed to find importCodebaseButton Button');
+    return this.importCodebaseButton.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: importCodebaseButton");
+    });
+    return;
+  }
+
 
   get okButton () {
     return element(by.xpath(".//*[contains(text(), 'OK')]"));

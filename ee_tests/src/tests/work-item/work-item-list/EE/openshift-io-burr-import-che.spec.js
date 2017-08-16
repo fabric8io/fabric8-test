@@ -62,7 +62,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 
 /* TODO - convert this into a test parameter */
 const GITHUB_NAME = "osiotestmachine";
-
+const IMPORT_NAME = "vertxbasic";
 
 describe('openshift.io End-to-End POC test - Scenario - Existing user: ', function () {
   var page, items, browserMode;
@@ -75,6 +75,12 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
+
+// Commented out pending creation of Jenkins secret for OSO token
+    /* Clean the user account's OpenShift Online resources */
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
+    console.log(result);
   });
 
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -83,7 +89,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
   });
 
   /* Simple test for registered user */
-  it("should perform Burr's demo", function() {
+  it("should perform Burr's demo - IMPORT project - Run Che", function() {
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
@@ -101,13 +107,14 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
-    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+    /* The user's account is cleaned before the test runs. The test must now Update the user's tenant, and
        wait until Che and Jenkins pods are running before starting the test. */
     OpenShiftIoDashboardPage.clickrightNavigationBar();
     OpenShiftIoDashboardPage.clickProfile();
     OpenShiftIoDashboardPage.clickupdateProfileButton();
     OpenShiftIoDashboardPage.clickupdateTenantButton();
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
@@ -118,6 +125,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Step 2) In OSIO, create new space */
 
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickCreateSpaceUnderLeftNavigationBar();  
 
     var spaceTime = returnTime();
@@ -143,13 +151,11 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
-    OpenShiftIoSpaceHomePage.clickTechnologyStack();
 
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
+    OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
+    OpenShiftIoSpaceHomePage.clickImportCodebaseByName (IMPORT_NAME);
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2();  // End of dialog page 2/3
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
-
     OpenShiftIoSpaceHomePage.clickOkButton();
 
     /* Trap 'Application Generation Error' here - if found, fail test and exit */
@@ -159,34 +165,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
 
-    /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
-       Angular bug with Protractor? Navigate directly to the URL instead */
-    // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime);
-    
-    OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
-    OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
-    console.log("Pipelines page contents = " + text);
-
-      /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
-      /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-      console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
-      expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
-
-      /* Verify that the source repo is referenced */
-      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
-    });
-
-    /* If the input require buttons are not displayed, the build has either failed or the build pipeline
-       is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
-    console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
-
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
-
-    OpenShiftIoPipelinePage.clickPromoteButton();
-
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
     /* TODO */
@@ -195,6 +173,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     /* Start by creating a codebase for the newly created project */
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
@@ -205,7 +184,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
       console.log("Codebases page contents = " + text);
     });
 
-    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME).getText().then(function(text){
+    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
       console.log("Codebase = " + text);
     });
 
@@ -221,11 +200,11 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
         });
     });
 
-    /* Look for the project in the Che navigator */
-    OpenShiftIoChePage.projectRootByName(spaceTime).getText().then(function (text) { 
-       console.log ('EE POC test - projectName = ' + text);
-    });
-    expect(OpenShiftIoChePage.projectRootByName(spaceTime).getText()).toBe(spaceTime);
+//    /* Look for the project in the Che navigator */
+//    OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText().then(function (text) { 
+//       console.log ('EE POC test - projectName = ' + text);
+//    });
+//    expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
 
     /* Switch back to the OSIO page */
     browser.sleep(constants.WAIT);
