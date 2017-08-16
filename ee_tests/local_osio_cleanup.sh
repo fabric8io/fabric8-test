@@ -28,11 +28,11 @@ oc login https://console.starter-us-east-2.openshift.com --username=$1 --passwor
 
 ## Step 2 - Delete/cleanup OpenShift.io assets
 
-oc delete all,pvc,cm,secrets,sa --all -n $1-run
-oc delete all,pvc,cm,secrets,sa --all -n $1-stage
-oc delete all,pvc,cm,secrets,sa --all -n $1-che
-oc delete all,pvc,cm,secrets,sa --all -n $1
-oc delete all,pvc,cm,secrets,sa --all -n $1-jenkins
+oc delete all,pvc,cm --all -n $1-run
+oc delete all,pvc,cm --all -n $1-stage
+oc delete all,pvc,cm --all -n $1-che
+oc delete all,pvc,cm --all -n $1
+oc delete all,pvc,cm --all -n $1-jenkins
 
 echo ""
 echo "************************** OSIO CLEAN-UP COMPLETE!! ************************** "
