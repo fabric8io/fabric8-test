@@ -1,7 +1,7 @@
 Fabric8-Test 
 ============
 
-Functional test for OSiO (OpenShift.io) platform.
+Functional tests for OSiO (OpenShift.io) platform.
 
 ## Installation
 
