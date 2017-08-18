@@ -46,7 +46,7 @@ class OpenShiftIoPipelinePage {
     return element(by.xpath(xpathString));
   }
   clickPipelineByName (nameString) {
-    browser.wait(until.elementToBeClickable(this.pipelineByName(pipelineByName)), constants.LONGEST_WAIT, 'Failed to find element pipelineByName');
+    browser.wait(until.elementToBeClickable(this.pipelineByName(nameString)), constants.LONGEST_WAIT, 'Failed to find element pipelineByName');
     this.pipelineByName(nameString).click().then(function(){
       console.log("OpenShiftIoPipelinesPage - clicked element: pipelineByName");
     });

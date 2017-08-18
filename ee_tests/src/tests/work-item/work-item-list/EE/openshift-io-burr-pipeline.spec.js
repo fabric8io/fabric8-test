@@ -166,28 +166,44 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
 
+    /* Verify that Jenkins is still up and running */
+    /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
+    console.log ("verify that Jenkins pod is still running");
+    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoDashboardPage.clickStatusIcon();
+    expect(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn.isPresent()).toBe(true);
+
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
     browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime);
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
+
+    /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
+    /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+    console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
+    expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
+
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
     console.log("Pipelines page contents = " + text);
 
-      /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
-      /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-      console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
-      expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
+      /* Verify that an error has not prevented the build from being started */
+      console.log ("Verify that error indicating that no pipeline builds have been run is not found");
+      expect(text).not.toContain("No pipeline builds have run for");
 
       /* Verify that the source repo is referenced */
+      console.log ("Verify that error source repository is displayed");
       expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
+
     });
 
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
        is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
-
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+   
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
