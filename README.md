@@ -15,12 +15,12 @@ npm install
 .sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io
 ```
 
-> Note: for macOS users, make sure you installed `nc` with `bew install netcat` prior launching the script.
+> Note: for macOS users, make sure you installed `nc` with `brew install netcat` prior launching the script.
 
 * Run on prod
 
 ```
 .sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io
 ```
-where USERNAME and PASSWORD should be replace by your OSiO credetials.
+where USERNAME and PASSWORD should be replaced by your OSiO credentials.
 
