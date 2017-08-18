@@ -301,6 +301,10 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//*[contains(@class,'fa.fa-power-off')]"));
   }
 
+  get cheStatusPoweredOn () {
+    return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[1]/status-info/span/span[contains(@class,'pficon-ok')]"));
+  }
+
   get jenkinsStatusPoweredOn () {
     return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[2]/status-info/span/span[contains(@class,'pficon-ok')]"));
   }

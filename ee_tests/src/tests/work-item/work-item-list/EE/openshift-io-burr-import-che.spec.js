@@ -64,7 +64,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 const GITHUB_NAME = "osiotestmachine";
 const IMPORT_NAME = "vertxbasic";
 
-describe('openshift.io End-to-End POC test - Scenario - Existing user: ', function () {
+describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che: ', function () {
   var page, items, browserMode;
 
   /* Set up for each function */
@@ -90,6 +90,17 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
   /* Simple test for registered user */
   it("should perform Burr's demo - IMPORT project - Run Che", function() {
+
+//    var webdriver = require("selenium-webdriver");
+//    var chrome = require("selenium-webdriver/chrome");
+//    var options = new chrome.Options();
+//    var path = require('chromedriver').path;
+//    var service = new chrome.ServiceBuilder(path).build();
+//    options.addArguments('disable-popup-blocking');
+//    chrome.setDefaultService(service);
+//    var driver = new webdriver.Builder()
+//      .withCapabilities(webdriver.Capabilities.chrome())
+//      .build();
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
@@ -119,7 +130,9 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT);
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
+    browser.sleep(constants.LONG_WAIT);
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
@@ -172,6 +185,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Step 6) In OSIO, create Che workspace for project   */
 
     /* Start by creating a codebase for the newly created project */
+    browser.sleep(constants.LONG_WAIT);
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
     browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
@@ -179,11 +193,12 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
     browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
-
+    
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
       console.log("Codebases page contents = " + text);
     });
 
+    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
     OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
       console.log("Codebase = " + text);
     });
@@ -191,9 +206,18 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
     OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
 
+    
     /* Switch to Che browser tab */
-    browser.sleep(constants.WAIT);
+    browser.sleep(constants.LONG_WAIT);
     browser.getAllWindowHandles().then(function (handles) {
+
+        console.log("Number of browser tabs = " + handles.length);
+        if (handles.length == 1) {
+          console.log ("ERROR - Che browser window did not open");
+        }
+
+        expect(handles.length).toBe(2);
+
         browser.switchTo().window(handles[1]);
         browser.getCurrentUrl().then(function(url) {
             console.log("Che workspace URL = " + url);
