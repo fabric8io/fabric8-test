@@ -1,4 +1,4 @@
-/**
+ /**
  * POC test for automated UI tests for openshift.io
  *  
  * Note on screen resolutions - See: http://www.itunesextractor.com/iphone-ipad-resolution.html
@@ -151,9 +151,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     OpenShiftIoSpaceHomePage = OpenShiftIoDashboardPage.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
-    browser.wait(until.urlContains('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT);
-    browser.wait(until.urlIs('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT); 
-    expect(browser.getCurrentUrl()).toEqual('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime);
+    browser.wait(until.urlContains(browser.params.target.url + '/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT);
+    browser.wait(until.urlIs(browser.params.target.url + '/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT); 
+    expect(browser.getCurrentUrl()).toEqual(browser.params.target.url + '/' + browser.params.login.user + '/'+ spaceTime);
 
     browser.getCurrentUrl().then(function (text) { 
        console.log ('EE POC test - new space URL = ' + text);
@@ -192,7 +192,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
+    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
 
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
