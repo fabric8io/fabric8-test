@@ -204,6 +204,10 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
    
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
+    console.log(result);
+
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);

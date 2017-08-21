@@ -206,7 +206,6 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
     OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
 
-    
     /* Switch to Che browser tab */
     browser.sleep(constants.LONG_WAIT);
     browser.getAllWindowHandles().then(function (handles) {
@@ -214,6 +213,9 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
         console.log("Number of browser tabs = " + handles.length);
         if (handles.length == 1) {
           console.log ("ERROR - Che browser window did not open");
+          var process = require('child_process').execSync;
+          var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
+          console.log(result);
         }
 
         expect(handles.length).toBe(2);
@@ -225,10 +227,10 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     });
 
 //    /* Look for the project in the Che navigator */
-//    OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText().then(function (text) { 
-//       console.log ('EE POC test - projectName = ' + text);
-//    });
-//    expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
+    OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText().then(function (text) { 
+       console.log ('EE POC test - projectName = ' + text);
+    });
+    expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
 
     /* Switch back to the OSIO page */
     browser.sleep(constants.WAIT);
