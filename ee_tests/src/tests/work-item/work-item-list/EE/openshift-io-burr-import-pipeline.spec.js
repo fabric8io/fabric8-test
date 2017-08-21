@@ -206,6 +206,10 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
     console.log(result);
 
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " jenkins").toString();
+    console.log(result);
+    
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
