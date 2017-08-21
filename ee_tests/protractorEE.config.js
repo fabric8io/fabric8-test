@@ -4,7 +4,8 @@ var reporter = new HtmlScreenshotReporter({
   dest: 'target/screenshots',
   filename: 'my-report.html',
   reportOnlyFailedSpecs: false,
-  captureOnlyFailedSpecs: true
+  captureOnlyFailedSpecs: false,
+  inlineImages: true
 });
 
 exports.config = {
