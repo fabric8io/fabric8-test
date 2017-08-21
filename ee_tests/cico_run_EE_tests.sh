@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Show command before executing
-set -x
+set +x
 
 set -e
 
@@ -30,7 +30,7 @@ service docker start
 cp /tmp/jenkins-env .
 docker build -t fabric8-ui-builder -f Dockerfile.builder .
 # User root is required to run webdriver-manager update. This shouldn't be a problem for CI containers
-mkdir -p dist && docker run --detach=true --name=fabric8-ui-builder --user=root --cap-add=SYS_ADMIN -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASSWORD -e "CI=true" -t -v $(pwd)/dist:/dist:Z fabric8-ui-builder
+mkdir -p dist && docker run --detach=true --name=fabric8-ui-builder --user=root --cap-add=SYS_ADMIN -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e "CI=true" -t -v $(pwd)/dist:/dist:Z fabric8-ui-builder
 
 # Build
 docker exec fabric8-ui-builder npm install
