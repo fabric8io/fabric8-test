@@ -65,6 +65,34 @@ waitForText: function (elementFinder) {
     });
   },
 
+  /* 
+  * Get system time in seconds since 1970 
+  */
+  returnTime: function () {
+
+    var month = new Array();
+    month[0] = "jan";
+    month[1] = "feb";
+    month[2] = "mar";
+    month[3] = "apr";
+    month[4] = "may";
+    month[5] = "jun";
+    month[6] = "jul";
+    month[7] = "aug";
+    month[8] = "sep";
+    month[9] = "oct";
+    month[10] = "nov";
+    month[11] = "dec";
+
+    var d = new Date();
+    var m = month[d.getMonth()];
+    var day = d.getDate(); 
+    var n = d.getTime();
+ 
+    console.log ("EE POC test - Creating space: " + m + day.toString() + n.toString());
+    return "test" +  m + day.toString() + n.toString();
+  },
+  
 /*
  * Create fixed length string - used to generate large strings
  */
