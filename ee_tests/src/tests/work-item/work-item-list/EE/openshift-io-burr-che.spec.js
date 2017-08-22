@@ -57,12 +57,14 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page'),
     OpenShiftIoCodebasePage = require('../page-objects/openshift-io-codebase.page'),
     OpenShiftIoChePage = require('../page-objects/openshift-io-che.page'),
+    OpenShiftProfilePage = require('../page-objects/openshift-io-profile.page'),
+    OpenShiftUpdateProfilePage = require('../page-objects/openshift-io-update-profile.page'),
+    OpenShiftIoCleanTenantPage = require('../page-objects/openshift-io-clean-tenant.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
 /* TODO - convert this into a test parameter */
 const GITHUB_NAME = "osiotestmachine";
-
 
 describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che: ', function () {
   var page, items, browserMode;
@@ -76,11 +78,10 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     page = new OpenShiftIoStartPage(browser.params.target.url);  
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
 
-// Commented out pending creation of Jenkins secret for OSO token
     /* Clean the user account's OpenShift Online resources */
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-    console.log(result);
+    ////var process = require('child_process').execSync;
+    ////var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
+    ////console.log(result);
   });
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -90,17 +91,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
   /* Simple test for registered user */
   it("should perform Burr's demo - CREATE project - Run Che", function() {
-   
-//    var webdriver = require("selenium-webdriver");
-//    var chrome = require("selenium-webdriver/chrome");
-//    var options = new chrome.Options();
-//    var path = require('chromedriver').path;
-//    var service = new chrome.ServiceBuilder(path).build();
-//    options.addArguments('disable-popup-blocking');
-//    chrome.setDefaultService(service);
-//    var driver = new webdriver.Builder()
-//      .withCapabilities(webdriver.Capabilities.chrome())
-//      .build();
 
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
@@ -111,19 +101,50 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     /* Step 1) Login to openshift.io */
 
     OpenShiftIoRHDLoginPage = page.clickLoginButton();
-
     OpenShiftIoRHDLoginPage.clickRhdUsernameField();
     OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
     OpenShiftIoRHDLoginPage.clickRhdPasswordField();
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
+    /* Clean the user account in OSO with the new clean tenant button */
+    OpenShiftIoDashboardPage.clickrightNavigationBar();
+
+    /* Access the profile page */
+    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+
+    /* Access the update profile page */
+    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+    /* Access the clean the tenant page */
+    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
+    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
+    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
+    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
+
+    /* Return to the account home page */
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+    
     /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
        wait until Che and Jenkins pods are running before starting the test. */
     OpenShiftIoDashboardPage.clickrightNavigationBar();
-    OpenShiftIoDashboardPage.clickProfile();
-    OpenShiftIoDashboardPage.clickupdateProfileButton();
-    OpenShiftIoDashboardPage.clickupdateTenantButton();
+
+//    OpenShiftIoDashboardPage.clickProfile();
+//    OpenShiftIoDashboardPage.clickupdateProfileButton();    
+//    OpenShiftIoDashboardPage.clickupdateTenantButton();
+
+    /* Access the profile page */
+    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+
+    /* Access the update profile page */
+    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+    /* Update the tenant */
+    OpenShiftUpdateProfilePage.clickupdateTenantButton();
+
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
     browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
@@ -244,7 +265,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
     /* For the purposes of this test - ignore all 'toast' popup warnings */
     OpenShiftIoDashboardPage.waitForToastToClose();
-
     OpenShiftIoDashboardPage.clickrightNavigationBar();
     OpenShiftIoDashboardPage.clickLogOut();
   });
