@@ -43,7 +43,7 @@ docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-l
 
 # Exec EE tests
 docker exec fabric8-ui-builder ./run_EE_tests.sh $1
-docker exec fabric8-ui-builder export RSYNC_PASSWORD=$ARTIFACT_PASS
+docker exec fabric8-ui-builder /bin/bash -c "export RSYNC_PASSWORD=$ARTIFACT_PASS"
 docker exec fabric8-ui-builder rsync -PHva target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
 # Test results to archive
