@@ -55,3 +55,4 @@ RTN_CODE=$?
 
 exit $RTN_CODE
 
+exit $RTN_CODE
