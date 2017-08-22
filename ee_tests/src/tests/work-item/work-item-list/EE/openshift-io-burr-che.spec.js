@@ -99,61 +99,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
     /* ----------------------------------------------------------*/
     /* Step 1) Login to openshift.io */
-
-    OpenShiftIoRHDLoginPage = page.clickLoginButton();
-    OpenShiftIoRHDLoginPage.clickRhdUsernameField();
-    OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
-    OpenShiftIoRHDLoginPage.clickRhdPasswordField();
-    OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
-    OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
-
-    /* Clean the user account in OSO with the new clean tenant button */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-
-    /* Access the profile page */
-    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-
-    /* Access the update profile page */
-    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-    /* Access the clean the tenant page */
-    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
-    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
-    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
-    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
-    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
-
-    /* Return to the account home page */
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-    
-    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
-       wait until Che and Jenkins pods are running before starting the test. */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-
-//    OpenShiftIoDashboardPage.clickProfile();
-//    OpenShiftIoDashboardPage.clickupdateProfileButton();    
-//    OpenShiftIoDashboardPage.clickupdateTenantButton();
-
-    /* Access the profile page */
-    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-
-    /* Access the update profile page */
-    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-    /* Update the tenant */
-    OpenShiftUpdateProfilePage.clickupdateTenantButton();
-
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-
-    /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
-    OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT);
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
-    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
@@ -270,5 +216,3 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
   });
 
 });
-
- 

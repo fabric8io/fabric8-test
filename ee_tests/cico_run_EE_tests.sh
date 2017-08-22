@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Show command before executing
+# Do not reveal secrets
 set +x
 
-set -e
+# Do not exit on failure so that artifacts can be archived
+set +e
 
 # Source environment variables of the jenkins slave
 # that might interest this worker.
@@ -43,10 +44,14 @@ docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-l
 
 # Exec EE tests
 docker exec fabric8-ui-builder ./run_EE_tests.sh $1
+RTN_CODE=$?
+
 # docker exec fabric8-ui-builder /bin/bash -c "export RSYNC_PASSWORD=$ARTIFACT_PASS"
 # docker exec fabric8-ui-builder rsync -PHva target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
 # Test results to archive
 # docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/target/ .
 # docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/functional_tests.log target
+
+exit $RTN_CODE
 
