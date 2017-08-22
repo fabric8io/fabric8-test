@@ -96,30 +96,8 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     
     console.log ("Test for target URL: " + browser.params.target.url)
 
-    /* ----------------------------------------------------------*/
     /* Step 1) Login to openshift.io */
-
-    OpenShiftIoRHDLoginPage = page.clickLoginButton();
-
-    OpenShiftIoRHDLoginPage.clickRhdUsernameField();
-    OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
-    OpenShiftIoRHDLoginPage.clickRhdPasswordField();
-    OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
-    OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
-
-    /* The user's account is cleaned before the test runs. The test must now Update the user's tenant, and
-       wait until Che and Jenkins pods are running before starting the test. */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-    OpenShiftIoDashboardPage.clickProfile();
-    OpenShiftIoDashboardPage.clickupdateProfileButton();
-    OpenShiftIoDashboardPage.clickupdateTenantButton();
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-
-    /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
-    OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
+    OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
@@ -128,7 +106,7 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickCreateSpaceUnderLeftNavigationBar();  
 
-    var spaceTime = returnTime();
+    var spaceTime = testSupport.returnTime();
     OpenShiftIoDashboardPage.typeNewSpaceName((spaceTime));
     OpenShiftIoDashboardPage.typeDevProcess("Scenario Driven Planning");
     OpenShiftIoDashboardPage.clickCreateSpaceButton();   
@@ -146,7 +124,6 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
        console.log ('EE POC test - new space URL = ' + text);
     });
 
-
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
 
@@ -158,29 +135,3 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
   });
 
 });
-
-  /* Get system time in seconds since 1970 */
-  var returnTime = function () {
-
-    var month = new Array();
-    month[0] = "jan";
-    month[1] = "feb";
-    month[2] = "mar";
-    month[3] = "apr";
-    month[4] = "may";
-    month[5] = "jun";
-    month[6] = "jul";
-    month[7] = "aug";
-    month[8] = "sep";
-    month[9] = "oct";
-    month[10] = "nov";
-    month[11] = "dec";
-
-    var d = new Date();
-    var m = month[d.getMonth()];
-    var day = d.getDate(); 
-    var n = d.getTime();
- 
-    console.log ("EE POC test - Creating space: " + m + day.toString() + n.toString());
-    return "test" +  m + day.toString() + n.toString();
-  }

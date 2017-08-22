@@ -38,6 +38,7 @@ class OpenShiftIoCleanTenantPage {
     return element(by.xpath(".//input[contains (@name,'username')]"));
   }
   clickEraseOsioEnvUsername () {
+    browser.wait(until.presenceOf(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
     browser.wait(until.elementToBeClickable(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
     this.eraseOsioEnvUsername.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvUsername");

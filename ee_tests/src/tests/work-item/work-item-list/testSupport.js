@@ -101,8 +101,8 @@ waitForText: function (elementFinder) {
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
     OpenShiftIoGithubLoginPage = require('./page-objects/openshift-io-github-login.page'),
-    OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
+    OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
     OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
     OpenShiftIoPipelinePage = require('./page-objects/openshift-io-pipeline.page'),
     OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
@@ -114,7 +114,7 @@ waitForText: function (elementFinder) {
 
     var until = protractor.ExpectedConditions;
 
- OpenShiftIoRHDLoginPage = page.clickLoginButton();
+    OpenShiftIoRHDLoginPage = page.clickLoginButton();
     OpenShiftIoRHDLoginPage.clickRhdUsernameField();
     OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
     OpenShiftIoRHDLoginPage.clickRhdPasswordField();
@@ -146,10 +146,6 @@ waitForText: function (elementFinder) {
        wait until Che and Jenkins pods are running before starting the test. */
     OpenShiftIoDashboardPage.clickrightNavigationBar();
 
-//    OpenShiftIoDashboardPage.clickProfile();
-//    OpenShiftIoDashboardPage.clickupdateProfileButton();    
-//    OpenShiftIoDashboardPage.clickupdateTenantButton();
-
     /* Access the profile page */
     OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
 
@@ -173,8 +169,50 @@ waitForText: function (elementFinder) {
 
   },
 
+  /* 
+  * Create new space for user 
+  */
+  createNewSpace: function (page, spaceName, username, password, targetUrl) {
 
+   var constants = require("./constants"),
+     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
+   var until = protractor.ExpectedConditions;
 
+    page.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+    page.clickCreateSpaceUnderLeftNavigationBar();  
+
+    page.typeNewSpaceName((spaceName));
+    page.typeDevProcess("Scenario Driven Planning");
+    page.clickCreateSpaceButton();   
+
+    /* For the purposes of this test - ignore all 'toast' popup warnings */
+    page.waitForToastToClose();
+    OpenShiftIoSpaceHomePage = page.clickNoThanksButton();
+
+    /* In the space home page, verify URL and end the test */
+    browser.wait(until.urlContains(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT);
+    browser.wait(until.urlIs(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT); 
+    expect(browser.getCurrentUrl()).toEqual(targetUrl + '/' + username + '/'+ spaceName);
+
+    browser.getCurrentUrl().then(function (text) { 
+       console.log ('EE POC test - new space URL = ' + text);
+    });
+
+    page.waitForToastToClose();
+    return OpenShiftIoSpaceHomePage;
+  },
+
+/* 
+  * Log user out of OSIO
+  */
+  logoutUser: function (page) {
+
+    /* For the purposes of this test - ignore all 'toast' popup warnings */
+    page.waitForToastToClose();
+    page.clickrightNavigationBar();
+    page.clickLogOut();
+  },
 
 
 /*
