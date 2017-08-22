@@ -93,6 +93,90 @@ waitForText: function (elementFinder) {
     return "test" +  m + day.toString() + n.toString();
   },
   
+  /* 
+  * Log user into OSIO, clean user account, update tenant 
+  */
+  loginCleanUpdate: function (page, username, password) {
+
+  var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
+    OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
+    OpenShiftIoGithubLoginPage = require('./page-objects/openshift-io-github-login.page'),
+    OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
+    OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
+    OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
+    OpenShiftIoPipelinePage = require('./page-objects/openshift-io-pipeline.page'),
+    OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
+    OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
+    OpenShiftProfilePage = require('./page-objects/openshift-io-profile.page'),
+    OpenShiftUpdateProfilePage = require('./page-objects/openshift-io-update-profile.page'),
+    OpenShiftIoCleanTenantPage = require('./page-objects/openshift-io-clean-tenant.page'),
+    constants = require("./constants");
+
+    var until = protractor.ExpectedConditions;
+
+ OpenShiftIoRHDLoginPage = page.clickLoginButton();
+    OpenShiftIoRHDLoginPage.clickRhdUsernameField();
+    OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
+    OpenShiftIoRHDLoginPage.clickRhdPasswordField();
+    OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
+    OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
+
+    /* Clean the user account in OSO with the new clean tenant button */
+    OpenShiftIoDashboardPage.clickrightNavigationBar();
+
+    /* Access the profile page */
+    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+
+    /* Access the update profile page */
+    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+    /* Access the clean the tenant page */
+    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
+    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
+    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
+    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
+
+    /* Return to the account home page */
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+    
+    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+       wait until Che and Jenkins pods are running before starting the test. */
+    OpenShiftIoDashboardPage.clickrightNavigationBar();
+
+//    OpenShiftIoDashboardPage.clickProfile();
+//    OpenShiftIoDashboardPage.clickupdateProfileButton();    
+//    OpenShiftIoDashboardPage.clickupdateTenantButton();
+
+    /* Access the profile page */
+    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+
+    /* Access the update profile page */
+    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+    /* Update the tenant */
+    OpenShiftUpdateProfilePage.clickupdateTenantButton();
+
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+
+    /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
+    OpenShiftIoDashboardPage.clickStatusIcon();
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT);
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
+    browser.sleep(constants.LONG_WAIT);
+
+    return OpenShiftIoDashboardPage;
+
+  },
+
+
+
+
+
 /*
  * Create fixed length string - used to generate large strings
  */
