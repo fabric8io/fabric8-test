@@ -13,7 +13,8 @@
 
 var testSupport = require('../testSupport'),
     constants = require("../constants"),
-    OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page');
+    OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page'),
+    OpenShiftProfilePage = require('../page-objects/openshift-io-profile.page');
 
 var until = protractor.ExpectedConditions;
 
@@ -309,6 +310,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[2]/status-info/span/span[contains(@class,'pficon-ok')]"));
   }
 
+  
   get updateProfileButton () {
     return element(by.xpath(".//button[contains (text(), 'Update Profile')]"));
   }
@@ -321,7 +323,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
 
   get updateTenantButton () {
-    return element(by.xpath(".//button[contains (text(), 'Update tenant')]"));
+    return element(by.xpath(".//button[contains (text(), 'Update Tenant')]"));
   }
   clickupdateTenantButton () {
     browser.wait(until.elementToBeClickable(this.updateTenantButton), constants.LONG_WAIT, 'Failed to find element updateTenantButton');
@@ -330,7 +332,55 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     });
     return;
   }
+  /*
+  get cleanTenantButton () {
+    return element(by.xpath(".//button[contains (text(), 'Reset Environment')]"));
+  }
+  clickCleanTenantButton () {
+    browser.wait(until.elementToBeClickable(this.cleanTenantButton), constants.LONG_WAIT, 'Failed to find element cleanTenantButton');
+    this.cleanTenantButton.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:cleanTenantButton");
+    });
+    return;
+  }
 
+  get eraseOsioEnvButton () {
+    return element(by.xpath(".//button[contains (text(), 'Erase My OpenShift.io Environment')]"));
+  }
+  clickEraseOsioEnvButton () {
+    browser.wait(until.elementToBeClickable(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
+    this.eraseOsioEnvButton.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvButton");
+    });
+    return;
+  }
+
+  get eraseOsioEnvUsername () {
+    return element(by.xpath(".//input[contains (@name,'username')]"));
+  }
+  clickEraseOsioEnvUsername () {
+    browser.wait(until.elementToBeClickable(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
+    this.eraseOsioEnvUsername.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvUsername");
+    });
+    return;
+  }
+  typeEraseOsioEnvUsername (usernameString) {
+    browser.wait(until.elementToBeClickable(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
+    return this.eraseOsioEnvUsername.sendKeys(usernameString);
+  }
+
+  get confirmEraseOsioEnvButton () {
+    return element(by.xpath(".//button[contains (text(), 'I understand my actions - erase my environment')]"));
+  }
+  clickConfirmEraseOsioEnvButton () {
+    browser.wait(until.elementToBeClickable(this.confirmEraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element confirmEraseOsioEnvButton');
+    this.confirmEraseOsioEnvButton.click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:confirmEraseOsioEnvButton");
+    });
+    return;
+  }
+  */
 
   /* Profile drop down selection */
   get profile () {
@@ -342,7 +392,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     this.profile.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:profile");
     });
-    return;
+    return new OpenShiftProfilePage();
   }
 
   /* Help drop down selection */
