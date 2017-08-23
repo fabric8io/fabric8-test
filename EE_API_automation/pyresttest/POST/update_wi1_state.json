@@ -1,0 +1,1 @@
+{"data":{"id":"$wiid","attributes":{"version":2,"system.state":"resolved"},"links":{"self":"https://api.openshift.io/api/spaces/$spaceid/workitems/$wiid"},"type":"workitems"}}

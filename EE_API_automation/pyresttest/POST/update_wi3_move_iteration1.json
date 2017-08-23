@@ -1,0 +1,1 @@
+{"data":{"id":"$wi3_id","attributes":{"version":0},"links":{"self":"$wi3_link"},"type":"workitems","relationships":{"iteration":{"data":{"id":"$space_iteration1_id","type":"iteration"}}}}}

@@ -1,0 +1,384 @@
+---
+-   config:
+    -   testset:    "osio planner-platform api test set"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          'fixedspacename':  'space4test',
+          'space_iteration1':    'spaceiter4test1',
+          'space_iteration2':    'spaceiter4test2',
+          'child_iteration1':    'childiter4space1',
+          'child_area_name1':    'childarea4test1',
+          'witypebug':   '26787039-b68f-4e28-8814-c2f93be1ef4e',
+          'wilinktype_blocked_by':  'aad2a4ad-d601-4104-9804-2c977ca2e0c1',
+          'wititle1':   'WI_1_CREATED_VIA_API_TEST',
+          'wititle2':   'WI_2_CREATED_VIA_API_TEST',
+          'wititle3':   'WI_3_CREATED_VIA_API_TEST',
+          'widesc1':    'WI DESCRIPTION',
+          'widesc2':    'WI DESCRIPTION. Edited via APIs'
+          }
+
+-   test:
+    -   name:   "Find logged-in User Details"
+    -   url:    {'template':  "/api/users?filter[username]=$userid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'loggedin_user_id': {'jsonpath_mini': 'data.0.id'}
+        -   'loggedin_user_name': {'jsonpath_mini': 'data.0.attributes.username'}
+
+    #Replace with https://api.openshift.io/api/namedspaces/rgarg-1/space4test
+    #GET/404
+    #{"errors":[{"code":"not_found","detail":"space with id 'space4test' not found","status":"404","title":"Not found error"}]}
+-   test:
+    -   name:   "Find a Space"
+    -   url:    {'template':  "/api/search/spaces?q=$fixedspacename"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.0.id'}
+
+-   test:
+    -   name:   "Delete the pre-existing Space - if any" 
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200, 400]
+
+-   test:
+    -   name:   "Create a brand new Space"
+    -   url:    "/api/spaces"
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_space.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$fixedspacename'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
+
+-   test:
+    -   name:   "Get space collaborators"
+    -   url:    {'template':  "/api/spaces/$spaceid/collaborators"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   extract_test:   {jsonpath_mini: "data.0",  test: "exists"}
+    -   extract_binds:
+        -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
+        -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
+        -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
+        -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
+
+-   test:
+    -   name:   "Get more Space details"
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
+
+-   test:
+    -   name:   "Query by Space - No Workitems"
+    -   url:    {'template':  '/api/search?filter[expression]={"space":"$spaceid"}'}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "links.first", comparator: "contains",   expected:   {template: 'filter[expression]={"space":"$spaceid"}'}}
+        -   compare:    {jsonpath_mini: "links.last", comparator: "contains",   expected:   {template: 'filter[expression]={"space":"$spaceid"}'}}
+        -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   0}
+        -   extract_test:   {jsonpath_mini: "data.0",  test: "not_exists"}
+
+-   test:
+    -   name:   "Get Areas under a Space - No child Space"
+    -   url:    {'template':  "/api/spaces/$spaceid/areas"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.0.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.0.attributes.parent_path_resolved", comparator: "eq",   expected:   '/'}
+        -   compare:    {jsonpath_mini: "data.0.relationships.space.data.id",   comparator: "eq",   expected:   {template: '$spaceid'}}
+        -   compare:    {jsonpath_mini: "data.0.type",   comparator: "eq",   expected:   "areas"}
+        -   extract_test:   {jsonpath_mini: "data.1",  test: "not_exists"}
+    -   extract_binds:
+        -   'parent_area_id': {'jsonpath_mini': 'data.0.id'}
+        -   'parent_area_name': {'jsonpath_mini': 'data.0.attributes.name'}
+
+-   test:
+    -   name:   "Create a new child Area"
+    -   url:    {'template':  "/api/areas/$parent_area_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_child_area.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$child_area_name'}}
+        -   compare:    {jsonpath_mini: "data.attributes.parent_path_resolved", comparator: "contains",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.parent.data.id", comparator: "eq",   expected:   {template: '$parent_area_id'}}
+        -   compare:    {jsonpath_mini: "data.relationships.space.data.id", comparator: "eq",   expected:   {template: '$spaceid'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "areas"}
+    -   extract_binds:
+        -   'child_area_id': {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Create a new Space-Iteration1"
+    -   url:    {'template':  "/api/spaces/$spaceid/iterations"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_space_iteration1.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$space_iteration1'}}
+        -   compare:    {jsonpath_mini: "data.attributes.description", comparator: "eq",   expected:   "Space Iteration for test"}
+        -   compare:    {jsonpath_mini: "data.attributes.resolved_parent_path", comparator: "contains",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.space.data.id", comparator: "eq",   expected:   {template: '$spaceid'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "iterations"}
+    -   extract_binds:
+        -   'space_iteration1_id': {'jsonpath_mini': 'data.id'}
+        -   'root_iteration_id': {'jsonpath_mini': 'data.relationships.parent.data.id'}
+
+-   test:
+    -   name:   "Create a new Space-Iteration2"
+    -   url:    {'template':  "/api/spaces/$spaceid/iterations"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_space_iteration2.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+    -   extract_binds:
+        -   'space_iteration2_id': {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Create a Workitem-2 in Space-Iteration1 - No Assignee"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_wi2.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle2'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc1'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   0}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypebug'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+        -   compare:    {jsonpath_mini: "data.relationships.iteration.data.id",   comparator: "eq",   expected:   {template: '$space_iteration1_id'}}
+    -   extract_binds:
+        -   'wi2_id':    {jsonpath_mini: 'data.id'}
+        -   'wi2_area_id':   {jsonpath_mini: 'data.relationships.area.data.id'}
+        -   'wi2_link':   {jsonpath_mini: 'data.links.self'}
+
+-   test:
+    -   name:   "Create a Workitem-3 in Space-Iteration2 - No Assignee"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_wi3.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle3'}}
+        -   compare:    {jsonpath_mini: "data.relationships.iteration.data.id",   comparator: "eq",   expected:   {template: '$space_iteration2_id'}}
+    -   extract_binds:
+        -   'wi3_id':    {jsonpath_mini: 'data.id'}
+        -   'wi3_area_id':   {jsonpath_mini: 'data.relationships.area.data.id'}
+        -   'wi3_link':   {jsonpath_mini: 'data.links.self'}
+
+-   test:
+    -   name:   "Query by Area AND Iteration - Workitems not present"
+    -   url:    {'template':  '/api/search?filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration2_id"}]}'}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "links.first", comparator: "contains",   expected:   {template: 'filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration2_id"}]}'}}
+        -   compare:    {jsonpath_mini: "links.last", comparator: "contains",   expected:   {template: 'filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration2_id"}]}'}}
+        -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   0}
+
+-   test:
+    -   name:   "Update Workitem-2 in Space-Iteration1 - Move to Child Area"
+    -   url:    {'template':  "/api/workitems/$wi2_id"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/update_wi2_move_childarea.json'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   2}
+        -   compare:    {jsonpath_mini: "data.relationships.area.data.id'",   comparator: "eq",   expected:   {template: '$child_area_id'}}
+
+-   test:
+    -   name:   "Query by Area=Child_Area AND Iteration=1 -- Workitem-2 is present"
+    -   url:    {'template':  '/api/search?filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration1_id"}]}'}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.0.id",   comparator: "eq",   expected:   {template:   '$wi2_id'}}
+        -   compare:    {jsonpath_mini: "links.first", comparator: "contains",   expected:   {template: 'filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration1_id"}]}'}}
+        -   compare:    {jsonpath_mini: "links.last", comparator: "contains",   expected:   {template: 'filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration1_id"}]}'}}
+        -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   1}
+
+-   test:
+    -   name:   "Update Workitem-3 in Space-Iteration2 -- Move to Space-Iteration1"
+    -   url:    {'template':  "/api/workitems/$wi3_id"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/update_wi3_move_iteration1.json'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   2}
+        -   compare:    {jsonpath_mini: "data.relationships.area.data.id'",   comparator: "eq",   expected:   {template: '$wi3_area_id'}}
+
+-   test:
+    -   name:   "Query by Area=Child_Area AND Iteration=2 -- Workitem-2 is present but Workitem-3 is not"
+    -   url:    {'template':  '/api/search?filter[expression]={"$AND":[{"space":"$spaceid"},{"area":"$child_area_id"},{"iteration":"$space_iteration1_id"}]}'}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.0.id",   comparator: "eq",   expected:   {template:   '$wi2_id'}}
+        -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   1}
+
+-   test:
+    -   name:   "Create a Workitem-1 in Backlog - No Assignee"
+    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_new_wi1.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc1'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   0}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypebug'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+        -   extract_test:   {jsonpath_mini: "data.relationships.assignees.data",  test: "not_exists"}
+    -   extract_binds:
+        -   'wiid': {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Update Workitem-1 in Backlog - Change Description"
+    -   url:    {'template':  "/api/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/update_wi1_description.json'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   1}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypebug'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+        -   extract_test:   {jsonpath_mini: "data.relationships.assignees.data",  test: "not_exists"}
+
+-   test:
+    -   name:   "Update Workitem-1 in Backlog - Change Assignee"
+    -   url:    {'template':  "/api/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/update_wi1_assignee.json'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "new"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   2}
+        -   compare:    {jsonpath_mini: "data.relationships.assignees.data.0.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypebug'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+
+-   test:
+    -   name:   "Update Workitem-1 in Backlog - Change State"
+    -   url:    {'template':  "/api/workitems/$wiid"}
+    -   method: "PATCH"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/update_wi1_state.json'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jmespath: "data.attributes.\"system.title\"", comparator: "eq",   expected:   {template: '$wititle1'}}
+        -   compare:    {jmespath: "data.attributes.\"system.state\"", comparator: "eq",   expected:   "resolved"}
+        -   compare:    {jmespath: "data.attributes.\"system.description\"", comparator: "eq",   expected:   {template: '$widesc2'}}
+        -   compare:    {jsonpath_mini: "data.attributes.version", comparator: "eq",   expected:   3}
+        -   compare:    {jsonpath_mini: "data.relationships.assignees.data.0.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.relationships.baseType.data.id",   comparator: "eq",   expected:   {template: '$witypebug'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   'workitems'}
+
+-   test:
+    -   name:   "Link Workitem-1 to Workitem-3 -- WI-1 is-blocked by WI-3"
+    -   url:    {'template':  "/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/link_wi1_blocked_by_wi3.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.relationships.link_type.data.id",   comparator: "eq",   expected:   {template: '$wilinktype_blocked_by'}}
+        -   compare:    {jsonpath_mini: "data.relationships.source.data.id",   comparator: "eq",   expected:   {template: '$wiid_iter2'}}
+        -   compare:    {jsonpath_mini: "data.relationships.target.data.id",   comparator: "eq",   expected:   {template: '$wiid'}}
+        -   compare:    {jsonpath_mini: "included.0.attributes.reverse_name",   comparator: "eq",   expected:   "blocked by"}
+    -   extract_binds:
+        -   'link_id_1': {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Verify Link between Workitem-1 & Workitem-3 -- WI-1 is-blocked by WI-3"
+    -   url:    {'template':  "/api/workitems/$wiid/relationships/links"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200, 304]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.0.relationships.link_type.data.id",   comparator: "eq",   expected:   {template: '$wilinktype_blocked_by'}}
+        -   compare:    {jsonpath_mini: "data.0.relationships.source.data.id",   comparator: "eq",   expected:   {template: '$wiid_iter2'}}
+        -   compare:    {jsonpath_mini: "data.0.relationships.target.data.id",   comparator: "eq",   expected:   {template: '$wiid'}}
+        -   compare:    {jsonpath_mini: "included.0.attributes.reverse_name",   comparator: "eq",   expected:   "blocked by"}
+        -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   1}
+
+-   test:
+    -   name:   "Delete Link between Workitem-1 & Workitem-3 -- WI-1 is-blocked by WI-3"
+    -   url:    {'template':  "/api/workitemlinks/$link_id_1"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]

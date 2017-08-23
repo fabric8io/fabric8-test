@@ -1,0 +1,1 @@
+{"data":{"attributes":{"system.state":"new","system.title":"$wititle3","system.description":"$widesc1"},"relationships":{"baseType":{"data":{"id":"$witypebug","type":"workitemtypes"}},"iteration":{"data":{"id":"$space_iteration2_id","type":"iteration"}}},"type":"workitems"}}
