@@ -59,7 +59,7 @@ docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./tar
 
 files = `ls -1 target/screenshots`
 for file in $files;
-do docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2;
+do docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2_$file;
 done
 
 # Test results to archive - TODO - how to archive these results?
