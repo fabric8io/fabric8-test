@@ -99,10 +99,9 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
 
-    /* For the purposes of this test - ignore all 'toast' popup warnings */
-    OpenShiftIoDashboardPage.waitForToastToClose();
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-    OpenShiftIoDashboardPage.clickLogOut();
+    /* ----------------------------------------------------------*/
+    /* Step 30) In OSIO, log out */
+    testSupport.logoutUser(OpenShiftIoDashboardPage);
   });
 
 });
