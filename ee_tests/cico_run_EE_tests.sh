@@ -6,6 +6,9 @@ set +x
 # Do not exit on failure so that artifacts can be archived
 set +e
 
+# Setup password used to rsync/archive test reuslts file
+cp ~/artifacts.key ./password_file
+
 # Source environment variables of the jenkins slave
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
@@ -36,8 +39,7 @@ mkdir -p dist && docker run --detach=true --name=fabric8-ui-builder --user=root 
 # Build
 docker exec fabric8-ui-builder npm install
 
-# Clean up the test user account's resources in OpenShift Online
-
+# Provide oc client to tests Clean up the test user account's resources in OpenShift Online
 docker exec fabric8-ui-builder wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
 docker exec fabric8-ui-builder tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
 docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
@@ -46,12 +48,15 @@ docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-l
 docker exec fabric8-ui-builder ./run_EE_tests.sh $1
 RTN_CODE=$?
 
-# docker exec fabric8-ui-builder /bin/bash -c "export RSYNC_PASSWORD=$ARTIFACT_PASS"
-# docker exec fabric8-ui-builder rsync -PHva target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
+# Archive test reuslts file
+docker exec fabric8-ui-builder ls -l ./password_file
+docker exec fabric8-ui-builder ls -l ./target/screenshots/my-report.html
+docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
-# Test results to archive
+# Test results to archive - TODO - how to archive these results?
 # docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/target/ .
 # docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/functional_tests.log target
 
 exit $RTN_CODE
+
 
