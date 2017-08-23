@@ -64,7 +64,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 const GITHUB_NAME = "osiotestmachine";
 const IMPORT_NAME = "vertxbasic";
 
-describe('openshift.io End-to-End POC test - Scenario - Existing user: ', function () {
+describe('openshift.io End-to-End POC test - Scenario - Create new space: ', function () {
   var page, items, browserMode;
 
   /* Set up for each function */
