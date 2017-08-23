@@ -102,27 +102,8 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
 
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickCreateSpaceUnderLeftNavigationBar();  
-
     var spaceTime = testSupport.returnTime();
-    OpenShiftIoDashboardPage.typeNewSpaceName((spaceTime));
-    OpenShiftIoDashboardPage.typeDevProcess("Scenario Driven Planning");
-    OpenShiftIoDashboardPage.clickCreateSpaceButton();   
-
-    /* For the purposes of this test - ignore all 'toast' popup warnings */
-    OpenShiftIoDashboardPage.waitForToastToClose();
-    OpenShiftIoSpaceHomePage = OpenShiftIoDashboardPage.clickNoThanksButton();
-
-    /* In the space home page, verify URL and end the test */
-    browser.wait(until.urlContains('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT);
-    browser.wait(until.urlIs('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime), constants.WAIT); 
-    expect(browser.getCurrentUrl()).toEqual('https://openshift.io/' + browser.params.login.user + '/'+ spaceTime);
-
-    browser.getCurrentUrl().then(function (text) { 
-       console.log ('EE POC test - new space URL = ' + text);
-    });
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
@@ -202,12 +183,8 @@ describe('openshift.io End-to-End POC test - Scenario - Existing user: ', functi
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
+    testSupport.logoutUser(OpenShiftIoDashboardPage);
 
-    /* For the purposes of this test - ignore all 'toast' popup warnings */
-    OpenShiftIoDashboardPage.waitForToastToClose();
-
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-    OpenShiftIoDashboardPage.clickLogOut();
   });
 
 });

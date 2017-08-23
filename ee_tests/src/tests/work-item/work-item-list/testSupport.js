@@ -161,8 +161,8 @@ waitForText: function (elementFinder) {
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT);
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT);
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start");
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start";
     browser.sleep(constants.LONG_WAIT);
 
     return OpenShiftIoDashboardPage;

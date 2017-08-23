@@ -191,11 +191,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     /* Step 30) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);
 
-//    /* For the purposes of this test - ignore all 'toast' popup warnings */
-//    OpenShiftIoDashboardPage.waitForToastToClose();
-//    OpenShiftIoDashboardPage.clickrightNavigationBar();
-//    OpenShiftIoDashboardPage.clickLogOut();
-
   });
 
 });
