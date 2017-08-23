@@ -136,7 +136,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime);
+    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime);
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
@@ -168,10 +168,20 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 //    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
 
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+    browser.sleep(constants.LONGER_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
+    });
 
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
+
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_pipeline_promote.png');
+    });
+
+    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
     OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/

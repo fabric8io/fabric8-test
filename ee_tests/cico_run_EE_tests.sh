@@ -54,7 +54,13 @@ docker exec fabric8-ui-builder chmod 600 password_file
 docker exec fabric8-ui-builder chown root password_file 
 docker exec fabric8-ui-builder ls -l password_file
 docker exec fabric8-ui-builder ls -l ./target/screenshots/my-report.html
+
 docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
+
+files = `ls -1 target/screenshots`
+for file in $files;
+do docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2;
+done
 
 # Test results to archive - TODO - how to archive these results?
 # docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/target/ .

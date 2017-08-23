@@ -150,7 +150,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime + "/create");
+    browser.get(browser.params.login.user + "/" + browser.params.login.user + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
     
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
@@ -185,7 +185,12 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
         });
     });
 
-//    /* Look for the project in the Che navigator */
+    browser.sleep(constants.LONG_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_import_che.png');
+    });
+
+    /* Look for the project in the Che navigator */
     OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText().then(function (text) { 
        console.log ('EE POC test - projectName = ' + text);
     });

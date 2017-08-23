@@ -59,6 +59,7 @@ class OpenShiftIoPipelinePage {
     return element(by.xpath(xpathString));
   }
   clickInputRequiredByPipelineByName (nameString) {
+    
     browser.wait(until.elementToBeClickable(this.inputRequiredByPipelineByName(nameString)), constants.LONGEST_WAIT, 'Failed to find element inputRequiredByPipelineByName');
     this.inputRequiredByPipelineByName(nameString).click().then(function(){
       console.log("OpenShiftIoPipelinesPage - clicked element: inputRequiredByPipelineByName");

@@ -134,7 +134,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get("https://openshift.io/" + browser.params.login.user + "/" + spaceTime);
+    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime);
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
@@ -169,10 +169,22 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
 //    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
     
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
+    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+    browser.sleep(constants.LONGER_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_import_pipeline_promote.png');
+    });
 
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
+
+    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+    browser.sleep(constants.LONGER_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_import_pipeline_promote.png');
+    });
+
+    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
     OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
