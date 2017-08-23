@@ -1,0 +1,20 @@
+1) Install Python pip
+
+- sudo dnf install python-pip
+OR
+- sudo yum install python-pip
+OR
+- wget https://bootstrap.pypa.io/get-pip.py && sudo python get-pip.py
+------------------------------------------------------------------------
+2) Install pyresttest (>=1.7.1)
+
+a) git clone https://github.com/svanoort/pyresttest.git
+b) cd pyresttest
+c) sudo python setup.py install
+------------------------------------------------------------------------
+3) Install pyresttest dependencies (requirements.txt is availablein the current dir)
+
+pip install -U -r requirements.txt
+
+
+

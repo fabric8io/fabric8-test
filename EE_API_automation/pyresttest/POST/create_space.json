@@ -1,0 +1,1 @@
+{"data":{"name":"$fixedspacename","path":"","attributes":{"name":"$fixedspacename"},"type":"spaces","privateSpace":false,"process":{"name":"","description":""},"relationships":{"areas":{"links":{"related":""}},"iterations":{"links":{"related":""}},"owned-by":{"data":{"id":"$loggedin_user_id","type":"identities"}}}}}

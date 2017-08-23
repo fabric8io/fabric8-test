@@ -1,0 +1,1 @@
+{"data":{"type":"workitemlinks","attributes":{"version":0},"relationships":{"link_type":{"data":{"id":"$wilinktype_blocked","type":"workitemlinktypes"}},"source":{"data":{"id":"$wi4_id","type":"workitems"}},"target":{"data":{"id":"$wiid","type":"workitems"}}}}}
