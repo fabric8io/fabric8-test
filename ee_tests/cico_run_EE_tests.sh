@@ -7,7 +7,7 @@ set +x
 set +e
 
 # Setup password used to rsync/archive test reuslts file
-cp ~/artifacts.key ./password_file
+cp ../artifacts.key ./password_file
 
 # Source environment variables of the jenkins slave
 # that might interest this worker.
