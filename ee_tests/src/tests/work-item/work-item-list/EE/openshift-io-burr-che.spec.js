@@ -175,6 +175,10 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
         });
     });
 
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_che.png');
+    });
+
     /* Look for the project in the Che navigator */
     OpenShiftIoChePage.projectRootByName(spaceTime).getText().then(function (text) { 
        console.log ('EE POC test - projectName = ' + text);
