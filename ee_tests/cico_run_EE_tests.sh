@@ -50,7 +50,9 @@ docker exec fabric8-ui-builder ./run_EE_tests.sh $1
 RTN_CODE=$?
 
 # Archive test reuslts file
-docker exec fabric8-ui-builder chmod 600 password_file && ls -l password_file
+docker exec fabric8-ui-builder chmod 600 password_file 
+docker exec fabric8-ui-builder chown root password_file 
+docker exec fabric8-ui-builder ls -l password_file
 docker exec fabric8-ui-builder ls -l ./target/screenshots/my-report.html
 docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
