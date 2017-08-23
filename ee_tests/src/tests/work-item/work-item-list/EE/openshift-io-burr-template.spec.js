@@ -32,7 +32,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 /* TODO - convert this into a test parameter */
 const GITHUB_NAME = "osiotestmachine";
 
-describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che: ', function () {
+describe('openshift.io End-to-End POC test - Scenario - Template: ', function () {
   var page, items, browserMode;
 
   /* Set up for each function */
@@ -51,7 +51,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
   });
 
   /* Simple test for registered user */
-  it("should perform Burr's demo - CREATE project - Run Che", function() {
+  it("should perform Burr's demo - CREATE project - Run Test", function() {
 
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;    
