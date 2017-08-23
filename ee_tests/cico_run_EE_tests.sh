@@ -8,6 +8,7 @@ set +e
 
 # Setup password used to rsync/archive test reuslts file
 cp ../artifacts.key ./password_file
+chmod 600 ./password_file
 
 # Source environment variables of the jenkins slave
 # that might interest this worker.
