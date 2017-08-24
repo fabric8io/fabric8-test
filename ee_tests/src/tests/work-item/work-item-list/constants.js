@@ -19,7 +19,15 @@ function define(name, value) {
     });
 }
 
+/* Timers */
 define("WAIT", 3000);   /* 3 seconds */
 define("LONG_WAIT", 30000);     /* 30 sec */
 define("LONGER_WAIT", 180000);     /* 3 min */
 define("LONGEST_WAIT", 600000);      /* 10 minutes */
+
+/* Quickstart names */
+define(VERTX_BASIC, "Vert.x - Basic");
+define(VERTX_CONFIGMAP, "Vert.x - ConfigMap");
+define(SPRINGBOOT_BASIC, "Spring Boot - Basic");
+define(VERTX_HEALTH_CHECK, "Vert.x Health Check Example");
+define(SPRINGBOOT_HEALTH_cHECK, "Spring Boot - Health Check");

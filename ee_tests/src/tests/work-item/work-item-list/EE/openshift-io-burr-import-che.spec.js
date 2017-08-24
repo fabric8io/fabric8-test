@@ -150,7 +150,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.login.user + "/" + browser.params.login.user + "/" + spaceTime + "/create");
+    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
     
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
