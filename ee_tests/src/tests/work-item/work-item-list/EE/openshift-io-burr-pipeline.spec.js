@@ -75,12 +75,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
-
-// Commented out pending creation of Jenkins secret for OSO token
-    /* Clean the user account's OpenShift Online resources */
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-    console.log(result);
   });
   
   /* Tests must reset the browser so that the test can logout/login cleanly */

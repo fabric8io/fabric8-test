@@ -75,12 +75,6 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
-
-// Commented out pending creation of Jenkins secret for OSO token
-    /* Clean the user account's OpenShift Online resources */
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-    console.log(result);
   });
 
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -90,17 +84,6 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
 
   /* Simple test for registered user */
   it("should perform Burr's demo - IMPORT project - Run Che", function() {
-
-//    var webdriver = require("selenium-webdriver");
-//    var chrome = require("selenium-webdriver/chrome");
-//    var options = new chrome.Options();
-//    var path = require('chromedriver').path;
-//    var service = new chrome.ServiceBuilder(path).build();
-//    options.addArguments('disable-popup-blocking');
-//    chrome.setDefaultService(service);
-//    var driver = new webdriver.Builder()
-//      .withCapabilities(webdriver.Capabilities.chrome())
-//      .build();
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
