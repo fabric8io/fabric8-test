@@ -409,6 +409,18 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
 
   /* Quickstart - Select technology stack and pipeline */
 
+  /* Quickstarts list */
+  get quickStartList () {
+    return element(by.xpath(".//app-generator-single-selection-dropdown"));
+  }
+  clickQuickStartList () {
+    browser.wait(until.elementToBeClickable(this.quickStartList), constants.LONG_WAIT, 'Failed to find element quickStartList');
+    this.quickStartList.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartList");
+    });
+    return;
+  }
+
   /* Quickstarts by name */
   quickStartByName (nameString) {
     var xpathString = ".//div[contains (@class,'item-name')][contains (text(),'" + nameString + "’)]";
