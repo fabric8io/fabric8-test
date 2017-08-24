@@ -23,7 +23,7 @@ function define(name, value) {
 define("WAIT", 3000);   /* 3 seconds */
 define("LONG_WAIT", 30000);     /* 30 sec */
 define("LONGER_WAIT", 180000);     /* 3 min */
-define("LONGEST_WAIT", 600000);      /* 10 minutes */
+define("LONGEST_WAIT", 300000);      /* 5 minutes */
 
 /* Quickstart names */
 define("VERTX_BASIC", "Vert.x - Basic");
