@@ -204,6 +204,13 @@ waitForText: function (elementFinder) {
   },
 
 /* 
+  * Create new quickstart - accept ALL defaults 
+  */
+  createQuickstartDefaults: function (spaceHomePage, dashboardPage) {
+    
+      },
+        
+/* 
   * Log user out of OSIO
   */
   logoutUser: function (page) {
