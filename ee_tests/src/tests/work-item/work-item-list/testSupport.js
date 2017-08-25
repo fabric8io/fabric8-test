@@ -206,10 +206,67 @@ waitForText: function (elementFinder) {
 /* 
   * Create new quickstart - accept ALL defaults 
   */
-  createQuickstartDefaults: function (spaceHomePage, dashboardPage) {
-    
-      },
+  createQuickstartDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage) {    
+
+    OpenShiftIoDashboardPage.waitForToastToClose();
+    OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
+
+    OpenShiftIoSpaceHomePage.clickTechnologyStack();
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
+    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+    OpenShiftIoSpaceHomePage.clickOkButton();
+
+    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+    OpenShiftIoDashboardPage.waitForToastToClose();
+  },
         
+ /* 
+  * Create new quickstart - import - accept ALL defaults 
+  */
+  importProjectDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, projectName) {    
+
+    OpenShiftIoDashboardPage.waitForToastToClose();
+    OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
+
+    OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
+    OpenShiftIoSpaceHomePage.clickImportCodebaseByName (projectName);
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2();  // End of dialog page 2/3
+    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+    OpenShiftIoSpaceHomePage.clickOkButton();
+
+    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+    OpenShiftIoDashboardPage.waitForToastToClose();    
+  },
+
+ /* 
+  * Create new quickstart - select quickstart by name
+  */
+  createQuickstartDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickstartName) {    
+
+    OpenShiftIoDashboardPage.waitForToastToClose();
+    OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
+    OpenShiftIoSpaceHomePage.clickTechnologyStack();
+ 
+    // Select quickstart by name
+    OpenShiftIoSpaceHomePage.clickQuickStartList();
+    OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
+    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+    OpenShiftIoSpaceHomePage.clickOkButton();
+
+    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+    OpenShiftIoDashboardPage.waitForToastToClose();
+        
+      },
+
+
 /* 
   * Log user out of OSIO
   */

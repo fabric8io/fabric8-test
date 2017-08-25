@@ -110,19 +110,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
 
- //   OpenShiftIoDashboardPage.waitForToastToClose();
-    OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
-
-    OpenShiftIoSpaceHomePage.clickTechnologyStack();
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
-    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
-    OpenShiftIoSpaceHomePage.clickOkButton();
-
-    /* Trap 'Application Generation Error' here - if found, fail test and exit */
-    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    OpenShiftIoDashboardPage.waitForToastToClose();
+    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage);    
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
