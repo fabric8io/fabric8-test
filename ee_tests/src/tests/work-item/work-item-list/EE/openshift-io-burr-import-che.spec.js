@@ -101,21 +101,10 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     var spaceTime = testSupport.returnTime();
     OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
 
-    /* ----------------------------------------------------------*/
-    /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
+      /* ----------------------------------------------------------*/
+    /* Step 3) In OSIO, import quickstart to space - accept all defaults */
 
-    OpenShiftIoDashboardPage.waitForToastToClose();
-    OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
-
-    OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
-    OpenShiftIoSpaceHomePage.clickImportCodebaseByName (IMPORT_NAME);
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2();  // End of dialog page 2/3
-    OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
-    OpenShiftIoSpaceHomePage.clickOkButton();
-
-    /* Trap 'Application Generation Error' here - if found, fail test and exit */
-    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    OpenShiftIoDashboardPage.waitForToastToClose();
+    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, IMPORT_NAME);
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
