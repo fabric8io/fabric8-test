@@ -57,7 +57,7 @@ docker exec fabric8-ui-builder ls -l ./target/screenshots
 
 docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
-files=`docker exec fabric8-ui-builder ls -1 ./target/screenshots/*.png`
+files=`docker exec fabric8-ui-builder ls -1 ./target/screenshots`
 
 for file in $files;
 do docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2_$file;
