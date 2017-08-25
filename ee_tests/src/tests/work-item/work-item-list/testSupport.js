@@ -142,22 +142,22 @@ waitForText: function (elementFinder) {
     browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
     
-    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
-       wait until Che and Jenkins pods are running before starting the test. */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-
-    /* Access the profile page */
-    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-
-    /* Access the update profile page */
-    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-    /* Update the tenant */
-    OpenShiftUpdateProfilePage.clickupdateTenantButton();
-
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+//    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+//       wait until Che and Jenkins pods are running before starting the test. */
+//    OpenShiftIoDashboardPage.clickrightNavigationBar();
+//
+//    /* Access the profile page */
+//    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+//
+//    /* Access the update profile page */
+//    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+//
+//    /* Update the tenant */
+//    OpenShiftUpdateProfilePage.clickupdateTenantButton();
+//
+//    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+//    browser.sleep(constants.WAIT);
+//    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
