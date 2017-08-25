@@ -161,8 +161,8 @@ waitForText: function (elementFinder) {
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update");
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update";
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
     browser.sleep(constants.LONG_WAIT);
 
     return OpenShiftIoDashboardPage;
@@ -245,7 +245,7 @@ waitForText: function (elementFinder) {
  /* 
   * Create new quickstart - select quickstart by name
   */
-  createQuickstartDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickstartName) {    
+  createQuickstartByNameDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickstartName) {    
 
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  

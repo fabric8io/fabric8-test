@@ -124,7 +124,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 
     /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
     /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName - see: https://github.com/openshiftio/openshift.io/issues/595');
     console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
     expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
 

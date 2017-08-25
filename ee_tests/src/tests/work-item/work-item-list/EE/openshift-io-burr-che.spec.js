@@ -149,13 +149,14 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
         console.log("Number of browser tabs = " + handles.length);
         if (handles.length == 1) {
-          console.log ("ERROR - Che browser window did not open");
+          console.log ("ERROR - Che browser window did not open - see: https://github.com/openshiftio/openshift.io/issues/618");
           var process = require('child_process').execSync;
           var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
           console.log(result);
         }
 
-        expect(handles.length).toBe(2);
+        /* Undocumented feature in Jasmine - adding a text string to the expect statement */
+        expect(handles.length).toBe(2, "total of 2 browser tabs is expected");
 
         browser.switchTo().window(handles[1]);
         browser.getCurrentUrl().then(function(url) {
