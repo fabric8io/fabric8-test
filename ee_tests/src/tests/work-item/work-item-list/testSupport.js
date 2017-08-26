@@ -160,10 +160,12 @@ waitForText: function (elementFinder) {
 //    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
-    OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
-    browser.sleep(constants.LONG_WAIT);
+//    OpenShiftIoDashboardPage.clickStatusIcon();
+//    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+//    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+//    browser.sleep(constants.LONG_WAIT);
+
+    browser.sleep(constants.RESET_TENANT_WAIT);
 
     return OpenShiftIoDashboardPage;
 
