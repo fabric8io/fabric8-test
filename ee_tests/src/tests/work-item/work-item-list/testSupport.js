@@ -165,7 +165,7 @@ waitForText: function (elementFinder) {
 //    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
 //    browser.sleep(constants.LONG_WAIT);
 
-    browser.sleep(constants.LONGEST_WAIT);
+    browser.sleep(constants.RESET_TENANT_WAIT);
 
     return OpenShiftIoDashboardPage;
 
