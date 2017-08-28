@@ -1,0 +1,64 @@
+---
+-   config:
+    -   testset:    "osio planner-platform api automation workshop"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          'fixedspacename':  'space4test',
+          }
+
+-   test:
+    -   name:   "Find logged-in User Details"
+    -   url:    {'template':  "/api/users?filter[username]=$userid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'loggedin_user_id': {'jsonpath_mini': 'data.0.id'}
+        -   'loggedin_user_name': {'jsonpath_mini': 'data.0.attributes.username'}
+
+-   test:
+    -   name:   "Find a Space by name using search api"
+    -   url:    {'template':  "/api/search/spaces?q=$fixedspacename"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.0.id'}
+
+-   test:
+    -   name:   "Delete the pre-existing Space - if any" 
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200, 400]
+
+-   test:
+    -   name:   "Create a brand new Space"
+    -   url:    "/api/spaces"
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/create_space.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$fixedspacename'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
+
+-   test:
+    -   name:   "Get Space details using the spaces api"
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
