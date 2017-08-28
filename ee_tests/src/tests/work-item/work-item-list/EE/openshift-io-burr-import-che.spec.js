@@ -116,27 +116,8 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* Step 6) In OSIO, create Che workspace for project   */
 
     /* Start by creating a codebase for the newly created project */
-    browser.sleep(constants.LONG_WAIT);
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
- 
-    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
-    OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
+    OpenShiftIoChePage = testSupport.createCodebaseImport (OpenShiftIoDashboardPage, browser.params.login.user, spaceTime, GITHUB_NAME, IMPORT_NAME);
     
-    OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
-      console.log("Codebases page contents = " + text);
-    });
-
-    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
-    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
-      console.log("Codebase = " + text);
-    });
-
-    OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
-    OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
-
     /* Switch to Che browser tab */
     browser.sleep(constants.LONG_WAIT);
     browser.getAllWindowHandles().then(function (handles) {
@@ -149,9 +130,11 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
           console.log(result);
         }
 
-        expect(handles.length).toBe(2);
+        /* Undocumented feature in Jasmine - adding a text string to the expect statement */
+        expect(handles.length).toBe(2, "total of 2 browser tabs is expected");
 
-        browser.switchTo().window(handles[1]);
+        testSupport.switchToWindow (browser, 1);
+        //browser.switchTo().window(handles[1]);
         browser.getCurrentUrl().then(function(url) {
             console.log("Che workspace URL = " + url);
         });
@@ -169,10 +152,8 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
 
     /* Switch back to the OSIO page */
-    browser.sleep(constants.WAIT);
-    browser.getAllWindowHandles().then(function (handles) {
-        browser.switchTo().window(handles[0]);
-    });
+    testSupport.switchToWindow (browser, 0);
+    
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
