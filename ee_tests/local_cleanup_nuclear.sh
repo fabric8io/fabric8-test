@@ -62,11 +62,14 @@ oc delete imagestream --all -n $1-jenkins
 
 ## Step 4 - Delete Che workspaces
 
-workspaces=`curl -L --header 'Authorization: Bearer $5' http://che-osiotest3141-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"che","id":"[\w-]+' | sed 's/"che","id":"//g'`
+WORKSPACES=`curl -L --header "Authorization: Bearer $5" http://che-$4-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"che","id":"[\w-]+' | sed 's/"che","id":"//g'`
 
 for workspace in $WORKSPACES; 
-do echo "deleting workspace " $workspace ; 
-curl -vLX DELETE -H 'Authorization: Bearer $5' https://che-osiotest3141-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace; 
+do
+    echo "stopping workspace "$workspace
+    curl -vLX DELETE -H "Authorization: Bearer $5" https://che-$4-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace/runtime
+    echo "deleting workspace "$workspace
+    curl -vLX DELETE -H "Authorization: Bearer $5" https://che-$4-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace
 done
 
 ## Step 5 - Delete OSIO spaces - TODO
