@@ -12,7 +12,7 @@ exports.config = {
     useAllAngular2AppRoots: true,
     getPageTimeout: 30000,
     seleniumAddress: 'http://localhost:4444/wd/hub',
-    specs: ['src/tests/**/EE/*burr*.spec.js'],
+    specs: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
     exclude: ['src/tests/**/EE/*none.spec.js'],
     jasmineNodeOpts: {
         defaultTimeoutInterval: 60000
