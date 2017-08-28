@@ -143,6 +143,7 @@ waitForText: function (elementFinder) {
 
     /* Access the clean the tenant page */
     OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+    browser.sleep(constants.WAIT);
     OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
     OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
     OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
@@ -277,7 +278,9 @@ waitForText: function (elementFinder) {
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 
-
+ /*
+  * Create a new codespace
+  */
   createCodebase: function  (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME) {
   
     var OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
@@ -308,6 +311,45 @@ waitForText: function (elementFinder) {
     OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
     return OpenShiftIoChePage;
   },
+
+
+ /*
+  * Create a new codespace for an imported project
+  */
+  createCodebaseImport: function  (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME, IMPORT_NAME) {
+    
+      var OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
+      OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
+      constants = require("./constants");
+      var until = protractor.ExpectedConditions;
+  
+    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+ 
+    /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
+    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
+    OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
+    
+    OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
+      console.log("Codebases page contents = " + text);
+    });
+
+    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
+    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
+      console.log("Codebase = " + text);
+    });
+
+    OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
+    OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
+
+
+      return OpenShiftIoChePage;
+    },
+  
+  
+
 
 
 /* 
