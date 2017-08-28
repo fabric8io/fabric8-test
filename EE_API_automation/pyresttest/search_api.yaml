@@ -4,7 +4,7 @@
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
-          'fixedspacename':  'space4test',
+          'fixedspacename':  'space4apitests',
           'space_iteration1':    'spaceiter4test1',
           'space_iteration2':    'spaceiter4test2',
           'child_area_name1':    'childarea4test1',

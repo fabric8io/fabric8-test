@@ -1,12 +1,14 @@
 ---
+## Import helpers or other test suites 
 - import:  get_a_space.yaml
 
+## define config options used by this test suite
 -   config:
     -   testset:    "osio planner-platform api automation workshop"
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
-          'fixedspacename':  'space4test',
+          'fixedspacename':  'space4apitests',
           'witypebug':   '26787039-b68f-4e28-8814-c2f93be1ef4e',
           'wilinktype_blocked':  'aad2a4ad-d601-4104-9804-2c977ca2e0c1',
           'wilinktype_related':  '355b647b-adc5-46b3-b297-cc54bc0554e6',
@@ -15,6 +17,8 @@
           'widesc1':    'WI DESCRIPTION',
           }
 
+##-----------------Section to fetch Space and Collaborators details----------------##
+## Get space ID 
 -   test:
     -   name:   "Find Space using the namedspaces api"
     -   url:    {'template':  "/api/namedspaces/$userid/$fixedspacename"}
@@ -28,6 +32,7 @@
     -   extract_binds:
         -   'spaceid': {'jsonpath_mini': 'data.id'}
         
+## Get space collaborators 
 -   test:
     -   name:   "Get space collaborators"
     -   url:    {'template':  "/api/spaces/$spaceid/collaborators"}
@@ -38,11 +43,15 @@
         -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   extract_test:   {jsonpath_mini: "data.0",  test: "exists"}
     -   extract_binds:
-        -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
+        -   'useriid': {'jsonpath_mini': 'data.0.attributes.identityID'}
         -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
         -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
         -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
+##-----------------Section to fetch Space and Collaborators details----------------##
 
+## Tests below this line ----------------------------------------------------------------------
+
+## Create a new WI-1
 -   test:
     -   name:   "Create a Workitem-1 in Backlog - No Assignee"
     -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
@@ -62,6 +71,7 @@
     -   extract_binds:
         -   'wiid': {'jsonpath_mini': 'data.id'}
 
+## Create a new WI-4
 -   test:
     -   name:   "Create a Workitem-4 in Backlog - No Assignee"
     -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
@@ -72,6 +82,7 @@
     -   extract_binds:
         -   'wi4_id': {'jsonpath_mini': 'data.id'}
 
+## Link Workitem-1 to Workitem-4
 -   test:
     -   name:   "Link Workitem-1 to Workitem-4 -- WI-1 is-blocked by WI-4"
     -   url:    {'template':  "/api/workitemlinks"}
@@ -90,6 +101,7 @@
     -   extract_binds:
         -   'link_id_1': {'jsonpath_mini': 'data.id'}
 
+## Verify the link between Workitem-1 & Workitem-4
 -   test:
     -   name:   "Verify Link between Workitem-1 & Workitem-4 -- WI-1 is-blocked by WI-4"
     -   url:    {'template':  "/api/workitems/$wiid/relationships/links"}
@@ -106,6 +118,7 @@
         -   compare:    {jsonpath_mini: "included.0.attributes.reverse_name",   comparator: "eq",   expected:   "blocked by"}
         -   compare:    {jsonpath_mini: "meta.totalCount",   comparator: "eq",   expected:   1}
 
+## Delete the link between Workitem-1 & Workitem-4
 -   test:
     -   name:   "Delete Link between Workitem-1 & Workitem-4 -- WI-1 is-blocked by WI-4"
     -   url:    {'template':  "/api/workitemlinks/$link_id_1"}
@@ -113,6 +126,7 @@
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
 
+## Link Workitem-4 to Workitem-1
 -   test:
     -   name:   "Link Workitem-4 to Workitem-1 -- WI-4 relates-to WI-1"
     -   url:    {'template':  "/api/workitemlinks"}
@@ -131,6 +145,7 @@
     -   extract_binds:
         -   'link_id_2': {'jsonpath_mini': 'data.id'}
 
+## Delete the link between Workitem-4 & Workitem-1
 -   test:
     -   name:   "Delete Link between Workitem-4 & Workitem-1 -- WI-4 relates-to WI-1"
     -   url:    {'template':  "/api/workitemlinks/$link_id_2"}

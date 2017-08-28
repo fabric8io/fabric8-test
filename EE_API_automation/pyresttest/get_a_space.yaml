@@ -4,7 +4,7 @@
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
-          'fixedspacename':  'space4test',
+          'fixedspacename':  'space4apitests',
           }
 
 -   test:
@@ -57,7 +57,7 @@
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
         -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
-        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$userid'}}
+        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$loggedin_user_id'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
     -   extract_binds:
         -   'spaceid': {'jsonpath_mini': 'data.id'}
