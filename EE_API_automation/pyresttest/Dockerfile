@@ -33,11 +33,8 @@ RUN cd /tmp \
   && cd pyresttest \
   && python setup.py install 
 
-RUN useradd -s /bin/bash ${F8_USER_NAME}
-
-# From here onwards, any RUN, CMD, or ENTRYPOINT
-# will be run under the following user
+RUN useradd --home-dir /tests -s /bin/bash ${F8_USER_NAME}
 USER ${F8_USER_NAME}
-
+WORKDIR /tests
+VOLUME ["/tests"]
 ENTRYPOINT ["pyresttest"]
-
