@@ -289,6 +289,7 @@
         -   extract_test:   {jsonpath_mini: "data.relationships.assignees.data",  test: "not_exists"}
     -   extract_binds:
         -   'wiid': {'jsonpath_mini': 'data.id'}
+        -   'wi1_link':   {jsonpath_mini: 'data.links.self'}
 
 -   test:
     -   name:   "Update Workitem-1 in Backlog - Change Description"
