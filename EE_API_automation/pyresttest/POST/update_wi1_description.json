@@ -1,1 +1,1 @@
-{"data":{"id":"$wiid","attributes":{"version":0,"system.description":{"markup":"Markdown","content":"$widesc2"}},"links":{"self":"https://api.openshift.io/api/spaces/$spaceid/workitems/$wiid"},"type":"workitems"}}
+{"data":{"id":"$wiid","attributes":{"version":0,"system.description":{"markup":"Markdown","content":"$widesc2"}},"links":{"self":"wi1_link"},"type":"workitems"}}
