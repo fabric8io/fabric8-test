@@ -4,7 +4,6 @@
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
-          'fixedspacename':  'space4test',
           }
 
 -   test:
