@@ -132,55 +132,142 @@ waitForText: function (elementFinder) {
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
-    /* Clean the user account in OSO with the new clean tenant button */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
+    console.log(result);
 
-    /* Access the profile page */
-    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+    process = require('child_process').execSync;
+    result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
+    console.log(result);
 
-    /* Access the update profile page */
-    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-    /* Access the clean the tenant page */
-    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
-    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
-    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
-    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
-
-    /* Return to the account home page */
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-    
-    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
-       wait until Che and Jenkins pods are running before starting the test. */
-    OpenShiftIoDashboardPage.clickrightNavigationBar();
-
-    /* Access the profile page */
-    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-
-    /* Access the update profile page */
-    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-    /* Update the tenant */
-    OpenShiftUpdateProfilePage.clickupdateTenantButton();
-
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+//    /* Clean the user account in OSO with the new clean tenant button */
+//    OpenShiftIoDashboardPage.clickrightNavigationBar();
+//
+//    /* Access the profile page */
+//    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+//
+//    /* Access the update profile page */
+//    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+//
+//    /* Access the clean the tenant page */
+//    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+//    browser.sleep(constants.WAIT);
+//    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
+//    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
+//    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
+//    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
+//
+//    /* Return to the account home page */
+//    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+//    browser.sleep(constants.WAIT);
+//    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+//    
+//    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+//       wait until Che and Jenkins pods are running before starting the test. */
+//    OpenShiftIoDashboardPage.clickrightNavigationBar();
+//
+//    /* Access the profile page */
+//    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+//
+//    /* Access the update profile page */
+//    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+//
+//    /* Update the tenant */
+//    OpenShiftUpdateProfilePage.clickupdateTenantButton();
+//
+//    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+//    browser.sleep(constants.WAIT);
+//    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
-    browser.sleep(constants.LONG_WAIT);
+    browser.sleep(constants.WAIT);
 //    browser.sleep(constants.RESET_TENANT_WAIT);
 
     return OpenShiftIoDashboardPage;
 
   },
+
+  /* 
+  * Log user into OSIO, clean user account, update tenant 
+  */
+  loginCleanUpdateNuke: function (page, username, password) {
+    
+      var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
+        OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
+        OpenShiftIoGithubLoginPage = require('./page-objects/openshift-io-github-login.page'),
+        OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
+        OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
+        OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
+        OpenShiftIoPipelinePage = require('./page-objects/openshift-io-pipeline.page'),
+        OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
+        OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
+        OpenShiftProfilePage = require('./page-objects/openshift-io-profile.page'),
+        OpenShiftUpdateProfilePage = require('./page-objects/openshift-io-update-profile.page'),
+        OpenShiftIoCleanTenantPage = require('./page-objects/openshift-io-clean-tenant.page'),
+        constants = require("./constants");
+    
+        var until = protractor.ExpectedConditions;
+    
+        OpenShiftIoRHDLoginPage = page.clickLoginButton();
+        OpenShiftIoRHDLoginPage.clickRhdUsernameField();
+        OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
+        OpenShiftIoRHDLoginPage.clickRhdPasswordField();
+        OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
+        OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
+        
+        /* Clean the user account in OSO with the new clean tenant button */
+        OpenShiftIoDashboardPage.clickrightNavigationBar();
+    
+        /* Access the profile page */
+        OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+    
+        /* Access the update profile page */
+        OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+    
+        /* Access the clean the tenant page */
+        OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+        browser.sleep(constants.WAIT);
+        OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
+        OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
+        OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
+        OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
+    
+        /* Return to the account home page */
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+        
+        /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+           wait until Che and Jenkins pods are running before starting the test. */
+        OpenShiftIoDashboardPage.clickrightNavigationBar();
+    
+        /* Access the profile page */
+        OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
+    
+        /* Access the update profile page */
+        OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+    
+        /* Update the tenant */
+        OpenShiftUpdateProfilePage.clickupdateTenantButton();
+    
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+    
+        /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
+        OpenShiftIoDashboardPage.clickStatusIcon();
+        browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+        browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+        browser.sleep(constants.LONG_WAIT);
+    //    browser.sleep(constants.RESET_TENANT_WAIT);
+    
+        return OpenShiftIoDashboardPage;
+    
+      },
+
 
   /* 
   * Create new space for user 
