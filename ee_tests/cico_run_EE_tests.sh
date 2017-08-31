@@ -43,10 +43,11 @@ mkdir -p dist
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN \
           -e EE_TEST_KC_TOKEN=$EE_TEST_KC_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
-          -e "CI=true" -t -v $(pwd)/dist:/dist:Z ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
+          -e "CI=true" -t -v $(pwd)/dist:/dist:Z ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest \
+          -v $PWD/password_file:/opt/fabric8-test/ee_tests/password_file
 
 # Exec EE tests
-docker exec fabric8-ui-builder ./run_EE_tests.sh $1
+docker exec fabric8-itest ./run_EE_tests.sh $1
 RTN_CODE=$?
 
 # Archive test reuslts file
