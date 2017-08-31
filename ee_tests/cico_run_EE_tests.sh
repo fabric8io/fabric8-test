@@ -33,34 +33,34 @@ service docker start
 
 # Build builder image
 cp /tmp/jenkins-env .
-docker build -t fabric8-ui-builder -f Dockerfile.builder .
 # User root is required to run webdriver-manager update. This shouldn't be a problem for CI containers
-mkdir -p dist && docker run --detach=true --name=fabric8-ui-builder --user=root --cap-add=SYS_ADMIN -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN -e EE_TEST_KC_TOKEN=$EE_TEST_KC_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e "CI=true" -t -v $(pwd)/dist:/dist:Z fabric8-ui-builder
 
-# Build
-docker exec fabric8-ui-builder npm install
+IMAGE="fabric8-test"
+REPOSITORY="fabric8io"
+REGISTRY="registry.devshift.net"
 
-# Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-docker exec fabric8-ui-builder wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
-docker exec fabric8-ui-builder tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz
-docker exec fabric8-ui-builder mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
+mkdir -p dist 
+docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
+          -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN \
+          -e EE_TEST_KC_TOKEN=$EE_TEST_KC_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
+          -e "CI=true" -t -v $(pwd)/dist:/dist:Z ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 # Exec EE tests
 docker exec fabric8-ui-builder ./run_EE_tests.sh $1
 RTN_CODE=$?
 
 # Archive test reuslts file
-docker exec fabric8-ui-builder chmod 600 password_file 
-docker exec fabric8-ui-builder chown root password_file 
-docker exec fabric8-ui-builder ls -l password_file
-docker exec fabric8-ui-builder ls -l ./target/screenshots
+docker exec fabric8-test chmod 600 password_file
+docker exec fabric8-test chown root password_file
+docker exec fabric8-test ls -l password_file
+docker exec fabric8-test ls -l ./target/screenshots
 
-docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
+docker exec fabric8-test rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2
 
-files=`docker exec fabric8-ui-builder ls -1 ./target/screenshots/*.png`
+files=`docker exec fabric8-test ls -1 ./target/screenshots/*.png`
 
 for file in $files;
-do docker exec fabric8-ui-builder rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2_$file;
+do docker exec fabric8-test rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2_$file;
 done
 
 # Test results to archive - TODO - how to archive these results?
