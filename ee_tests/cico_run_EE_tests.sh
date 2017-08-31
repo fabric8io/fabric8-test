@@ -46,7 +46,7 @@ echo "Run test container"
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN \
           -e EE_TEST_KC_TOKEN=$EE_TEST_KC_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
-          -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
+          -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 echo -n Updating Webdriver and Selenium...
