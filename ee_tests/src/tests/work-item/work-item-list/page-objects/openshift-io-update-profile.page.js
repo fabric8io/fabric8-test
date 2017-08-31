@@ -46,6 +46,11 @@ class OpenShiftIoUpdateProfilePage {
     return new OpenShiftIoCleanTenantPage;
   }
 
+  /* Used to obtain the test account KC token */
+  get obtainToken () {
+    return element(by.xpath(".//*[contains(@class,'token-heading')]"));
+  }
+
 }
 
 module.exports = OpenShiftIoUpdateProfilePage;

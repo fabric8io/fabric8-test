@@ -226,6 +226,10 @@ waitForText: function (elementFinder) {
     
         /* Access the update profile page */
         OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+//        OpenShiftUpdateProfilePage.obtainToken.getText().then(function(text){
+//          console.log("Token = " + text);
+//        });
     
         /* Access the clean the tenant page */
         OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
