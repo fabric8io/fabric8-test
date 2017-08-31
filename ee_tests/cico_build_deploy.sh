@@ -6,12 +6,12 @@ set -e
 # Export needed vars
 set +x
 for var in BUILD_NUMBER BUILD_URL JENKINS_URL GIT_BRANCH GH_TOKEN NPM_TOKEN GIT_COMMIT DEVSHIFT; do
-  export $(grep ${var} jenkins-env | xargs)
+  export $(grep ${var} ../jenkins-env | xargs)
 done
 export BUILD_TIMESTAMP=`date -u +%Y-%m-%dT%H:%M:%S`+00:00
 set -x
 
-if [ -n "${JENKINS_URL}" ]; then
+if [ -n "${BUILD_NUMBER}" ]; then
   # We need to disable selinux for now, XXX
   /usr/sbin/setenforce 0
 
@@ -30,8 +30,12 @@ REGISTRY="push.registry.devshift.net"
 docker build -t ${IMAGE} -f Dockerfile.builder .
 
 ## All ok, deploy
-if [ $? -eq 0 -a -n "${JENKINS_URL}" ]; then
+if [ $? -eq 0 ]; then
   echo 'CICO: build OK'
+
+  if [ -z "${BUILD_NUMBER}" ]; then
+    exit 0
+  fi
 
   if [ -n "${DEVSHIFT_USERNAME}" ] && [ -n "${DEVSHIFT_PASSWORD}" ]; then
       docker login -u ${DEVSHIFT_USERNAME} -p ${DEVSHIFT_PASSWORD} ${REGISTRY}
