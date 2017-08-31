@@ -140,54 +140,12 @@ waitForText: function (elementFinder) {
     result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
     console.log(result);
 
-//    /* Clean the user account in OSO with the new clean tenant button */
-//    OpenShiftIoDashboardPage.clickrightNavigationBar();
-//
-//    /* Access the profile page */
-//    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-//
-//    /* Access the update profile page */
-//    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-//
-//    /* Access the clean the tenant page */
-//    OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
-//    browser.sleep(constants.WAIT);
-//    OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
-//    OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
-//    OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
-//    OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
-//
-//    /* Return to the account home page */
-//    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-//    browser.sleep(constants.WAIT);
-//    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-//    
-//    /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
-//       wait until Che and Jenkins pods are running before starting the test. */
-//    OpenShiftIoDashboardPage.clickrightNavigationBar();
-//
-//    /* Access the profile page */
-//    OpenShiftProfilePage = OpenShiftIoDashboardPage.clickProfile();
-//
-//    /* Access the update profile page */
-//    OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-//
-//    /* Update the tenant */
-//    OpenShiftUpdateProfilePage.clickupdateTenantButton();
-//
-//    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-//    browser.sleep(constants.WAIT);
-//    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
     browser.sleep(constants.WAIT);
-//    browser.sleep(constants.RESET_TENANT_WAIT);
-
     return OpenShiftIoDashboardPage;
-
   },
 
   /* 

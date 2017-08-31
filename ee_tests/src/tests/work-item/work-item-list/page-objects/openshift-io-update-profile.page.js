@@ -48,7 +48,8 @@ class OpenShiftIoUpdateProfilePage {
 
   /* Used to obtain the test account KC token */
   get obtainToken () {
-    return element(by.xpath(".//*[contains(@class,'token-heading')]"));
+    browser.wait(until.elementToBeClickable(element(by.xpath(".//*[@id='token']/div/p"))), constants.LONG_WAIT, 'Failed to find element cleanTenantButton');  
+    return element(by.xpath(".//*[@id='token']/div/p"));
   }
 
 }
