@@ -40,11 +40,14 @@ REPOSITORY="fabric8io"
 REGISTRY="registry.devshift.net"
 
 mkdir -p dist 
+echo "Pull fabric8-test image"
+docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest > /dev/null
+echo "Run test container"
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e EE_TEST_USERNAME=$EE_TEST_USERNAME -e EE_TEST_PASSWORD=$EE_TEST_PASSWORD -e EE_TEST_OSO_TOKEN=$EE_TEST_OSO_TOKEN \
           -e EE_TEST_KC_TOKEN=$EE_TEST_KC_TOKEN -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
-          -e "CI=true" -t -v $(pwd)/dist:/dist:Z ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest \
-          -v $PWD/password_file:/opt/fabric8-test/ee_tests/password_file
+          -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
+          ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 echo -n Updating Webdriver and Selenium...
 docker exec fabric8-test webdriver-manager update
