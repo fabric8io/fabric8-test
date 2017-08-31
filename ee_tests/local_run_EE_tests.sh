@@ -22,9 +22,9 @@ echo done.
 
 # Finally run protractor
 echo Running tests...
-node_modules/protractor/bin/protractor protractorEE.config.js --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
+#node_modules/protractor/bin/protractor protractorEE.config.js --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
-#node_modules/protractor/bin/protractor protractorEE.config.js --suite runTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
+node_modules/protractor/bin/protractor protractorEE.config.js --suite runTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 TEST_RESULT=$?
 
 # cat log file to stdout 
