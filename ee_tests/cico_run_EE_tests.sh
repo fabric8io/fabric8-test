@@ -47,7 +47,7 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -v $PWD/password_file:/opt/fabric8-test/ee_tests/password_file
 
 # Exec EE tests
-docker exec fabric8-itest ./run_EE_tests.sh $1
+docker exec fabric8-test ./run_EE_tests.sh $1
 RTN_CODE=$?
 
 # Archive test reuslts file
