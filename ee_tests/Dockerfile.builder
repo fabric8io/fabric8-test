@@ -1,5 +1,10 @@
 FROM centos:7
 ENV LANG=en_US.utf8
+#ENV NPM_CONFIG_LOGLEVEL info
+ENV NODE_VERSION 6.5.0
+ENV DISPLAY=:99
+
+ENTRYPOINT ["/opt/fabric8-test/docker-entrypoint.sh"]
 
 # load the gpg keys
 COPY gpg ../gpg
@@ -19,15 +24,14 @@ RUN set -ex \
     gpg --import "/gpg/${key}.gpg" ; \
   done
 
-#ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.5.0
-
-RUN yum -y update && \
-    yum install -y bzip2 fontconfig tar java-1.8.0-openjdk nmap-ncat psmisc gtk3 git \
+COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
+RUN yum  --setopt tsflags='nodocs' -y update && \
+    yum install --setopt tsflags='nodocs' -y bzip2 fontconfig tar java-1.8.0 nmap-ncat psmisc gtk3 git \
       python-setuptools xorg-x11-xauth wget unzip which \
       xorg-x11-server-Xvfb xfonts-100dpi libXfont GConf2 \
       xorg-x11-fonts-75dpi xfonts-scalable xfonts-cyrillic \
-      ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc && \
+      ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc \
+      xorg-x11-server-Xvfb google-chrome-stable && \
       yum -y clean all
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
@@ -49,24 +53,15 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 
 RUN npm install -g jasmine-node protractor
 
-COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
-RUN yum install -y xorg-x11-server-Xvfb google-chrome-stable
+WORKDIR /opt/fabric8-test/
 
-ENV DISPLAY=:99
-ENV FABRIC8_USER_NAME=fabric8
-
-RUN useradd --user-group --create-home --shell /bin/false ${FABRIC8_USER_NAME}
-
-ENV HOME=/home/${FABRIC8_USER_NAME}
-ENV WORKSPACE=$HOME/fabric8-ui
-RUN mkdir $WORKSPACE
-
-COPY .  $WORKSPACE
-RUN chown -R ${FABRIC8_USER_NAME}:${FABRIC8_USER_NAME} $HOME/*
-
-USER ${FABRIC8_USER_NAME}
-WORKDIR $WORKSPACE/
+COPY . .
 
 VOLUME /dist
 
-ENTRYPOINT ["/home/fabric8/fabric8-ui/docker-entrypoint.sh"]
+# Provide oc client to tests Clean up the test user account's resources in OpenShift Online
+RUN wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
+    tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
+    mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
+
+RUN npm install
