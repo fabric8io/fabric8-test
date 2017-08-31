@@ -46,6 +46,10 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest \
           -v $PWD/password_file:/opt/fabric8-test/ee_tests/password_file
 
+echo -n Updating Webdriver and Selenium...
+docker exec fabric8-test webdriver-manager update
+docker exec fabric8-test webdriver-manager update --versions.chrome 2.29
+
 # Exec EE tests
 docker exec fabric8-test ./run_EE_tests.sh $1
 RTN_CODE=$?
