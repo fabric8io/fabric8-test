@@ -16,8 +16,8 @@ exports.config = {
     exclude: ['src/tests/**/EXCLUDE/*.js'],
 
     suites: {
-      runfullTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'], 
-      runTest: ['src/tests/**/EE/*burr-che.spec.js'],
+      runTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'], 
+      runOneTest: ['src/tests/**/EE/*burr-che.spec.js'],
       setupTest:  'src/tests/**/EE/*setup*.spec.js'
     },
 
