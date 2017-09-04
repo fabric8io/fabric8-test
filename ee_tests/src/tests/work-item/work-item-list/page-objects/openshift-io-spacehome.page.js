@@ -264,7 +264,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
-/* UI Page Section: Stack Reports */
+/* UI Page Section: Analytics/Stack Reports */
 
   get stackReports () {
 //    return element(by.xpath(".//fabric8-analytical-report-widget"));
@@ -278,7 +278,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
-  /* STack Reports */
+  /* Stack/Analytical Reports */
   get stackReportsSectionTitle () {
 //    return element(by.xpath(".//*[contains(@class,'card-pf-title')]//*[contains(text(), 'Stack Reports')]"));
     return element(by.id("spacehome-analytical-report-title"));
@@ -291,6 +291,42 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get stackReportSection () {
+    return element (by.css(".fabric8-stack-analysis"));
+  }
+
+  get stackReportSummaries () {
+    return element (by.css(".stack-report-inshort"));
+  }
+
+  get stackReportFindingsInShort () {
+    return element (by.css(".findings-inshort"));
+  }
+  
+  get StackReportSummaryInShort () {
+    return element (by.css(".summary-inshort"));
+  }
+  
+  get stackReportRecommendationsInShort () {
+    return element (by.css(".recommendations-inshort"));
+  }
+  
+  get stackReportDetailedReport () {
+    return element (by.css("..modal.in.fade"));
+  }
+  
+  get detailedReportHeading () {
+    return element (by.xpath(".//*[contains(text(),'Stack report')]"));
+  }
+    
+  get detailedAnalysisHeading () {
+    return element (by.xpath(".//*[contains(text(),'Detail analysis of your stack components')]"));
+  }
+  
+  get additionalCompoenntsHeading () {
+    return element (by.xpath(".//*[contains(text(),'Additional components recommended by Openshift IO')]"));
+  }
+  
 /* UI Page Section: My Workitems */
 
   get workitems () {
@@ -556,10 +592,6 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
-
-
-
-
   /* Technology Stack project types */
 
   get vertXbasic () {
@@ -644,21 +676,6 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     });
     return;
   }
-
-  /* Access a codebase by name */
-
-//  pipelineByName (pipelineNameString) {
-//  //     .//*[contains(text(),'testMay81494273390587')]/../../../div-item-workspaces
-//    var xpathString = ".//*[contains(text(),'" + pipelineNameString + "')]/../../../div-item-workspaces";
-//    return element(by.xpath(xpathString));
-//  }
-//  clickpipelineByName (pipelineNameString) {
-//    browser.wait(until.elementToBeClickable(this.pipelineByName (pipelineNameString)), constants.LONG_WAIT, 'Failed to find element pipelineByName');
-//    this.pipelineByName(pipelineNameString).click().then(function(){
-//      console.log("OpenShiftIoSpaceHomePage - clicked element: pipelineByName");
-//    });
-//    return;
-//  }
 
   get createWorkspace () {
     return element(by.xpath(".//codebases-item-workspaces[1]"));
