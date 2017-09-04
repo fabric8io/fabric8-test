@@ -1,0 +1,24 @@
+---
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          }
+
+-   test:
+    -   name:   "Find Space using the namedspaces api"
+    -   url:    {'template':  "/api/namedspaces/$userid/$userid-$space_name_var"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'spaceid':  {'jsonpath_mini':    'data.id'}
+        -   'spacename':    {'jsonpath_mini':   data.attributes.name'}
+
+
+-   test:
+    -   name:   "Delete the Space as we are DONE" 
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   method: "DELETE"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]

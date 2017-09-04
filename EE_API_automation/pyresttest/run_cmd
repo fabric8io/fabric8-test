@@ -1,4 +1,4 @@
-pyresttest <YOUR_TARGET_SUT> <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID'}"
+pyresttest <YOUR_TARGET_SUT> <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID', 'space_name_var':'YOUR_CUSTOM_SPACE_NAME'}"
 
 YOUR_TARGET_SUT: https://api.openshift.io OR anything else you want it to be
 YOUR_TEST_SCRIPT_NAME: API_automation_workshop.yaml OR anything else you want it to be
