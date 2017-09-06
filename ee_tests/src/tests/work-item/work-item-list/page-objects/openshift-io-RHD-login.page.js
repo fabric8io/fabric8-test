@@ -23,6 +23,14 @@ class OpenShiftIoRHDLoginPage {
   constructor() {
   };
 
+  doLogin(browser) {
+    this.clickRhdUsernameField();
+    this.typeRhdUsernameField(browser.params.login.user);
+    this.clickRhdPasswordField();
+    this.typeRhdPasswordField(browser.params.login.password);
+    return this.clickRhdLoginButton();
+  }
+
   /* Social media login buttons */
 
   get githubLoginButton () {

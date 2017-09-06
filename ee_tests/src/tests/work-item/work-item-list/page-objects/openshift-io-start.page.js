@@ -15,7 +15,8 @@ var OpenShiftIoRHDLoginPage = require('../page-objects/openshift-io-RHD-login.pa
     testSupport = require('../testSupport'),
     constants = require("../constants"),
     Common = require('../page-objects/common.page'),
-    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page');
+    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
+    OpenShiftIoF8OSLoginPage = require('../page-objects/openshift-io-F8-OS-login.page');
 
 var until = protractor.ExpectedConditions;
 
@@ -309,11 +310,19 @@ class OpenShiftIoStartPage {
   get loginButton () {
     return element(by.xpath(".//*[@id='signUp']//*[@id='login']"));
   }
-  clickLoginButton () {
+  clickLoginButton (browser) {
      this.loginButton.click().then(function(){
       console.log("OpenShiftIoStartPage - clicked element: loginButton");
     });
-     return new OpenShiftIoRHDLoginPage();
+
+    var platform = browser.params.target.platform || "osio";
+    console.log("logging in to platform " + platform);
+
+    if ("osio" === platform) {
+      return new OpenShiftIoRHDLoginPage();
+    } else {
+      return new OpenShiftIoF8OSLoginPage();
+    }
   }
 
   /* Botton of the page Login button */
