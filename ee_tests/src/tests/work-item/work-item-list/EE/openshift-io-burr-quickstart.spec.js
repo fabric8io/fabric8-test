@@ -131,7 +131,6 @@ Wildfly Swarm - REST and RH SSO  */
 
 });
 
-
   /* Run the test */
   var runTheTest = function (page, quickStartName) {
       
