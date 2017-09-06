@@ -16,9 +16,11 @@ exports.config = {
     exclude: ['src/tests/**/EXCLUDE/*.js'],
 
     suites: {
-      runAllTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'], 
+      allTest: ['src/tests/**/EE/*burr*.spec.js'], 
+      mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
       runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
-      setupTest:  'src/tests/**/EE/*setup*.spec.js'
+      quickstartTest: ['src/tests/**/EE/*burr*quickstart.spec.js'],
+      setupTest: ['src/tests/**/EE/*setup*.spec.js']
     },
 
     jasmineNodeOpts: {

@@ -107,7 +107,7 @@ waitForText: function (elementFinder) {
   /* 
   * Log user into OSIO, clean user account, update tenant 
   */
-  loginCleanUpdate: function (page, username, password) {
+  loginCleanUpdate: function (page, username, password, cleanOption) {
 
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
@@ -132,18 +132,29 @@ waitForText: function (elementFinder) {
     OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
     OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
 
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
-    console.log(result);
+    if ( (cleanOption == constants.CLEAN_JENKINS) || (cleanOption == constants.CLEAN_ALL) ) {
+      process = require('child_process').execSync;
+      result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
+      console.log("CLEANING JENKINS: " + result);
+    }
 
-    process = require('child_process').execSync;
-    result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-    console.log(result);
+    if ( (cleanOption == constants.CLEAN_CHE) || (cleanOption == constants.CLEAN_ALL) ) {
+      var process = require('child_process').execSync;
+      var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
+      console.log("CLEANING CHE:" + result);
+    }
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+
+    if ( (cleanOption == constants.CLEAN_JENKINS) || (cleanOption == constants.CLEAN_ALL) ) {
+      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+    }
+      
+    if ( (cleanOption == constants.CLEAN_CHE) || (cleanOption == constants.CLEAN_ALL) ) {
+      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+    }
+ 
     browser.sleep(constants.WAIT);
     return OpenShiftIoDashboardPage;
   },

@@ -26,9 +26,7 @@ define("LONGER_WAIT", 180000);     /* 3 min */
 define("LONGEST_WAIT", 600000);      /* 10 minutes */
 define("RESET_TENANT_WAIT", 300000);     /* 5 min */
 
-/* Quickstart names */
-define("VERTX_BASIC", "Vert.x - Basic");
-define("VERTX_CONFIGMAP", "Vert.x - ConfigMap");
-define("SPRINGBOOT_BASIC", "Spring Boot - Basic");
-define("VERTX_HEALTH_CHECK", "Vert.x Health Check Example");
-define("SPRINGBOOT_HEALTH_CHECK", "Spring Boot - Health Check");
+/* Pre-test cleanup types */
+define("CLEAN_CHE", "CLEAN_CHE");
+define("CLEAN_STAGE_RUN", "CLEAN_STAGE_RUN");
+define("CLEAN_ALL", "CLEAN_ALL");
