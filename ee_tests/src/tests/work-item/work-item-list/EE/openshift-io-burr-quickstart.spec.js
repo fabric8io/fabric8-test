@@ -93,32 +93,31 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
   } else {
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.X Basic", function () {
-      runTheTest(page, "Vert.x - Basic");
+      runTheTest(page, "Vert.x HTTP Booster");
     });
 
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x - ConfigMap", function () {
-      runTheTest(page, constants.VERTX_CONFIGMAP);
+      runTheTest(page, "Vert.x - HTTP & Config Map");
     });
 
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Basic", function () {
-      runTheTest(page, constants.SPRINGBOOT_BASIC);
+      runTheTest(page, "Spring Boot - HTTP");
     });
 
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function () {
-      runTheTest(page, constants.VERTX_HEALTH_CHECK);
+      runTheTest(page, "Vert.x Health Check Example");
     });
 
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
-      runTheTest(page, constants.SPRINGBOOT_HEALTH_CHECK);
+      runTheTest(page, "Spring Boot Health Check Example");
     });
   }
 
 });
-
 
   /* Run the test */
   var runTheTest = function (page, quickStartName) {

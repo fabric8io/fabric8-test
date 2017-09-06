@@ -107,7 +107,7 @@ waitForText: function (elementFinder) {
   /* 
   * Log user into OSIO, clean user account, update tenant 
   */
-  loginCleanUpdate: function (page, username, password) {
+  loginCleanUpdate: function (page, username, password, cleanOption) {
 
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
