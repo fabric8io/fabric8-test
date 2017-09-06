@@ -10,27 +10,12 @@
     "canExecute": false,
     "wizard": true,
     "canMoveToNextStep": false,
-    "canMoveToPreviousStep": true,
+    "canMoveToPreviousStep": false,
     "steps": [
-      "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep",
       "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"
-    ],
-    "isExecute": false
+    ]
   },
   "inputs": [
-    {
-      "name": "gitOrganisation",
-      "shortName": " ",
-      "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
-      "inputType": "org.jboss.forge.inputType.DEFAULT",
-      "enabled": true,
-      "required": true,
-      "deprecated": false,
-      "label": "Organisation",
-      "description": "The github organisation to import repositories from",
-      "class": "UISelectOne",
-      "value": "$selected_github_organisation"
-    },
     {
       "name": "gitRepositoryPattern",
       "shortName": " ",
@@ -48,6 +33,5 @@
       ]
     }
   ],
-  "results": [],
   "stepIndex": 1
 }

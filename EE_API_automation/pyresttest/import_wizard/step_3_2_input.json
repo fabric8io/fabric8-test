@@ -29,58 +29,7 @@
       "required": false,
       "deprecated": false,
       "label": "Pipeline",
-      "description": "The Jenkinsfile used to define the Continous Delivery pipeline",
-      "valueChoices": [
-        {
-          "id": "Release",
-          "builder": "maven",
-          "descriptionMarkdown": "Maven based pipeline which:\n\n* creates a new version then builds and deploys the project into the maven repository\n* runs an integration test in the **Test** environment\n",
-          "environments": [
-            "Test"
-          ],
-          "label": "Release",
-          "stages": [
-            "Build Release",
-            "Integration Test"
-          ],
-          "value": "maven/Release/Jenkinsfile"
-        },
-        {
-          "id": "Release and Stage",
-          "builder": "maven",
-          "descriptionMarkdown": "Maven based pipeline which:\n\n* creates a new version then builds and deploys the project into the maven repository\n* runs an integration test in the **Test** environment\n* stages the new version into the **Stage** environment\n",
-          "environments": [
-            "Test",
-            "Stage"
-          ],
-          "label": "Release and Stage",
-          "stages": [
-            "Build Release",
-            "Integration Test",
-            "Rollout to Stage"
-          ],
-          "value": "maven/ReleaseAndStage/Jenkinsfile"
-        },
-        {
-          "id": "Release, Stage, Approve and Promote",
-          "builder": "maven",
-          "descriptionMarkdown": "Maven based pipeline which:\n\n* creates a new version then builds and deploys the project into the maven repository\n* runs an integration test in the **Test** environment\n* stages the new version into the **Stage** environment\n* waits for **Approval** to promote \n* promotes to the **Run** environment\n",
-          "environments": [
-            "Test",
-            "Stage",
-            "Run"
-          ],
-          "label": "Release, Stage, Approve and Promote",
-          "stages": [
-            "Build Release",
-            "Integration Test",
-            "Rollout to Stage",
-            "Approve",
-            "Rollout to Run"
-          ],
-          "value": "maven/ReleaseStageApproveAndPromote/Jenkinsfile"
-        }
-      ],
+      "description": "The Jenkinsfile used to define the Continous Delivery pipeline",  
       "class": "UISelectOne",
       "value": "Release, Stage, Approve and Promote"
     },
@@ -94,25 +43,8 @@
       "deprecated": false,
       "label": "Organisation",
       "description": "The organisation",
-      "valueChoices": [
-        {
-          "id": "ckrych"
-        },
-        {
-          "id": "ckrych-che"
-        },
-        {
-          "id": "ckrych-jenkins"
-        },
-        {
-          "id": "ckrych-run"
-        },
-        {
-          "id": "ckrych-stage"
-        }
-      ],
       "class": "UISelectOne",
-      "value": "ckrych"
+      "value": "$k8_space"
     },
     {
       "name": "labelSpace",
@@ -137,25 +69,8 @@
       "deprecated": false,
       "label": "Organisation",
       "description": "The github organisation to import repositories from",
-      "valueChoices": [
-        {
-          "id": "3musket33rs",
-          "avatarUrl": "https://avatars2.githubusercontent.com/u/1974314?v=4",
-          "description": "http://3musket33rs.github.com",
-          "htmlUrl": "https://github.com/3musket33rs",
-          "name": "3.musket33rs",
-          "valid": true
-        },
-        {
-          "id": "corinnekrych",
-          "description": "My personal github account",
-          "htmlUrl": "https://github.com/corinnekrych",
-          "name": "corinnekrych",
-          "valid": true
-        }
-      ],
       "class": "UISelectOne",
-      "value": "corinnekrych"
+      "value": "$selected_github_organisation"
     },
     {
       "name": "gitRepositoryPattern",
@@ -167,23 +82,10 @@
       "deprecated": false,
       "label": "Repository name pattern",
       "description": "The regex pattern to match repository names",
-      "valueChoices": [        {
-          "id": "sprint135",
-          "description": "created at Tue Aug 08 07:52:49 UTC 2017",
-          "name": "sprint135",
-          "valid": true
-        },
-        {
-          "id": "sprint135bis",
-          "description": "created at Tue Aug 08 08:16:47 UTC 2017",
-          "name": "sprint135bis",
-          "valid": true
-        }
-    ],
       "class": "UISelectMany",
       "value": [
-        "sprint135",
-        "sprint135bis"
+        "$selected_github_repo_1",
+        "$selected_github_repo_2"
       ]
     }
   ],
