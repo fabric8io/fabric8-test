@@ -62,6 +62,7 @@ Basically try this:
 ```
 cd ee_tests
 npm install
+node_modules/protractor/bin/webdriver-manager  start --versions.chrome 2.29
 ```
 
 Then in IDEA:
@@ -70,8 +71,8 @@ Then in IDEA:
 * select the `+` to add a new runtime configuration and select `Protractor`
 * find the `protractorEE-env.config.js` file as the test suite to run
 * define the following environment variables:
-  * USERNAME
-  * PASSWORD
+  * USERNAME (the username on RHD for https://openshift.io or github for fabric8)
+  * PASSWORD (the password for RHD / github like above)
   * TARGET_URL (if you want to point at something other than https://openshift.io/)
   * you may want to define [some of these other environment variables](https://github.com/fabric8io/fabric8-test/blob/master/ee_tests/protractorEE-env.config.js#L17) too
 * now just click the Run / Debug button in IDEA!
