@@ -98,7 +98,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
-    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
+    var username = testSupport.userEntityName(browser.params.login.user);
+
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
@@ -118,7 +120,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime);
+    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime);
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
@@ -147,7 +149,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
    
 //    var process = require('child_process').execSync;
-//    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " jenkins").toString();
+//    var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
 
     /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */

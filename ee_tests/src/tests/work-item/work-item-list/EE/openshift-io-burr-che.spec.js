@@ -105,7 +105,8 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
-    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
+    var username = testSupport.userEntityName(browser.params.login.user);
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
@@ -122,7 +123,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     /* Step 6) In OSIO, create Che workspace for project   */
 
     /* Start by creating a codebase for the newly created project */
-    OpenShiftIoChePage = testSupport.createCodebase (OpenShiftIoDashboardPage, browser.params.login.user, spaceTime, GITHUB_NAME);
+    OpenShiftIoChePage = testSupport.createCodebase (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME);
 
     /* Switch to Che browser tab */
     browser.sleep(constants.LONG_WAIT);
@@ -132,7 +133,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
         if (handles.length == 1) {
           console.log ("ERROR - Che browser window did not open - see: https://github.com/openshiftio/openshift.io/issues/618");
           var process = require('child_process').execSync;
-          var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
+          var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " che").toString();
           console.log(result);
         }
 
