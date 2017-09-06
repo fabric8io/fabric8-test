@@ -41,3 +41,12 @@ variable before you start script mentioned above:
 ```
 SELENIUM_BROWSER=firefox
 ```
+
+### End-to-End tests on Fabric8
+
+To run against a fabric8 installation (e.g. via minishift) run the following command:
+
+
+```
+./local_run_EE_fabric8_test.sh githubUserName githubPassword http://fabric8-fabric8.${minishift ip}.nip.io
+```

@@ -125,36 +125,39 @@ waitForText: function (elementFinder) {
 
     var until = protractor.ExpectedConditions;
 
-    OpenShiftIoRHDLoginPage = page.clickLoginButton();
-    OpenShiftIoRHDLoginPage.clickRhdUsernameField();
-    OpenShiftIoRHDLoginPage.typeRhdUsernameField(browser.params.login.user);
-    OpenShiftIoRHDLoginPage.clickRhdPasswordField();
-    OpenShiftIoRHDLoginPage.typeRhdPasswordField(browser.params.login.password);
-    OpenShiftIoDashboardPage = OpenShiftIoRHDLoginPage.clickRhdLoginButton();
+    var loginPage = page.clickLoginButton(browser);
 
-    if ( (cleanOption == constants.CLEAN_JENKINS) || (cleanOption == constants.CLEAN_ALL) ) {
+    loginPage.doLogin(browser);
+
+    OpenShiftIoDashboardPage = new OpenShiftIoDashboardPage();
+
+    console.log("waiting for dashboard button");
+
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.headerDropDownToggle), 500000, "Timeout waiting for Dashboard drop down");
+
+    console.log("dashboard dropdown button found!");
+
+    var process = require('child_process').execSync;
+    var platform = browser.params.target.platform || "osio";
+
+    /* lets only run the cleanup CLIs on OSIO */
+    if ("osio" === platform) {
+      var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
+      console.log(result);
+
       process = require('child_process').execSync;
       result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-      console.log("CLEANING JENKINS: " + result);
-    }
-
-    if ( (cleanOption == constants.CLEAN_CHE) || (cleanOption == constants.CLEAN_ALL) ) {
-      var process = require('child_process').execSync;
-      var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
-      console.log("CLEANING CHE:" + result);
+      console.log(result);
     }
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
-
-    if ( (cleanOption == constants.CLEAN_JENKINS) || (cleanOption == constants.CLEAN_ALL) ) {
-      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
-    }
-      
-    if ( (cleanOption == constants.CLEAN_CHE) || (cleanOption == constants.CLEAN_ALL) ) {
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+    if (browser.params.target.disableChe) {
+      console.log("Disabling waiting for Che to start");
+    } else {
       browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     }
- 
     browser.sleep(constants.WAIT);
     return OpenShiftIoDashboardPage;
   },
@@ -246,10 +249,15 @@ waitForText: function (elementFinder) {
   * Create new space for user 
   */
   createNewSpace: function (page, spaceName, username, password, targetUrl) {
+    var constants = require("./constants"),
+      OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
+    var until = protractor.ExpectedConditions;
 
-   var constants = require("./constants"),
-     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
-   var until = protractor.ExpectedConditions;
+    // if using fabric8 lets switch from the github username to the openshift user name
+    var platform = browser.params.target.platform || "osio";
+    if (platform !== "osio") {
+      username = browser.params.login.openshiftUser || "developer";
+    }
 
     page.clickHeaderDropDownToggle();
     browser.sleep(constants.WAIT);
@@ -264,6 +272,7 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage = page.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
+    console.log("Lets wait for the URL to contain username " + username + "/" + spaceName);
     browser.wait(until.urlContains(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT);
     browser.wait(until.urlIs(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT); 
     expect(browser.getCurrentUrl()).toEqual(targetUrl + '/' + username + '/'+ spaceName);

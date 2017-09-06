@@ -81,53 +81,41 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     browser.restart();
   });
 
-/* Quickstarts as of September 5, 2017
+  var quickstartName = browser.params.target.quickstart;
+  if (quickstartName) {
+    console.log("Running quickstart test: " + quickstartName);
+    
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - " + quickstartName, function () {
+      runTheTest(page, quickstartName);
+    });
 
-Multiple issues:
+  } else {
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.X Basic", function () {
+      runTheTest(page, "Vert.x HTTP Booster");
+    });
 
-Noe.js quickstarts - https://github.com/openshiftio/openshift.io/issues/761
-WildFLy quickstarts - https://github.com/openshiftio/openshift.io/issues/759
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x - ConfigMap", function () {
+      runTheTest(page, "Vert.x - HTTP & Config Map");
+    });
 
-Vert.x HTTP Booster*
-Secured Vertx - Rest & Red Hat SSO
-Vert.x - HTTP & Config Map*
-Vert.x CRUD Example using JBDC
-Vert.x Health Check Example*
-Node.js - CRUD Example
-Noce.js - HTTP
-Node.js - Health Checks
-Secured Spring Boot Tomcat - HTTP & Red Hat SSO
-Spring Boot - CRUD
-Spring Boot - ConfigMap
-Spring Boot - HTTP*
-Spring Boot Circuit Breaker Example
-Spring Boot Health Check Example*
-HTTP CRUD - Wildfly Swarm
-Wildfly Swarm - Circuit Breaker
-Wildfly Swarm - Config Map
-Wildfly Swarm - HTTP
-Wildfly Swarm - Health Checks
-Wildfly Swarm - REST and RH SSO  */
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Basic", function () {
+      runTheTest(page, "Spring Boot - HTTP");
+    });
 
-  it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.X HTTP Booster", function() {       
-    runTheTest (page, "Vert.x HTTP Booster");
-  });
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function () {
+      runTheTest(page, "Vert.x Health Check Example");
+    });
 
-  it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x - HTTP & Config Map", function() {       
-    runTheTest (page, "Vert.x - HTTP & Config Map");
-  });
-
-  it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - HTTP", function() {       
-    runTheTest (page, "Spring Boot - HTTP");
-  });
-
-  it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function() {       
-    runTheTest (page, "Vert.x Health Check Example");
-  });
-
-  it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot Health Check Example", function() {       
-   runTheTest (page, "Spring Boot Health Check Example");
-  });
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
+      runTheTest(page, "Spring Boot Health Check Example");
+    });
+  }
 
 });
 

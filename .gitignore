@@ -59,3 +59,7 @@ typings/
 
 # generated screenshots
 target/
+
+# IDE stuff
+.idea
+.project
