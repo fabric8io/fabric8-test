@@ -450,7 +450,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//app-generator-single-selection-dropdown"));
   }
   clickQuickStartList () {
-    browser.wait(until.elementToBeClickable(this.quickStartList), constants.LONG_WAIT, 'Failed to find element quickStartList');
+    browser.wait(until.elementToBeClickable(this.quickStartList), constants.LONGER_WAIT, 'Failed to find element quickStartList');
     this.quickStartList.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartList");
     });
@@ -561,7 +561,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
 
   clickOkButton () {
-     browser.wait(until.elementToBeClickable(this.okButton), constants.LONG_WAIT, 'Failed to find element OK button');
+     browser.wait(until.elementToBeClickable(this.okButton), constants.LONGER_WAIT, 'Failed to find element OK button');
      this.okButton.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: okButton");
     });

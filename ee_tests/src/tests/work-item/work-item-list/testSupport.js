@@ -104,6 +104,27 @@ waitForText: function (elementFinder) {
       });
   },
 
+
+  /**
+   * Returns the entity name of the current user which is used in the URL after, say,
+   * https:///openshift.io/{userEntityName}/{spaceName}
+   *
+   * This name may not be the same as the user name due to special characters (e.g. email addresses or underscores).
+   *
+   * When using fabric8 on MiniShift then this is typically 'developer' for the `oc whoami` rather than
+   * the user name used to login into GitHub
+   */
+  userEntityName: function (username) {
+    if (!username) {
+      username = browser.params.login.user;
+    }
+    var platform = browser.params.target.platform || "osio";
+    if (platform !== "osio") {
+      username = browser.params.login.openshiftUser || "developer";
+    }
+    return username;
+  },
+
   /* 
   * Log user into OSIO, clean user account, update tenant 
   */
@@ -142,22 +163,38 @@ waitForText: function (elementFinder) {
 
     /* lets only run the cleanup CLIs on OSIO */
     if ("osio" === platform) {
-      var result = process('sh ./local_cleanup_che.sh ' + browser.params.login.user + ' ' + browser.params.kc.token).toString();
+      var username = this.userEntityName(browser.params.login.user);
+      var result = process('sh ./local_cleanup_che.sh ' + username + ' ' + browser.params.kc.token).toString();
       console.log(result);
 
       process = require('child_process').execSync;
-      result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
+      result = process('sh ./local_cleanup.sh ' + username + ' ' + browser.params.oso.token).toString();
       console.log(result);
     }
 
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
+
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
     if (browser.params.target.disableChe) {
       console.log("Disabling waiting for Che to start");
     } else {
       browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     }
+    
+    if ("osio" !== platform) {
+      // lets clean the environment before a test
+      this.cleanEnvironment();
+
+      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+      if (browser.params.target.disableChe) {
+        console.log("Disabling waiting for Che to start");
+      } else {
+        browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+      }
+    }
+
+
     browser.sleep(constants.WAIT);
     return OpenShiftIoDashboardPage;
   },
@@ -208,9 +245,12 @@ waitForText: function (elementFinder) {
         browser.sleep(constants.WAIT);
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
-        OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(browser.params.login.user);
+        OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(this.userEntityName(browser.params.login.user));
         OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
-    
+
+
+        // TODO remove the rest of this function with: this.cleanEnvironment() ??
+
         /* Return to the account home page */
         OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
         browser.sleep(constants.WAIT);
@@ -244,20 +284,92 @@ waitForText: function (elementFinder) {
     
       },
 
+  /*
+  * Resets the users environment
+  */
+  cleanEnvironment: function () {
+
+      var OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
+        constants = require("./constants");
+
+        var until = protractor.ExpectedConditions;
+
+        var username = this.userEntityName(browser.params.login.user);
+
+        console.log("Cleaning the tenant environment for user entity name: " + username);
+
+        /* Clean the user account in OSO with the new clean tenant button */
+        var dashboardPage = new OpenShiftIoDashboardPage();
+        dashboardPage.clickrightNavigationBar();
+
+        /* Access the profile page */
+        OpenShiftProfilePage = dashboardPage.clickProfile();
+
+        /* Access the update profile page */
+        OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+//        OpenShiftUpdateProfilePage.obtainToken.getText().then(function(text){
+//          console.log("Token = " + text);
+//        });
+
+        /* Access the clean the tenant page */
+        OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
+        browser.sleep(constants.WAIT);
+        OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
+        OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
+
+        OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(username);
+        OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
+
+        /* Return to the account home page */
+        dashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+        dashboardPage.clickAccountHomeUnderLeftNavigationBar();
+
+        /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+           wait until Che and Jenkins pods are running before starting the test. */
+        dashboardPage.clickrightNavigationBar();
+
+        /* Access the profile page */
+        OpenShiftProfilePage = dashboardPage.clickProfile();
+
+        /* Access the update profile page */
+        OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
+
+        /* Update the tenant */
+        OpenShiftUpdateProfilePage.clickupdateTenantButton();
+
+        dashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+        dashboardPage.clickAccountHomeUnderLeftNavigationBar();
+
+        /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
+        dashboardPage.clickStatusIcon();
+        if (browser.params.target.disableChe) {
+          console.log("Disabling waiting for Che to start");
+        } else {
+          browser.wait(until.presenceOf(dashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+        }
+        browser.wait(until.presenceOf(dashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+        browser.sleep(constants.LONG_WAIT);
+    //    browser.sleep(constants.RESET_TENANT_WAIT);
+
+        return dashboardPage;
+
+      },
+
 
   /* 
   * Create new space for user 
   */
   createNewSpace: function (page, spaceName, username, password, targetUrl) {
     var constants = require("./constants"),
-      OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
+            OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
     var until = protractor.ExpectedConditions;
 
     // if using fabric8 lets switch from the github username to the openshift user name
     var platform = browser.params.target.platform || "osio";
-    if (platform !== "osio") {
-      username = browser.params.login.openshiftUser || "developer";
-    }
+    username = this.userEntityName(username);
 
     page.clickHeaderDropDownToggle();
     browser.sleep(constants.WAIT);
@@ -351,7 +463,7 @@ waitForText: function (elementFinder) {
   * Create a new codespace
   */
   createCodebase: function  (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME) {
-  
+
     var OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
     OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
     constants = require("./constants");
@@ -364,15 +476,16 @@ waitForText: function (elementFinder) {
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
+    var username = this.userEntityName(browser.params.login.user);
+    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
 
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
       console.log("Codebases page contents = " + text);
     });
 
-    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
-    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, spaceTime, GITHUB_NAME).getText().then(function(text){
+    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (username, spaceTime, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
+    OpenShiftIoCodebasePage.codebaseByName (username, spaceTime, GITHUB_NAME).getText().then(function(text){
       console.log("Codebase = " + text);
     });
 
@@ -391,22 +504,24 @@ waitForText: function (elementFinder) {
       OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
       constants = require("./constants");
       var until = protractor.ExpectedConditions;
-  
+
+    var username = this.userEntityName(browser.params.login.user);
+
     browser.sleep(constants.LONG_WAIT);
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
     browser.sleep(constants.WAIT);
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime + "/create");
+    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
     
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
       console.log("Codebases page contents = " + text);
     });
 
-    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
-    OpenShiftIoCodebasePage.codebaseByName (browser.params.login.user, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
+    browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (username, IMPORT_NAME, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
+    OpenShiftIoCodebasePage.codebaseByName (username, IMPORT_NAME, GITHUB_NAME).getText().then(function(text){
       console.log("Codebase = " + text);
     });
 

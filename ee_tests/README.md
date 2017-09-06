@@ -50,3 +50,31 @@ To run against a fabric8 installation (e.g. via minishift) run the following com
 ```
 ./local_run_EE_fabric8_test.sh githubUserName githubPassword http://fabric8-fabric8.${minishift ip}.nip.io
 ```
+
+### Running the E2E Tests in Intellij IDEA
+
+You can run the E2E tests directly in IDEA which makes it super easy to link from failures to protractor test code when there are failures or to set breakpoints and to debug the tests.
+
+There is some background on [running protractor in IDEA here](https://www.jetbrains.com/help/idea/run-debug-configuration-protractor.html).
+
+Basically try this:
+
+```
+cd ee_tests
+npm install
+```
+
+Then in IDEA:
+
+* click the `Run -> Edit Configurations...` button in IDEA
+* select the `+` to add a new runtime configuration and select `Protractor`
+* find the `protractorEE-env.config.js` file as the test suite to run
+* define the following environment variables:
+  * USERNAME
+  * PASSWORD
+  * TARGET_URL (if you want to point at something other than https://openshift.io/)
+  * you may want to define [some of these other environment variables](https://github.com/fabric8io/fabric8-test/blob/master/ee_tests/protractorEE-env.config.js#L17) too
+* now just click the Run / Debug button in IDEA!
+* if a test fails you should have nice links in the output to source lines - you can also set breakpoints and debug the tests!
+  
+ 

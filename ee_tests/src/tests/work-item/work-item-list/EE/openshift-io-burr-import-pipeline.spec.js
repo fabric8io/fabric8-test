@@ -87,7 +87,9 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
-    
+
+    var username = testSupport.userEntityName(browser.params.login.user);
+
     console.log ("Test for target URL: " + browser.params.target.url)
 
     /* Step 1) Login to openshift.io */
@@ -97,7 +99,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
-    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, import quickstart to space - accept all defaults */
@@ -117,7 +119,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get(browser.params.target.url + "/" + browser.params.login.user + "/" + spaceTime);
+    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime);
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
@@ -145,11 +147,11 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(IMPORT_NAME)), constants.WAIT, 'Failed to find PipelineByName');
 
 //    var process = require('child_process').execSync;
-//    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " che").toString();
+//    var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " che").toString();
 //    console.log(result);
 
 //    var process = require('child_process').execSync;
-//    var result = process('sh ./local_oc.sh ' + browser.params.login.user + ' ' + browser.params.oso.token + " jenkins").toString();
+//    var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
     
     /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
