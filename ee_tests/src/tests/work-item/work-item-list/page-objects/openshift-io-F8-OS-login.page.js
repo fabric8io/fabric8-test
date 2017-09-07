@@ -6,9 +6,8 @@
 
 var testSupport = require('../testSupport'),
     constants = require("../constants"),
-    OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page'),
-    OpenShiftIoOpenShiftLoginPage = require('../page-objects/openshift-io-openshift-login.page'),
-    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page');
+    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
+    OpenShiftIoOpenShiftLoginPage = require('../page-objects/openshift-io-openshift-login.page');
 
 var until = protractor.ExpectedConditions;
 
