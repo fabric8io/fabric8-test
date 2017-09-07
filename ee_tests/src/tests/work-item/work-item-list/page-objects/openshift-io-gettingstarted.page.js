@@ -13,7 +13,6 @@
 
 var testSupport = require('../testSupport'),
         constants = require("../constants"),
-        OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
         OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page');
 
 let until = protractor.ExpectedConditions;
@@ -81,11 +80,17 @@ class OpenShiftIoGettingStartedPage {
   }
 
   clickStartPageConnectButton(browser, callback) {
-    browser.wait(until.presenceOf(this.startPageConnectButton), constants.WAIT, 'Failed waiting for Start Page Connect button to be enabled');
+
+    browser.wait(until.presenceOf(this.startPageConnectButton), constants.WAIT, 'Failed waiting for Start Page Connect button to be present');
+    browser.wait(until.elementToBeClickable(this.startPageConnectButton), constants.WAIT, 'Failed waiting for Start Page Connect button to be clickable');
     this.startPageConnectButton.click().then(function () {
       console.log("OpenShiftIoGettingStartedPage - clicked element:startPageConnectButton");
 
       console.log("Now logging into github if we need to");
+
+      // lets make the require lazy as got some errors testing
+      // fabric8 with minishift if we did this at the top of the file
+      var OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page');
       var githubLoginPage = new OpenShiftIoGithubLoginPage();
       githubLoginPage.doLogin(browser, callback);
     });
