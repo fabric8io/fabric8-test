@@ -184,6 +184,24 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//*[contains(@class, 'navbar-left')]//*[contains(@class,'recent-items')]//*[contains(@class,'nav-item-icon')]"));
   }
 
+//   .//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'testspace')]
+
+  /* Recent space by name */
+  recentSpaceByName (spaceName) {
+    var xpathString = ".//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'" + spaceName + "')]";
+    return element(by.xpath(xpathString));
+  }
+
+  clickRecentSpaceByName (spaceName) {
+    browser.wait(until.elementToBeClickable(this.recentSpaceByName(spaceName)), constants.LONG_WAIT, 'Failed to find element recentSpaceByName');
+    this.recentSpaceByName(spaceName).click().then(function(){
+      console.log("OpenShiftIoDashboardPage - clicked element:recentSpaceByName");
+    });
+    return;
+  }
+
+
+
   /* Create space in Left Navigation Bar */
     get createSpaceUnderLeftNavigationBar () {
 //    return element(by.xpath("//*[contains(@class, 'navbar-left')]//*[contains(@class,'recent-items')]//*[contains(@class,'nav-item-icon')]//*[contains(@class,'pficon-add-circle-o')]"));

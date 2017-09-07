@@ -97,7 +97,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
     var spaceTime = testSupport.returnTime();
     var username = testSupport.userEntityName(browser.params.login.user);
-    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
+//    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
+
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
@@ -165,6 +167,14 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     /* TODO */
 
 
+        /* Return to the account home page */
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+        browser.sleep(constants.LONGEST_WAIT);
+
+//        OpenShiftIoDashboardPage.clickRecentSpaceByName (spaceTime);
+        
 
 
     
