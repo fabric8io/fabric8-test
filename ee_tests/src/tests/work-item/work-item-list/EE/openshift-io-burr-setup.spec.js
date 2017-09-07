@@ -50,7 +50,6 @@ var until = protractor.ExpectedConditions;
 
 var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('../page-objects/openshift-io-RHD-login.page'),
-    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
     OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page'),
     OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page'),
     OpenShiftIoRegistrationPage = require('../page-objects/openshift-io-registration.page'),
