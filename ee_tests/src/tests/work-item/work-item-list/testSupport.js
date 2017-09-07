@@ -135,6 +135,26 @@ waitForText: function (elementFinder) {
     return browser.params.target.platform || "osio";
   },
 
+
+  /**
+   * Joins the arguments as URI paths ensuring there's exactly one '/' between each path entry
+   */
+  joinURIPath: function () {
+    var answer = null;
+    for (var i = 0, j = arguments.length; i < j; i++) {
+      var arg = arguments[i];
+      if (i === 0 || !answer) {
+        answer = arg;
+      } else {
+        if (!answer.endsWith("/")) {
+          answer += "/";
+        }
+        answer += arg;
+      }
+    }
+    return answer;
+  },
+
   /* 
   * Log user into OSIO, clean user account, update tenant 
   */
@@ -142,7 +162,6 @@ waitForText: function (elementFinder) {
 
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
-    OpenShiftIoGithubLoginPage = require('./page-objects/openshift-io-github-login.page'),
     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
     OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
     OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
@@ -392,10 +411,18 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage = page.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
-    console.log("Lets wait for the URL to contain username " + username + "/" + spaceName);
-    browser.wait(until.urlContains(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT);
-    browser.wait(until.urlIs(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT); 
-    expect(browser.getCurrentUrl()).toEqual(targetUrl + '/' + username + '/'+ spaceName);
+    var urlText = this.joinURIPath(targetUrl, username, spaceName);
+
+    console.log("Lets wait for the URL to contain the space URL: " + urlText);
+
+    browser.wait(until.urlContains(urlText), constants.LONG_WAIT, "Failed waiting to move to the space page with URL: " + urlText + " Did create space not work?").then(function () {
+      console.log("After the wait!");
+      browser.getCurrentUrl().then(function (text) {
+         console.log ('The browser was at URL: ' + text);
+      });
+    });
+    browser.wait(until.urlIs(urlText), constants.WAIT);
+    expect(browser.getCurrentUrl()).toEqual(urlText);
 
     browser.getCurrentUrl().then(function (text) { 
        console.log ('EE POC test - new space URL = ' + text);
