@@ -119,7 +119,7 @@ waitForText: function (elementFinder) {
       username = browser.params.login.user;
     }
     var platform = this.targetPlatform();
-    if (platform !== "osio") {
+    if (platform === "fabric8-openshift") {
       username = browser.params.login.openshiftUser || "developer";
     }
     return username;
