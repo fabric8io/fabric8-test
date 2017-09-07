@@ -118,11 +118,21 @@ waitForText: function (elementFinder) {
     if (!username) {
       username = browser.params.login.user;
     }
-    var platform = browser.params.target.platform || "osio";
+    var platform = this.targetPlatform();
     if (platform !== "osio") {
       username = browser.params.login.openshiftUser || "developer";
     }
     return username;
+  },
+
+  /**
+   * Returns the platform name which is either
+   * * "osio" for testing on https://openshift.io/
+   * * "fabric8-openshift" for testing
+   * * "fabric8-kubernetes" for testing fabric8 on a kubernetes cluster
+   */
+  targetPlatform: function () {
+    return browser.params.target.platform || "osio";
   },
 
   /* 
@@ -159,7 +169,7 @@ waitForText: function (elementFinder) {
     console.log("dashboard dropdown button found!");
 
     var process = require('child_process').execSync;
-    var platform = browser.params.target.platform || "osio";
+    var platform = this.targetPlatform();
 
     /* lets only run the cleanup CLIs on OSIO */
     if ("osio" === platform) {
@@ -367,8 +377,6 @@ waitForText: function (elementFinder) {
             OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
     var until = protractor.ExpectedConditions;
 
-    // if using fabric8 lets switch from the github username to the openshift user name
-    var platform = browser.params.target.platform || "osio";
     username = this.userEntityName(username);
 
     page.clickHeaderDropDownToggle();

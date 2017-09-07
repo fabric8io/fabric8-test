@@ -315,7 +315,7 @@ class OpenShiftIoStartPage {
       console.log("OpenShiftIoStartPage - clicked element: loginButton");
     });
 
-    var platform = browser.params.target.platform || "osio";
+    var platform = testSupport.targetPlatform();
     console.log("logging in to platform " + platform);
 
     if ("osio" === platform) {
