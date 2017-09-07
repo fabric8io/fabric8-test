@@ -102,7 +102,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//a[contains(text(),'No thanks, take me to')]"));
   }
   clickNoThanksButton () {
-    browser.wait(until.elementToBeClickable(this.noThanksButton), constants.LONG_WAIT, 'Failed to find element noThanksButton button');
+    browser.wait(until.elementToBeClickable(this.noThanksButton), constants.LONG_WAIT, 'Failed to find element noThanksButton button. Did Create Space fail?');
     this.noThanksButton.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:noThanksButton");
     });
@@ -261,7 +261,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.id("header_status"));
   }
   clickStatusIcon () {
-    browser.wait(until.elementToBeClickable(this.statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
+    console.log("Waiting for the statusIcon to be present");
+    browser.wait(until.presenceOf(this.statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
+    browser.wait(until.elementToBeClickable(this.statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
     this.statusIcon.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:statusIcon");
     });

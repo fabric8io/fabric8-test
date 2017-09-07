@@ -118,11 +118,21 @@ waitForText: function (elementFinder) {
     if (!username) {
       username = browser.params.login.user;
     }
-    var platform = browser.params.target.platform || "osio";
-    if (platform !== "osio") {
+    var platform = this.targetPlatform();
+    if (platform === "fabric8-openshift") {
       username = browser.params.login.openshiftUser || "developer";
     }
     return username;
+  },
+
+  /**
+   * Returns the platform name which is either
+   * * "osio" for testing on https://openshift.io/
+   * * "fabric8-openshift" for testing
+   * * "fabric8-kubernetes" for testing fabric8 on a kubernetes cluster
+   */
+  targetPlatform: function () {
+    return browser.params.target.platform || "osio";
   },
 
   /* 
@@ -159,7 +169,7 @@ waitForText: function (elementFinder) {
     console.log("dashboard dropdown button found!");
 
     var process = require('child_process').execSync;
-    var platform = browser.params.target.platform || "osio";
+    var platform = this.targetPlatform();
 
     /* lets only run the cleanup CLIs on OSIO */
     if ("osio" === platform) {
@@ -175,7 +185,7 @@ waitForText: function (elementFinder) {
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
 
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     if (browser.params.target.disableChe) {
       console.log("Disabling waiting for Che to start");
     } else {
@@ -186,7 +196,7 @@ waitForText: function (elementFinder) {
       // lets clean the environment before a test
       this.cleanEnvironment();
 
-      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
       if (browser.params.target.disableChe) {
         console.log("Disabling waiting for Che to start");
       } else {
@@ -367,8 +377,6 @@ waitForText: function (elementFinder) {
             OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page');
     var until = protractor.ExpectedConditions;
 
-    // if using fabric8 lets switch from the github username to the openshift user name
-    var platform = browser.params.target.platform || "osio";
     username = this.userEntityName(username);
 
     page.clickHeaderDropDownToggle();

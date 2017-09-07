@@ -13,7 +13,7 @@
 
 var testSupport = require('../testSupport'),
         constants = require("../constants"),
-        OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page');
+        OpenShiftIoF8KeyCloakLoginPage = require('../page-objects/openshift-io-F8-keycloak-login.page');
 
 let until = protractor.ExpectedConditions;
 //let CompleteRegistrationPage = require ("./complete-registration.page");
@@ -34,8 +34,19 @@ class OpenShiftIoGithubLoginPage {
                 that.typeGithubLoginField(browser.params.login.user);
                 that.clickGithubPassword();
                 that.typeGithubPassword(browser.params.login.password);
-                that.clickGithubLoginButton(null);
-                that.clickAuthorizeApplicationButton(callback);
+
+                if (testSupport.targetPlatform() === "fabric8-kubernetes") {
+                  var nextCallback = function () {
+                    var kcDetailsPage = new OpenShiftIoF8KeyCloakLoginPage();
+                    kcDetailsPage.doLogin(browser, callback);
+                  };
+                  that.clickGithubLoginButton(nextCallback);
+
+                } else {
+                  that.clickGithubLoginButton(null);
+                  that.clickAuthorizeApplicationButton(callback);
+                }
+
               } else {
                 console.log("No github login field present!");
                 if (callback) {
@@ -98,7 +109,7 @@ class OpenShiftIoGithubLoginPage {
   }
 
   clickAuthorizeApplicationButton(callback) {
-    browser.wait(until.presenceOf(this.authorizeApplicationButton), constants.WAIT, 'Failed to find github authorize button');
+    browser.wait(until.presenceOf(this.authorizeApplicationButton), constants.LONG_WAIT, 'Failed to find github authorize button');
     browser.wait(until.elementToBeClickable(this.authorizeApplicationButton), constants.WAIT, 'Failed waiting for the github authorize button to be clickable');
 
     this.authorizeApplicationButton.click().then(function () {

@@ -20,8 +20,7 @@ class OpenShiftIoF8OSLoginPage {
   doLogin(browser) {
     console.log("Processing OpenShiftIoF8OSLoginPage");
 
-    var platform = browser.params.target.platform || "osio";
-    var nextPage = null;
+    var platform = testSupport.targetPlatform();
     if ("fabric8-openshift" === platform) {
       this.clickOpenshiftflowLoginButton();
     } else {
@@ -31,7 +30,7 @@ class OpenShiftIoF8OSLoginPage {
 
 
   get githubLoginButton () {
-     return element(by.css("#social-github"));
+     return element(by.id("zocial-github"));
   }
 
   clickGithubLoginButton () {
@@ -39,8 +38,13 @@ class OpenShiftIoF8OSLoginPage {
     this.githubLoginButton.click().then(function(){
       console.log("OpenShiftIoF8OSLoginPage - clicked element:githubLoginButton");
 
+      var nextCallback = function () {
+        var nextPage = new OpenShiftIoGettingStartedPage();
+        nextPage.doLogin(browser, null);
+      };
+
       var nextPage = new OpenShiftIoGithubLoginPage();
-      nextPage.doLogin(browser);
+      nextPage.doLogin(browser, nextCallback);
     });
   }
 

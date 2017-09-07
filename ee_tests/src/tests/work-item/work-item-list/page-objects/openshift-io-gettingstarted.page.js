@@ -39,25 +39,29 @@ class OpenShiftIoGettingStartedPage {
     var dropDownToggle = dashboardPage.headerDropDownToggle;
     dropDownToggle.isPresent().then(function (present) {
       if (!present) {
-        browser.wait(until.presenceOf(githubCheckBox), constants.WAIT, 'Failed waiting for Getting Started github auth checkbox to be visible');
-        browser.wait(until.elementToBeClickable(githubCheckBox), constants.WAIT, 'Failed waiting for Getting Started github auth checkbox to be clickable');
+        if (testSupport.targetPlatform() === "fabric8-kubernetes") {
+          clickGetStarted();
+        } else {
+          browser.wait(until.presenceOf(githubCheckBox), constants.WAIT, 'Failed waiting for Getting Started github auth checkbox to be visible');
+          browser.wait(until.elementToBeClickable(githubCheckBox), constants.WAIT, 'Failed waiting for Getting Started github auth checkbox to be clickable');
 
-        // lets then connect to github if its present
-        githubCheckBox.isPresent().then(function (present) {
-          if (present) {
-            githubCheckBox.isSelected().then(function (checked) {
-              if (!checked) {
-                githubCheckBox.click();
-                that.clickStartPageConnectButton(browser, clickGetStarted);
-              } else {
-                clickGetStarted();
-              }
-            });
-          } else {
-            console.log("the github checkbox is not present!");
-            clickGetStarted();
-          }
-        });
+          // lets then connect to github if its present
+          githubCheckBox.isPresent().then(function (present) {
+            if (present) {
+              githubCheckBox.isSelected().then(function (checked) {
+                if (!checked) {
+                  githubCheckBox.click();
+                  that.clickStartPageConnectButton(browser, clickGetStarted);
+                } else {
+                  clickGetStarted();
+                }
+              });
+            } else {
+              console.log("the github checkbox is not present!");
+              clickGetStarted();
+            }
+          });
+        }
       }
     });
 
@@ -94,7 +98,6 @@ class OpenShiftIoGettingStartedPage {
     var dropDownToggle = dashboardPage.headerDropDownToggle;
     dropDownToggle.isPresent().then(function (present) {
       if (!present) {
-        //browser.wait(until.presenceOf(getStartedButton), constants.WAIT, 'Failed waiting for Start Page Get Started Button to be visible');
         browser.wait(until.presenceOf(getStartedButton), constants.LONGER_WAIT, 'Failed waiting for Start Page Get Started Button to be visible');
         browser.wait(until.elementToBeClickable(getStartedButton), constants.WAIT, 'Failed waiting for Start Page Get Started Button to be visible');
 
