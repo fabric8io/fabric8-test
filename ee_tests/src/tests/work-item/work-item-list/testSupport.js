@@ -175,7 +175,7 @@ waitForText: function (elementFinder) {
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
 
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     if (browser.params.target.disableChe) {
       console.log("Disabling waiting for Che to start");
     } else {
@@ -186,7 +186,7 @@ waitForText: function (elementFinder) {
       // lets clean the environment before a test
       this.cleanEnvironment();
 
-      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT), "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
       if (browser.params.target.disableChe) {
         console.log("Disabling waiting for Che to start");
       } else {
