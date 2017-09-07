@@ -109,8 +109,16 @@ class OpenShiftIoGithubLoginPage {
   }
 
   clickAuthorizeApplicationButton(callback) {
-    browser.wait(until.presenceOf(this.authorizeApplicationButton), constants.LONG_WAIT, 'Failed to find github authorize button');
-    browser.wait(until.elementToBeClickable(this.authorizeApplicationButton), constants.WAIT, 'Failed waiting for the github authorize button to be clickable');
+    try {
+      browser.wait(until.presenceOf(this.authorizeApplicationButton), constants.LONG_WAIT, 'Failed to find github authorize button');
+      browser.wait(until.elementToBeClickable(this.authorizeApplicationButton), constants.WAIT, 'Failed waiting for the github authorize button to be clickable');
+    } catch (e) {
+      console.log("Failed to find the github authorize button - maybe we've already logged in?", e)
+
+      if (callback) {
+        callback();
+      }
+    }
 
     this.authorizeApplicationButton.click().then(function () {
               console.log("OpenShiftIoGithubLoginPage - clicked element: authorizeApplicationButton");
