@@ -3,6 +3,9 @@ var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 var reporter = new HtmlScreenshotReporter({
   dest: 'target/screenshots',
   filename: 'my-report.html',
+  showSummary: true,
+  showQuickLinks: true,
+  reportFailedUrl: true,
   reportOnlyFailedSpecs: false,
   captureOnlyFailedSpecs: false,
   inlineImages: true
@@ -31,7 +34,7 @@ if (!password) {
 var targetUrl = process.env.TARGET_URL || "https://openshift.io/";
 var testSpecs = process.env.SPECS || 'src/tests/**/EE/*burr-quickstart.spec.js';
 var platform = process.env.TARGET_PLATFORM || ((targetUrl === "https://openshift.io" || targetUrl === "https://openshift.io/") ? "osio" : "fabric8-openshift");
-var quickstart = process.env.QUICKSTART || "Vert.x - Basic";
+var quickstart = process.env.QUICKSTART || "Vert.x HTTP Booster";
 var disableChe = "";
 if (process.env.DISABLE_CHE === "true") {
   disableChe = "true";
@@ -89,14 +92,6 @@ exports.config = {
   // Assign the test reporter to each running instance
   onPrepare: function() {
     jasmine.getEnv().addReporter(reporter);
-
-/*
-    browser.getProcessedConfig().then(function (config) {
-      console.log("=== has params", config.params);
-      config.params = {
-      };
-    });
-*/
   },
 
   // Close the report after all tests finish
@@ -105,24 +100,6 @@ exports.config = {
       reporter.afterLaunch(resolve.bind(this, exitCode));
     });
   }
-
 };
-/*
-
-module.exports = {
-  params: {
-    login: {
-      user: "jstrachan-testing",
-      password: "sp33d0sp33d0"
-    },
-    target: {
-      url: "http://fabric8-fabric8.192.168.64.82.nip.io",
-      platform: "fabric8-openshift",
-      quickstart: "Vert.x - Basic",
-      disableChe: "true"
-    }
-  }
-};
-*/
 
 
