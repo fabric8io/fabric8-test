@@ -50,7 +50,6 @@ var until = protractor.ExpectedConditions;
 
 var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('../page-objects/openshift-io-RHD-login.page'),
-    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
     OpenShiftIoDashboardPage = require('../page-objects/openshift-io-dashboard.page'),
     OpenShiftIoSpaceHomePage = require('../page-objects/openshift-io-spacehome.page'),
     OpenShiftIoRegistrationPage = require('../page-objects/openshift-io-registration.page'),
@@ -174,7 +173,11 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 
       /* Verify that the source repo is referenced */
       console.log ("Verify that error source repository is displayed");
-      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
+      var githubname = GITHUB_NAME;
+      if (testSupport.targetPlatform() !== "osio") {
+        githubName = username;
+      }
+      expect(text).toContain("Source Repository: https://github.com/" + githubname + "/" + spaceTime + ".git");
     });
 
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
