@@ -102,7 +102,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//a[contains(text(),'No thanks, take me to')]"));
   }
   clickNoThanksButton () {
-    browser.wait(until.elementToBeClickable(this.noThanksButton), constants.LONG_WAIT, 'Failed to find element noThanksButton button');
+    browser.wait(until.elementToBeClickable(this.noThanksButton), constants.LONG_WAIT, 'Failed to find element noThanksButton button. Did Create Space fail?');
     this.noThanksButton.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:noThanksButton");
     });
