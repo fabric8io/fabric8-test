@@ -118,7 +118,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime);
+    browser.get(testSupport.joinURIPath(browser.params.target.url, username, spaceTime));
 
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 

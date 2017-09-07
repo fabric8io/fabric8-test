@@ -161,6 +161,9 @@ waitForText: function (elementFinder) {
         if (!answer.endsWith("/")) {
           answer += "/";
         }
+        if (arg.startsWith("/")) {
+          arg = arg.substring(1);
+        }
         answer += arg;
       }
     }
@@ -428,7 +431,6 @@ waitForText: function (elementFinder) {
     console.log("Lets wait for the URL to contain the space URL: " + urlText);
 
     browser.wait(until.urlContains(urlText), constants.LONG_WAIT, "Failed waiting to move to the space page with URL: " + urlText + " Did create space not work?").then(function () {
-      console.log("After the wait!");
       browser.getCurrentUrl().then(function (text) {
          console.log ('The browser was at URL: ' + text);
       });
@@ -524,7 +526,7 @@ waitForText: function (elementFinder) {
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
     var username = this.userEntityName(browser.params.login.user);
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
+    browser.get(this.joinURIPath(browser.params.target.url, username, spaceTime, "create"));
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
 
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
@@ -560,7 +562,7 @@ waitForText: function (elementFinder) {
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
+    browser.get(this.joinURIPath(browser.params.target.url, username, spaceTime, "create"));
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
     
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){

@@ -135,6 +135,12 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 
     var spaceTime = testSupport.returnTime();
     var username = testSupport.userEntityName(browser.params.login.user);
+    var githubname = GITHUB_NAME;
+    var platform = testSupport.targetPlatform();
+    if (platform !== "osio") {
+      githubname = browser.params.login.user || username;
+    }
+
     OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
@@ -155,12 +161,19 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime);
+    browser.get(testSupport.joinURIPath(browser.params.target.url, username, spaceTime));
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
     /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
     /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+    try {
+      browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.LONG_WAIT, 'Failed to find PipelineByName: ' + spaceTime);
+    } catch (e) {
+      browser.getCurrentUrl().then(function (url) {
+        console.log('Failed to find PipelineByName: ' + spaceTime + ' when at URL: ' + url);
+      });
+      throw e;
+    }
     console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
     expect(OpenShiftIoPipelinePage.allPipelineByName(spaceTime).count()).toBe(1);
 
@@ -172,11 +185,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
       expect(text).not.toContain("No pipeline builds have run for");
 
       /* Verify that the source repo is referenced */
-      console.log ("Verify that error source repository is displayed");
-      var githubname = GITHUB_NAME;
-      if (testSupport.targetPlatform() !== "osio") {
-        githubName = username;
-      }
+      console.log ("Verify that error source repository is displayed for: " + githubname + "/" + spaceTime);
       expect(text).toContain("Source Repository: https://github.com/" + githubname + "/" + spaceTime + ".git");
     });
 
