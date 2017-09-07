@@ -132,7 +132,19 @@ waitForText: function (elementFinder) {
    * * "fabric8-kubernetes" for testing fabric8 on a kubernetes cluster
    */
   targetPlatform: function () {
-    return browser.params.target.platform || "osio";
+    var platform = browser.params.target.platform;
+    if (!platform) {
+      var url = browser.params.target.url;
+      if (url) {
+        if (url === "https://openshift.io" || url === "https://openshift.io/") {
+          return "osio";
+        } else {
+          // lets assume fabric8 on openshift as its better than assuming OSIO when not using OSIO :)
+          return "fabric8-openshift";
+        }
+      }
+    }
+    return platform || "osio";
   },
 
 
