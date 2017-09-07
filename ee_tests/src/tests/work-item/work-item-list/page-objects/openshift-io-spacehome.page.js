@@ -291,6 +291,17 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get stackReportsButton () {
+    return element(by.css(".stack-reports-btn"));
+  }
+  clickStackReportsButton () {
+    browser.wait(until.elementToBeClickable(this.stackReportsButton), constants.LONG_WAIT, 'Failed to find element stackReportsButton');
+    this.stackReportsButton.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: StackReportsButton");
+    });
+    return;
+}
+
   get stackReportSection () {
     return element (by.css(".fabric8-stack-analysis"));
   }
@@ -312,21 +323,88 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
   
   get stackReportDetailedReport () {
-    return element (by.css("..modal.in.fade"));
+    return element (by.css(".modal.in.fade"));
   }
   
   get detailedReportHeading () {
-    return element (by.xpath(".//*[contains(text(),'Stack report')]"));
+    return element (by.xpath(".//*[contains(text(),'Stack report')]/.."));
   }
     
   get detailedAnalysisHeading () {
     return element (by.xpath(".//*[contains(text(),'Detail analysis of your stack components')]"));
   }
   
-  get additionalCompoenntsHeading () {
+  get additionalComponentsHeading () {
     return element (by.xpath(".//*[contains(text(),'Additional components recommended by Openshift IO')]"));
   }
+
+//  get dependenciesTable () {
+//    return element (by.id("dependenciesTable"));
+//  }
+//
+//  dependenciesTableElement (row, column) {
+//    var xpathString = ".//[@id='dependenciesTable']/tbody/tr[" + row + "]/td[" + column + "]";
+//    return element (by.xpath (xpathString));
+//  }
+
+  // TODO - Repelase ALL xpath references!
+
+  get dependenciesTable () {
+    return element (by.xpath(".//*[contains(text(),'Detail analysis of your stack components')]/../../../../../div[2]/div/component-level-information/div/div/table"));
+  }
   
+  get dependenciesTableViewToggle () {
+    return element (by.xpath(".//*[contains(text(),'Detail analysis of your stack components')]/../i"));
+  }
+  
+  clickDependenciesTableViewToggle () {
+    browser.wait(until.elementToBeClickable(this.dependenciesTableViewToggle), constants.LONG_WAIT, 'Failed to find element dependenciesTableViewToggle');
+    this.dependenciesTableViewToggle.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: dependenciesTableViewToggle");
+    });
+    return;
+  }
+
+  get additionalComponentsTable () {
+    return element (by.xpath(".//*[contains(text(),'Additional components recommended by Openshift IO')]/../../../../../div[2]/div/component-level-information/div/div/table"));
+  }
+  get additionalComponentsTableViewToggle () {
+    return element (by.xpath(".//*[contains(text(),'Additional components recommended by Openshift IO')]/../i"));
+  }
+
+  clickAdditionalComponentsViewToggle () {
+    browser.wait(until.elementToBeClickable(this.additionalComponentsTableViewToggle), constants.LONG_WAIT, 'Failed to find element additionalComponents');
+    this.additionalComponentsTableViewToggle.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: additionalComponents");
+    });
+    return; 
+  }
+
+  dependenciesTableElement (row, column) {
+    var xpathString = ".//*[contains(text(),'Detail analysis of your stack components')]/../../../../../div[2]/div/component-level-information/div/div/table/tbody/tr[" + row + "]/td[" + column + "]";
+    return element (by.xpath (xpathString));
+  }
+
+  additionalComponentsTableElement (row, column) {
+    var xpathString = ".//*[contains(text(),'Additional components recommended by Openshift IO')]/../../../../../div[2]/div/component-level-information/div/div/table/tbody/tr[" + row + "]/td[" + column + "]";
+    return element (by.xpath (xpathString));
+  }
+  
+  get analyticsCloseButton () {
+    return element (by.xpath(".//h4[contains(text(),'Report title on Application')]/../button"));
+  }
+  clickAnalyticsCloseButton () {
+    browser.wait(until.elementToBeClickable(this.analyticsCloseButton), constants.LONG_WAIT, 'Failed to find element analyticsCloseButton');
+    this.analyticsCloseButton.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: analyticsCloseButton");
+    });
+    return; 
+  }
+
+
+
+
+
 /* UI Page Section: My Workitems */
 
   get workitems () {
