@@ -252,12 +252,11 @@ waitForText: function (elementFinder) {
     
         /* Access the clean the tenant page */
         OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
-        browser.sleep(constants.WAIT);
+        browser.sleep(constants.LONG_WAIT);
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
         OpenShiftIoCleanTenantPage.typeEraseOsioEnvUsername(this.userEntityName(browser.params.login.user));
         OpenShiftIoCleanTenantPage.clickConfirmEraseOsioEnvButton();
-
 
         // TODO remove the rest of this function with: this.cleanEnvironment() ??
 
