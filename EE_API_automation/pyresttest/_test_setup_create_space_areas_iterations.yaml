@@ -1,0 +1,124 @@
+---
+
+### SETUP STEPS:
+# 1. Create Space
+#
+# 2. Create Child Areas (Area 1 - Area 5) - 5 nos.
+# Note: Default Parent Area with the Space name get auto created
+#
+# 3. Create Child Iterations (Iteration 1 - Iteration 5)
+# Note: Default Parent Iteration with the Space name get auto created
+#
+
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   generators:
+        # - 'space_name_generated': {type:  'random_text',  character_set:  'alphanumeric'}
+        - 'area_nos_generated': {type:  'number_sequence',  start:  1}
+        - 'iteration_nos_generated': {type:  'number_sequence',  start:  1}
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          }
+
+-   test:
+    -   name:   "Find logged-in User Details"
+    -   url:    {'template':  "/api/users?filter[username]=$userid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'loggedin_user_id': {'jsonpath_mini': 'data.0.id'}
+        -   'loggedin_user_name': {'jsonpath_mini': 'data.0.attributes.username'}
+
+#### Step 1: Create a new Space . . . . . . . . . . . . . . . . . . . . . . . . 
+-   test:
+    -   name:   "Create a brand new Space"
+    # -   generator_binds:    {space_name_generated_b: space_name_generated}
+    -   url:    "/api/spaces"
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_space.json'}}
+    -   expected_status:    [201]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$userid-$space_name_var'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+    -   extract_binds:
+        -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacename': {'jsonpath_mini': 'data.attributes.name'}
+
+-   test:
+    -   name:   "Get Space details using the spaces api"
+    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
+        # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
+        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$loggedin_user_id'}}
+        -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
+
+-   test:
+    -   name:   "Find Space using the namedspaces api"
+    -   url:    {'template':  "/api/namedspaces/$userid/$spacename"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+        
+-   test:
+    -   name:   "Get space collaborators"
+    -   url:    {'template':  "/api/spaces/$spaceid/collaborators"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
+        -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
+        -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
+        -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
+
+-   test:
+    -   name:   "Get Parent-Root Iteration details"
+    -   url:    {'template':  "/api/spaces/$spaceid/iterations"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200, 304]
+    -   extract_binds:
+        -   'parent_iteration_id': {'jsonpath_mini': 'data.0.id'}
+
+#### Step 2: Create Child Areas (Area 0 - Area 5) . . . . . . . . . . . . . . . . . . . . . . . . 
+-   test:
+    -   name:   "Get Parent Area under a Space"
+    -   url:    {'template':  "/api/spaces/$spaceid/areas"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'parent_area_id': {'jsonpath_mini': 'data.0.id'}
+        -   'parent_area_name': {'jsonpath_mini': 'data.0.attributes.name'}
+
+-   benchmark:
+    -   name:   "Create child Areas"
+    -   generator_binds:    {area_name_generated_b: area_nos_generated}
+    -   url:    {'template':  "/api/areas/$parent_area_id"}
+    -   method: "POST"
+    -   warmup_runs:    0
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_child_area.json'}}
+    -   benchmark_runs: 5
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create child Iterations"
+    -   generator_binds:    {iteration_name_generated_b: iteration_nos_generated}
+    -   url:    {'template':  "/api/iterations/$parent_iteration_id"}
+    -   method: "POST"
+    -   warmup_runs:    0
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_child_iteration.json'}}
+    -   benchmark_runs: 5
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean

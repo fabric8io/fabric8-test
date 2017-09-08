@@ -1,0 +1,36 @@
+---
+### SETUP STEPS:
+# 1. Create Space
+#
+# 2. Create Child Areas (Area 1 - Area 5) - 5 nos.
+# Note: Default Parent Area with the Space name get auto created
+#
+# 3. Create Child Iterations (Iteration 1 - Iteration 5)
+# Note: Default Parent Iteration with the Space name get auto created
+#
+# 4. Create Workitems in Iteration 1. Title = Title Text # (starting from 0), Description = Description Text # (starting from 0). TOTAL 24 WIs
+#   a. Create Workitems of Type Task - 3 no.
+#
+# 5. Create Workitems in Iteration 2. Title = Title Text # (starting from 24), Description = Description Text # (starting from 24). TOTAL 24 WIs
+#   a. Create Workitems of Type Task - 3 no.
+#
+# 6. Create Workitems in Backlog. Title = Title Text # (starting from 48), Description = Description Text # (starting from 48). TOTAL 24 WIs
+#   a. Create Workitems of Type Feature - 3 no.
+#   b. Create Workitems of Type Scenario - 3 no.
+#   c. Create Workitems of Type Task - 3 no.
+#   d. Create Workitems of Type Experience - 3 no.
+#   e. Create Workitems of Type Fundamentals - 3 no.
+#   f. Create Workitems of Type Value Proposition - 3 no.
+#   g. Create Workitems of Type Papercuts - 3 no.
+#   h. Create Workitems of Type Bug - 3 no.
+
+- import:   _test_setup_create_space_areas_iterations.yaml
+- import:   _test_setup_create_workitems.yaml
+
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          }
+
