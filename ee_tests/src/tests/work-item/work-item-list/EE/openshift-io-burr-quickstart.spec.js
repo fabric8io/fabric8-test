@@ -200,7 +200,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
       testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
     });
 
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.PIPELINE_COMPLETE_WAIT, 'Failed to find inputRequiredByPipelineByName');
     expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
 
     browser.takeScreenshot().then(function (png) {
