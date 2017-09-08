@@ -14,7 +14,8 @@
 #oc delete all,pvc,cm,secrets,sa --all -n $1-run
 #oc delete all,pvc,cm,secrets,sa --all -n $1-stage
 
-./oc delete bc --all -n $1
+## Experiment - what happens over time if pipelines are not cleaned?
+##./oc delete bc --all -n $1
 #./oc delete all,pvc,cm --all -n $1-che
 #./oc delete all,pvc,cm --all -n $1-jenkins
 ./oc delete all,pvc,cm --all -n $1-run
