@@ -132,7 +132,42 @@ waitForText: function (elementFinder) {
    * * "fabric8-kubernetes" for testing fabric8 on a kubernetes cluster
    */
   targetPlatform: function () {
-    return browser.params.target.platform || "osio";
+    var platform = browser.params.target.platform;
+    if (!platform) {
+      var url = browser.params.target.url;
+      if (url) {
+        if (url === "https://openshift.io" || url === "https://openshift.io/") {
+          return "osio";
+        } else {
+          // lets assume fabric8 on openshift as its better than assuming OSIO when not using OSIO :)
+          return "fabric8-openshift";
+        }
+      }
+    }
+    return platform || "osio";
+  },
+
+
+  /**
+   * Joins the arguments as URI paths ensuring there's exactly one '/' between each path entry
+   */
+  joinURIPath: function () {
+    var answer = null;
+    for (var i = 0, j = arguments.length; i < j; i++) {
+      var arg = arguments[i];
+      if (i === 0 || !answer) {
+        answer = arg;
+      } else {
+        if (!answer.endsWith("/")) {
+          answer += "/";
+        }
+        if (arg.startsWith("/")) {
+          arg = arg.substring(1);
+        }
+        answer += arg;
+      }
+    }
+    return answer;
   },
 
   /* 
@@ -142,7 +177,6 @@ waitForText: function (elementFinder) {
 
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
-    OpenShiftIoGithubLoginPage = require('./page-objects/openshift-io-github-login.page'),
     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
     OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
     OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
@@ -391,10 +425,17 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage = page.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
-    console.log("Lets wait for the URL to contain username " + username + "/" + spaceName);
-    browser.wait(until.urlContains(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT);
-    browser.wait(until.urlIs(targetUrl + '/' + username + '/'+ spaceName), constants.WAIT); 
-    expect(browser.getCurrentUrl()).toEqual(targetUrl + '/' + username + '/'+ spaceName);
+    var urlText = this.joinURIPath(targetUrl, username, spaceName);
+
+    console.log("Lets wait for the URL to contain the space URL: " + urlText);
+
+    browser.wait(until.urlContains(urlText), constants.LONG_WAIT, "Failed waiting to move to the space page with URL: " + urlText + " Did create space not work?").then(function () {
+      browser.getCurrentUrl().then(function (text) {
+         console.log ('The browser was at URL: ' + text);
+      });
+    });
+    browser.wait(until.urlIs(urlText), constants.WAIT);
+    expect(browser.getCurrentUrl()).toEqual(urlText);
 
     browser.getCurrentUrl().then(function (text) { 
        console.log ('EE POC test - new space URL = ' + text);
@@ -484,7 +525,7 @@ waitForText: function (elementFinder) {
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
     var username = this.userEntityName(browser.params.login.user);
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
+    browser.get(this.joinURIPath(browser.params.target.url, username, spaceTime, "create"));
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
 
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
@@ -520,7 +561,7 @@ waitForText: function (elementFinder) {
     OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
  
     /* Go to the Create page - https://openshift.io/almusertest1/testmay91494369460731/create  */
-    browser.get(browser.params.target.url + "/" + username + "/" + spaceTime + "/create");
+    browser.get(this.joinURIPath(browser.params.target.url, username, spaceTime, "create"));
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
     
     OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
