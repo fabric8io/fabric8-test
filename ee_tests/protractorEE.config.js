@@ -19,7 +19,7 @@ exports.config = {
       allTest: ['src/tests/**/EE/*burr*.spec.js'], 
       mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
       runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
-      quickstartTest: ['src/tests/**/EE/*burr*quickstart.spec.js', 'src/tests/**/EE/*setup*.spec.js'],
+      quickstartTest: ['src/tests/**/EE/*burr*quickstart.spec.js'],
       analyticTest: ['src/tests/**/EE/*burr*analytic.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js']
     },
