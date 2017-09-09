@@ -607,6 +607,18 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get pipelineStrategy () {
+    return element(by.xpath(".//input[contains(@title,'Release, Stage, Approve and Promote')]"));
+  }
+  clickPipelineStrategy () {
+      browser.wait(until.elementToBeClickable(this.pipelineStrategy), constants.LONG_WAIT, 'Failed to find element pipelineStrategy');
+      this.pipelineStrategy.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: pipelineStrategy");
+    });
+    return;
+  }
+
+
 
   get technologyStack () {
 //    return element(by.xpath(".//h3/strong[contains(text(),'technology stack')]"));

@@ -470,12 +470,16 @@ waitForText: function (elementFinder) {
   */
   importProjectDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, projectName) {    
 
+    var constants = require("./constants");
+    
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
 
     OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
     OpenShiftIoSpaceHomePage.clickImportCodebaseByName (projectName);
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2();  // End of dialog page 2/3
+    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoSpaceHomePage.clickPipelineStrategy();
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
     OpenShiftIoSpaceHomePage.clickOkButton();
 

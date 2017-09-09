@@ -153,23 +153,36 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
 //    var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
     
-    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
-    browser.sleep(constants.LONGER_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_import_pipeline_promote.png');
+//    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+//    browser.sleep(constants.LONGER_WAIT);
+//    browser.takeScreenshot().then(function (png) {
+//      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_import_pipeline_promote.png');
+//    });
+//
+//    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+//    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
+//
+//    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+//    browser.sleep(constants.LONGER_WAIT);
+//    browser.takeScreenshot().then(function (png) {
+//      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_import_pipeline_promote.png');
+//    });
+//
+//    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
+//    OpenShiftIoPipelinePage.clickPromoteButton();
+
+    /* Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+      console.error("Failed to find inputRequiredByPipelineByName: " + err);
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + IMPORT_NAME + '_pipeline_promote_fail.png');
+        throw err;
+      });
     });
 
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
-
-    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
-    browser.sleep(constants.LONGER_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_import_pipeline_promote.png');
-    });
-
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
-    OpenShiftIoPipelinePage.clickPromoteButton();
+   expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true);
+   OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
+   OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
