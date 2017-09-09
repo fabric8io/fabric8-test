@@ -151,21 +151,28 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 //    var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
 //    console.log(result);
 
-    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
-    browser.sleep(constants.LONGER_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
+//    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
+//    browser.sleep(constants.LONGER_WAIT);
+//    browser.takeScreenshot().then(function (png) {
+//      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
+//    });
+
+    /* There is a recurring/intermittent problem where build pipelines are not created.
+      Take a screenshot in the event that the build fails 
+      https://github.com/openshiftio/openshift.io/issues/517 */ 
+
+    /* Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+      console.error("Failed to find inputRequiredByPipelineByName: " + err);
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');
+        throw err;
+      });
     });
 
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
-
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_pipeline_promote.png');
-    });
-
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
-    OpenShiftIoPipelinePage.clickPromoteButton();
+   expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
+   OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+   OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
