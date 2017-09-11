@@ -1,4 +1,16 @@
+
+Command to run the automation:
+-------------------------------------------------
+1) If intended to run against your target SUT using relative URLs (The framework will append all URLs specified in yaml files with the value passed via arg YOUR_TARGET_SUT):
+
 pyresttest <YOUR_TARGET_SUT> <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID', 'space_name_var':'YOUR_CUSTOM_SPACE_NAME'}"
 
+2) If intended to run against your target SUT using absolute URLs (The framework will use the URLs specified in yaml files as-is. The SUT in this case is passed via arg 'sut' in vars):
+
+pyresttest null <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID', 'space_name_var':'YOUR_CUSTOM_SPACE_NAME', 'sut':'https://api.openshift.io'}" --absolute-urls
+
+Legend:
+---------------------
 YOUR_TARGET_SUT: https://api.openshift.io OR anything else you want it to be
 YOUR_TEST_SCRIPT_NAME: API_automation_workshop.yaml OR anything else you want it to be
+sut: https://api.openshift.io OR anything else you want it to be
