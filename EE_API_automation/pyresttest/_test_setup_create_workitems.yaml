@@ -23,7 +23,8 @@
 -   config:
     -   testset:    "osio api automation - test setup"
     -   generators:
-        - 'workitem_nos_generated': {type:  'number_sequence',  start:  29, increment:  -1}
+        - 'workitem_nos_generated': {type:  'number_sequence',  start:  1}
+        # - 'workitem_nos_generated': {type:  'gen_int_seq'}
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
@@ -39,7 +40,7 @@
 
 -   test:
     -   name:   "Find Space using the namedspaces api"
-    -   url:    {'template':  "/api/namedspaces/$userid/$userid-$space_name_var"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
         # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
@@ -49,7 +50,7 @@
         
 -   test:
     -   name:   "Get Iteration details"
-    -   url:    {'template':  "/api/spaces/$spaceid/iterations"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/iterations"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   extract_binds:
@@ -60,12 +61,12 @@
 -   benchmark:
     -   name:   "Create Workitems (Tasks) in Iteration 1"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/setup/create_wi_task_iter1.json'}}
-    -   benchmark_runs: 3
+    -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
         -   total_time: mean
@@ -74,12 +75,12 @@
 -   benchmark:
     -   name:   "Create Workitems (Task) in Iteration 2"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/setup/create_wi_task_iter2.json'}}
-    -   benchmark_runs: 3
+    -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
         -   total_time: mean
@@ -88,90 +89,12 @@
 -   benchmark:
     -   name:   "Create Workitems (Bugs) in Backlog"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/setup/create_wi_bug.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Papercuts) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_paper.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Value Proposition) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_value.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Fundamentals) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_funda.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Experience) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_exp.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Tasks) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_task.json'}}
-    -   benchmark_runs: 3
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
-    -   name:   "Create Workitems (Scenario) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_scenario.json'}}
-    -   benchmark_runs: 3
+    -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
         -   total_time: mean
@@ -179,12 +102,90 @@
 -   benchmark:
     -   name:   "Create Workitems (Feature) in Backlog"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "/api/spaces/$spaceid/workitems"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/setup/create_wi_feature.json'}}
-    -   benchmark_runs: 3
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Papercuts) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_paper.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Value Proposition) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_value.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Fundamentals) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_funda.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Experience) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_exp.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Tasks) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_task.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Scenario) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_scenario.json'}}
+    -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
         -   total_time: mean

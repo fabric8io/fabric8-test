@@ -23,7 +23,7 @@
 
 -   test:
     -   name:   "Find logged-in User Details"
-    -   url:    {'template':  "/api/users?filter[username]=$userid"}
+    -   url:    {'template':  "$sut/api/users?filter[username]=$userid"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   extract_binds:
@@ -34,10 +34,10 @@
 -   test:
     -   name:   "Create a brand new Space"
     # -   generator_binds:    {space_name_generated_b: space_name_generated}
-    -   url:    "/api/spaces"
+    -   url:    {'template':  "$sut/api/spaces"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_space.json'}}
+    -   body:   {'template':    {'file':'./POST/create_space.json'}}
     -   expected_status:    [201]
     -   validators:
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
@@ -51,7 +51,7 @@
 
 -   test:
     -   name:   "Get Space details using the spaces api"
-    -   url:    {'template':  "/api/spaces/$spaceid"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   validators:
@@ -63,13 +63,13 @@
 
 -   test:
     -   name:   "Find Space using the namedspaces api"
-    -   url:    {'template':  "/api/namedspaces/$userid/$spacename"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$spacename"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
         
 -   test:
     -   name:   "Get space collaborators"
-    -   url:    {'template':  "/api/spaces/$spaceid/collaborators"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   extract_binds:
@@ -80,17 +80,17 @@
 
 -   test:
     -   name:   "Get Parent-Root Iteration details"
-    -   url:    {'template':  "/api/spaces/$spaceid/iterations"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/iterations"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200, 304]
     -   extract_binds:
         -   'parent_iteration_id': {'jsonpath_mini': 'data.0.id'}
 
-#### Step 2: Create Child Areas (Area 0 - Area 5) . . . . . . . . . . . . . . . . . . . . . . . . 
+#### Step 2: Create Child Areas (Area 1 - Area 5) . . . . . . . . . . . . . . . . . . . . . . . . 
 -   test:
     -   name:   "Get Parent Area under a Space"
-    -   url:    {'template':  "/api/spaces/$spaceid/areas"}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/areas"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   extract_binds:
@@ -100,7 +100,7 @@
 -   benchmark:
     -   name:   "Create child Areas"
     -   generator_binds:    {area_name_generated_b: area_nos_generated}
-    -   url:    {'template':  "/api/areas/$parent_area_id"}
+    -   url:    {'template':  "$sut/api/areas/$parent_area_id"}
     -   method: "POST"
     -   warmup_runs:    0
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
@@ -110,10 +110,11 @@
         -   total_time: total
         -   total_time: mean
 
+#### Step 3: Create Child Iterations (Area 1 - Area 5) . . . . . . . . . . . . . . . . . . . . . . . . 
 -   benchmark:
     -   name:   "Create child Iterations"
     -   generator_binds:    {iteration_name_generated_b: iteration_nos_generated}
-    -   url:    {'template':  "/api/iterations/$parent_iteration_id"}
+    -   url:    {'template':  "$sut/api/iterations/$parent_iteration_id"}
     -   method: "POST"
     -   warmup_runs:    0
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}

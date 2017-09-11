@@ -1,4 +1,7 @@
 ---
+## This file could be used to create a new space for the test user
+## Spacename: $userid-$space_name_var, where 'userid' is the OSIO user ID and 'space_name_var' is the spacename passed as an argument
+
 -   config:
     -   testset:    "osio planner-platform api automation workshop"
     -   variable_binds: {
@@ -17,7 +20,7 @@
 
 -   test:
     -   name:   "Find a Space by name using search api"
-    -   url:    {'template':  "/api/search/spaces?q=$userid-$fixedspacename"}
+    -   url:    {'template':  "/api/search/spaces?q=$userid-$space_name_var"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   extract_binds:
@@ -32,7 +35,7 @@
 
 -   test:
     -   name:   "Create a brand new Space"
-    -   url:    "/api/spaces"
+    -   url:    {'template':  "/api/spaces"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/create_space.json'}}
@@ -41,7 +44,7 @@
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
         -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
-        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$userid-$fixedspacename'}}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$userid-$space_name_var'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
     -   extract_binds:
         -   'spaceid': {'jsonpath_mini': 'data.id'}

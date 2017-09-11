@@ -1,1 +1,0 @@
-{"data":{"attributes":{"system.state":"new","system.title":"Title Text $wi_nos_generated","system.description":"Description Text $wi_nos_generated"},"relationships":{"baseType":{"data":{"id":"$witypescenario","type":"workitemtypes"}},"iteration":{"data":{"id":"$iteration1_id","type":"iteration"}}},"type":"workitems"}}
