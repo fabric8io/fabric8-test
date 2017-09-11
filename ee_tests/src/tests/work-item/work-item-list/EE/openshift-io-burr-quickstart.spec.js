@@ -194,21 +194,37 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
    
-    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
-    browser.sleep(constants.LONGER_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
-    });
+    /* There is a recurring/intermittent problem where build pipelines are not created.
+      https://github.com/openshiftio/openshift.io/issues/517 */ 
 
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.PIPELINE_COMPLETE_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
-
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_pipeline_promote.png');
-    });
-
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
-    OpenShiftIoPipelinePage.clickPromoteButton();
+    /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
+       https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
+       Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
+       browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+        console.error("Failed to find inputRequiredByPipelineByName: " + err);
+  
+        /* Dump the Jenkins pod log to stdout */
+        var process = require('child_process').execSync;
+        var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
+        console.log(result);
+  
+        /* Save a screenshot */
+        browser.takeScreenshot().then(function (png) {
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');
+          throw err;
+        });
+      });
+  
+      /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
+         https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
+      if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true)) { 
+        browser.takeScreenshot().then(function (png) {
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote.png.png');
+        });
+      }
+    
+     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+     OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
