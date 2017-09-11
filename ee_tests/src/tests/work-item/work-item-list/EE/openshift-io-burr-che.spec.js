@@ -76,11 +76,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
-
-    /* Clean the user account's OpenShift Online resources */
-    ////var process = require('child_process').execSync;
-    ////var result = process('sh ./local_cleanup.sh ' + browser.params.login.user + ' ' + browser.params.oso.token).toString();
-    ////console.log(result);
   });
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
@@ -130,6 +125,8 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
         console.log("Number of browser tabs = " + handles.length);
         if (handles.length == 1) {
+
+          /* If Che fails to open - dump the Che log to stdout */
           console.log ("ERROR - Che browser window did not open - see: https://github.com/openshiftio/openshift.io/issues/618");
           var process = require('child_process').execSync;
           var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " che").toString();
@@ -140,22 +137,25 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
         expect(handles.length).toBe(2, "total of 2 browser tabs is expected");
 
         testSupport.switchToWindow (browser, 1);
-//        browser.switchTo().window(handles[1]);
         browser.getCurrentUrl().then(function(url) {
             console.log("Che workspace URL = " + url);
         });
-    });
-
-    browser.sleep(constants.LONG_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_che.png');
     });
 
     /* Look for the project in the Che navigator */
     OpenShiftIoChePage.projectRootByName(spaceTime).getText().then(function (text) { 
        console.log ('EE POC test - projectName = ' + text);
     });
-    expect(OpenShiftIoChePage.projectRootByName(spaceTime).getText()).toBe(spaceTime);
+    
+    /* Verify that the project was created and is available in the Che workspace */
+
+    /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
+       https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
+    if (!expect(OpenShiftIoChePage.projectRootByName(spaceTime).getText()).toBe(spaceTime)) { 
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_1.png');
+      });
+    }
 
     /* Switch back to the OSIO page */
     testSupport.switchToWindow (browser, 0);
