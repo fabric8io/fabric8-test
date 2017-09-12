@@ -279,11 +279,7 @@ waitForText: function (elementFinder) {
     
         /* Access the update profile page */
         OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-//        OpenShiftUpdateProfilePage.obtainToken.getText().then(function(text){
-//          console.log("Token = " + text);
-//        });
-    
+   
         /* Access the clean the tenant page */
         OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
         browser.sleep(constants.LONG_WAIT);
@@ -350,10 +346,6 @@ waitForText: function (elementFinder) {
 
         /* Access the update profile page */
         OpenShiftUpdateProfilePage = OpenShiftProfilePage.clickupdateProfileButton();
-
-//        OpenShiftUpdateProfilePage.obtainToken.getText().then(function(text){
-//          console.log("Token = " + text);
-//        });
 
         /* Access the clean the tenant page */
         OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
@@ -552,10 +544,10 @@ waitForText: function (elementFinder) {
   */
   createCodebaseImport: function  (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME, IMPORT_NAME) {
     
-      var OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
-      OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
-      constants = require("./constants");
-      var until = protractor.ExpectedConditions;
+    var OpenShiftIoChePage = require('./page-objects/openshift-io-che.page'),
+        OpenShiftIoCodebasePage = require('./page-objects/openshift-io-codebase.page'),
+        constants = require("./constants");
+    var until = protractor.ExpectedConditions;
 
     var username = this.userEntityName(browser.params.login.user);
 
@@ -580,14 +572,9 @@ waitForText: function (elementFinder) {
     OpenShiftIoCodebasePage.clickCreateCodebaseKebab();
     OpenShiftIoChePage = OpenShiftIoCodebasePage.clickCreateCodebaseIcon();
 
-
       return OpenShiftIoChePage;
     },
   
-  
-
-
-
 /* 
   * Log user out of OSIO
   */
@@ -598,7 +585,6 @@ waitForText: function (elementFinder) {
     page.clickrightNavigationBar();
     page.clickLogOut();
   },
-
 
 /*
  * Create fixed length string - used to generate large strings

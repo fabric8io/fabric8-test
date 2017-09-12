@@ -100,13 +100,11 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
-    /* ----------------------------------------------------------*/
-    /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
     OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
 
-      /* ----------------------------------------------------------*/
+    /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, import quickstart to space - accept all defaults */
 
     testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, IMPORT_NAME);
@@ -167,11 +165,6 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* Switch back to the OSIO page */
     testSupport.switchToWindow (browser, 0);
     
-    /* Cleanup - Delete the build config created by the test */
-    //var process = require('child_process').execSync;
-    //var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
-    //console.log(result);
-
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);

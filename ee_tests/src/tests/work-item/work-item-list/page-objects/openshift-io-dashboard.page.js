@@ -184,9 +184,8 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//*[contains(@class, 'navbar-left')]//*[contains(@class,'recent-items')]//*[contains(@class,'nav-item-icon')]"));
   }
 
-//   .//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'testspace')]
-
   /* Recent space by name */
+  // Example:  .//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'testspace')]
   recentSpaceByName (spaceName) {
     var xpathString = ".//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'" + spaceName + "')]";
     return element(by.xpath(xpathString));
@@ -200,11 +199,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
-
-
   /* Create space in Left Navigation Bar */
-    get createSpaceUnderLeftNavigationBar () {
-//    return element(by.xpath("//*[contains(@class, 'navbar-left')]//*[contains(@class,'recent-items')]//*[contains(@class,'nav-item-icon')]//*[contains(@class,'pficon-add-circle-o')]"));
+  get createSpaceUnderLeftNavigationBar () {
+    // Example: return element(by.xpath("//*[contains(@class, 'navbar-left')]//*[contains(@class,'recent-items')]//*[contains(@class,'nav-item-icon')]//*[contains(@class,'pficon-add-circle-o')]"));
     return element(by.id("header_createSpace"));
   }
   clickCreateSpaceUnderLeftNavigationBar () {
@@ -352,59 +349,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     });
     return;
   }
-  /*
-  get cleanTenantButton () {
-    return element(by.xpath(".//button[contains (text(), 'Reset Environment')]"));
-  }
-  clickCleanTenantButton () {
-    browser.wait(until.elementToBeClickable(this.cleanTenantButton), constants.LONG_WAIT, 'Failed to find element cleanTenantButton');
-    this.cleanTenantButton.click().then(function(){
-      console.log("OpenShiftIoDashboardPage - clicked element:cleanTenantButton");
-    });
-    return;
-  }
-
-  get eraseOsioEnvButton () {
-    return element(by.xpath(".//button[contains (text(), 'Erase My OpenShift.io Environment')]"));
-  }
-  clickEraseOsioEnvButton () {
-    browser.wait(until.elementToBeClickable(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
-    this.eraseOsioEnvButton.click().then(function(){
-      console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvButton");
-    });
-    return;
-  }
-
-  get eraseOsioEnvUsername () {
-    return element(by.xpath(".//input[contains (@name,'username')]"));
-  }
-  clickEraseOsioEnvUsername () {
-    browser.wait(until.elementToBeClickable(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
-    this.eraseOsioEnvUsername.click().then(function(){
-      console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvUsername");
-    });
-    return;
-  }
-  typeEraseOsioEnvUsername (usernameString) {
-    browser.wait(until.elementToBeClickable(this.eraseOsioEnvUsername), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvUsername');
-    return this.eraseOsioEnvUsername.sendKeys(usernameString);
-  }
-
-  get confirmEraseOsioEnvButton () {
-    return element(by.xpath(".//button[contains (text(), 'I understand my actions - erase my environment')]"));
-  }
-  clickConfirmEraseOsioEnvButton () {
-    browser.wait(until.elementToBeClickable(this.confirmEraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element confirmEraseOsioEnvButton');
-    this.confirmEraseOsioEnvButton.click().then(function(){
-      console.log("OpenShiftIoDashboardPage - clicked element:confirmEraseOsioEnvButton");
-    });
-    return;
-  }
-  */
-
+  
   /* Profile drop down selection */
   get profile () {
-//    return element(by.xpath("//*[@id='header_rightDropdown']//*[contains(@class, 'user-dropdown-menu')]//*[contains(text(),'Profile')]"));
     return element(by.id("header_loggedinProfile"));
   }
   clickProfile () {
