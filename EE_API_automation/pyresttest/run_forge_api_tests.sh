@@ -17,17 +17,17 @@ else
             exit;
         fi
         echo "==> 2. start pre-requisites: create space WIZARD..."
-        pyresttest https://api.openshift.io get_a_space.yaml --vars="{'token': '$2', 'userid': '$1', 'fixedspacename': 'WIZARD'}" #--interactive true #--print-headers true
+        pyresttest https://api.openshift.io get_a_space.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true #--print-headers true
         echo "==> 3. start forge api testing..."
         #pyresttest https://api.openshift.io gihub_step.yaml --vars="{'token': '$2', 'userid': '$1'}" #--interactive true #--print-headers true 
         hasGitOrganisation=$(curl --header "Authorization: Bearer $2" https://forge.api.openshift.io/forge/commands/fabric8-import-git | grep -c 'GithubImportPickOrganisationStep')
         if [ "$hasGitOrganisation" -gt "0" ]; then 
             echo "==> Username belongs to a github organisation: $hasGitOrganisation"
-            pyresttest https://forge.api.openshift.io API_forge_wizard.yaml --vars="{'token': '$2', 'userid': '$1', 'fixedspacename': 'WIZARD'}" #--interactive true --print-headers true
+            pyresttest https://forge.api.openshift.io API_forge_wizard.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true --print-headers true
 
         else
             echo "==> Username doesn't belong to any github organisation: $hasGitOrganisation"
-            pyresttest https://forge.api.openshift.io API_forge_wizard_no_gh_organisation.yaml --vars="{'token': '$2', 'userid': '$1', 'fixedspacename': 'WIZARD'}" #--interactive true --print-headers true
+            pyresttest https://forge.api.openshift.io API_forge_wizard_no_gh_organisation.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true --print-headers true
         fi
     fi
 fi
