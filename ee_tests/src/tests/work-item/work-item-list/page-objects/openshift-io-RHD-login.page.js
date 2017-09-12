@@ -123,11 +123,18 @@ class OpenShiftIoRHDLoginPage {
 
   /* Red Hat Developer Login */
 
+  /* Username related changes caused by Sept 12, 2017 UI change - the username label is now
+     displayed inside the username field - the label must be clicked before the username text is
+     entered */
+  get rhdUsernameFieldLabel () {
+    return element(by.css(".login-username-field.field>label"));
+  }
   get rhdUsernameField () {
-     return element(by.id("username"));
+    return element(by.id("username"));
   }
   clickRhdUsernameField () {
-     return this.rhdUsernameField.click().then(function(){
+      browser.wait(until.elementToBeClickable(this.rhdUsernameFieldLabel), constants.LONG_WAIT, 'Failed to find rhdUsernameField');
+      return this.rhdUsernameFieldLabel.click().then(function(){
       console.log("OpenShiftIoRHDLoginPage - clicked element:rhdUsernameField");
     });
     return;
@@ -140,8 +147,9 @@ class OpenShiftIoRHDLoginPage {
      return element(by.id("password"));
   }
   clickRhdPasswordField () {
-     return this.rhdPasswordField.click().then(function(){
-      console.log("OpenShiftIoRHDLoginPage - clicked element:rhdPasswordField");
+    browser.wait(until.elementToBeClickable(this.rhdPasswordField), constants.LONG_WAIT, 'Failed to find rhdPasswordField');
+    return this.rhdPasswordField.click().then(function(){
+       console.log("OpenShiftIoRHDLoginPage - clicked element:rhdPasswordField");
     });
     return;
   }
