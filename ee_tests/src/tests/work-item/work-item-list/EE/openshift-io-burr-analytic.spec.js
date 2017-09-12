@@ -14,7 +14,6 @@
 
 /* Actions to be performed by this EE Demo/Test - As suggested by Pavel T. August - June 2017
 
-
 We use the following steps to check the basic stack analysis functionality:
 
 1       Login to openshift.io with username/password
@@ -96,16 +95,13 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
     var spaceTime = testSupport.returnTime();
     var username = testSupport.userEntityName(browser.params.login.user);
-//    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
     OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
-
 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
 
     testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage);  
-    
-    
+        
     /* Verify that Jenkins is still up and running */
     /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
     console.log ("verify that Jenkins pod is still running");
@@ -164,68 +160,63 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of analytic report */
-    /* TODO */
-
 
         /* Return to the account home page */
-        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-        browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
 
-        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-        browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+    browser.sleep(constants.WAIT);
 
-        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-        browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
 
-        OpenShiftIoDashboardPage.clickRecentSpaceByName (spaceTime);
-        browser.sleep(constants.WAIT);
+    OpenShiftIoDashboardPage.clickRecentSpaceByName (spaceTime);
+    browser.sleep(constants.WAIT);
 
-        OpenShiftIoSpaceHomePage.clickStackReportsButton();
-        browser.sleep(constants.WAIT);
+    OpenShiftIoSpaceHomePage.clickStackReportsButton();
+    browser.sleep(constants.WAIT);
 
-//        OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
-//          console.log("Stack report heading = " + text);
-//        });
-        OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 1).getText().then(function(text){
-          console.log("Stack report item = " + text);
-        });
-        OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 2).getText().then(function(text){
-          console.log("Stack report item = " + text);
-        });
-//        OpenShiftIoSpaceHomePage.dependenciesTable.getText().then(function(text){
-//          console.log("Stack report dependencies table = " + text);
-//        });
+    OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
+      console.log("Stack report heading = " + text);
+    });
 
-        browser.sleep(constants.WAIT);
-        OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
-        browser.sleep(constants.WAIT);
+    OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 1).getText().then(function(text){
+      console.log("Stack report item = " + text);
+    });
 
-//        OpenShiftIoSpaceHomePage.additionalComponentsTable.getText().then(function(text){
-//          console.log("Stack report additionalComponents table = " + text);
-//        });
+    OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 2).getText().then(function(text){
+      console.log("Stack report item = " + text);
+    });
 
-        OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 1).getText().then(function(text){
-          console.log("Stack report element = " + text);
-        });
+    OpenShiftIoSpaceHomePage.dependenciesTable.getText().then(function(text){
+      console.log("Stack report dependencies table = " + text);
+    });
 
-        OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 3).getText().then(function(text){
-          console.log("Stack report element = " + text);
-        });
+    browser.sleep(constants.WAIT);
+    OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
+    browser.sleep(constants.WAIT);
 
-       OpenShiftIoSpaceHomePage.clickAnalyticsCloseButton();
+    OpenShiftIoSpaceHomePage.additionalComponentsTable.getText().then(function(text){
+      console.log("Stack report additionalComponents table = " + text);
+    });
 
-//       browser.sleep(constants.LONGEST_WAIT);
+    OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 1).getText().then(function(text){
+       console.log("Stack report element = " + text);
+    });
 
-       OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-       browser.sleep(constants.WAIT);
+    OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 3).getText().then(function(text){
+      console.log("Stack report element = " + text);
+    });
 
-       OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-       browser.sleep(constants.WAIT);
+    OpenShiftIoSpaceHomePage.clickAnalyticsCloseButton();
+
+    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+    browser.sleep(constants.WAIT);
+
+    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+    browser.sleep(constants.WAIT);
           
-
-
-    
-
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);

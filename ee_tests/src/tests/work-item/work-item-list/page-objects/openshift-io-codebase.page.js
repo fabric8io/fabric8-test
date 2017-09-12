@@ -77,53 +77,6 @@ class OpenShiftIoCodebasePage {
     return new OpenShiftIoChePage();
   }
 
-
-
-
-/*
-
-
-codebase
-//div[contains(@class,'list-pf-title') ]/a[contains(text(),'osiotest3142/july18')]
-
-create workspace link
-//div[contains(@class,'list-pf-title') ]/a[contains(text(),'osiotest3142/july18a')]/../../../div[contains(@class,'list-pf-additional-content')]/codebases-item-workspaces/a/i
-
-kebab
-//div[contains(@class,'list-pf-title') ]/a[contains(text(),'osiotest3142/july18a')]/../../../../../../div[contains(@class,'list-pf-actions')]/codebases-item-actions/span/ul/li/a[contains(text(),'Create workspace')]
-//div[contains(@class,'list-pf-title') ]/a[contains(text(),'osiotest3142/july18a')]/../../../../../../div[contains(@class,'list-pf-actions')]/codebases-item-actions/span/ul/li/a[contains(text(),'Remove workspace')]
-
-
-
-
-
-List of codespaces
-.list-group.list-view-pf.list-view-pf-view
-
-Codespaces heading line
-.list-group-item.list-group-item-heading-row
-
-Codespace by name
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')    ]
-
-Create codespace icon
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../..//i[contains(@class,'pficon-add-circle-o')]
-
-Codebase’s kebab button
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../../../../..//button
-
-Create codebase, delete codebase
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../../../../..//li[1]
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../../../../..//li[2]
-
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../../../../..//*[contains(text(),'Create workspace')]
-
-.//a[contains(@target,'_blank') and contains(text(),'osiotest314/testjul61499369606171a')]/../../../../../..//*[contains(text(),’Remove workspace')]
-
-*/
-
-
-
 }
 
 module.exports = OpenShiftIoCodebasePage;

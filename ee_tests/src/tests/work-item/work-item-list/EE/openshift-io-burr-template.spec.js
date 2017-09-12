@@ -69,6 +69,22 @@ describe('openshift.io End-to-End POC test - Scenario - Template: ', function ()
     /* ----------------------------------------------------------*/
     /* Step 3) Add your tests here */
 
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+      console.error("Failed to find inputRequiredByPipelineByName: " + err);
+
+      /* Dump the Jenkins pod log to stdout */
+      var process = require('child_process').execSync;
+      var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
+      console.log(result);
+
+      /* Save a screenshot */
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');
+        throw err;
+      });
+    });
+
+
     /* ----------------------------------------------------------*/
     /* Step NN) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);

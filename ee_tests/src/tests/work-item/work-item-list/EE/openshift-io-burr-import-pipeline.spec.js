@@ -155,31 +155,31 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
        Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
-       browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
-        console.error("Failed to find inputRequiredByPipelineByName: " + err);
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+      console.error("Failed to find inputRequiredByPipelineByName: " + err);
   
-        /* Dump the Jenkins pod log to stdout */
-        var process = require('child_process').execSync;
-        var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
-        console.log(result);
+      /* Dump the Jenkins pod log to stdout */
+      var process = require('child_process').execSync;
+      var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
+      console.log(result);
   
-        /* Save a screenshot */
-        browser.takeScreenshot().then(function (png) {
-          testSupport.writeScreenShot(png, 'target/screenshots/' + IMPORT_NAME + '_pipeline_promote_fail.png');
-          throw err;
-        });
+      /* Save a screenshot */
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + IMPORT_NAME + '_pipeline_promote_fail.png');
+        throw err;
       });
+    });
   
-      /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
-         https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
-      if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true)) { 
-        browser.takeScreenshot().then(function (png) {
-          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_matchingstring.png');
-        });
-      }
+    /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
+       https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
+    if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true)) { 
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_matchingstring.png');
+      });
+    }
     
-     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
-     OpenShiftIoPipelinePage.clickPromoteButton();
+    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
+    OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */

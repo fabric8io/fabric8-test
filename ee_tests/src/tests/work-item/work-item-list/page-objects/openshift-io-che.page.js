@@ -23,7 +23,7 @@ class OpenShiftIoChePage {
 
   /* Element - project root - by name */
   projectRootByName (projectRootString) {
-    //    .//*[@id='gwt-debug-projectTree']/div[contains(@name,'testaug101502380205634')]
+    // example:  .//*[@id='gwt-debug-projectTree']/div[contains(@name,'testaug101502380205634')]
     var xpathString = ".//*[@id='gwt-debug-projectTree']/div[contains(@name,'" + projectRootString + "')]";
     browser.wait(until.presenceOf(element(by.xpath(xpathString)), constants.LONGEST_WAIT, 'Failed to find element projectName'));
     return element(by.xpath(xpathString));
