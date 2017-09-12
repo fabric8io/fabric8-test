@@ -12,7 +12,6 @@
     "canMoveToNextStep": true,
     "canMoveToPreviousStep": true,
     "steps": [
-      "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep",
       "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep",
       "Obsidian: Configure Pipeline",
       "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"
@@ -20,35 +19,6 @@
     "isExecute": false
   },
   "inputs": [
-    {
-      "name": "gitOrganisation",
-      "shortName": " ",
-      "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
-      "inputType": "org.jboss.forge.inputType.DEFAULT",
-      "enabled": true,
-      "required": true,
-      "deprecated": false,
-      "label": "Organisation",
-      "description": "The github organisation to import repositories from",
-      "class": "UISelectOne",
-      "value": "$selected_github_organisation"
-    },
-    {
-      "name": "gitRepositoryPattern",
-      "shortName": " ",
-      "valueType": "io.fabric8.forge.generator.git.GitRepositoryDTO",
-      "inputType": "org.jboss.forge.inputType.DEFAULT",
-      "enabled": true,
-      "required": true,
-      "deprecated": false,
-      "label": "Repository name pattern",
-      "description": "The regex pattern to match repository names",
-      "class": "UISelectMany",
-      "value": [
-        "$selected_github_repo_1",
-        "$selected_github_repo_2"
-      ]
-    },
     {
       "name": "pipeline",
       "shortName": " ",
@@ -58,7 +28,7 @@
       "required": false,
       "deprecated": false,
       "label": "Pipeline",
-      "description": "The Jenkinsfile used to define the Continous Delivery pipeline",
+      "description": "The Jenkinsfile used to define the Continous Delivery pipeline",  
       "class": "UISelectOne",
       "value": "Release, Stage, Approve and Promote"
     },
@@ -87,6 +57,22 @@
       "description": "The space for the new app",
       "class": "UIInput",
       "value": "testwizard"
+    },
+    {
+      "name": "gitRepositoryPattern",
+      "shortName": " ",
+      "valueType": "io.fabric8.forge.generator.git.GitRepositoryDTO",
+      "inputType": "org.jboss.forge.inputType.DEFAULT",
+      "enabled": true,
+      "required": true,
+      "deprecated": false,
+      "label": "Repository name pattern",
+      "description": "The regex pattern to match repository names",
+      "class": "UISelectMany",
+      "value": [
+        "$selected_github_repo_1",
+        "$selected_github_repo_2"
+      ]
     }
   ],
   "results": [],

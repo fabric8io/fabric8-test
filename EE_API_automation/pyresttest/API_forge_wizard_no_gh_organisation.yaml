@@ -16,7 +16,7 @@
 ################################################################################################################
 
 ################################################################################################################
-# Step 1: select a github organisation 
+# Step 1: init 
 ################################################################################################################
 
 # 1.1 - init
@@ -28,52 +28,10 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
-        -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
-    -   extract_binds:
-        -   'selected_github_organisation': {'jsonpath_mini': 'inputs.0.valueChoices.0.id'}
-
-# 1.2 - validate # Useless - Steps always return true no validation on github organisation
--   test:
-    -   name:   "Import repository wizard step1 validate - select a gh organisation"
-    -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_1_2_input.json'}}
-    -   expected_status:    [200]
-    -   validators:
-        -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
-        -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
-        -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectOne"}
-        -   compare:    {jmespath: "inputs[0].inputType", comparator: "eq",   expected:  "org.jboss.forge.inputType.DEFAULT"}
-        -   compare:    {jmespath: "inputs[0].valueType", comparator: "eq",   expected:  "io.fabric8.forge.generator.git.GitOrganisationDTO"}
-        -   compare:    {jmespath: "inputs[0].enabled", comparator: "eq",   expected:  true}
-        -   compare:    {jmespath: "inputs[0].required", comparator: "eq",   expected:  true} 
-        -   compare:    {jmespath: "inputs[0].name", comparator: "eq",   expected:  "gitOrganisation"}
-
-# 1.3 - next
--   test:
-    -   name:   "Import repository wizard step1 next - select a gh organisation"
-    -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_1_3_input.json'}}
-    -   expected_status:    [200]
-    -   validators:
-        -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
         -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
-        -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   false} # validation for next should be skipped
+        -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   false} #see issue xxx
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false}
-        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectMany"}
     -   extract_binds:
@@ -90,14 +48,13 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_2_1_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_2_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
@@ -110,7 +67,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_2_2_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_2_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
@@ -118,7 +75,6 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true} 
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
@@ -139,9 +95,9 @@
         -   compare:    {jmespath: "inputs[2].valueType", comparator: "eq",   expected:  "java.lang.String"}
         -   compare:    {jmespath: "inputs[2].enabled", comparator: "eq",   expected:  true}
         -   compare:    {jmespath: "inputs[2].required", comparator: "eq",   expected:  false} 
-        -   compare:    {jmespath: "inputs[2].name", comparator: "eq",   expected:  "labelSpace"}     
+        -   compare:    {jmespath: "inputs[2].name", comparator: "eq",   expected:  "labelSpace"}        
     -   extract_binds:
-        -   'k8_space': {'jsonpath_mini': 'inputs.1.value'}        
+        -   'k8_space': {'jsonpath_mini': 'inputs.1.value'}             
 
 ################################################################################################################
 # Step 3: select pipeline process (Release | Releaseand stage | Release, Stage, Approve and Promote, Aprove)
@@ -153,14 +109,13 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_3_1_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_3_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
@@ -173,7 +128,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_3_2_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_3_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
@@ -181,7 +136,6 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true} 
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
@@ -216,14 +170,13 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_4_1_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_4_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false} # bc final step
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
@@ -236,7 +189,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_4_2_input.json'}}
+    -   body:   {'template':{'file':'./import_wizard_no_gh_organisation/step_4_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
