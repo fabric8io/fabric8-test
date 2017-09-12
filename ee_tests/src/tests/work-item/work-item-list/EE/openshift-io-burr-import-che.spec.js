@@ -86,8 +86,14 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
-    
+
+    var username = testSupport.userEntityName(browser.params.login.user);    
     console.log ("Test for target URL: " + browser.params.target.url)
+
+    /* Cleanup - Delete the build config created by the test */
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
+    console.log(result);
 
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password, constants.CLEAN_ALL );
@@ -150,9 +156,21 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     });
     expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
 
+   /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
+      https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
+      if (!expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME)) { 
+      browser.takeScreenshot().then(function (png) {
+         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_1.png');
+      });
+    }
+
     /* Switch back to the OSIO page */
     testSupport.switchToWindow (browser, 0);
     
+    /* Cleanup - Delete the build config created by the test */
+    //var process = require('child_process').execSync;
+    //var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
+    //console.log(result);
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
