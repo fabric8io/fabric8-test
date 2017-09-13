@@ -36,9 +36,6 @@ class OpenShiftIoSpaceHomePage {
     return element(by.xpath(".//*[contains (@class,'pipelines-page')]"));
   }
 
-  /* Assume only one pipeline since this is a new space */
-//    .//contains[(@class,'pficon-build')][1]
-
   pipelineByName (pipelineNameString) {
     var xpathString = ".//*[contains(text(),'almightytest/" + pipelineNameString + "')]";
     return element(by.xpath(xpathString));

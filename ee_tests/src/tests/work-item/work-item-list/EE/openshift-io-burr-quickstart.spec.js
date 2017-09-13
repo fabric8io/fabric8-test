@@ -108,8 +108,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function () {
       runTheTest(page, "Vert.x Health Check Example");
-    });
-
+    })
     /* Quickstart test */
     it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
       runTheTest(page, "Spring Boot Health Check Example");
@@ -195,12 +194,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
        Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
        browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
         console.error("Failed to find inputRequiredByPipelineByName: " + err);
-  
-        /* Dump the Jenkins pod log to stdout */
-        var process = require('child_process').execSync;
-        var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
-        console.log(result);
-  
+    
         /* Save a screenshot */
         browser.takeScreenshot().then(function (png) {
           testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');

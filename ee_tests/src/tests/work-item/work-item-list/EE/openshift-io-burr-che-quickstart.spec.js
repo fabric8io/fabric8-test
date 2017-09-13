@@ -61,6 +61,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 
 /* TODO - convert this into a test parameter */
 const GITHUB_NAME = "osiotestmachine";
+var glocal_spacename;
 
 describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pipeline: ', function () {
   var page, items, browserMode;
@@ -77,6 +78,11 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
   afterEach(function () { 
+
+    /* Take a screenshot at the end as Che frequently hits test timeouts */
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + glocal_spacename + '_che_workspace_99.png');
+    });
     browser.restart();
   });
 
@@ -135,6 +141,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
+
+    glocal_spacename = spaceTime;
+
     var username = testSupport.userEntityName(browser.params.login.user);
     var githubname = GITHUB_NAME;
     var platform = testSupport.targetPlatform();
@@ -183,6 +192,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Look for the project in the Che navigator */
     OpenShiftIoChePage.projectRootByName(spaceTime).getText().then(function (text) { 
        console.log ('EE POC test - projectName = ' + text);
+       browser.takeScreenshot().then(function (png) {
+         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_2.png');
+       });
     });
         
     /* Verify that the project was created and is available in the Che workspace */
@@ -191,7 +203,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
     if (!expect(OpenShiftIoChePage.projectRootByName(spaceTime).getText()).toBe(spaceTime)) { 
       browser.takeScreenshot().then(function (png) {
-        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_2.png');
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_fail_che_workspace_3.png');
       });
     }
     
