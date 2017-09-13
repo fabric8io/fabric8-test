@@ -17,13 +17,14 @@ exports.config = {
 
     suites: {
       allTest: ['src/tests/**/EE/*burr*.spec.js'], 
-      mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
-      runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
-      quickstartTest: ['src/tests/**/EE/*burr*quickstart.spec.js'],
       analyticTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       cheTest: ['src/tests/**/EE/*burr*che*.spec.js'],
+      chequickstartTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js'],
       importTest: ['src/tests/**/EE/*burr*import*.spec.js'],
+      mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
+      quickstartTest: ['src/tests/**/EE/*burr-quickstart.spec.js'],    
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
+      runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js']
     },
 
