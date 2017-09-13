@@ -106,27 +106,6 @@ class OpenShiftIoPipelinePage {
     return;
   }
 
-/*
-pipeline list
-css .pipeline-list
-
-Element - by name - in pipeline list
-.//a[contains(@class,'card-title') and contains(text(),'june31')]/../../..
-
-Input required
-.//a[contains(@class,'card-title') and contains(text(),'june31')]/../../..//a[contains(text(),'Input Required')]
-
-Source repo
-.//a[contains(@class,'card-title') and contains(text(),'june31')]/../../..//a[contains(text(),'june31.git')]
-
-View pipeline runs
- .//a[contains(@class,'card-title') and contains(text(),'june31')]/../../..//a[contains(text(),’View Pipeline Runs’)]
-
-Edit pipeline
- .//a[contains(@class,'card-title') and contains(text(),'june31')]/../../..//a[contains(text(),'Edit Pipeline')][
-
-*/
-
   /* Button displayed after build pipeline performs stage and test */
   get inputRequiredButton () {
     return element(by.xpath(".//a[contains(text(),'Input Required')][1]"));

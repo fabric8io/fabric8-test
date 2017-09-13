@@ -308,7 +308,8 @@ class OpenShiftIoStartPage {
 
   /* Login button */
   get loginButton () {
-    return element(by.xpath(".//*[@id='signUp']//*[@id='login']"));
+//    return element(by.xpath(".//*[@id='signUp']//*[@id='login']"));
+    return element(by.xpath(".//*[@id='login']"));
   }
   clickLoginButton (browser) {
      this.loginButton.click().then(function(){
