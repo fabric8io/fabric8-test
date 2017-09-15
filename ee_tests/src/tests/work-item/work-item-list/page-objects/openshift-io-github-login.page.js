@@ -12,8 +12,7 @@
  */
 
 var testSupport = require('../testSupport'),
-        constants = require("../constants"),
-        OpenShiftIoF8KeyCloakLoginPage = require('../page-objects/openshift-io-F8-keycloak-login.page');
+        constants = require("../constants");
 
 let until = protractor.ExpectedConditions;
 //let CompleteRegistrationPage = require ("./complete-registration.page");
@@ -25,6 +24,7 @@ class OpenShiftIoGithubLoginPage {
   };
 
   doLogin(browser, callback) {
+    var OpenShiftIoF8KeyCloakLoginPage = require('../page-objects/openshift-io-F8-keycloak-login.page');
     console.log("Processing OpenShiftIoGithubLoginPage");
 
     var that = this;
@@ -40,8 +40,8 @@ class OpenShiftIoGithubLoginPage {
                     var kcDetailsPage = new OpenShiftIoF8KeyCloakLoginPage();
                     kcDetailsPage.doLogin(browser, callback);
                   };
-                  that.clickGithubLoginButton(nextCallback);
-
+                  that.clickGithubLoginButton(null);
+                  that.clickAuthorizeApplicationButton(nextCallback);
                 } else {
                   that.clickGithubLoginButton(null);
                   that.clickAuthorizeApplicationButton(callback);
@@ -108,32 +108,72 @@ class OpenShiftIoGithubLoginPage {
     //return element(by.xpath(".//button[contains(text(), 'Authorize application')]"));
   }
 
-  clickAuthorizeApplicationButton(callback) {
-    try {
-      browser.wait(until.presenceOf(this.authorizeApplicationButton), constants.LONG_WAIT, 'Failed to find github authorize button');
-      browser.wait(until.elementToBeClickable(this.authorizeApplicationButton), constants.WAIT, 'Failed waiting for the github authorize button to be clickable');
-    } catch (e) {
-      console.log("Failed to find the github authorize button - maybe we've already logged in?", e)
+  clickAuthorizeApplicationButton(callback, retried) {
+    var OpenShiftIoF8KeyCloakLoginPage = require("../page-objects/openshift-io-F8-keycloak-login.page");
+    var OpenShiftIoGettingStartedPage = require("../page-objects/openshift-io-gettingstarted.page");
+    var keycloakDetailsPage = new OpenShiftIoF8KeyCloakLoginPage();
+    var gettingStartedPage = new OpenShiftIoGettingStartedPage();
 
-      if (callback) {
-        callback();
-      }
-    }
-
-    this.authorizeApplicationButton.click().then(function () {
-              console.log("OpenShiftIoGithubLoginPage - clicked element: authorizeApplicationButton");
-
-              if (callback) {
-                callback();
+    var that = this;
+    // lets see if the auth button does not appear due to being redirected to the keycloak details page
+    keycloakDetailsPage.kcDetailsForm.isPresent().then(function (present) {
+      if (present) {
+        console.log("No github authorizeApplicationButton so carrying on");
+        if (callback) {
+          callback();
+        }
+      } else {
+        gettingStartedPage.startPageGetStartedButton.isPresent().then(function (present) {
+          if (present) {
+            console.log("Getting started start button is visible so no need to authenticate or approve github");
+            if (callback) {
+              callback();
+            }
+          } else {
+            browser.getCurrentUrl().then(function (url) {
+              if (url && url.endsWith("/_gettingstarted")) {
+                console.log("fabric8-ui bug! We are showing a blank page when we should have shown the get started button!");
+                console.log("trying a browser refresh to fix this!");
+                if (!retried) {
+                  // lets hack around this and force a reload
+                  browser.refresh();
+                  that.clickAuthorizeApplicationButton(callback, true);
+                  return;
+                } else {
+                  console.log("No get started button yet at " + url + " so lets wait to be redirected to the _home page");
+                  browser.wait(until.urlContains("/_home"), constants.LONG_WAIT, 'Failed to redirect to the _home page!');
+                  console.log("Now on the home page!");
+                  if (callback) {
+                    callback();
+                  }
+                  return;
+                }
               }
-            },
-            function (e) {
-              console.log("OpenShiftIoGithubLoginPage - no authorizeApplicationButton - must have already logged in?", e);
 
-              if (callback) {
-                callback();
-              }
+              console.log("No keycloak details form yet so waiting for the gitub authorizeApplicationButton as we are on page: " + url);
+
+              browser.wait(until.presenceOf(that.authorizeApplicationButton), constants.LONG_WAIT, 'Failed to find github authorize button');
+              browser.wait(until.elementToBeClickable(that.authorizeApplicationButton), constants.WAIT, 'Failed waiting for the github authorize button to be clickable');
+
+              that.authorizeApplicationButton.click().then(function () {
+                        console.log("OpenShiftIoGithubLoginPage - clicked element: authorizeApplicationButton");
+
+                        if (callback) {
+                          callback();
+                        }
+                      },
+                      function (e) {
+                        console.log("OpenShiftIoGithubLoginPage - no authorizeApplicationButton - must have already logged in?", e);
+
+                        if (callback) {
+                          callback();
+                        }
+                      });
             });
+          }
+        });
+      }
+    });
     return;
   }
 

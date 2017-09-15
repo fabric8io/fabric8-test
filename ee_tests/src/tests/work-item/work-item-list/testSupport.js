@@ -219,7 +219,12 @@ waitForText: function (elementFinder) {
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
 
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+    var firstResetTimeout = constants.RESET_TENANT_WAIT;
+    if ("osio" !== platform) {
+      // it can take a while to download docker images on minikube/minishift so lets increase the timeout
+      firstResetTimeout = constants.PIPELINE_COMPLETE_WAIT;
+    }
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), firstResetTimeout, "Timeout waiting for Jenkins to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     if (browser.params.target.disableChe) {
       console.log("Disabling waiting for Che to start");
     } else {
