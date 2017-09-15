@@ -1,31 +1,47 @@
 ---
 ### SETUP STEPS:
-# 1. Create Space
+# 1. Create a new Space (OSIO_USER_ID-Custom_name_passed_as_argument)
+#   a. Add another collaborator
 #
 # 2. Create Child Areas (Area 1 - Area 5) - 5 nos.
 # Note: Default Parent Area with the Space name get auto created
 #
 # 3. Create Child Iterations (Iteration 1 - Iteration 5)
-# Note: Default Parent Iteration with the Space name get auto created
+#   a. Create Two Nested Iterations
+#       i. Iteration 1 --> Iteration 1a --> Iteration 1b
+#       ii. Iteration 2 --> Iteration 2a --> Iteration 2b
 #
-# 4. Create Workitems in Iteration 1. Title = Title Text # (starting from 0), Description = Description Text # (starting from 0). TOTAL 24 WIs
-#   a. Create Workitems of Type Task - 3 no.
+# 4. Create Workitems in Iteration 1. Title = Title Text # , Description = Description Text # .
+#   a. Create Workitems of Type Task - 2 no. (WI-1, WI-2) 
 #
-# 5. Create Workitems in Iteration 2. Title = Title Text # (starting from 24), Description = Description Text # (starting from 24). TOTAL 24 WIs
-#   a. Create Workitems of Type Task - 3 no.
+# 5. Create Workitems in Iteration 2. Title = Title Text # , Description = Description Text # .
+#   a. Create Workitems of Type Task - 2 no. (WI-3, WI-4) 
 #
 # 6. Create Workitems in Backlog. Title = Title Text # (starting from 48), Description = Description Text # (starting from 48). TOTAL 24 WIs
-#   a. Create Workitems of Type Feature - 3 no.
-#   b. Create Workitems of Type Scenario - 3 no.
-#   c. Create Workitems of Type Task - 3 no.
-#   d. Create Workitems of Type Experience - 3 no.
-#   e. Create Workitems of Type Fundamentals - 3 no.
-#   f. Create Workitems of Type Value Proposition - 3 no.
-#   g. Create Workitems of Type Papercuts - 3 no.
-#   h. Create Workitems of Type Bug - 3 no.
+#   a. Create Workitems of Type Scenario - 2 no. (WI-5, WI-6) 
+#   b. Create Workitems of Type Fundamentals - 2 no. (WI-7, WI-8) 
+#   c. Create Workitems of Type Papercuts - 2 no.  (WI-9, WI-10) 
+#   d. Create Workitems of Type Value Proposition - 2 no. (WI-11, WI-12) 
+#   e. Create Workitems of Type Experience - 2 no. (WI-13, WI-14) 
+#   f. Create Workitems of Type Bug - 2 no. (WI-15, WI-16) 
+#   g. Create Workitems of Type Feature - 2 no. (WI-17, WI-18) 
+#   h. Create Workitems of Type Task - 2 no. (WI-19, WI-20) 
+#
+# 7. Add TWO comments to the top TWO Workitems each. WI-19 and WI-20
+#   - Comment Text 1
+#   - Comment Text 2
+#
+# 8. Create TWO hierarchies: 
+#   a. Scenarios (WI-5) --> Value Proposition (WI-11) --> Feature (WI-17) --> Task (WI-19)
+#   b. Fundamental (WI-7) --> Experience (WI-13) --> Bug (WI-15)
+#
+
 
 - import:   _test_setup_create_space_areas_iterations.yaml
 - import:   _test_setup_create_workitems.yaml
+- import:   _test_add_workitem_comments.yaml
+- import:   _test_add_nested_iterations.yaml
+- import:   _test_create_workitem_hierarchies.yaml
 
 -   config:
     -   testset:    "osio api automation - test setup"

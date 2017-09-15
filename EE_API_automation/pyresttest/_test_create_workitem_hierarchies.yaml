@@ -1,0 +1,177 @@
+---
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          'wilinktype_parent':  '7479a9b9-8607-46fa-9535-d448fa8768ab'
+          }
+        
+-   test:
+    -   name:   "Get Workitem-5 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/5"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi5_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-5 ID"
+    -   url:    {'template':  "$wi5_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi5_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-11 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/11"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi11_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-11 ID"
+    -   url:    {'template':  "$wi11_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi11_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-17 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/17"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi17_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-17 ID"
+    -   url:    {'template':  "$wi17_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi17_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-19 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/19"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi19_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-19 ID"
+    -   url:    {'template':  "$wi19_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi19_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-7 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/7"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi7_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-7 ID"
+    -   url:    {'template':  "$wi7_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi7_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-13 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/13"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi13_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-13 ID"
+    -   url:    {'template':  "$wi13_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi13_id':   {'jsonpath_mini': 'data.id'}
+
+-   test:
+    -   name:   "Get Workitem-15 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/15"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi15_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Get Workitem-15 ID"
+    -   url:    {'template':  "$wi15_link"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'wi15_id':   {'jsonpath_mini': 'data.id'}
+##################################################################################################
+-   test:
+    -   name:   "Link Workitem-5 to Workitem-11 -- WI-5 is-parent-of WI-11"
+    -   url:    {'template':  "$sut/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi5_11_hierarchy.json'}}
+    -   expected_status:    [201]
+
+-   test:
+    -   name:   "Link Workitem-11 to Workitem-17 -- WI-11 is-parent-of WI-17"
+    -   url:    {'template':  "$sut/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi11_17_hierarchy.json'}}
+    -   expected_status:    [201]
+
+-   test:
+    -   name:   "Link Workitem-17 to Workitem-19 -- WI-17 is-parent-of WI-19"
+    -   url:    {'template':  "$sut/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi17_19_hierarchy.json'}}
+    -   expected_status:    [201]
+
+-   test:
+    -   name:   "Link Workitem-7 to Workitem-13 -- WI-7 is-parent-of WI-13"
+    -   url:    {'template':  "$sut/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi7_13_hierarchy.json'}}
+    -   expected_status:    [201]
+
+-   test:
+    -   name:   "Link Workitem-13 to Workitem-15 -- WI-13 is-parent-of WI-15"
+    -   url:    {'template':  "$sut/api/workitemlinks"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi13_15_hierarchy.json'}}
+    -   expected_status:    [201]
+
+
+

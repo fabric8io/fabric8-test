@@ -1,0 +1,52 @@
+{
+  "data": {
+    "attributes": {
+      "active_status": false,
+      "created-at": "2017-09-12T10:08:46.099929Z",
+      "name": "Iteration1b",
+      "parent_path": "/$iterroot_id",
+      "resolved_parent_path": "/$spacename",
+      "state": "new",
+      "updated-at": "2017-09-12T10:08:46.099930Z",
+      "user_active": false,
+      "description": "Child Iteration1b"
+    },
+    "id": "$iter1a_id",
+    "links": {
+      "related": "$iter1a_link",
+      "self": "$iter1a_link"
+    },
+    "relationships": {
+      "parent": {
+        "data": {
+          "id": "$iterroot_id",
+          "type": "iterations"
+        },
+        "links": {
+          "related": "$iterroot_link",
+          "self": "$iterroot_link"
+        }
+      },
+      "space": {
+        "data": {
+          "id": "$spaceid",
+          "type": "spaces"
+        },
+        "links": {
+          "related": "$spacelink",
+          "self": "$spacelink"
+        }
+      },
+      "workitems": {
+        "links": {
+          "related": ""
+        },
+        "meta": {
+          "closed": 0,
+          "total": 1
+        }
+      }
+    },
+    "type": "iterations"
+  }
+}

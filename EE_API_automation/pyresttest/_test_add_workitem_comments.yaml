@@ -1,0 +1,57 @@
+---
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          }
+        
+-   test:
+    -   name:   "Get Workitem-19 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/19"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi19_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Add comment#1 to Workitem-19"
+    -   url:    {'template':  "$wi19_link/comments"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/add_wi_comment1.json'}}
+    -   expected_status:    [200]
+
+-   test:
+    -   name:   "Add comment#2 to Workitem-19"
+    -   url:    {'template':  "$wi19_link/comments"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/add_wi_comment2.json'}}
+    -   expected_status:    [200]
+
+-   test:
+    -   name:   "Get Workitem-20 URL"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/20"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [301, 304]
+    -   extract_binds:
+        -   'wi20_link':   {header: 'Location'}
+
+-   test:
+    -   name:   "Add comment#1 to Workitem-20"
+    -   url:    {'template':  "$wi20_link/comments"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/add_wi_comment1.json'}}
+    -   expected_status:    [200]
+
+-   test:
+    -   name:   "Add comment#2 to Workitem-20"
+    -   url:    {'template':  "$wi20_link/comments"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/add_wi_comment2.json'}}
+    -   expected_status:    [200]
