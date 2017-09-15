@@ -29,6 +29,7 @@
         -   compare:    {jsonpath_mini: "data.type", comparator: "eq",   expected:   'spaces'}
     -   extract_binds:
         -   'spaceid': {'jsonpath_mini': 'data.id'}
+        -   'spacelink':    {'jsonpath_mini':   data.links.self'}
 
 -   test:
     -   name:   "Get space collaborators"

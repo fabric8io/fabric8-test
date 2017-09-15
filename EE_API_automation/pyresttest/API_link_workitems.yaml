@@ -26,6 +26,7 @@
     -   extract_binds:
         -   'spaceid':  {'jsonpath_mini':    'data.id'}
         -   'spacename':    {'jsonpath_mini':   data.attributes.name'}
+        -   'spacelink':    {'jsonpath_mini':   data.links.self'}
         
 # -   test:
 #     -   name:   "Get space collaborators"

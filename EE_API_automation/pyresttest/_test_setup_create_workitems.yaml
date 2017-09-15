@@ -87,26 +87,26 @@
 
 ################# Create Workitems under Backlog ##############################################
 -   benchmark:
-    -   name:   "Create Workitems (Bugs) in Backlog"
+    -   name:   "Create Workitems (Scenario) in Backlog"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
     -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_bug.json'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_scenario.json'}}
     -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
         -   total_time: mean
 
 -   benchmark:
-    -   name:   "Create Workitems (Feature) in Backlog"
+    -   name:   "Create Workitems (Fundamentals) in Backlog"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
     -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
     -   warmup_runs:    0
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_feature.json'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_funda.json'}}
     -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
@@ -139,19 +139,6 @@
         -   total_time: mean
 
 -   benchmark:
-    -   name:   "Create Workitems (Fundamentals) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_funda.json'}}
-    -   benchmark_runs: 2
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
-
--   benchmark:
     -   name:   "Create Workitems (Experience) in Backlog"
     -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
     -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
@@ -159,6 +146,32 @@
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   body:   {'template':{'file':'./POST/setup/create_wi_exp.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Bugs) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_bug.json'}}
+    -   benchmark_runs: 2
+    -   metrics:
+        -   total_time: total
+        -   total_time: mean
+
+-   benchmark:
+    -   name:   "Create Workitems (Feature) in Backlog"
+    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
+    -   warmup_runs:    0
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_wi_feature.json'}}
     -   benchmark_runs: 2
     -   metrics:
         -   total_time: total
@@ -177,17 +190,6 @@
         -   total_time: total
         -   total_time: mean
 
--   benchmark:
-    -   name:   "Create Workitems (Scenario) in Backlog"
-    -   generator_binds:    {wi_nos_generated: workitem_nos_generated}
-    -   url:    {'template':  "$sut/api/spaces/$spaceid/workitems"}
-    -   warmup_runs:    0
-    -   method: "POST"
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./POST/setup/create_wi_scenario.json'}}
-    -   benchmark_runs: 2
-    -   metrics:
-        -   total_time: total
-        -   total_time: mean
+
 
 

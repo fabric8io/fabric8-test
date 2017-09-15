@@ -19,6 +19,7 @@
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
+          'second_collaborator_id':    '65e8100c-bc56-403a-b470-783fa893667c'
           }
 
 -   test:
@@ -68,10 +69,12 @@
     -   expected_status:    [200]
         
 -   test:
-    -   name:   "Get space collaborators"
+    -   name:   "Get space collaborators - Must be only 1"
     -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
+    -   validators:
+        -   compare:    {jsonpath_mini: "meta.totalCount", comparator: "eq",   expected:   1}
     -   extract_binds:
         -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
         -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
@@ -86,6 +89,22 @@
     -   expected_status:    [200, 304]
     -   extract_binds:
         -   'parent_iteration_id': {'jsonpath_mini': 'data.0.id'}
+
+####   1a. Add another collaborator. . . . . . . . . . . . . . . . . . 
+-   test:
+    -   name:   "Add a second collaborator to the Space"
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators/$second_collaborator_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+
+-   test:
+    -   name:   "Validate the addition of the second collaborator"
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   validators:
+        -   compare:    {jsonpath_mini: "meta.totalCount", comparator: "eq",   expected:   2}
 
 #### Step 2: Create Child Areas (Area 1 - Area 5) . . . . . . . . . . . . . . . . . . . . . . . . 
 -   test:

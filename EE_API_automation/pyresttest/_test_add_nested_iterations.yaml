@@ -1,0 +1,72 @@
+---
+-   config:
+    -   testset:    "osio api automation - test setup"
+    -   variable_binds: {
+          'headername': 'Content-Type',
+          'headervalue':  'application/vnd.api+json',
+          }
+
+-   test:
+    -   name:   "Find Space Details"
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var"}
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   expected_status:    [200]
+    -   extract_binds:
+        -   'spaceid':  {'jsonpath_mini':    'data.id'}
+        -   'spacename':    {'jsonpath_mini':   data.attributes.name'}
+        -   'spacelink':    {'jsonpath_mini':   data.links.self'}
+
+-   test:
+    -   name:   "Get Iteration 1 ID"
+    -   url:    {'template':  "$sut/api/spaces/$spaceid/iterations"}
+    -   method: "GET"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   extract_binds:
+        -   'iter1_id':   {'jsonpath_mini': 'data.0.id'}
+        -   'iter1_name':   {'jsonpath_mini': 'data.0.attributes.name'}
+        -   'iter1_link':   {'jsonpath_mini': 'data.0.links.self'}
+        -   'iter2_id':   {'jsonpath_mini': 'data.1.id'}
+        -   'iter2_name':   {'jsonpath_mini': 'data.1.attributes.name'}
+        -   'iter2_link':   {'jsonpath_mini': 'data.1.links.self'}
+        -   'iterroot_id':   {'jsonpath_mini': 'data.0.relationships.parent.data.id'}
+        -   'iterroot_link':   {'jsonpath_mini': 'data.0.relationships.parent.links.self'}
+
+-   test:
+    -   name:   "Add a child Iteration1a to Iteration 1"
+    -   url:    {'template':  "$sut/api/iterations/$iter1_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_nested_iteration1a.json'}}
+    -   expected_status:    [201]
+    -   extract_binds:
+        -   'iter1a_id':   {'jsonpath_mini': 'data.id'}
+        -   'iter1a_name':   {'jsonpath_mini': 'data.attributes.name'}
+        -   'iter1a_link':   {'jsonpath_mini': 'data.links.self'}
+
+-   test:
+    -   name:   "Add a child Iteration1b to Iteration 1a"
+    -   url:    {'template':  "$sut/api/iterations/$iter1a_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_nested_iteration1b.json'}}
+    -   expected_status:    [201]
+
+-   test:
+    -   name:   "Add a child Iteration2a to Iteration 2"
+    -   url:    {'template':  "$sut/api/iterations/$iter2_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_nested_iteration2a.json'}}
+    -   expected_status:    [201]
+    -   extract_binds:
+        -   'iter2a_id':   {'jsonpath_mini': 'data.id'}
+        -   'iter2a_name':   {'jsonpath_mini': 'data.attributes.name'}
+        -   'iter2a_link':   {'jsonpath_mini': 'data.links.self'}
+
+-   test:
+    -   name:   "Add a child Iteration1b to Iteration 1a"
+    -   url:    {'template':  "$sut/api/iterations/$iter2a_id"}
+    -   method: "POST"
+    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+    -   body:   {'template':{'file':'./POST/setup/create_nested_iteration2b.json'}}
+    -   expected_status:    [201]
