@@ -156,6 +156,27 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_1.png');
       });
     }
+    
+    OpenShiftIoChePage.clickmainMenuRunButton();
+    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoChePage.clickmainMenuRunButtonRunSelection();
+    browser.sleep(constants.LONG_WAIT);
+    OpenShiftIoChePage.clickBottomPanelRunTab();
+    browser.sleep(constants.LONG_WAIT);
+
+    OpenShiftIoChePage.bottomPanelOutputTitles.getText().then(function (text) { 
+      console.log ("titles=" + text);
+    });
+    OpenShiftIoChePage.bottomPanelOutputLabel.getText().then(function (text) { 
+      console.log ("label=" + text);
+    });
+    OpenShiftIoChePage.bottomPanelOutputPreview.getText().then(function (text) { 
+     console.log ("preview=" + text);
+    });
+    OpenShiftIoChePage.bottomPanelCommandConsoleLines.getText().then(function (text) { 
+      console.log ("[[[text=" + text + "]]]");
+      expect(text).toContain("Succeeded in deploying verticle");
+    });
 
     /* Switch back to the OSIO page */
     testSupport.switchToWindow (browser, 0);

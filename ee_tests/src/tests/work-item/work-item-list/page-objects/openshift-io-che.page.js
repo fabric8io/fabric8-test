@@ -29,6 +29,188 @@ class OpenShiftIoChePage {
     return element(by.xpath(xpathString));
   }
 
+  /*
+ 
+  Che page UI diagram (September 2017)
+
+  -----------------------------------------------------------------------------------------------------------------------------
+  |                                          *Main Menu Panel*                                                                |
+  | toggle-icon   Workspace  Project  Edit  Assistant  Run  Git  Profile  Help    Run    Debug
+  -----------------------------------------------------------------------------------------------------------------------------
+  | *Debug Nav Panel*      |
+  |                        |
+  |  Projects Explorer     |
+  |  project               |
+  |  project               |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  -----------------------------------------------------------------------------------------------------------------------------
+  | *Debug Consoles Panel* | dev-machine  terminal  run
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  |                        |
+  -----------------------------------------------------------------------------------------------------------------------------
+  | *Debug Bottom Panel*
+  |
+  -----------------------------------------------------------------------------------------------------------------------------
+
+
+  */
+
+/* Main Menu Panel */
+get mainMenuPanel () {
+  return element(by.css("#gwt-debug-mainMenuPanel"));
+}
+
+/* Main Menu Panel toggle-icon */
+get mainMenuToggleIcon () {
+  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBBN')]"));
+}
+clickMainMenuToggleIcon () {
+  browser.wait(until.elementToBeClickable(this.mainMenuToggleIcon), constants.LONG_WAIT, 'Failed to find element mainMenuToggleIcon');
+  this.mainMenuToggleIcon.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: mainMenuToggleIcon");
+  });
+  return;
+}
+
+/* Main Menu Panel option by name 
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Workspace’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Project’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Edit’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Assistant’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Run)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Git’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Profile’)]
+  //*[contains(@class,'GJ5I-CRBGU')][contains(text(),'Help’)]
+*/
+mainMenuOptionByName (nameString) {
+  var xpathString = ".//*[contains(@class,'GJ5I-CRBGU')][contains(text(),'" + nameString + "’)]";
+  return element(by.xpath(xpathString));
+}
+clickMainMenuOptionByName (nameString) {
+  browser.wait(until.elementToBeClickable(this.mainMenuOptionByName(nameString)), constants.LONG_WAIT, 'Failed to find element mainMenuOptionByName');
+  this.mainMenuOptionByName(nameString).click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: mainMenuOptionByName");
+  });
+  return;
+}
+
+/* Main Menu Panel run button */
+get mainMenuRunButton () {
+  return element(by.css("#gwt-debug-command_toolbar-button_Run"));
+//  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBJ5.GJ5I-CRBK5')]"));
+}
+clickmainMenuRunButton () {
+  browser.wait(until.elementToBeClickable(this.mainMenuRunButton), constants.LONG_WAIT, 'Failed to find element mainMenuRunButton');
+  this.mainMenuRunButton.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: mainMenuRunButton");
+  });
+  return;
+}
+
+/*
+<div class="gwt-PopupPanel GJ5I-CRBBAB" style="left: 556px; top: 29px; position: absolute; clip: rect(auto auto auto auto); overflow: visible;"><div class="popupContent"><div>
+<div class="GJ5I-CRBP5 GJ5I-CRBAAB"><div style="float: left;">run</div></div></div></div></div>
+*/
+
+/* Main Menu Panel run button run selection*/
+get mainMenuRunButtonRunSelection () {
+//  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBP5 GJ5I-CRBAAB')]"));
+  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GJ5I-CRBBAB')]"));
+}
+clickmainMenuRunButtonRunSelection () {
+  browser.wait(until.elementToBeClickable(this.mainMenuRunButtonRunSelection), constants.LONG_WAIT, 'Failed to find element mainMenuRunButtonRunSelection');
+  this.mainMenuRunButtonRunSelection.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: mainMenuRunButtonRunSelection");
+  });
+  return;
+}
+
+/* Main Menu Panel debug button */
+get mainMenuDebugButton () {
+  return element(by.css("#gwt-debug-command_toolbar-button_Debug"));
+}
+clickmainMenuDebugButton () {
+  browser.wait(until.elementToBeClickable(this.mainMenuDebugButton), constants.LONG_WAIT, 'Failed to find element mainMenuDebugButton');
+  this.mainMenuDebugButton.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: mainMenuDebugButton");
+  });
+  return;
+}
+
+
+/* Debug Consoles Panel */
+get debugConsolesPanel () {
+  return element(by.css("#gwt-debug-consolesPanel"));
+}
+
+
+
+/* Debug Nav Panel */
+get debugNavPanel () {
+  return element(by.css("#gwt-debug-navPanel"));
+}
+
+/*
+
+.//*[contains(@class,'GJ5I-CRBAK')][contains(text(),'Projects Explorer')]
+.//*[contains(@class,'GJ5I-CRBFBB')]/*[contains(text(),'.vertx')]
+
+*/
+
+
+/* Bottom Panel */
+get bottomPanel () {
+  return element(by.css("#gwt-debug-BottomPanel"));
+}
+
+/* Bottom Panel run tab */
+get bottomPanelRunTab () {
+  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBCGC')][contains(text(),'run')]"));
+}
+clickBottomPanelRunTab () {
+  browser.wait(until.elementToBeClickable(this.bottomPanelRunTab), constants.LONG_WAIT, 'Failed to find element bottomPanelRunTab');
+  this.bottomPanelRunTab.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: bottomPanelRunTab");
+  });
+  return;
+}
+
+/* Bottom Panel command */
+get bottomPanelOutputTitles () {
+  return element.all(by.xpath(".//*[contains(@class,'GJ5I-CRBHRB GJ5I-CRBCRB')]"));
+}
+/* Bottom Panel command */
+get bottomPanelOutputLabel () {
+  return element.all(by.xpath(".//*[contains(@class,'gwt-Label GJ5I-CRBHRB GJ5I-CRBCRB')]"));
+}
+/* Bottom Panel command */
+get bottomPanelOutputPreview () {
+  return element.all(by.xpath(".//*[contains(@class,'gwt-Anchor GJ5I-CRBIRB GJ5I-CRBMRB GJ5I-CRBCRB')]"));
+}
+/*
+<div id="gwt-debug-commandConsoleLines" class="GJ5I-CRBERB" style="width: 100%;"><pre>Downloading: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/6.0_ALPHA/asm-6.0_ALPHA.pom</pre><pre>2/2 KB   
+*/
+
+/* Bottom Panel command console lines of text */
+get bottomPanelCommandConsoleLines () {
+//  return element(by.id("gwt-debug-commandConsoleLines"));
+  return element.all(by.xpath(".//*[contains(@class,'GJ5I-CRBERB')]")).last();
+}
+/*
+<div id="gwt-debug-commandConsoleLines" class="GJ5I-CRBERB" 
+*/
+
 }
 
 module.exports = OpenShiftIoChePage;
