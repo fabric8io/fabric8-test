@@ -5,9 +5,7 @@
  */
 
 var testSupport = require('../testSupport'),
-    constants = require("../constants"),
-    OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page'),
-    OpenShiftIoOpenShiftLoginPage = require('../page-objects/openshift-io-openshift-login.page');
+    constants = require("../constants");
 
 var until = protractor.ExpectedConditions;
 
@@ -32,9 +30,12 @@ class OpenShiftIoF8OSLoginPage {
      return element(by.id("zocial-github"));
   }
 
-  clickGithubLoginButton () {
+  clickGithubLoginButton() {
+    var OpenShiftIoGettingStartedPage = require('../page-objects/openshift-io-gettingstarted.page'),
+            OpenShiftIoGithubLoginPage = require('../page-objects/openshift-io-github-login.page');
+
     browser.wait(until.presenceOf(this.githubLoginButton), constants.WAIT, 'Failed to find github login');
-    this.githubLoginButton.click().then(function(){
+    this.githubLoginButton.click().then(function () {
       console.log("OpenShiftIoF8OSLoginPage - clicked element:githubLoginButton");
 
       var nextCallback = function () {
@@ -51,6 +52,8 @@ class OpenShiftIoF8OSLoginPage {
      return element(by.id("zocial-openshift-v3"));
   }
   clickOpenshiftflowLoginButton () {
+    var OpenShiftIoOpenShiftLoginPage = require('../page-objects/openshift-io-openshift-login.page');
+
     browser.wait(until.presenceOf(this.openshiftLoginButton), constants.WAIT, 'Failed to find openshift login');
     this.openshiftLoginButton.click().then(function(){
       console.log("OpenShiftIoF8OSLoginPage - clicked element:openshiftLoginButton");

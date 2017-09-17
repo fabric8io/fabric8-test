@@ -597,7 +597,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-finish-button']"));
   }
   clickQuickStartFinishButton2 () {
-      browser.wait(until.elementToBeClickable(this.quickStartFinishButton2), constants.LONG_WAIT, 'Failed to find element quickStartFinishButton2');
+      browser.wait(until.elementToBeClickable(this.quickStartFinishButton2), constants.LONGEST_WAIT, 'Failed to find element quickStartFinishButton2');
       this.quickStartFinishButton2.click().then(function(){
       console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartFinishButton2");
     });

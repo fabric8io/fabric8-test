@@ -103,7 +103,12 @@ class OpenShiftIoGettingStartedPage {
     var dropDownToggle = dashboardPage.headerDropDownToggle;
     dropDownToggle.isPresent().then(function (present) {
       if (!present) {
-        browser.wait(until.presenceOf(getStartedButton), constants.LONGER_WAIT, 'Failed waiting for Start Page Get Started Button to be visible');
+        var firstTimeout = constants.LONGER_WAIT;
+        if (testSupport.targetPlatform() !== "osio") {
+          // lets leave plenty of time on minikube/minishift for docker images to startup
+          firstTimeout = constants.PIPELINE_COMPLETE_WAIT;
+        }
+        browser.wait(until.presenceOf(getStartedButton), firstTimeout, 'Failed waiting for Start Page Get Started Button to be visible');
         browser.wait(until.elementToBeClickable(getStartedButton), constants.WAIT, 'Failed waiting for Start Page Get Started Button to be visible');
 
         console.log("Clicking Start Page Getting Started Button");

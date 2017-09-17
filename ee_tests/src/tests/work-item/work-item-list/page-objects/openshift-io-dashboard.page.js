@@ -259,12 +259,22 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
   clickStatusIcon () {
     console.log("Waiting for the statusIcon to be present");
-    browser.wait(until.presenceOf(this.statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
-    browser.wait(until.elementToBeClickable(this.statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
-    this.statusIcon.click().then(function(){
+    var statusIcon = this.statusIcon;
+    browser.wait(until.presenceOf(statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
+    browser.wait(until.elementToBeClickable(statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
+    statusIcon.click().then(function () {
       console.log("OpenShiftIoDashboardPage - clicked element:statusIcon");
+    }, function (err) {
+      console.log("Failed to click the status icon due to modal issues: " + err);
+      browser.driver.sleep(2000);
+      browser.wait(until.presenceOf(statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
+      browser.wait(until.elementToBeClickable(statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
+      statusIcon.click().then(function () {
+        console.log("OpenShiftIoDashboardPage - clicked element:statusIcon");
+      }, function (err) {
+        console.log("Failed again to click the status icon due to : " + err)
+      });
     });
-    return;
   }
 
   get statusIconPlatform () {
