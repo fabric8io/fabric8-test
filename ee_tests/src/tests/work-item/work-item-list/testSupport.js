@@ -320,7 +320,7 @@ waitForText: function (elementFinder) {
         /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
         OpenShiftIoDashboardPage.clickStatusIcon();
         browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
-        browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+        browser.wait(until.presenceOf(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
         browser.sleep(constants.LONG_WAIT);
     //    browser.sleep(constants.RESET_TENANT_WAIT);
     
@@ -366,7 +366,7 @@ waitForText: function (elementFinder) {
         browser.sleep(constants.WAIT);
         dashboardPage.clickAccountHomeUnderLeftNavigationBar();
 
-        /* The user's account is cleaned before the test runs. Th etest must now Update the user's tenant, and
+        /* The user's account is cleaned before the test runs. The test must now Update the user's tenant, and
            wait until Che and Jenkins pods are running before starting the test. */
         dashboardPage.clickrightNavigationBar();
 
@@ -390,7 +390,7 @@ waitForText: function (elementFinder) {
         } else {
           browser.wait(until.presenceOf(dashboardPage.cheStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
         }
-        browser.wait(until.presenceOf(dashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT), "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595";
+        browser.wait(until.presenceOf(dashboardPage.jenkinsStatusPoweredOn), constants.LONGEST_WAIT, "Timeout waiting for Jenkis to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
         browser.sleep(constants.LONG_WAIT);
     //    browser.sleep(constants.RESET_TENANT_WAIT);
 
