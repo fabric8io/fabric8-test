@@ -68,11 +68,11 @@ For each argument name `foo` you pass the argument using `--foo=value` or `--foo
 
 #### Custom boosters
 
-*  `booster` : the name of the booster (quickstart) to use in the tests. e.g. to test a single quickstart use `gofabric8 e2e --booster=""`
+*  `booster` : the name of the booster (quickstart) to use in the tests
 *  `booster-git-ref` : the booster git repository reference (branch, tag, sha)
 *  `booster-git-repo` : the booster git repository URL to use for the tests - when using a fork or custom catalog"
 
-e.g. to test a custom booster in a fork try:
+e.g. to test a custom booster in your own fork try:
 
 ```
 gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-repo=https://github.com/myuser/booster-catalog.git
