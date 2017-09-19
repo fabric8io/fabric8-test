@@ -206,10 +206,11 @@ waitForText: function (elementFinder) {
     var process = require('child_process').execSync;
     var platform = this.targetPlatform();
 
-
-    /* lets update the tenant config before we reset/recreate the tenant */
-    var tenantProfilePage = new OpenShiftIoProfileTenantPage();
-    tenantProfilePage.updateTenant(browser);
+// Commenting out as this approach to opening browser windows is resultig in this
+// error causing tests to fail: This driver instance does not have a valid session ID (did you call WebDriver.quit()?) and may no longer be used.   
+//    /* lets update the tenant config before we reset/recreate the tenant */
+//    var tenantProfilePage = new OpenShiftIoProfileTenantPage();
+//    tenantProfilePage.updateTenant(browser);
 
     /* lets only run the cleanup CLIs on OSIO */
     if ("osio" === platform) {
@@ -221,7 +222,6 @@ waitForText: function (elementFinder) {
       result = process('sh ./local_cleanup.sh ' + username + ' ' + browser.params.oso.token).toString();
       console.log(result);
     }
-
     
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
