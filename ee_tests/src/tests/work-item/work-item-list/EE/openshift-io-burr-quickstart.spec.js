@@ -209,9 +209,12 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
           testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote.png.png');
         });
       }
-    
-     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
-     OpenShiftIoPipelinePage.clickPromoteButton();
+
+      // TODO input button not yet working on kubernetes */
+    if (platform !== "fabric8-kubernetes") {
+      OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+      OpenShiftIoPipelinePage.clickPromoteButton();
+    }
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
@@ -221,7 +224,11 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
-    testSupport.logoutUser(OpenShiftIoDashboardPage);
+
+    // TODO logout only works on OSIO so far
+    if (platform === "osio") {
+      testSupport.logoutUser(OpenShiftIoDashboardPage);
+    }
 
     
   }

@@ -5,7 +5,12 @@ set -x
 DEFAULT_TEST_SUITE="runTest"
 TEST_SUITE=${6:-$DEFAULT_TEST_SUITE}
 
-LOGFILE=$(pwd)/functional_tests.log
+DIR="$(pwd)"
+if [ -z "$DIR" ]; then
+  DIR="."
+fi
+
+LOGFILE=${DIR}/functional_tests.log
 echo Using logfile $LOGFILE 
 
 # lets make sure we use the local protractor webdriver-manager
@@ -32,16 +37,22 @@ fi
 echo Running protractor test suite ${PROTRACTOR_JS} ...
 #node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
-node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5 \
- --params.target.platform="$TEST_PLATFORM" --params.target.quickstart="$TEST_QUICKSTART" \
- --params.login.openshiftUser="$OS_USERNAME" --params.login.openshiftPassword="$OS_PASSWORD" \
- --params.target.disableChe="$DISABLE_CHE_CHECKS"
+node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
 
 TEST_RESULT=$?
 
-# cat log file to stdout 
-# cat $LOGFILE
+
+# cat log file to stdout
+if [ "$CAT_LOGFILE" == "true" ]; then
+  echo
+  echo "------------------------------------------"
+  echo "Log file:"
+  cat $LOGFILE
+  echo "------------------------------------------"
+  echo
+fi
+
 
 # Cleanup webdriver-manager and web app processes
 fuser -k -n tcp 4444
