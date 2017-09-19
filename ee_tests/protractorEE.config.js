@@ -26,7 +26,7 @@ exports.config = {
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
       runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js'],
-      tempTest: ['src/tests/**/EE/*burr-che.spec.js']
+      tempTest: ['src/tests/**/EE/*burr-pipeline.spec.js']
     },
 
     jasmineNodeOpts: {
