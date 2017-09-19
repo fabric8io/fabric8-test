@@ -43,7 +43,7 @@ class OpenShiftIoProfileTenantPage {
       console.log("Clearing the tenant configuration");
 
       this.clickButton("clearButton", this.clearButtonButton);
-      this.clickButton("saveButton", this.saveButtonButton);
+      this.clickButton("cancelButton", this.cancelButtonButton);
 
     } else {
 
@@ -165,6 +165,11 @@ class OpenShiftIoProfileTenantPage {
   get clearButtonButton() {
     return element(by.id("clearButton"));
   }
+  
+  get cancelButtonButton() {
+    return element(by.id("cancelButton"));
+  }
+
 }
 
 module.exports = OpenShiftIoProfileTenantPage;
