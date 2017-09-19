@@ -9,6 +9,11 @@ pyresttest <YOUR_TARGET_SUT> <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO
 
 pyresttest null <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID', 'space_name_var':'YOUR_CUSTOM_SPACE_NAME', 'sut':'https://api.openshift.io'}" --absolute-urls
 
+3) Inside the Container:
+  $ cd EE_API_automation/pyresttest
+  $ docker build -t ee . -f Dockerfile
+  $ docker run --rm -it -v $PWD:/tests:Z ee null <YOUR_TEST_SCRIPT_NAME> --vars="{'token':'YOUR_OSIO_SECURITY_TOKEN', 'userid':'YOUR_OSIO_USER_ID', 'space_name_var':'YOUR_CUSTOM_SPACE_NAME', 'sut':'https://api.openshift.io'}" --absolute-urls
+
 Legend:
 ---------------------
 YOUR_TARGET_SUT: https://api.openshift.io OR anything else you want it to be
