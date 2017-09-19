@@ -29,16 +29,10 @@ where USERNAME and PASSWORD should be replaced by your OSiO credentials.
 
 You can run the E2E tests on a running fabric8 cluster using the [gofabric8](https://github.com/fabric8io/gofabric8/releases) CLI tool.
 
-First you need to add a `Secret` for a username/password you wish to use on your cluster. If you've not created one yet you can do that via the CLI:
+First you need to add a `Secret` for a username/password you wish to use to test your cluster. If you've not created one yet you can do that via the CLI:
 
 ```
 gofabric8 e2e-secret --user=MYUSER --password=MYPWD --secret=MYNAME
-```
-
-The above defaults to testing on a fabric8 cluster on openshift. If you want to test on a kubernetes based cluster like GKE then add the ` --platform=fabric8-kubernetes` argument:
-
-```
-gofabric8 e2e-secret --user=MYUSER --password=MYPWD --secret=MYNAME --platform=fabric8-kubernetes 
 ```
 
 This command will generate a secret called `MYNAME` using your username/password values of `MYUSER/MYPWD`
@@ -54,4 +48,42 @@ if you have your own fork of this repository you can refer to your own fork and 
 ```
 gofabric8 e2e --repo https://github.com/jstrachan/fabric8-test.git --branch new-script
 ```
+
+### Arguments
+
+You can specify a number of different CLI arguments to parameterize the E2E tests to configure things like custom Tenant YAMLs to test (e.g. PRs against the YAMLs) or custom boosters.
+
+To see a list of all the current options type:
+
+```
+gofabric8 help e2e
+```
+
+For each argument name `foo` you pass the argument using `--foo=value` or `--foo value` like the above examples for passing in `repo` and `branch` arguments.
+
+#### Cluster
+
+* `url` : the URL of the remote fabric8 console. If not specified it uses the URL of the current `fabric8` service in the current namespace (or the specified `namespace` argument)
+* `platform` : the kind of platform to test. e.g. `osio`, `fabric8-openshift` or `fabric8-kubernetes`. Typically you can ignore this argument as gofabric8 will deadfult this for you
+
+#### Custom boosters
+
+*  `booster` : the name of the booster (quickstart) to use in the tests. e.g. to test a single quickstart use `gofabric8 e2e --booster=""`
+*  `booster-git-ref` : the booster git repository reference (branch, tag, sha)
+*  `booster-git-repo` : the booster git repository URL to use for the tests - when using a fork or custom catalog"
+
+e.g. to test a custom booster in a fork try:
+
+```
+gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-repo=https://github.com/myuser/booster-catalog.git
+```
+
+
+#### Custom Tenant YAML
+
+*  `che-version` : the Che YAML version for the tenant
+*  `jenkins-version` : the Jenkins YAML version for the tenant
+*  `team-version` : the Team YAML version for the tenant
+*  `maven-repo` : the maven repository used for tenant YAML if using a PR or custom build
+
 

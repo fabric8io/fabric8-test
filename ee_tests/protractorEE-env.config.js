@@ -22,6 +22,16 @@ var reporter = new HtmlScreenshotReporter({
  *
  * QUICKSTART = the name of the quickstart to test such as 'Vert.x - Basic'
  * DISABLE_CHE = set to "true" if you want to disable asserting the Che pod startups on login/reset environment
+ *
+ * Booster config:
+ * BOOSTER_GIT_REF = the git ref (branch / commit / sha) for the booster catalog to use
+ * BOOSTER_GIT_REPO = the git repo of the booster catalog to use if not using the main fork at https://github.com/openshiftio/booster-catalog
+ *
+ * Tenant config:
+ * TENANT_CHE_VERSION = version of Che to use
+ * TENANT_JENKINS_VERSION = version of Jenkins to use
+ * TENANT_TEAM_VERSION = version of Team to use (for team related resources like quotas)
+ * TENANT_MAVEN_REPO = maven repo for custom versions of tenant stuff if using pre-released versions or PRs
  */
 var username = process.env.USERNAME;
 if (!username) {
@@ -78,6 +88,16 @@ exports.config = {
       platform: platform,
       quickstart: quickstart,
       disableChe: disableChe
+    },
+    boosterCatalog: {
+      gitRef: process.env.BOOSTER_GIT_REF || "",
+      gitRepo: process.env.BOOSTER_GIT_REPO || ""
+    },
+    tenantConfig: {
+      cheVersion: process.env.TENANT_CHE_VERSION || "",
+      jenkinsVersion: process.env.TENANT_JENKINS_VERSION || "",
+      teamVersion: process.env.TENANT_TEAM_VERSION || "",
+      mavenRepo: process.env.TENANT_MAVEN_REPO || ""
     }
   },
 

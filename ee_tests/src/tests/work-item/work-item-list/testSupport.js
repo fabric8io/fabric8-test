@@ -178,6 +178,7 @@ waitForText: function (elementFinder) {
   var OpenShiftIoStartPage = require('./page-objects/openshift-io-start.page'),
     OpenShiftIoRHDLoginPage = require('./page-objects/openshift-io-RHD-login.page'),
     OpenShiftIoSpaceHomePage = require('./page-objects/openshift-io-spacehome.page'),
+    OpenShiftIoProfileTenantPage = require('./page-objects/openshift-io-profile-tenant.page'),
     OpenShiftIoDashboardPage = require('./page-objects/openshift-io-dashboard.page'),
     OpenShiftIoRegistrationPage = require('./page-objects/openshift-io-registration.page'),
     OpenShiftIoPipelinePage = require('./page-objects/openshift-io-pipeline.page'),
@@ -205,6 +206,11 @@ waitForText: function (elementFinder) {
     var process = require('child_process').execSync;
     var platform = this.targetPlatform();
 
+
+    /* lets update the tenant config before we reset/recreate the tenant */
+    var tenantProfilePage = new OpenShiftIoProfileTenantPage();
+    tenantProfilePage.updateTenant(browser);
+
     /* lets only run the cleanup CLIs on OSIO */
     if ("osio" === platform) {
       var username = this.userEntityName(browser.params.login.user);
@@ -216,6 +222,7 @@ waitForText: function (elementFinder) {
       console.log(result);
     }
 
+    
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
 
@@ -398,6 +405,16 @@ waitForText: function (elementFinder) {
 
       },
 
+
+  /*
+  * If specified lets update the tenant configuration to test specific boosters or tenant versions
+  */
+  updateTenantConfig: function () {
+    var OpenShiftIoProfileTenantPage = require('./page-objects/openshift-io-profile-tenant.page');
+
+    var page = new OpenShiftIoProfileTenantPage();
+    page.updateTenant(browser);
+  },
 
   /* 
   * Create new space for user 
