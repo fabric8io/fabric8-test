@@ -539,7 +539,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return element(by.xpath(xpathString));
   }
   clickQuickStartByName (nameString) {
-    browser.wait(until.elementToBeClickable(this.quickStartByName(nameString)), constants.WAIT, 'Failed to find element quickStartByName: ' + nameString);
+    browser.wait(until.elementToBeClickable(this.quickStartByName(nameString)), constants.WAIT, 'Failed to find element quickStartByName: `' + nameString + "`");
     this.quickStartByName(nameString).click().then(function() {
       console.log("OpenShiftIoSpaceHomePage - clicked element: quickStarByName " + nameString);
     });
