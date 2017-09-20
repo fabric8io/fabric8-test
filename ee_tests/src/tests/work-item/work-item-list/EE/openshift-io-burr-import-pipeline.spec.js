@@ -140,7 +140,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
       expect(text).not.toContain("No pipeline builds have run for");
 
       /* Verify that the source repo is referenced */
-      console.log ("Verify that error source repository is displayed");
+      console.log ("Verify that source repository is displayed");
       expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + IMPORT_NAME + ".git");
     });
 
@@ -155,7 +155,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
        Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGER_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
       console.error("Failed to find inputRequiredByPipelineByName: " + err);
   
       /* Dump the Jenkins pod log to stdout */
