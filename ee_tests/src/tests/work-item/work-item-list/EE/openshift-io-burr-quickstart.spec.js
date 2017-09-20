@@ -185,6 +185,10 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
        is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_created.png');
+    });
    
     /* There is a recurring/intermittent problem where build pipelines are not created.
       https://github.com/openshiftio/openshift.io/issues/517 */ 
@@ -206,7 +210,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
          https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
       if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true)) { 
         browser.takeScreenshot().then(function (png) {
-          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote.png.png');
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote.png');
         });
       }
 
