@@ -156,13 +156,25 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_1.png');
       });
     }
-    
+
+    /* Run the quickstart - and verify that it was successful */
     OpenShiftIoChePage.clickmainMenuRunButton();
     browser.sleep(constants.LONG_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_run.png');
+    });
+
     OpenShiftIoChePage.clickmainMenuRunButtonRunSelection();
-    browser.sleep(constants.LONG_WAIT);
+    browser.sleep(constants.LONGER_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_run_selection.png');
+    });
+
     OpenShiftIoChePage.clickBottomPanelRunTab();
     browser.sleep(constants.LONG_WAIT);
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_run_results.png');
+    });
 
     OpenShiftIoChePage.bottomPanelOutputTitles.getText().then(function (text) { 
       console.log ("titles=" + text);
