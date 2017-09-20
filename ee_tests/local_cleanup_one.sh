@@ -9,7 +9,7 @@
 ./oc login https://api.starter-us-east-2.openshift.com --token=$2
 ./oc project $1
 
-count=`oc get bc | grep vertxbasic | wc -l`
+export count=`oc get bc | grep vertxbasic | wc -l`
 
 if [ $count -gt 0 ]
 then
