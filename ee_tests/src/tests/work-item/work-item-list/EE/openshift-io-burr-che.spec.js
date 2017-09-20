@@ -165,7 +165,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     });
 
     OpenShiftIoChePage.clickmainMenuRunButtonRunSelection();
-    browser.sleep(constants.LONGER_WAIT);
+    browser.sleep(constants.LONG_WAIT);
     browser.takeScreenshot().then(function (png) {
       testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_run_selection.png');
     });
