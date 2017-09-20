@@ -1,4 +1,5 @@
 var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
+var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 var reporter = new HtmlScreenshotReporter({
   dest: 'target/screenshots',
@@ -49,6 +50,17 @@ exports.config = {
   // Assign the test reporter to each running instance
   onPrepare: function() {
     jasmine.getEnv().addReporter(reporter);
+
+    jasmine.getEnv().addReporter(new SpecReporter({
+      spec: {
+        displayStacktrace: true,
+        displayDuration: true,
+      },
+      summary: {
+        displayDuration: true
+      }
+    }));
+
   },
 
   // Close the report after all tests finish

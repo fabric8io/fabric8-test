@@ -179,7 +179,7 @@ get bottomPanelRunTab () {
   return element(by.xpath(".//*[contains(@class,'GJ5I-CRBCGC')][contains(text(),'run')]"));
 }
 clickBottomPanelRunTab () {
-  browser.wait(until.elementToBeClickable(this.bottomPanelRunTab), constants.LONG_WAIT, 'Failed to find element bottomPanelRunTab');
+  browser.wait(until.elementToBeClickable(this.bottomPanelRunTab), constants.LONGER_WAIT, 'Failed to find element bottomPanelRunTab');
   this.bottomPanelRunTab.click().then(function(){
     console.log("OpenShiftIoChePage - clicked element: bottomPanelRunTab");
   });
