@@ -185,6 +185,8 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     OpenShiftIoChePage.bottomPanelOutputPreview.getText().then(function (text) { 
      console.log ("preview=" + text);
     });
+
+    browser.wait(until.textToBePresentInElement(OpenShiftIoChePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), constants.LONG_WAIT);
     OpenShiftIoChePage.bottomPanelCommandConsoleLines.getText().then(function (text) { 
       console.log ("[[[text=" + text + "]]]");
       expect(text).toContain("Succeeded in deploying verticle");
