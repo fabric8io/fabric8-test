@@ -198,9 +198,6 @@ get bottomPanelOutputLabel () {
 get bottomPanelOutputPreview () {
   return element.all(by.xpath(".//*[contains(@class,'gwt-Anchor GJ5I-CRBIRB GJ5I-CRBMRB GJ5I-CRBCRB')]"));
 }
-/*
-<div id="gwt-debug-commandConsoleLines" class="GJ5I-CRBERB" style="width: 100%;"><pre>Downloading: https://repo.maven.apache.org/maven2/org/ow2/asm/asm/6.0_ALPHA/asm-6.0_ALPHA.pom</pre><pre>2/2 KB   
-*/
 
 /* Bottom Panel command console lines of text */
 get bottomPanelCommandConsoleLines () {
