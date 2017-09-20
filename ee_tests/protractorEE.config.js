@@ -24,7 +24,7 @@ exports.config = {
       mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
       quickstartTest: ['src/tests/**/EE/*burr-quickstart.spec.js'],    
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
-      runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js', 'src/tests/**/EE/*burr-import-che.spec.js', 'src/tests/**/EE/*burr-import-pipeline.spec.js'],
+      runTest: ['src/tests/**/EE/*burr-che.spec.js', 'src/tests/**/EE/*burr-pipeline.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js']
     },
 
