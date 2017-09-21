@@ -12,6 +12,10 @@ Functional tests for OSiO (OpenShift.io) platform.
 ```
 cd ee_tests
 npm install
+npm install webdriver-manager
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.29
+
 .sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io testSuiteName 
 ```
 
