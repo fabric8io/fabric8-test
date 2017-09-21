@@ -60,7 +60,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     constants = require("../constants");
 
 /* TODO - convert this into a test parameter */
-const GITHUB_NAME = "osiotestmachine";
+var GITHUB_NAME = browser.params.github.username;
 var glocal_spacename;
 
 describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pipeline: ', function () {

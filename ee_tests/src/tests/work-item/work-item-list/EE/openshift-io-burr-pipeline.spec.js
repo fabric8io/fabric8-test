@@ -60,7 +60,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     constants = require("../constants");
 
 /* TODO - convert this into a test parameter */
-const GITHUB_NAME = "osiotestmachine";
+var GITHUB_NAME = browser.params.github.username;
 
 
 describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pipeline: ', function () {
@@ -87,7 +87,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
     
-    console.log ("Test for target URL: " + browser.params.target.url)
+    console.log ("Test for target URL: " + browser.params.target.url);
 
     /* ----------------------------------------------------------*/
     /* Step 1) Login to openshift.io */

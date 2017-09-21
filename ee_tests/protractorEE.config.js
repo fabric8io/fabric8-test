@@ -19,7 +19,7 @@ exports.config = {
     suites: {
       allTest: ['src/tests/**/EE/*burr*.spec.js'], 
       analyticTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
-      cheTest: ['src/tests/**/EE/*burr*che*.spec.js'],
+      cheTest: ['src/tests/**/EE/*burr-che.spec.js'],
       chequickstartTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js'],
       importTest: ['src/tests/**/EE/*burr*import*.spec.js'],
       mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
