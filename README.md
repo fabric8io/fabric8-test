@@ -22,7 +22,7 @@ npm install
 ```
 .sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io testSuiteName
 ```
-where USERNAME and PASSWORD should be replaced by your OSiO credentials.
+where USERNAME and PASSWORD should be replaced by your OSiO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
 
 ## Running the E2E tests inside a pod
