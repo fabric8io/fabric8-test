@@ -16,7 +16,7 @@ npm install webdriver-manager
 webdriver-manager update
 webdriver-manager update --versions.chrome 2.29
 
-.sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io testSuiteName 
+.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName 
 ```
 
 > Note: for macOS users, make sure you installed `nc` with `brew install netcat` prior launching the script.
@@ -24,7 +24,7 @@ webdriver-manager update --versions.chrome 2.29
 * Run on prod
 
 ```
-.sh ./local_run_EE_tests.sh USERNAME PASSWORD https://openshift.io testSuiteName
+.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName
 ```
 where USERNAME and PASSWORD should be replaced by your OSiO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
