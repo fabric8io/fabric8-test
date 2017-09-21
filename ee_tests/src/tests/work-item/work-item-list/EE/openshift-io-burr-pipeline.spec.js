@@ -169,10 +169,12 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
       browser.takeScreenshot().then(function (png) {
         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_matchingstring.png');
       });
+      testSupport.outputOcData(username);
     }
   
    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
    OpenShiftIoPipelinePage.clickPromoteButton();
+   testSupport.outputOcData(username);
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */

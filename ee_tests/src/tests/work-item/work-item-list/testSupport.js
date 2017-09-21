@@ -608,6 +608,16 @@ waitForText: function (elementFinder) {
     page.clickLogOut();
   },
 
+
+/* 
+  * Print data from oc - to assist debugging pipeline creation failuers
+  */
+  outputOcData: function (username) {
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_oc_data.sh ' + username + ' ' + browser.params.oso.token).toString();
+    console.log(result);
+  },
+
 /*
  * Create fixed length string - used to generate large strings
  */
