@@ -60,7 +60,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     constants = require("../constants");
 
 /* TODO - convert this into a test parameter */
-const GITHUB_NAME = "osiotestmachine";
+var GITHUB_NAME = browser.params.github.username;
 const IMPORT_NAME = "vertxbasic";
 
 describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che: ', function () {

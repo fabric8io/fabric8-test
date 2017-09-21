@@ -2,8 +2,14 @@
 
 set -x
 
+
+# Default values for parameters
+
 DEFAULT_TEST_SUITE="runTest"
 TEST_SUITE=${6:-$DEFAULT_TEST_SUITE}
+
+DEFAULT_GITHUB_USERNAME="osiotestmachine"
+GITHUB_USERNAME=${7:-$DEFAULT_GITHUB_USERNAME}
 
 DIR="$(pwd)"
 if [ -z "$DIR" ]; then
@@ -37,8 +43,7 @@ fi
 echo Running protractor test suite ${PROTRACTOR_JS} ...
 #node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
-node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
-
+node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5 --params.github.username=$GITHUB_USERNAME
 
 TEST_RESULT=$?
 
