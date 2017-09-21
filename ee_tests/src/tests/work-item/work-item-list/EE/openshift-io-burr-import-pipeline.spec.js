@@ -90,10 +90,10 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     var username = testSupport.userEntityName(browser.params.login.user);
     console.log ("Test for target URL: " + browser.params.target.url)
 
-    /* Cleanup - Delete the build config created by the test */
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
-    console.log(result);
+//    /* Cleanup - Delete the build config created by the test */
+//    var process = require('child_process').execSync;
+//    var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
+//    console.log(result);
 
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
