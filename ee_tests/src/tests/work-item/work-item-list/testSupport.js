@@ -546,10 +546,6 @@ waitForText: function (elementFinder) {
     browser.get(this.joinURIPath(browser.params.target.url, username, spaceTime, "create"));
     OpenShiftIoCodebasePage = new OpenShiftIoCodebasePage();
 
-    OpenShiftIoCodebasePage.codebaseList.getText().then(function(text){
-      console.log("Codebases page contents = " + text);
-    });
-
     browser.wait(until.elementToBeClickable(OpenShiftIoCodebasePage.codebaseByName (username, spaceTime, GITHUB_NAME)), constants.WAIT, 'Failed to find CodebaseByName');
     OpenShiftIoCodebasePage.codebaseByName (username, spaceTime, GITHUB_NAME).getText().then(function(text){
       console.log("Codebase = " + text);
@@ -641,7 +637,6 @@ waitForText: function (elementFinder) {
         /* Undocumented feature in Jasmine - adding a text string to the expect statement */
         expect(handles.length).toBe(2, "total of 2 browser tabs is expected");
 
-//        testSupport.switchToWindow (browser, 1);
         browser.sleep(constants.WAIT);
         browser.getAllWindowHandles().then(function (handles) {
           browser.switchTo().window(handles[1]);
