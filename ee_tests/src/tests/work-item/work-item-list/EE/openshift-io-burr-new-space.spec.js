@@ -73,7 +73,7 @@ describe('openshift.io End-to-End POC test - Scenario - Create new space: ', fun
     // http://stackoverflow.com/questions/38050626/angular-2-with-protractorjs-failed-error-while-waiting-for-protractor-to-sync-w 
     browser.ignoreSynchronization = true;
     page = new OpenShiftIoStartPage(browser.params.target.url);  
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 6000000;   /* 10 minutes */
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = constants.JASMINE_TIMEOUT;
   });
 
   /* Tests must reset the browser so that the test can logout/login cleanly */

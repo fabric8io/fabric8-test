@@ -31,7 +31,8 @@ echo -n Starting Webdriver and Selenium...
 (webdriver-manager start --versions.chrome 2.29 >>$LOGFILE 2>&1 &)
 
 # Wait for port 4444 to be listening connections
-while ! (nc -w 1 127.0.0.1 4444 </dev/null >/dev/null 2>&1); do sleep 1; done
+##### while ! (nc -w 1 127.0.0.1 4444 </dev/null >/dev/null 2>&1); do sleep 1; done
+until curl --output /dev/null --silent --head --fail 127.0.0.1:4444; do sleep 1; done
 echo done.
 
 PROTRACTOR_JS="$PROTRACTOR_CONFIG_JS"
@@ -43,7 +44,11 @@ fi
 echo Running protractor test suite ${PROTRACTOR_JS} ...
 #node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
-node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5 --params.github.username=$GITHUB_USERNAME
+### node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5 --params.github.username=$GITHUB_USERNAME
+
+node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME
+
+
 
 TEST_RESULT=$?
 

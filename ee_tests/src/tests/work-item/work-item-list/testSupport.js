@@ -608,14 +608,90 @@ waitForText: function (elementFinder) {
     page.clickLogOut();
   },
 
-
 /* 
-  * Print data from oc - to assist debugging pipeline creation failuers
+  * Print data from oc - to assist debugging pipeline creation failures
   */
   outputOcData: function (username) {
     var process = require('child_process').execSync;
     var result = process('sh ./local_oc_data.sh ' + username + ' ' + browser.params.oso.token).toString();
     console.log(result);
+  },
+
+/* 
+  * Create workspace in Che 
+    */
+  createCheWorkspace: function (chePage, spaceName, username, osoToken) {    
+
+    var constants = require("./constants");
+
+    /* Switch to Che browser tab */
+    browser.sleep(constants.LONG_WAIT);
+    browser.getAllWindowHandles().then(function (handles) {
+
+        console.log("Number of browser tabs = " + handles.length);
+        if (handles.length == 1) {
+
+          /* If Che fails to open - dump the Che log to stdout */
+          console.log ("ERROR - Che browser window did not open - see: https://github.com/openshiftio/openshift.io/issues/618");
+          var process = require('child_process').execSync;
+          var result = process('sh ./local_oc.sh ' + username + ' ' + osoToken + " che").toString();
+          console.log(result);
+        }
+
+        /* Undocumented feature in Jasmine - adding a text string to the expect statement */
+        expect(handles.length).toBe(2, "total of 2 browser tabs is expected");
+
+//        testSupport.switchToWindow (browser, 1);
+        browser.sleep(constants.WAIT);
+        browser.getAllWindowHandles().then(function (handles) {
+          browser.switchTo().window(handles[1]);
+        });
+
+        browser.getCurrentUrl().then(function(url) {
+            console.log("Che workspace URL = " + url);
+        });
+    });
+
+    /* Look for the project in the Che navigator */
+    chePage.projectRootByName(spaceName).getText().then(function (text) { 
+       console.log ('EE POC test - projectName = ' + text);
+    });
+
+  },
+
+/* 
+  * Run a quickstart in Che workspace
+  */
+  runQuickstart: function (chePage, spaceName) {
+
+    var constants = require("./constants");
+
+    /* Run the quickstart - and verify that it was successful */
+    chePage.clickmainMenuRunButton();
+    browser.sleep(constants.LONG_WAIT);
+
+    chePage.clickmainMenuRunButtonRunSelection();
+    browser.sleep(constants.LONG_WAIT);
+
+    chePage.clickBottomPanelRunTab();
+    browser.sleep(constants.LONG_WAIT);
+
+    chePage.bottomPanelOutputTitles.getText().then(function (text) { 
+      console.log ("titles=" + text);
+    });
+
+    chePage.bottomPanelOutputLabel.getText().then(function (text) { 
+      console.log ("label=" + text);
+    });
+
+    chePage.bottomPanelOutputPreview.getText().then(function (text) { 
+     console.log ("preview=" + text);
+    });
+
+    chePage.bottomPanelCommandConsoleLines.getText().then(function (text) { 
+      console.log ("[[[text=" + text + "]]]");
+    });
+  
   },
 
 /*

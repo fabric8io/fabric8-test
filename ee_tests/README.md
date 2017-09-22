@@ -14,25 +14,24 @@ The EE tests simulate a user's actions by creating spaces and projects in the UI
 
 To run the tests locally, execute these commands:
 
-git clone git@github.com:fabric8io/fabric8-test.git
+```
 cd ee_tests
 npm install
+npm install webdriver-manager
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.29
 
-And then invoke this script:
-
-```
-sh ./local_run_EE_tests.sh username password http://target-URL-for-your-server
-```
-
-For example:
-
-```
-sh ./local_run_EE_tests.sh username password https://openshift.io
+.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName githubUsername
 ```
 
-To run the tests locally on docker, run this script:
-local_cico_run_EE_tests.sh username password http://target-URL-for-your-server
+> Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed int he tests' local directory. 
 
+* Run on prod
+
+```
+.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName githubUsername
+```
+where USERNAME and PASSWORD should be replaced by your OSiO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
 By default, Google Chrome browser is used by EE tests via Selenium. If you want
 to use different browser (Firefox for example), set up the following environment
