@@ -24,9 +24,7 @@ set +x
 cat ./jenkins-env | grep EE_TEST > ~/.ee_test_params
 . ~/.ee_test_params
 
-## node_modules/protractor/bin/protractor protractorEE.config.js --suite setupTest --params.login.user=$EE_TEST_USERNAME --params.login.password=$EE_TEST_PASSWORD --params.oso.token=$EE_TEST_OSO_TOKEN --params.kc.token=$EE_TEST_KC_TOKEN --params.target.url=$1
-
-node_modules/protractor/bin/protractor protractorEE.config.js --suite $2 --params.login.user=$EE_TEST_USERNAME --params.login.password=$EE_TEST_PASSWORD --params.oso.token=$EE_TEST_OSO_TOKEN --params.kc.token=$EE_TEST_KC_TOKEN --params.target.url=$1
+node_modules/protractor/bin/protractor protractorEE.config.js --suite $2 --params.login.user=$EE_TEST_USERNAME --params.login.password=$EE_TEST_PASSWORD --params.oso.token=$EE_TEST_OSO_TOKEN --params.kc.token=$EE_TEST_KC_TOKEN --params.target.url=$1 --params.github.username="osiotestmachine"
 
 TEST_RESULT=$?
 set -x
