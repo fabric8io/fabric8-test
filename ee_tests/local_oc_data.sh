@@ -12,13 +12,13 @@
 echo "*****************************************************"
 
 echo "Openshift build configs: "
-oc export bc
+./oc export bc
 
 echo "OpenShift stage deployments: "
-oc get deploy -n $1-stage
+./oc get deploy -n $1-stage
 
 echo "OpenShist stage pods: "
-oc get pod -n $1-stage
+./oc get pod -n $1-stage
 
 echo "*****************************************************"
 
