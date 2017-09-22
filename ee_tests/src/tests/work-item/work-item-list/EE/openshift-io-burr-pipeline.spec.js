@@ -159,6 +159,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
       /* Save a screenshot */
       browser.takeScreenshot().then(function (png) {
         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');
+        testSupport.outputOcData(username);
         throw err;
       });
     });

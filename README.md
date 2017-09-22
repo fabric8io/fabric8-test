@@ -19,7 +19,7 @@ webdriver-manager update --versions.chrome 2.29
 .sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName githubUsername
 ```
 
-> Note: for macOS users, make sure you installed `nc` with `brew install netcat` prior launching the script. Also note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed int he tests' local directory. 
+> Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed in the tests' local directory. 
 
 * Run on prod
 
@@ -89,5 +89,6 @@ gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-re
 *  `jenkins-version` : the Jenkins YAML version for the tenant
 *  `team-version` : the Team YAML version for the tenant
 *  `maven-repo` : the maven repository used for tenant YAML if using a PR or custom build
+
 
 
