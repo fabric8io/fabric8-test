@@ -24,10 +24,28 @@ webdriver-manager update --versions.chrome 2.29
 * Run on prod
 
 ```
-.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName githubUsername
+.sh ./local_run_EE_tests.sh username password openShiftToken OSIOtoken targetUrl testSuiteName githubUsername openshiftOnlineUsername
 ```
-where USERNAME and PASSWORD should be replaced by your OSiO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
+where username and password should be replaced by your OSIO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
+Given the large number of test parameters, you might find it easier to define the parameters as env variables, for example:
+
+export OSIO_URL=https://openshift.io
+export TEST_SUITE=<test suite name>                         (default value == "runTest")
+export RHD_USERNAME=<RedHatDeveloper Username>
+export RHD_PASSWORD=<RedHatDeveloper Password>
+export OSO_TOKEN=<OSO OpenShift Token>
+export KC_TOKEN=<KC Token>
+export GH_USERNAME=<GitHub user linked with RHD account>    (default value == RHD_USERNAME)
+export OSO_USERNAME=<OpenShift Online username>             (default value == RHD_USERNAME
+sh ./local_run_EE_tests.sh ${RHD_USERNAME} \
+                           ${RHD_PASSWORD} \
+                           ${OSIO_URL} \
+                           ${OSO_TOKEN} \
+                           ${KC_TOKEN} \
+                           ${TEST_SUITE} \
+                           ${GH_USERNAME} \
+                           ${OSO_USERNAME}
 
 ## Running the E2E tests inside a pod
 
