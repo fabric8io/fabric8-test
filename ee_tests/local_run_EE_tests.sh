@@ -2,14 +2,16 @@
 
 set -x
 
-
-# Default values for parameters
+# Default values for optional parameters
 
 DEFAULT_TEST_SUITE="runTest"
 TEST_SUITE=${6:-$DEFAULT_TEST_SUITE}
 
 DEFAULT_GITHUB_USERNAME="osiotestmachine"
 GITHUB_USERNAME=${7:-$DEFAULT_GITHUB_USERNAME}
+
+DEFAULT_OSO_USERNAME=$1
+OSO_USERNAME=${8:-$1}
 
 DIR="$(pwd)"
 if [ -z "$DIR" ]; then
@@ -42,16 +44,10 @@ fi
 
 # Finally run protractor
 echo Running protractor test suite ${PROTRACTOR_JS} ...
-#node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite setupTest --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5
 
-### node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite $TEST_SUITE --params.login.user=$1 --params.login.password=$2 --params.target.url=$3 --params.oso.token=$4 --params.kc.token=$5 --params.github.username=$GITHUB_USERNAME
-
-node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME
-
-
+node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME --params.oso.username=$OSO_USERNAME
 
 TEST_RESULT=$?
-
 
 # cat log file to stdout
 if [ "$CAT_LOGFILE" == "true" ]; then
@@ -62,7 +58,6 @@ if [ "$CAT_LOGFILE" == "true" ]; then
   echo "------------------------------------------"
   echo
 fi
-
 
 # Cleanup webdriver-manager and web app processes
 fuser -k -n tcp 4444
