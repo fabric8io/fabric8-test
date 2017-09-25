@@ -83,7 +83,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     browser.takeScreenshot().then(function (png) {
       testSupport.writeScreenShot(png, 'target/screenshots/' + glocal_spacename + '_che_workspace_99.png');
     });
-    browser.restart();
+    //browser.restart();
   });
 
   var quickstartName = browser.params.target.quickstart;

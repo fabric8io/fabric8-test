@@ -77,7 +77,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
   afterEach(function () { 
-    browser.restart();
+//    browser.restart();
   });
 
   var quickstartName = browser.params.target.quickstart;
