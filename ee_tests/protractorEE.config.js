@@ -10,6 +10,7 @@ var reporter = new HtmlScreenshotReporter({
 });
 
 exports.config = {
+    restartBrowserBetweenTests: true,
     useAllAngular2AppRoots: true,
     getPageTimeout: 30000,
     seleniumAddress: 'http://localhost:4444/wd/hub',

@@ -46,7 +46,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
   afterEach(function () { 
-    browser.restart();
+    //browser.restart();
   });
 
   /* Simple test for registered user */
