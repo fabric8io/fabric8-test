@@ -125,8 +125,8 @@ clickmainMenuRunButton () {
 
 /* Main Menu Panel run button run selection*/
 get mainMenuRunButtonRunSelection () {
-//  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBP5 GJ5I-CRBAAB')]"));
-  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GJ5I-CRBBAB')]"));
+//  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GJ5I-CRBBAB')]"));
+  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GLJLMPIDEAB')]"));
 }
 clickmainMenuRunButtonRunSelection () {
   browser.wait(until.elementToBeClickable(this.mainMenuRunButtonRunSelection), constants.LONG_WAIT, 'Failed to find element mainMenuRunButtonRunSelection');
@@ -176,7 +176,8 @@ get bottomPanel () {
 
 /* Bottom Panel run tab */
 get bottomPanelRunTab () {
-  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBCGC')][contains(text(),'run')]"));
+//  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBCGC')][contains(text(),'run')]"));
+  return element(by.xpath(".//*[contains(@class,'GLJLMPIDCHC')][contains(text(),'run')]"));
 }
 clickBottomPanelRunTab () {
   browser.wait(until.elementToBeClickable(this.bottomPanelRunTab), constants.LONGER_WAIT, 'Failed to find element bottomPanelRunTab');
@@ -201,8 +202,7 @@ get bottomPanelOutputPreview () {
 
 /* Bottom Panel command console lines of text */
 get bottomPanelCommandConsoleLines () {
-//  return element(by.id("gwt-debug-commandConsoleLines"));
-  return element.all(by.xpath(".//*[contains(@class,'GJ5I-CRBERB')]")).last();
+  return element.all(by.id("gwt-debug-commandConsoleScrollPanel")).last();
 }
 /*
 <div id="gwt-debug-commandConsoleLines" class="GJ5I-CRBERB" 
