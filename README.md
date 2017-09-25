@@ -29,7 +29,7 @@ webdriver-manager update --versions.chrome 2.29
 where username and password should be replaced by your OSIO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
 Given the large number of test parameters, you might find it easier to define the parameters as env variables, for example:
-
+```
 export OSIO_URL=https://openshift.io
 export TEST_SUITE=<test suite name>                         (default value == "runTest")
 export RHD_USERNAME=<RedHatDeveloper Username>
@@ -46,7 +46,7 @@ sh ./local_run_EE_tests.sh ${RHD_USERNAME} \
                            ${TEST_SUITE} \
                            ${GH_USERNAME} \
                            ${OSO_USERNAME}
-
+```
 ## Running the E2E tests inside a pod
 
 You can run the E2E tests on a running fabric8 cluster using the [gofabric8](https://github.com/fabric8io/gofabric8/releases) CLI tool.
