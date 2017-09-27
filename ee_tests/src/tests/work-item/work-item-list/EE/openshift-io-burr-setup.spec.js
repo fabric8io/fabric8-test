@@ -68,7 +68,7 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
 
   /* Set up for each function */
   beforeEach(function () {
-    testSupport.setBrowserMode('extreme');
+    testSupport.setBrowserMode('desktop');
     // Failed: Error while waiting for Protractor to sync with the page: "window.getAllAngularTestabilities is not a function"
     // http://stackoverflow.com/questions/38050626/angular-2-with-protractorjs-failed-error-while-waiting-for-protractor-to-sync-w 
     browser.ignoreSynchronization = true;
