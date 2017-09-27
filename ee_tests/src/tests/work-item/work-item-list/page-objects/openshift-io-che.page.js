@@ -187,26 +187,47 @@ clickBottomPanelRunTab () {
   return;
 }
 
-/* Bottom Panel command */
+/* Bottom Panel title */
 get bottomPanelOutputTitles () {
   return element.all(by.xpath(".//*[contains(@class,'GJ5I-CRBHRB GJ5I-CRBCRB')]"));
 }
-/* Bottom Panel command */
+/* Bottom Panel label */
 get bottomPanelOutputLabel () {
   return element.all(by.xpath(".//*[contains(@class,'gwt-Label GJ5I-CRBHRB GJ5I-CRBCRB')]"));
 }
 /* Bottom Panel command */
-get bottomPanelOutputPreview () {
-  return element.all(by.xpath(".//*[contains(@class,'gwt-Anchor GJ5I-CRBIRB GJ5I-CRBMRB GJ5I-CRBCRB')]"));
+get bottomPanelOutputCommand () {
+//  return element.all(by.xpath(".//*[contains(@class,'gwt-Anchor GJ5I-CRBIRB GJ5I-CRBMRB GJ5I-CRBCRB')]"));
+  return element.all(by.xpath(".//*[contains(text(),'command:')]/following-sibling::div[contains(text(),'scl enable’)]"));
 }
-
+/* Bottom Panel preview */
+get bottomPanelOutputPreview () {
+    return element.all(by.xpath(".//*[contains(text(),'preview:')]/following-sibling::a[contains(text(),'http://')]"));
+  }
 /* Bottom Panel command console lines of text */
 get bottomPanelCommandConsoleLines () {
   return element.all(by.id("gwt-debug-commandConsoleScrollPanel")).last();
 }
-/*
-<div id="gwt-debug-commandConsoleLines" class="GJ5I-CRBERB" 
-*/
+
+
+/* Bottom Panel terminal tab */
+get bottomPanelTerminalTab () {
+  return element(by.xpath(".//*[contains(@class, 'GLJLMPIDCHC')][contains(text(),'Terminal’)]')]"));
+  }
+  clickBottomPanelTerminalTab () {
+    browser.wait(until.elementToBeClickable(this.bottomPanelTerminalTab), constants.LONGER_WAIT, 'Failed to find element bottomPanelTerminalTab');
+    this.bottomPanelRunTab.click().then(function(){
+      console.log("OpenShiftIoChePage - clicked element: bottomPanelTerminalTab");
+    });
+    return;
+  }
+
+// TODO
+//
+//    .//*[contains(@class, 'GLJLMPIDCHC')][contains(text(),'Terminal’)]
+//    .//*[@id='gat-debug-terminal']
+//    .//*[contains(@class,'xterm-rows')]
+
 
 }
 
