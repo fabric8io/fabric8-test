@@ -38,10 +38,10 @@ class OpenShiftIoCleanTenantPage {
 //    this.eraseOsioEnvButton.getText().then(function(text){
 //        console.log("Erase button text = " + text);
 //    });
-
-    /* There seems to be a problem with protractor running on headless Chrome + Xvfb not able to click 
-       on the button if the page grows larger that the height defined in the display. */
-    browser.actions().mouseMove(this.eraseOsioEnvButton).perform();
+//
+//    /* There seems to be a problem with protractor running on headless Chrome + Xvfb not able to click 
+//       on the button if the page grows larger that the height defined in the display. */
+//    browser.actions().mouseMove(this.eraseOsioEnvButton).perform();
 
     this.eraseOsioEnvButton.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvButton");
