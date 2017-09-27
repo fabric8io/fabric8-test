@@ -27,6 +27,7 @@ class OpenShiftIoCleanTenantPage {
     return element(by.xpath(".//button[contains (text(), 'Erase My OpenShift.io Environment')]"));
   }
   clickEraseOsioEnvButton () {
+    browser.wait(until.presenceOf(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
     browser.wait(until.elementToBeClickable(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
     this.eraseOsioEnvButton.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvButton");
