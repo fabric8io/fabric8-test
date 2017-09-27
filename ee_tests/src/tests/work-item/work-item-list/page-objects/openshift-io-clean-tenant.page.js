@@ -28,7 +28,17 @@ class OpenShiftIoCleanTenantPage {
   }
   clickEraseOsioEnvButton () {
     browser.wait(until.presenceOf(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
+    browser.wait(until.visibilityOf(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
     browser.wait(until.elementToBeClickable(this.eraseOsioEnvButton), constants.LONG_WAIT, 'Failed to find element eraseOsioEnvButton');
+
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + '_erase_env.png');
+    });
+
+    this.eraseOsioEnvButton.getText().then(function(text){
+        console.log("Erase button text = " + text);
+    });
+
     this.eraseOsioEnvButton.click().then(function(){
       console.log("OpenShiftIoDashboardPage - clicked element:eraseOsioEnvButton");
     });
