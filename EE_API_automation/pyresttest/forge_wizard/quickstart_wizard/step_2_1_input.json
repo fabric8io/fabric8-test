@@ -55,7 +55,7 @@
         "label": "OpenShift Project name",
         "description": "The following characters are accepted: -a-z0-9 and the name cannot start or end with a dash",
         "class": "UIInput",
-        "value": "$repo_name"
+        "value": "$repo"
       },
       {
         "name": "groupId",

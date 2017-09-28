@@ -4,7 +4,8 @@
     -   timeout: 20
     -   variable_binds: {
           'headername': 'Content-Type',
-          'headervalue':  'application/json'
+          'headervalue':  'application/json',
+          'repo': "$repo_name"
           }
 
 ################################################################################################################

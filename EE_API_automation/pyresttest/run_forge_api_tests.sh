@@ -23,8 +23,10 @@ else
         if [ "$hasGitOrganisation" -gt "0" ]; then 
             echo "==> Username belongs to a github organisation: $hasGitOrganisation"
             #pyresttest https://forge.api.openshift.io API_forge_wizard.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true --print-headers true
-            uuid=$(uuidgen) # TODO for ubuntu, use uuid-runtime 
-            pyresttest https://forge.api.openshift.io API_forge_quickstart_wizard.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD', 'repo_name': quickstart-$uuid}" #--interactive true --print-headers true
+            uuid=$(uuidgen | sed 's/-//g' | cut -c1-20) # TODO for ubuntu, use uuid-runtime 
+            repo = "q_$uuid"
+            echo "==> Project name q_$uuid"
+            pyresttest https://forge.api.openshift.io API_forge_quickstart_wizard.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD', 'repo_name': $repo}" #--interactive true --print-headers true
         else
             echo "==> Username doesn't belong to any github organisation: $hasGitOrganisation"
             pyresttest https://forge.api.openshift.io API_forge_wizard_no_gh_organisation.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true --print-headers true
