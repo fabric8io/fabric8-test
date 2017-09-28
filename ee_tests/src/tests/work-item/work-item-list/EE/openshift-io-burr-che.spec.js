@@ -59,7 +59,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
 
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password, constants.CLEAN_ALL );
-    testSupport.cleanEnvironment();
+    //testSupport.cleanEnvironment();
 
     /* Step 2) In OSIO, create new space */
     var spaceTime = testSupport.returnTime();
