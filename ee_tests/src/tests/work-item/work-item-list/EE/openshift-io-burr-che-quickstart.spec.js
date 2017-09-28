@@ -142,7 +142,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
-    testSupport.cleanEnvironment();
+    //testSupport.cleanEnvironment();
     glocal_spacename = spaceTime;
 
     var username = testSupport.userEntityName(browser.params.login.user);
