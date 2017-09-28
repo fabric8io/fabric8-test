@@ -19,32 +19,6 @@
     },
     "inputs": [
       {
-        "name": "quickstart",
-        "shortName": " ",
-        "valueType": "io.fabric8.forge.generator.quickstart.BoosterDTO",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": true,
-        "deprecated": false,
-        "label": "Quickstart",
-        "description": "",
-        "class": "UISelectOne",
-        "value": "$selected_quickstart"
-      },
-      {
-        "name": "gitOrganisation",
-        "shortName": " ",
-        "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": true,
-        "deprecated": false,
-        "label": "Organisation",
-        "description": "The github organisation to create this project inside",
-        "class": "UISelectOne",
-        "value": "$selected_organisation"
-      },
-      {
         "name": "named",
         "shortName": " ",
         "valueType": "java.lang.String",
@@ -55,7 +29,7 @@
         "label": "OpenShift Project name",
         "description": "The following characters are accepted: -a-z0-9 and the name cannot start or end with a dash",
         "class": "UIInput",
-        "value": "$repo_name"
+        "value": "$selected_name"
       },
       {
         "name": "groupId",
@@ -82,8 +56,21 @@
         "description": "",
         "class": "UIInput",
         "value": "$selected_version"
+      },
+      {
+        "name": "quickstart",
+        "shortName": " ",
+        "valueType": "io.fabric8.forge.generator.quickstart.BoosterDTO",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Quickstart",
+        "description": "",
+        "class": "UISelectOne",
+        "value": "$selected_quickstart"
       }
     ],
     "results": [],
-    "stepIndex": 1
+    "stepIndex": 2
   }

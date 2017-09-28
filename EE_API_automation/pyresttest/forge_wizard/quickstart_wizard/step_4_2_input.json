@@ -1,10 +1,4 @@
 {
-    "metadata": {
-      "deprecated": false,
-      "category": "Uncategorized",
-      "name": "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep",
-      "description": "No Description"
-    },
     "state": {
       "valid": true,
       "canExecute": true,
@@ -19,7 +13,47 @@
       ],
       "isExecute": false
     },
+    "messages": [],
     "inputs": [
+      {
+        "name": "jenkinsSpace",
+        "shortName": " ",
+        "valueType": "java.lang.String",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Jenkins Space",
+        "description": "The space running Jenkins",
+        "class": "UISelectOne",
+        "value": "$k8_space-jenkins"
+      },
+      {
+        "name": "triggerBuild",
+        "shortName": " ",
+        "valueType": "java.lang.Boolean",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": false,
+        "deprecated": false,
+        "label": "Trigger build",
+        "description": "Should a build be triggered immediately after import?",
+        "class": "UIInput",
+        "value": true
+      },
+      {
+        "name": "addCIWebHooks",
+        "shortName": " ",
+        "valueType": "java.lang.Boolean",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": false,
+        "deprecated": false,
+        "label": "Add CI?",
+        "description": "Should we add a Continuous Integration webhooks for Pull Requests?",
+        "class": "UIInput",
+        "value": true
+      },
       {
         "name": "quickstart",
         "shortName": " ",
@@ -123,47 +157,9 @@
         "description": "The space for the new app",
         "class": "UIInput",
         "value": "$space_name_var"
-      },
-      {
-        "name": "jenkinsSpace",
-        "shortName": " ",
-        "valueType": "java.lang.String",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": true,
-        "deprecated": false,
-        "label": "Jenkins Space",
-        "description": "The space running Jenkins",
-        "class": "UISelectOne",
-        "value": "$k8_space-jenkins"
-      },
-      {
-        "name": "triggerBuild",
-        "shortName": " ",
-        "valueType": "java.lang.Boolean",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": false,
-        "deprecated": false,
-        "label": "Trigger build",
-        "description": "Should a build be triggered immediately after import?",
-        "class": "UIInput",
-        "value": true
-      },
-      {
-        "name": "addCIWebHooks",
-        "shortName": " ",
-        "valueType": "java.lang.Boolean",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": false,
-        "deprecated": false,
-        "label": "Add CI?",
-        "description": "Should we add a Continuous Integration webhooks for Pull Requests?",
-        "class": "UIInput",
-        "value": true
       }
     ],
     "results": [],
-    "stepIndex": 3
+    "stepIndex": 4,
+    "isExecute": true
   }

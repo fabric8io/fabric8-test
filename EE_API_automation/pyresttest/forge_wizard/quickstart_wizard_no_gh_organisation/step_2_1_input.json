@@ -32,19 +32,6 @@
         "value": "$selected_quickstart"
       },
       {
-        "name": "gitOrganisation",
-        "shortName": " ",
-        "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
-        "inputType": "org.jboss.forge.inputType.DEFAULT",
-        "enabled": true,
-        "required": true,
-        "deprecated": false,
-        "label": "Organisation",
-        "description": "The github organisation to create this project inside",
-        "class": "UISelectOne",
-        "value": "$selected_organisation"
-      },
-      {
         "name": "named",
         "shortName": " ",
         "valueType": "java.lang.String",
