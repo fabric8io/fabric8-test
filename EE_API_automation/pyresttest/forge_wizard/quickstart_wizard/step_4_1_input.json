@@ -1,0 +1,924 @@
+
+Failed to create BuildConfig from from project corinneboooo. io.fabric8.kubernetes.client.KubernetesClientException: Failure executing: POST at: https://api.starter-us-east-2.openshift.com/apis/build.openshift.io/v1/namespaces/ckrych/buildconfigs. Message: BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'). Received status: Status(apiVersion=v1, code=422, details=StatusDetails(causes=[StatusCause(field=metadata.labels, message=Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), reason=FieldValueInvalid, additionalProperties={})], group=null, kind=BuildConfig, name=corinneboooo, retryAfterSeconds=null, additionalProperties={}), kind=Status, message=BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), metadata=ListMeta(resourceVersion=null, selfLink=null, additionalProperties={}), reason=Invalid, status=Failure, additionalProperties={}).",
+
+
+{
+    "type": "java.lang.RuntimeException",
+    "message": "Failed to create BuildConfig from from project corinneboooo. io.fabric8.kubernetes.client.KubernetesClientException: Failure executing: POST at: https://api.starter-us-east-2.openshift.com/apis/build.openshift.io/v1/namespaces/ckrych/buildconfigs. Message: BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'). Received status: Status(apiVersion=v1, code=422, details=StatusDetails(causes=[StatusCause(field=metadata.labels, message=Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), reason=FieldValueInvalid, additionalProperties={})], group=null, kind=BuildConfig, name=corinneboooo, retryAfterSeconds=null, additionalProperties={}), kind=Status, message=BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), metadata=ListMeta(resourceVersion=null, selfLink=null, additionalProperties={}), reason=Invalid, status=Failure, additionalProperties={}).",
+    "localizedMessage": "Failed to create BuildConfig from from project corinneboooo. io.fabric8.kubernetes.client.KubernetesClientException: Failure executing: POST at: https://api.starter-us-east-2.openshift.com/apis/build.openshift.io/v1/namespaces/ckrych/buildconfigs. Message: BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'). Received status: Status(apiVersion=v1, code=422, details=StatusDetails(causes=[StatusCause(field=metadata.labels, message=Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), reason=FieldValueInvalid, additionalProperties={})], group=null, kind=BuildConfig, name=corinneboooo, retryAfterSeconds=null, additionalProperties={}), kind=Status, message=BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), metadata=ListMeta(resourceVersion=null, selfLink=null, additionalProperties={}), reason=Invalid, status=Failure, additionalProperties={}).",
+    "forgeVersion": "3.6.1.Final",
+    "stackTrace": [
+        {
+            "line": 1459,
+            "class": "io.fabric8.kubernetes.api.Controller",
+            "file": "Controller.java",
+            "method": "onApplyError"
+        },
+        {
+            "line": 806,
+            "class": "io.fabric8.kubernetes.api.Controller",
+            "file": "Controller.java",
+            "method": "doCreateBuildConfig"
+        },
+        {
+            "line": 794,
+            "class": "io.fabric8.kubernetes.api.Controller",
+            "file": "Controller.java",
+            "method": "applyBuildConfig"
+        },
+        {
+            "line": 339,
+            "class": "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep",
+            "file": "CreateBuildConfigStep.java",
+            "method": "execute"
+        },
+        {
+            "line": -1,
+            "class": "sun.reflect.GeneratedMethodAccessor659",
+            "method": "invoke"
+        },
+        {
+            "line": 43,
+            "class": "sun.reflect.DelegatingMethodAccessorImpl",
+            "file": "DelegatingMethodAccessorImpl.java",
+            "method": "invoke"
+        },
+        {
+            "line": 498,
+            "class": "java.lang.reflect.Method",
+            "file": "Method.java",
+            "method": "invoke"
+        },
+        {
+            "line": 87,
+            "class": "org.jboss.forge.furnace.proxy.ClassLoaderInterceptor$1",
+            "file": "ClassLoaderInterceptor.java",
+            "method": "call"
+        },
+        {
+            "line": 42,
+            "class": "org.jboss.forge.furnace.util.ClassLoaders",
+            "file": "ClassLoaders.java",
+            "method": "executeIn"
+        },
+        {
+            "line": 103,
+            "class": "org.jboss.forge.furnace.proxy.ClassLoaderInterceptor",
+            "file": "ClassLoaderInterceptor.java",
+            "method": "invoke"
+        },
+        {
+            "line": -1,
+            "class": "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep_$$_javassist_559efd1f-a5c5-4c66-85f5-4ad04ec8338e",
+            "file": "CreateBuildConfigStep_$$_javassist_559efd1f-a5c5-4c66-85f5-4ad04ec8338e.java",
+            "method": "execute"
+        },
+        {
+            "line": 161,
+            "class": "org.jboss.forge.addon.ui.impl.controller.WizardCommandControllerImpl",
+            "file": "WizardCommandControllerImpl.java",
+            "method": "execute"
+        },
+        {
+            "line": 157,
+            "class": "org.jboss.forge.addon.ui.impl.controller.NoUIWizardControllerDecorator",
+            "file": "NoUIWizardControllerDecorator.java",
+            "method": "execute"
+        },
+        {
+            "line": -1,
+            "class": "sun.reflect.GeneratedMethodAccessor654",
+            "method": "invoke"
+        },
+        {
+            "line": 43,
+            "class": "sun.reflect.DelegatingMethodAccessorImpl",
+            "file": "DelegatingMethodAccessorImpl.java",
+            "method": "invoke"
+        },
+        {
+            "line": 498,
+            "class": "java.lang.reflect.Method",
+            "file": "Method.java",
+            "method": "invoke"
+        },
+        {
+            "line": 124,
+            "class": "org.jboss.forge.furnace.proxy.ClassLoaderAdapterCallback$2",
+            "file": "ClassLoaderAdapterCallback.java",
+            "method": "call"
+        },
+        {
+            "line": 42,
+            "class": "org.jboss.forge.furnace.util.ClassLoaders",
+            "file": "ClassLoaders.java",
+            "method": "executeIn"
+        },
+        {
+            "line": 97,
+            "class": "org.jboss.forge.furnace.proxy.ClassLoaderAdapterCallback",
+            "file": "ClassLoaderAdapterCallback.java",
+            "method": "invoke"
+        },
+        {
+            "line": -1,
+            "class": "org.jboss.forge.addon.ui.controller.CommandController_$$_javassist_669a2d6f-980f-4ff4-90ea-4475fbd6df50",
+            "file": "CommandController_$$_javassist_669a2d6f-980f-4ff4-90ea-4475fbd6df50.java",
+            "method": "execute"
+        },
+        {
+            "line": 483,
+            "class": "org.obsidiantoaster.generator.rest.ObsidianResource",
+            "file": "ObsidianResource.java",
+            "method": "executeCommandJson"
+        },
+        {
+            "line": -1,
+            "class": "org.obsidiantoaster.generator.rest.ObsidianResource$Proxy$_$$_WeldClientProxy",
+            "method": "executeCommandJson"
+        },
+        {
+            "line": -1,
+            "class": "sun.reflect.GeneratedMethodAccessor653",
+            "method": "invoke"
+        },
+        {
+            "line": 43,
+            "class": "sun.reflect.DelegatingMethodAccessorImpl",
+            "file": "DelegatingMethodAccessorImpl.java",
+            "method": "invoke"
+        },
+        {
+            "line": 498,
+            "class": "java.lang.reflect.Method",
+            "file": "Method.java",
+            "method": "invoke"
+        },
+        {
+            "line": 139,
+            "class": "org.jboss.resteasy.core.MethodInjectorImpl",
+            "file": "MethodInjectorImpl.java",
+            "method": "invoke"
+        },
+        {
+            "line": 295,
+            "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+            "file": "ResourceMethodInvoker.java",
+            "method": "invokeOnTarget"
+        },
+        {
+            "line": 249,
+            "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+            "file": "ResourceMethodInvoker.java",
+            "method": "invoke"
+        },
+        {
+            "line": 236,
+            "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+            "file": "ResourceMethodInvoker.java",
+            "method": "invoke"
+        },
+        {
+            "line": 402,
+            "class": "org.jboss.resteasy.core.SynchronousDispatcher",
+            "file": "SynchronousDispatcher.java",
+            "method": "invoke"
+        },
+        {
+            "line": 209,
+            "class": "org.jboss.resteasy.core.SynchronousDispatcher",
+            "file": "SynchronousDispatcher.java",
+            "method": "invoke"
+        },
+        {
+            "line": 221,
+            "class": "org.jboss.resteasy.plugins.server.servlet.ServletContainerDispatcher",
+            "file": "ServletContainerDispatcher.java",
+            "method": "service"
+        },
+        {
+            "line": 56,
+            "class": "org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher",
+            "file": "HttpServletDispatcher.java",
+            "method": "service"
+        },
+        {
+            "line": 51,
+            "class": "org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher",
+            "file": "HttpServletDispatcher.java",
+            "method": "service"
+        },
+        {
+            "line": 790,
+            "class": "javax.servlet.http.HttpServlet",
+            "file": "HttpServlet.java",
+            "method": "service"
+        },
+        {
+            "line": 85,
+            "class": "io.undertow.servlet.handlers.ServletHandler",
+            "file": "ServletHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 62,
+            "class": "io.undertow.servlet.handlers.security.ServletSecurityRoleHandler",
+            "file": "ServletSecurityRoleHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 36,
+            "class": "io.undertow.servlet.handlers.ServletDispatchingHandler",
+            "file": "ServletDispatchingHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 78,
+            "class": "org.wildfly.extension.undertow.security.SecurityContextAssociationHandler",
+            "file": "SecurityContextAssociationHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.server.handlers.PredicateHandler",
+            "file": "PredicateHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 62,
+            "class": "org.wildfly.swarm.generated.FaviconErrorHandler",
+            "file": "FaviconErrorHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 94,
+            "class": "io.undertow.server.handlers.PathHandler",
+            "file": "PathHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 131,
+            "class": "io.undertow.servlet.handlers.security.SSLInformationAssociationHandler",
+            "file": "SSLInformationAssociationHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 57,
+            "class": "io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler",
+            "file": "ServletAuthenticationCallHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.server.handlers.PredicateHandler",
+            "file": "PredicateHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 46,
+            "class": "io.undertow.security.handlers.AbstractConfidentialityHandler",
+            "file": "AbstractConfidentialityHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 64,
+            "class": "io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler",
+            "file": "ServletConfidentialityConstraintHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 60,
+            "class": "io.undertow.security.handlers.AuthenticationMechanismsHandler",
+            "file": "AuthenticationMechanismsHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 77,
+            "class": "io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler",
+            "file": "CachedAuthenticatedSessionHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 50,
+            "class": "io.undertow.security.handlers.NotificationReceiverHandler",
+            "file": "NotificationReceiverHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.security.handlers.AbstractSecurityContextAssociationHandler",
+            "file": "AbstractSecurityContextAssociationHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.server.handlers.PredicateHandler",
+            "file": "PredicateHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 61,
+            "class": "org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler",
+            "file": "JACCContextIdHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.server.handlers.PredicateHandler",
+            "file": "PredicateHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.server.handlers.PredicateHandler",
+            "file": "PredicateHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 292,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+            "file": "ServletInitialHandler.java",
+            "method": "handleFirstRequest"
+        },
+        {
+            "line": 81,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+            "file": "ServletInitialHandler.java",
+            "method": "access$100"
+        },
+        {
+            "line": 138,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler$2",
+            "file": "ServletInitialHandler.java",
+            "method": "call"
+        },
+        {
+            "line": 135,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler$2",
+            "file": "ServletInitialHandler.java",
+            "method": "call"
+        },
+        {
+            "line": 48,
+            "class": "io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1",
+            "file": "ServletRequestContextThreadSetupAction.java",
+            "method": "call"
+        },
+        {
+            "line": 43,
+            "class": "io.undertow.servlet.core.ContextClassLoaderSetupAction$1",
+            "file": "ContextClassLoaderSetupAction.java",
+            "method": "call"
+        },
+        {
+            "line": 44,
+            "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+            "file": "LegacyThreadSetupActionWrapper.java",
+            "method": "call"
+        },
+        {
+            "line": 44,
+            "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+            "file": "LegacyThreadSetupActionWrapper.java",
+            "method": "call"
+        },
+        {
+            "line": 44,
+            "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+            "file": "LegacyThreadSetupActionWrapper.java",
+            "method": "call"
+        },
+        {
+            "line": 44,
+            "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+            "file": "LegacyThreadSetupActionWrapper.java",
+            "method": "call"
+        },
+        {
+            "line": 272,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+            "file": "ServletInitialHandler.java",
+            "method": "dispatchRequest"
+        },
+        {
+            "line": 81,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+            "file": "ServletInitialHandler.java",
+            "method": "access$000"
+        },
+        {
+            "line": 104,
+            "class": "io.undertow.servlet.handlers.ServletInitialHandler$1",
+            "file": "ServletInitialHandler.java",
+            "method": "handleRequest"
+        },
+        {
+            "line": 202,
+            "class": "io.undertow.server.Connectors",
+            "file": "Connectors.java",
+            "method": "executeRootHandler"
+        },
+        {
+            "line": 805,
+            "class": "io.undertow.server.HttpServerExchange$1",
+            "file": "HttpServerExchange.java",
+            "method": "run"
+        },
+        {
+            "line": 1142,
+            "class": "java.util.concurrent.ThreadPoolExecutor",
+            "file": "ThreadPoolExecutor.java",
+            "method": "runWorker"
+        },
+        {
+            "line": 617,
+            "class": "java.util.concurrent.ThreadPoolExecutor$Worker",
+            "file": "ThreadPoolExecutor.java",
+            "method": "run"
+        },
+        {
+            "line": 748,
+            "class": "java.lang.Thread",
+            "file": "Thread.java",
+            "method": "run"
+        }
+    ],
+    "cause": {
+        "type": "io.fabric8.kubernetes.client.KubernetesClientException",
+        "message": "Failure executing: POST at: https://api.starter-us-east-2.openshift.com/apis/build.openshift.io/v1/namespaces/ckrych/buildconfigs. Message: BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'). Received status: Status(apiVersion=v1, code=422, details=StatusDetails(causes=[StatusCause(field=metadata.labels, message=Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), reason=FieldValueInvalid, additionalProperties={})], group=null, kind=BuildConfig, name=corinneboooo, retryAfterSeconds=null, additionalProperties={}), kind=Status, message=BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), metadata=ListMeta(resourceVersion=null, selfLink=null, additionalProperties={}), reason=Invalid, status=Failure, additionalProperties={}).",
+        "localizedMessage": "Failure executing: POST at: https://api.starter-us-east-2.openshift.com/apis/build.openshift.io/v1/namespaces/ckrych/buildconfigs. Message: BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'). Received status: Status(apiVersion=v1, code=422, details=StatusDetails(causes=[StatusCause(field=metadata.labels, message=Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), reason=FieldValueInvalid, additionalProperties={})], group=null, kind=BuildConfig, name=corinneboooo, retryAfterSeconds=null, additionalProperties={}), kind=Status, message=BuildConfig \"corinneboooo\" is invalid: metadata.labels: Invalid value: \"ckrych@redhat.com-WIZARD\": a valid label must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyValue',  or 'my_value',  or '12345', regex used for validation is '(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?'), metadata=ListMeta(resourceVersion=null, selfLink=null, additionalProperties={}), reason=Invalid, status=Failure, additionalProperties={}).",
+        "forgeVersion": "3.6.1.Final",
+        "stackTrace": [
+            {
+                "line": 470,
+                "class": "io.fabric8.kubernetes.client.dsl.base.OperationSupport",
+                "file": "OperationSupport.java",
+                "method": "requestFailure"
+            },
+            {
+                "line": 409,
+                "class": "io.fabric8.kubernetes.client.dsl.base.OperationSupport",
+                "file": "OperationSupport.java",
+                "method": "assertResponseCode"
+            },
+            {
+                "line": 379,
+                "class": "io.fabric8.kubernetes.client.dsl.base.OperationSupport",
+                "file": "OperationSupport.java",
+                "method": "handleResponse"
+            },
+            {
+                "line": 343,
+                "class": "io.fabric8.kubernetes.client.dsl.base.OperationSupport",
+                "file": "OperationSupport.java",
+                "method": "handleResponse"
+            },
+            {
+                "line": 226,
+                "class": "io.fabric8.kubernetes.client.dsl.base.OperationSupport",
+                "file": "OperationSupport.java",
+                "method": "handleCreate"
+            },
+            {
+                "line": 769,
+                "class": "io.fabric8.kubernetes.client.dsl.base.BaseOperation",
+                "file": "BaseOperation.java",
+                "method": "handleCreate"
+            },
+            {
+                "line": 356,
+                "class": "io.fabric8.kubernetes.client.dsl.base.BaseOperation",
+                "file": "BaseOperation.java",
+                "method": "create"
+            },
+            {
+                "line": 804,
+                "class": "io.fabric8.kubernetes.api.Controller",
+                "file": "Controller.java",
+                "method": "doCreateBuildConfig"
+            },
+            {
+                "line": 794,
+                "class": "io.fabric8.kubernetes.api.Controller",
+                "file": "Controller.java",
+                "method": "applyBuildConfig"
+            },
+            {
+                "line": 339,
+                "class": "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep",
+                "file": "CreateBuildConfigStep.java",
+                "method": "execute"
+            },
+            {
+                "line": -1,
+                "class": "sun.reflect.GeneratedMethodAccessor659",
+                "method": "invoke"
+            },
+            {
+                "line": 43,
+                "class": "sun.reflect.DelegatingMethodAccessorImpl",
+                "file": "DelegatingMethodAccessorImpl.java",
+                "method": "invoke"
+            },
+            {
+                "line": 498,
+                "class": "java.lang.reflect.Method",
+                "file": "Method.java",
+                "method": "invoke"
+            },
+            {
+                "line": 87,
+                "class": "org.jboss.forge.furnace.proxy.ClassLoaderInterceptor$1",
+                "file": "ClassLoaderInterceptor.java",
+                "method": "call"
+            },
+            {
+                "line": 42,
+                "class": "org.jboss.forge.furnace.util.ClassLoaders",
+                "file": "ClassLoaders.java",
+                "method": "executeIn"
+            },
+            {
+                "line": 103,
+                "class": "org.jboss.forge.furnace.proxy.ClassLoaderInterceptor",
+                "file": "ClassLoaderInterceptor.java",
+                "method": "invoke"
+            },
+            {
+                "line": -1,
+                "class": "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep_$$_javassist_559efd1f-a5c5-4c66-85f5-4ad04ec8338e",
+                "file": "CreateBuildConfigStep_$$_javassist_559efd1f-a5c5-4c66-85f5-4ad04ec8338e.java",
+                "method": "execute"
+            },
+            {
+                "line": 161,
+                "class": "org.jboss.forge.addon.ui.impl.controller.WizardCommandControllerImpl",
+                "file": "WizardCommandControllerImpl.java",
+                "method": "execute"
+            },
+            {
+                "line": 157,
+                "class": "org.jboss.forge.addon.ui.impl.controller.NoUIWizardControllerDecorator",
+                "file": "NoUIWizardControllerDecorator.java",
+                "method": "execute"
+            },
+            {
+                "line": -1,
+                "class": "sun.reflect.GeneratedMethodAccessor654",
+                "method": "invoke"
+            },
+            {
+                "line": 43,
+                "class": "sun.reflect.DelegatingMethodAccessorImpl",
+                "file": "DelegatingMethodAccessorImpl.java",
+                "method": "invoke"
+            },
+            {
+                "line": 498,
+                "class": "java.lang.reflect.Method",
+                "file": "Method.java",
+                "method": "invoke"
+            },
+            {
+                "line": 124,
+                "class": "org.jboss.forge.furnace.proxy.ClassLoaderAdapterCallback$2",
+                "file": "ClassLoaderAdapterCallback.java",
+                "method": "call"
+            },
+            {
+                "line": 42,
+                "class": "org.jboss.forge.furnace.util.ClassLoaders",
+                "file": "ClassLoaders.java",
+                "method": "executeIn"
+            },
+            {
+                "line": 97,
+                "class": "org.jboss.forge.furnace.proxy.ClassLoaderAdapterCallback",
+                "file": "ClassLoaderAdapterCallback.java",
+                "method": "invoke"
+            },
+            {
+                "line": -1,
+                "class": "org.jboss.forge.addon.ui.controller.CommandController_$$_javassist_669a2d6f-980f-4ff4-90ea-4475fbd6df50",
+                "file": "CommandController_$$_javassist_669a2d6f-980f-4ff4-90ea-4475fbd6df50.java",
+                "method": "execute"
+            },
+            {
+                "line": 483,
+                "class": "org.obsidiantoaster.generator.rest.ObsidianResource",
+                "file": "ObsidianResource.java",
+                "method": "executeCommandJson"
+            },
+            {
+                "line": -1,
+                "class": "org.obsidiantoaster.generator.rest.ObsidianResource$Proxy$_$$_WeldClientProxy",
+                "method": "executeCommandJson"
+            },
+            {
+                "line": -1,
+                "class": "sun.reflect.GeneratedMethodAccessor653",
+                "method": "invoke"
+            },
+            {
+                "line": 43,
+                "class": "sun.reflect.DelegatingMethodAccessorImpl",
+                "file": "DelegatingMethodAccessorImpl.java",
+                "method": "invoke"
+            },
+            {
+                "line": 498,
+                "class": "java.lang.reflect.Method",
+                "file": "Method.java",
+                "method": "invoke"
+            },
+            {
+                "line": 139,
+                "class": "org.jboss.resteasy.core.MethodInjectorImpl",
+                "file": "MethodInjectorImpl.java",
+                "method": "invoke"
+            },
+            {
+                "line": 295,
+                "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+                "file": "ResourceMethodInvoker.java",
+                "method": "invokeOnTarget"
+            },
+            {
+                "line": 249,
+                "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+                "file": "ResourceMethodInvoker.java",
+                "method": "invoke"
+            },
+            {
+                "line": 236,
+                "class": "org.jboss.resteasy.core.ResourceMethodInvoker",
+                "file": "ResourceMethodInvoker.java",
+                "method": "invoke"
+            },
+            {
+                "line": 402,
+                "class": "org.jboss.resteasy.core.SynchronousDispatcher",
+                "file": "SynchronousDispatcher.java",
+                "method": "invoke"
+            },
+            {
+                "line": 209,
+                "class": "org.jboss.resteasy.core.SynchronousDispatcher",
+                "file": "SynchronousDispatcher.java",
+                "method": "invoke"
+            },
+            {
+                "line": 221,
+                "class": "org.jboss.resteasy.plugins.server.servlet.ServletContainerDispatcher",
+                "file": "ServletContainerDispatcher.java",
+                "method": "service"
+            },
+            {
+                "line": 56,
+                "class": "org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher",
+                "file": "HttpServletDispatcher.java",
+                "method": "service"
+            },
+            {
+                "line": 51,
+                "class": "org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher",
+                "file": "HttpServletDispatcher.java",
+                "method": "service"
+            },
+            {
+                "line": 790,
+                "class": "javax.servlet.http.HttpServlet",
+                "file": "HttpServlet.java",
+                "method": "service"
+            },
+            {
+                "line": 85,
+                "class": "io.undertow.servlet.handlers.ServletHandler",
+                "file": "ServletHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 62,
+                "class": "io.undertow.servlet.handlers.security.ServletSecurityRoleHandler",
+                "file": "ServletSecurityRoleHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 36,
+                "class": "io.undertow.servlet.handlers.ServletDispatchingHandler",
+                "file": "ServletDispatchingHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 78,
+                "class": "org.wildfly.extension.undertow.security.SecurityContextAssociationHandler",
+                "file": "SecurityContextAssociationHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.server.handlers.PredicateHandler",
+                "file": "PredicateHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 62,
+                "class": "org.wildfly.swarm.generated.FaviconErrorHandler",
+                "file": "FaviconErrorHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 94,
+                "class": "io.undertow.server.handlers.PathHandler",
+                "file": "PathHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 131,
+                "class": "io.undertow.servlet.handlers.security.SSLInformationAssociationHandler",
+                "file": "SSLInformationAssociationHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 57,
+                "class": "io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler",
+                "file": "ServletAuthenticationCallHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.server.handlers.PredicateHandler",
+                "file": "PredicateHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 46,
+                "class": "io.undertow.security.handlers.AbstractConfidentialityHandler",
+                "file": "AbstractConfidentialityHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 64,
+                "class": "io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler",
+                "file": "ServletConfidentialityConstraintHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 60,
+                "class": "io.undertow.security.handlers.AuthenticationMechanismsHandler",
+                "file": "AuthenticationMechanismsHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 77,
+                "class": "io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler",
+                "file": "CachedAuthenticatedSessionHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 50,
+                "class": "io.undertow.security.handlers.NotificationReceiverHandler",
+                "file": "NotificationReceiverHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.security.handlers.AbstractSecurityContextAssociationHandler",
+                "file": "AbstractSecurityContextAssociationHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.server.handlers.PredicateHandler",
+                "file": "PredicateHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 61,
+                "class": "org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler",
+                "file": "JACCContextIdHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.server.handlers.PredicateHandler",
+                "file": "PredicateHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.server.handlers.PredicateHandler",
+                "file": "PredicateHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 292,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+                "file": "ServletInitialHandler.java",
+                "method": "handleFirstRequest"
+            },
+            {
+                "line": 81,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+                "file": "ServletInitialHandler.java",
+                "method": "access$100"
+            },
+            {
+                "line": 138,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler$2",
+                "file": "ServletInitialHandler.java",
+                "method": "call"
+            },
+            {
+                "line": 135,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler$2",
+                "file": "ServletInitialHandler.java",
+                "method": "call"
+            },
+            {
+                "line": 48,
+                "class": "io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1",
+                "file": "ServletRequestContextThreadSetupAction.java",
+                "method": "call"
+            },
+            {
+                "line": 43,
+                "class": "io.undertow.servlet.core.ContextClassLoaderSetupAction$1",
+                "file": "ContextClassLoaderSetupAction.java",
+                "method": "call"
+            },
+            {
+                "line": 44,
+                "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+                "file": "LegacyThreadSetupActionWrapper.java",
+                "method": "call"
+            },
+            {
+                "line": 44,
+                "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+                "file": "LegacyThreadSetupActionWrapper.java",
+                "method": "call"
+            },
+            {
+                "line": 44,
+                "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+                "file": "LegacyThreadSetupActionWrapper.java",
+                "method": "call"
+            },
+            {
+                "line": 44,
+                "class": "io.undertow.servlet.api.LegacyThreadSetupActionWrapper$1",
+                "file": "LegacyThreadSetupActionWrapper.java",
+                "method": "call"
+            },
+            {
+                "line": 272,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+                "file": "ServletInitialHandler.java",
+                "method": "dispatchRequest"
+            },
+            {
+                "line": 81,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler",
+                "file": "ServletInitialHandler.java",
+                "method": "access$000"
+            },
+            {
+                "line": 104,
+                "class": "io.undertow.servlet.handlers.ServletInitialHandler$1",
+                "file": "ServletInitialHandler.java",
+                "method": "handleRequest"
+            },
+            {
+                "line": 202,
+                "class": "io.undertow.server.Connectors",
+                "file": "Connectors.java",
+                "method": "executeRootHandler"
+            },
+            {
+                "line": 805,
+                "class": "io.undertow.server.HttpServerExchange$1",
+                "file": "HttpServerExchange.java",
+                "method": "run"
+            },
+            {
+                "line": 1142,
+                "class": "java.util.concurrent.ThreadPoolExecutor",
+                "file": "ThreadPoolExecutor.java",
+                "method": "runWorker"
+            },
+            {
+                "line": 617,
+                "class": "java.util.concurrent.ThreadPoolExecutor$Worker",
+                "file": "ThreadPoolExecutor.java",
+                "method": "run"
+            },
+            {
+                "line": 748,
+                "class": "java.lang.Thread",
+                "file": "Thread.java",
+                "method": "run"
+            }
+        ]
+    }
+}

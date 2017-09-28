@@ -1,1 +1,32 @@
-{"data":{"attributes":{"name":"$space_iteration2","description":"Space Iteration 2 for test","state":"new","parent_path":"","resolved_parent_path":""},"relationships":{"parent":{"data":{"id":"","type":"iterations"},"links":{"self":""}},"space":{"data":{"id":"$spaceid","type":"space"},"links":{"self":""}}},"type":"iterations"}}
+{
+    "data": {
+        "attributes": {
+            "name": "$space_iteration2",
+            "description": "Space Iteration 2 for test",
+            "state": "new",
+            "parent_path": "",
+            "resolved_parent_path": ""
+        },
+        "relationships": {
+            "parent": {
+                "data": {
+                    "id": "",
+                    "type": "iterations"
+                },
+                "links": {
+                    "self": ""
+                }
+            },
+            "space": {
+                "data": {
+                    "id": "$spaceid",
+                    "type": "space"
+                },
+                "links": {
+                    "self": ""
+                }
+            }
+        },
+        "type": "iterations"
+    }
+}

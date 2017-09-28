@@ -1,6 +1,6 @@
 ---
 -   config:
-    -   testset:    "osio planner-platform api automation workshop"
+    -   testset:    "Forge import flow wizard when logged in with an OSiO user without github organisation"
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/json'

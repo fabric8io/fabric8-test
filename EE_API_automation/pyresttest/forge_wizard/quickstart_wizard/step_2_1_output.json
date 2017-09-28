@@ -1,0 +1,87 @@
+{
+    "state": {
+        "valid": true,
+        "canExecute": true,
+        "wizard": true,
+        "canMoveToNextStep": true,
+        "canMoveToPreviousStep": true,
+        "steps": [
+            "Quickstart",
+            "Fabric8: Project Info",
+            "Obsidian: Configure Pipeline",
+            "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"
+        ]
+    },
+    "messages": [],
+    "inputs": [
+        {
+            "name": "gitOrganisation",
+            "shortName": " ",
+            "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "Organisation",
+            "description": "The github organisation to create this project inside",
+            "valueChoices": [
+                {
+                    "id": "3.musket33rs",
+                    "avatarUrl": "https://avatars2.githubusercontent.com/u/1974314?v=4",
+                    "description": "http://3musket33rs.github.com",
+                    "htmlUrl": "https://github.com/3musket33rs",
+                    "name": "3.musket33rs",
+                    "valid": true
+                },
+                {
+                    "id": "corinnekrych",
+                    "description": "My personal github account",
+                    "htmlUrl": "https://github.com/corinnekrych",
+                    "name": "corinnekrych",
+                    "valid": true
+                }
+            ],
+            "class": "UISelectOne",
+            "value": "corinnekrych"
+        },
+        {
+            "name": "named",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "OpenShift Project name",
+            "description": "The following characters are accepted: -a-z0-9 and the name cannot start or end with a dash",
+            "class": "UIInput",
+            "value": "boooo"
+        },
+        {
+            "name": "groupId",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "Group Id",
+            "description": "",
+            "class": "UIInput",
+            "value": "io.openshift.booster"
+        },
+        {
+            "name": "version",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "Version",
+            "description": "",
+            "class": "UIInput",
+            "value": "1.0.0-SNAPSHOT"
+        }
+    ]
+}
