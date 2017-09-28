@@ -215,16 +215,16 @@ waitForText: function (elementFinder) {
 //    var tenantProfilePage = new OpenShiftIoProfileTenantPage();
 //    tenantProfilePage.updateTenant(browser);
 
-//    /* lets only run the cleanup CLIs on OSIO */
-//    if ("osio" === platform) {
-////      var username = this.userEntityName(browser.params.login.user);
-//      var result = process('sh ./local_cleanup_che.sh ' + browser.params.oso.username + ' ' + browser.params.kc.token).toString();
-//      console.log(result);
-//
-//      process = require('child_process').execSync;
-//      result = process('sh ./local_cleanup.sh ' + browser.params.oso.username + ' ' + browser.params.oso.token).toString();
-//      console.log(result);
-//    }
+    /* lets only run the cleanup CLIs on OSIO */
+    if ("osio" === platform) {
+//      var username = this.userEntityName(browser.params.login.user);
+      var result = process('sh ./local_cleanup_che.sh ' + browser.params.oso.username + ' ' + browser.params.kc.token).toString();
+      console.log(result);
+
+      process = require('child_process').execSync;
+      result = process('sh ./local_cleanup.sh ' + browser.params.oso.username + ' ' + browser.params.oso.token).toString();
+      console.log(result);
+    }
     
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
     OpenShiftIoDashboardPage.clickStatusIcon();
