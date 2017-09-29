@@ -209,20 +209,53 @@ get bottomPanelCommandConsoleLines () {
   return element.all(by.id("gwt-debug-commandConsoleScrollPanel")).last();
 }
 
-
 /* Bottom Panel terminal tab */
+
+get bottomPanelTerminal () {
+  return element(by.id("gwt-debug-Terminal"));
+  }
+clickBottomPanelTerminal () {
+  browser.wait(until.elementToBeClickable(this.bottomPanelTerminal), constants.LONGER_WAIT, 'Failed to find element bottomPanelTerminal');
+  this.bottomPanelTerminal.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: bottomPanelTerminal");
+  });
+  return;
+}
+typeTerminalConsole (commandString) {
+  return this.bottomPanelTerminal.sendKeys(commandString);
+}
+
 get bottomPanelTerminalTab () {
-  return element(by.xpath(".//*[contains(@class, 'GLJLMPIDCHC')][contains(text(),'Terminal’)]')]"));
+  return element(by.xpath(".//*[contains(@class, 'GLJLMPIDCHC')][contains(text(),'Terminal')]"));
   }
   clickBottomPanelTerminalTab () {
     browser.wait(until.elementToBeClickable(this.bottomPanelTerminalTab), constants.LONGER_WAIT, 'Failed to find element bottomPanelTerminalTab');
-    this.bottomPanelRunTab.click().then(function(){
+    this.bottomPanelTerminalTab.click().then(function(){
       console.log("OpenShiftIoChePage - clicked element: bottomPanelTerminalTab");
     });
     return;
   }
 
-// TODO
+/* Bottom Panel terminal tab console lines of text */
+get bottomPanelTerminalConsoleLines () {
+  return element.all(by.xpath(".//*[contains(@class,'xterm-rows')]"));
+}
+get bottomPanelTerminalConsoleLastLine () {
+  return element.all(by.xpath(".//*[contains(@class,'xterm-rows')]/div")).last();;
+}
+clickBottomPanelTerminalConsoleLastLine () {
+  browser.wait(until.elementToBeClickable(this.bottomPanelTerminalConsoleLastLine), constants.LONGER_WAIT, 'Failed to find element bottomPanelTerminalConsoleLastLine');
+  this.bottomPanelTerminalConsoleLastLine.click().then(function(){
+    console.log("OpenShiftIoChePage - clicked element: bottomPanelTerminalConsoleLastLine");
+  });
+  return;
+}
+
+
+
+
+
+  // TODO
 //
 //    .//*[contains(@class, 'GLJLMPIDCHC')][contains(text(),'Terminal’)]
 //    .//*[@id='gat-debug-terminal']
