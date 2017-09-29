@@ -61,7 +61,6 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 
 /* TODO - convert this into a test parameter */
 var GITHUB_NAME = browser.params.github.username;
-const IMPORT_NAME = "vertxbasic";
 
 describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pipeline: ', function () {
   var page, items, browserMode;
@@ -80,20 +79,39 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
   afterEach(function () { 
     browser.restart();
   });
+  
+  /* Quickstart test */
+  it("should perform Quickstart test - IMPORT project - Run Pipeline - Vert.X Basic", function () {
+    runTheTest(page, "vertxbasic");
+  });
 
-  /* Simple test for registered user */
-  it("should perform Burr's demo - IMPORT project - Run Pipeline", function() {
+//  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Pipeline - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+//
+//  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Pipeline - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+////  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Pipeline - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+//
+
+
+  /* Run the test */
+  var runTheTest = function (page, importQuickstartName) {
+    
+//  /* Simple test for registered user */
+//  it("should perform Burr's demo - IMPORT project - Run Pipeline", function() {
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
 
     var username = testSupport.userEntityName(browser.params.login.user);
     console.log ("Test for target URL: " + browser.params.target.url)
-
-//    /* Cleanup - Delete the build config created by the test */
-//    var process = require('child_process').execSync;
-//    var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
-//    console.log(result);
 
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
@@ -107,7 +125,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, import quickstart to space - accept all defaults */
 
-    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, IMPORT_NAME);
+    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, importQuickstartName);
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
@@ -128,9 +146,9 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
 
     /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
     /* https://github.com/fabric8-ui/fabric8-ui/issues/1707 */
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(IMPORT_NAME)), constants.WAIT, 'Failed to find PipelineByName - see: https://github.com/openshiftio/openshift.io/issues/595');
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(importQuickstartName)), constants.WAIT, 'Failed to find PipelineByName - see: https://github.com/openshiftio/openshift.io/issues/595');
     console.log("Verify that only one pipeline is created - https://github.com/fabric8-ui/fabric8-ui/issues/1707");
-    expect(OpenShiftIoPipelinePage.allPipelineByName(IMPORT_NAME).count()).toBe(1);
+    expect(OpenShiftIoPipelinePage.allPipelineByName(importQuickstartName).count()).toBe(1);
     
     OpenShiftIoPipelinePage.pipelinesPage.getText().then(function(text){
       console.log("Pipelines page contents = " + text);
@@ -141,13 +159,13 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
 
       /* Verify that the source repo is referenced */
       console.log ("Verify that source repository is displayed");
-      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + IMPORT_NAME + ".git");
+      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + importQuickstartName + ".git");
     });
 
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
        is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(IMPORT_NAME)), constants.WAIT, 'Failed to find PipelineByName');
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(importQuickstartName)), constants.WAIT, 'Failed to find PipelineByName');
 
     /* There is a recurring/intermittent problem where build pipelines are not created.
       https://github.com/openshiftio/openshift.io/issues/517 */ 
@@ -155,30 +173,25 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
        Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME)), constants.LONGER_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(importQuickstartName)), constants.LONGER_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
       console.error("Failed to find inputRequiredByPipelineByName: " + err);
-  
-      /* Dump the Jenkins pod log to stdout */
-      var process = require('child_process').execSync;
-      var result = process('sh ./local_oc.sh ' + username + ' ' + browser.params.oso.token + " jenkins").toString();
-      console.log(result);
-  
+    
       /* Save a screenshot */
       browser.takeScreenshot().then(function (png) {
-        testSupport.writeScreenShot(png, 'target/screenshots/' + IMPORT_NAME + '_pipeline_promote_fail.png');
+        testSupport.writeScreenShot(png, 'target/screenshots/' + importQuickstartName + '_pipeline_promote_fail.png');
         throw err;
       });
     });
   
     /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
-    if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(IMPORT_NAME).isPresent()).toBe(true)) { 
+    if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(importQuickstartName).isPresent()).toBe(true)) { 
       browser.takeScreenshot().then(function (png) {
         testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_matchingstring.png');
       });
     }
     
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(IMPORT_NAME);
+    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(importQuickstartName);
     OpenShiftIoPipelinePage.clickPromoteButton();
 
     /* ----------------------------------------------------------*/
@@ -190,7 +203,8 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);
+  }
 
-  });
+//  });
 
 });
