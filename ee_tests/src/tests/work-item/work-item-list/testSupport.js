@@ -28,9 +28,6 @@ module.exports = {
       break;
     case 'desktop':
       browser.driver.manage().window().setSize(1920, 1080);
-      break;
-    case 'extreme':
-      browser.driver.manage().window().setSize(1920, 2000);
     } 
   },
 
@@ -364,7 +361,7 @@ waitForText: function (elementFinder) {
 
         /* Access the clean the tenant page */
         OpenShiftIoCleanTenantPage = OpenShiftUpdateProfilePage.clickCleanTenantButton();
-        browser.sleep(constants.WAIT);
+        browser.sleep(constants.LONG_WAIT);
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvButton();
         OpenShiftIoCleanTenantPage.clickEraseOsioEnvUsername();
 
@@ -710,7 +707,17 @@ generateString: function (size, newlines) {
   }
   // console.log ("return string ="  + retString);
   return retString;
-}
+},
 
+
+/*
+ * Enter text, followed by new line into UI element such as Che terminal
+ */
+enterText: function (element, textString) {
+  var constants = require("./constants");
+  browser.driver.actions().mouseDown(element).click().sendKeys(textString).perform();
+  browser.driver.actions().mouseDown(element).click().sendKeys(protractor.Key.ENTER).perform();
+  browser.sleep(constants.WAIT);
+}
 
 };
