@@ -61,7 +61,7 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
 
 /* TODO - convert this into a test parameter */
 var GITHUB_NAME = browser.params.github.username;
-const IMPORT_NAME = "vertxbasic";
+const importQuickstartName = "vertxbasic";
 
 describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che: ', function () {
   var page, items, browserMode;
@@ -81,19 +81,37 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     //browser.restart();
   });
 
-  /* Simple test for registered user */
-  it("should perform Burr's demo - IMPORT project - Run Che", function() {
+  /* Quickstart test */
+  it("should perform Quickstart test - IMPORT project - Run Che - Vert.X Basic", function () {
+    runTheTest(page, "vertxbasic");
+  });
+
+//  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Che - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+//
+//  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Che - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+////  /* Quickstart test */
+//  it("should perform Quickstart test - IMPORT project - Run Che - NAME TBD", function () {
+//    runTheTest(page, "NAME TBD");
+//  });
+//
+
+  /* Run the test */
+  var runTheTest = function (page, importQuickstartName) {
+
+//  /* Simple test for registered user */
+//  it("should perform Burr's demo - IMPORT project - Run Che", function() {
    
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
 
     var username = testSupport.userEntityName(browser.params.login.user);    
     console.log ("Test for target URL: " + browser.params.target.url)
-
-//    /* Cleanup - Delete the build config created by the test */
-//    var process = require('child_process').execSync;
-//    var result = process('sh ./local_cleanup_one.sh ' + username + ' ' + browser.params.oso.token + " " + IMPORT_NAME).toString();
-//    console.log(result);
 
     /* Step 1) Login to openshift.io */
     OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password, constants.CLEAN_ALL );
@@ -107,7 +125,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, import quickstart to space - accept all defaults */
 
-    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, IMPORT_NAME);
+    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, importQuickstartName);
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
@@ -119,7 +137,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* Step 6) In OSIO, create Che workspace for project   */
 
     /* Start by creating a codebase for the newly created project */
-    OpenShiftIoChePage = testSupport.createCodebaseImport (OpenShiftIoDashboardPage, browser.params.login.user, spaceTime, GITHUB_NAME, IMPORT_NAME);
+    OpenShiftIoChePage = testSupport.createCodebaseImport (OpenShiftIoDashboardPage, browser.params.login.user, spaceTime, GITHUB_NAME, importQuickstartName);
     
     /* Switch to Che browser tab */
     browser.sleep(constants.LONG_WAIT);
@@ -149,14 +167,14 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     });
 
     /* Look for the project in the Che navigator */
-    OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText().then(function (text) { 
+    OpenShiftIoChePage.projectRootByName(importQuickstartName).getText().then(function (text) { 
        console.log ('EE POC test - projectName = ' + text);
     });
-    expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME);
+    expect(OpenShiftIoChePage.projectRootByName(importQuickstartName).getText()).toBe(importQuickstartName);
 
    /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
       https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
-      if (!expect(OpenShiftIoChePage.projectRootByName(IMPORT_NAME).getText()).toBe(IMPORT_NAME)) { 
+      if (!expect(OpenShiftIoChePage.projectRootByName(importQuickstartName).getText()).toBe(importQuickstartName)) { 
       browser.takeScreenshot().then(function (png) {
          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_che_workspace_1.png');
       });
@@ -169,7 +187,8 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* Step 30) In OSIO, log out */
     testSupport.logoutUser(OpenShiftIoDashboardPage);
 
-  });
+//  });
+  }
 
 });
 
