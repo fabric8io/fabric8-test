@@ -125,7 +125,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Che
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, import quickstart to space - accept all defaults */
 
-    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, importQuickstartName);
+    testSupport.importProjectDefaults(OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, importQuickstartName, spaceTime);
 
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */

@@ -123,8 +123,17 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
  /* -----------------------------------------------------------------*/
 
   /* Did the App/Project Creation Fail? */
+  get appGenerationSuccess () {
+    return element(by.xpath(".//*[contains(text(), 'A starter application was created.')]"));
+  }
+
   get appGenerationError () {
     return element(by.xpath(".//*[contains(text(), 'Application Generator Error')]"));
+  }
+
+  /* Did the App/Project Creation Fail? */
+  get executeForgeCommandError () {
+    return element(by.xpath(".//*[contains(text(), 'Execute Forge Command Error')]"));
   }
 
   waitForAppGenErrorToClose () {
