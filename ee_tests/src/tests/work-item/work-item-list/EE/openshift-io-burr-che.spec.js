@@ -67,7 +67,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Che
     OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
-    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage);    
+    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, spaceTime);    
 
     /* Step 4) In OSIO, create Che workspace for project   */
     OpenShiftIoChePage = testSupport.createCodebase (OpenShiftIoDashboardPage, username, spaceTime, GITHUB_NAME);

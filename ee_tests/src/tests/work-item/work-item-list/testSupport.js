@@ -462,7 +462,9 @@ waitForText: function (elementFinder) {
 /* 
   * Create new quickstart - accept ALL defaults 
   */
-  createQuickstartDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage) {    
+  createQuickstartDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, spaceName) {    
+    var until = protractor.ExpectedConditions;
+    var constants = require("./constants");
 
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
@@ -472,18 +474,32 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+      console.error("Failed to find appGenerationSuccess: " + err);
+
+      /* Save a screenshot */
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
+        testSupport.outputOcData(username);
+        throw err;
+      });
+    });
+
     OpenShiftIoSpaceHomePage.clickOkButton();
 
-    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    /* Trap application generation errors here - if found, fail test and exit */
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
         
  /* 
   * Create new quickstart - import - accept ALL defaults 
   */
-  importProjectDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, projectName) {    
-
+  importProjectDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, projectName, spaceName) {    
+ 
+    var until = protractor.ExpectedConditions;
     var constants = require("./constants");
     
     OpenShiftIoDashboardPage.waitForToastToClose();
@@ -495,17 +511,33 @@ waitForText: function (elementFinder) {
     browser.sleep(constants.LONG_WAIT);
     OpenShiftIoSpaceHomePage.clickPipelineStrategy();
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+      console.error("Failed to find appGenerationSuccess: " + err);
+
+      /* Save a screenshot */
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
+        testSupport.outputOcData(username);
+        throw err;
+      });
+    });
+
     OpenShiftIoSpaceHomePage.clickOkButton();
 
-    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    /* Trap application generation errors here - if found, fail test and exit */
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    OpenShiftIoDashboardPage.waitForToastToClose();    
+    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
+    OpenShiftIoDashboardPage.waitForToastToClose();
   },
 
  /* 
   * Create new quickstart - select quickstart by name
   */
-  createQuickstartByNameDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickstartName) {    
+  createQuickstartByNameDefaults: function (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickstartName, spaceName) {    
+ 
+    var until = protractor.ExpectedConditions;
+    var constants = require("./constants");
 
     OpenShiftIoDashboardPage.waitForToastToClose();
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
@@ -518,10 +550,23 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
+    
+    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+      console.error("Failed to find appGenerationSuccess: " + err);
+
+      /* Save a screenshot */
+      browser.takeScreenshot().then(function (png) {
+        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
+        testSupport.outputOcData(username);
+        throw err;
+      });
+    });
+
     OpenShiftIoSpaceHomePage.clickOkButton();
 
-    /* Trap 'Application Generation Error' here - if found, fail test and exit */
+    /* Trap application generation errors here - if found, fail test and exit */
     expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 

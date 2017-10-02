@@ -100,7 +100,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     /* ----------------------------------------------------------*/
     /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
 
-    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage);  
+    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, spaceTime);  
         
     /* Verify that Jenkins is still up and running */
     /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
