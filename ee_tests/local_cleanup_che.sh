@@ -4,9 +4,9 @@
 
 ## Parameters
 ## $1 = github username
-## $2 = OSIO token
+## $2 = KC Refresh token
 ##
-## ex: sh ./local_cleanup_che.sh USERNAME KC_TOKEN 
+## ex: sh ./local_cleanup_che.sh USERNAME KC_REFRESH_TOKEN 
 
 ## Delete Che workspaces
 
@@ -16,9 +16,11 @@ set +x
 # Do not exit on failure so that artifacts can be archived
 set +e
 
-WORKSPACES=`curl -L --header "Authorization: Bearer $2" http://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace |  grep -oP '"id":"[\w-]+' | sed 's/"id":"//g'`
+ACCEPT_TOKEN=`curl -H "Content-Type: application/json" -X POST -d "{\"refresh_token\":\"$2\"}" https://auth.openshift.io/api/token/refresh | grep -oP '"access_token":"[\S]+"' | sed 's/"access_token":"//g' | sed 's/","expires_in.*//'`
 
-echo $WORKSPACES
+WORKSPACES=`curl -L --header "Authorization: Bearer $ACCEPT_TOKEN" http://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace |  grep -oP '"id":"[\w-]+' | sed 's/"id":"//g'`
+
+echo "workspaces="$WORKSPACES
 
 for workspace in $WORKSPACES; 
 do
@@ -27,4 +29,5 @@ do
     echo "deleting workspace "$workspace
     curl -vLX DELETE -H "Authorization: Bearer $2" https://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace
 done
+
 
