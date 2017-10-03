@@ -216,13 +216,12 @@ waitForText: function (elementFinder) {
     if ("osio" === platform) {
 //      var username = this.userEntityName(browser.params.login.user);
 
-      /* October 3, 2017 - comment out to determine if tests are colliding and removing in use assets 
       var result = process('sh ./local_cleanup_che.sh ' + browser.params.oso.username + ' ' + browser.params.kc.token).toString();
       console.log(result);   
 
       process = require('child_process').execSync;
       result = process('sh ./local_cleanup.sh ' + browser.params.oso.username + ' ' + browser.params.oso.token).toString();
-      console.log(result);   */
+      console.log(result);  
     }
     
     /* Wait until the Jenkins status icon indicates that the Jenkins pod is running. */
