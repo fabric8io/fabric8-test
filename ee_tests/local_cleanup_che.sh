@@ -20,7 +20,10 @@ ACCEPT_TOKEN=`curl -H "Content-Type: application/json" -X POST -d "{\"refresh_to
 
 WORKSPACES=`curl -L --header "Authorization: Bearer $ACCEPT_TOKEN" http://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace |  grep -oP '"id":"[\w-]+' | sed 's/"id":"//g'`
 
-echo "workspaces="$WORKSPACES
+echo "*****************************************************"
+echo "Pre-test cleanup - Delete old workspaces from Che"
+
+echo "Che workspaces to be deleted="$WORKSPACES
 
 for workspace in $WORKSPACES; 
 do
@@ -29,5 +32,5 @@ do
     echo "deleting workspace "$workspace
     curl -vLX DELETE -H "Authorization: Bearer $2" https://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace/$workspace
 done
-
+echo "*****************************************************"
 
