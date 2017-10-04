@@ -1,8 +1,13 @@
+#!/bin/bash
+
 ## Delete/cleanup OpenShift resources
 
 ## Parameters
 ## $1 = user/project name in OpenShift
 ## $2 = OpenShift web console token
+
+echo "*****************************************************"
+echo "Pre-test cleanup - Delete build configs and deployment configd from OSO"
 
 ## Step 1 - Access OpenShift 
 ./oc login https://api.starter-us-east-2.openshift.com --token=$2
@@ -20,4 +25,5 @@
 ./oc delete all,pvc,cm --all -n $1-run
 ./oc delete all,pvc,cm --all -n $1-stage
 
+echo "*****************************************************"
 
