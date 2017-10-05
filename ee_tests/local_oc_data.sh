@@ -36,5 +36,14 @@ echo "---------------------------------------------"
  
 echo "OpenShift run pods: "
 ./oc get pod -n $1-run
+echo "---------------------------------------------"
+
+echo "OpenShift get buildconfig"
+oc get buildconfig 
+echo "---------------------------------------------"
+
+echo "OpenShift get build"
+oc get build
+
  
 echo "*****************************************************"
