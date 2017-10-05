@@ -55,6 +55,15 @@ module.exports = {
     stream.end();
   },
 
+ /* 
+  * Print data from oc - to assist debugging pipeline creation failures
+  */
+  outputOcData: function (username) {
+    var process = require('child_process').execSync;
+    var result = process('sh ./local_oc_data.sh ' + username + ' ' + browser.params.oso.token).toString();
+    console.log(result);
+  },
+
 /*
  * Custom wait function - determine if ANY text appears in a field's value
  */
@@ -479,19 +488,21 @@ waitForText: function (elementFinder) {
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
       console.error("Failed to find appGenerationSuccess: " + err);
 
+      /* Trap application generation errors here - if found, fail test and exit */
+      expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
+      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+
       /* Save a screenshot */
       browser.takeScreenshot().then(function (png) {
-        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
-        testSupport.outputOcData(username);
-        throw err;
+        var fs = require('fs');
+        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
+        stream.write(new Buffer(png, 'base64'));
+        stream.end();
       });
+
     });
 
     OpenShiftIoSpaceHomePage.clickOkButton();
-
-    /* Trap application generation errors here - if found, fail test and exit */
-    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
         
@@ -516,19 +527,21 @@ waitForText: function (elementFinder) {
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
       console.error("Failed to find appGenerationSuccess: " + err);
 
+      /* Trap application generation errors here - if found, fail test and exit */
+      expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
+      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+
       /* Save a screenshot */
       browser.takeScreenshot().then(function (png) {
-        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
-        testSupport.outputOcData(username);
-        throw err;
+        var fs = require('fs');
+        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
+        stream.write(new Buffer(png, 'base64'));
+        stream.end();
       });
+
     });
 
     OpenShiftIoSpaceHomePage.clickOkButton();
-
-    /* Trap application generation errors here - if found, fail test and exit */
-    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 
@@ -555,19 +568,21 @@ waitForText: function (elementFinder) {
     browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
       console.error("Failed to find appGenerationSuccess: " + err);
 
+      /* Trap application generation errors here - if found, fail test and exit */
+      expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
+      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
+
       /* Save a screenshot */
       browser.takeScreenshot().then(function (png) {
-        testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_app_generation_fail.png');
-        testSupport.outputOcData(username);
-        throw err;
-      });
+        var fs = require('fs');
+        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
+        stream.write(new Buffer(png, 'base64'));
+        stream.end();
+      });    
+
     });
 
     OpenShiftIoSpaceHomePage.clickOkButton();
-
-    /* Trap application generation errors here - if found, fail test and exit */
-    expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-    expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 
@@ -648,15 +663,6 @@ waitForText: function (elementFinder) {
     page.waitForToastToClose();
     page.clickrightNavigationBar();
     page.clickLogOut();
-  },
-
-/* 
-  * Print data from oc - to assist debugging pipeline creation failures
-  */
-  outputOcData: function (username) {
-    var process = require('child_process').execSync;
-    var result = process('sh ./local_oc_data.sh ' + username + ' ' + browser.params.oso.token).toString();
-    console.log(result);
   },
 
 /* 
