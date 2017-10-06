@@ -106,6 +106,55 @@ class OpenShiftIoPipelinePage {
     return;
   }
 
+
+  /* Kebab displayed after build pipeline performs stage and test */
+  get pipelineKebab () {
+    return element(by.xpath(".//button[@id='dropdownKebabRight9']"));
+  }
+  clickpipelineKebab () {
+    browser.wait(until.elementToBeClickable(this.pipelineKebab), constants.LONGEST_WAIT, 'Failed to find element pipelineKebab');
+    this.pipelineKebab.click().then(function(){
+      console.log("OpenShiftIoPipelinesPage - clicked element: pipelineKebab");
+    });
+    return;
+  }
+
+  /* Kebab displayed after build pipeline performs stage and test */
+  get pipelineKebabStartPipeline () {
+    return element(by.xpath(".//*[contains(text(), 'Start Pipeline')]"));
+  }
+  clickPipelineKebabStartPipeline () {
+    browser.wait(until.elementToBeClickable(this.pipelineKebabStartPipeline), constants.LONGEST_WAIT, 'Failed to find element pipelineKebabStartPipeline');
+    this.pipelineKebabStartPipeline.click().then(function(){
+      console.log("OpenShiftIoPipelinesPage - clicked element: pipelineKebabStartPipeline");
+    });
+    return;
+  }
+
+  /* Stage icon */
+  get stageIcon () {
+    return element(by.xpath(".//div[contains(text(),'Rollout to Stage')]/*[contains(@class,'open-service-icon')]/a"));
+  }
+  clickStageIcon () {
+    browser.wait(until.elementToBeClickable(this.stageIcon), constants.LONGEST_WAIT, 'Failed to find element stageIcon');
+    this.stageIcon.click().then(function(){
+      console.log("OpenShiftIoPipelinesPage - clicked element: stageIcon");
+    });
+    return;
+  }
+
+  /* Run icon */
+  get runIcon () {
+    return element(by.xpath(".//div[contains(text(),'Rollout to Run')]/*[contains(@class,'open-service-icon')]/a"));
+  }
+  clickRunIcon () {
+    browser.wait(until.elementToBeClickable(this.runIcon), constants.LONGEST_WAIT, 'Failed to find element runIcon');
+    this.runIcon.click().then(function(){
+      console.log("OpenShiftIoPipelinesPage - clicked element: runIcon");
+    });
+    return;
+  }
+
   /* Button displayed after build pipeline performs stage and test */
   get inputRequiredButton () {
     return element(by.xpath(".//a[contains(text(),'Input Required')][1]"));

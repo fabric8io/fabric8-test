@@ -193,6 +193,8 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(importQuickstartName);
     OpenShiftIoPipelinePage.clickPromoteButton();
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
 
     /* ----------------------------------------------------------*/
     /* Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress” */
