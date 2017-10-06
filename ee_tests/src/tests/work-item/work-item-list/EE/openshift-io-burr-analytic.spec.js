@@ -130,7 +130,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
       expect(text).not.toContain("No pipeline builds have run for");
 
       /* Verify that the source repo is referenced */
-      console.log ("Verify that error source repository is displayed");
+      console.log ("Verify that source repository is displayed");
       expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
 
     });
@@ -155,7 +155,10 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
     OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
     OpenShiftIoPipelinePage.clickPromoteButton();
-
+    
+    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
+//    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
+  
     browser.sleep(constants.LONG_WAIT);
 
    /* ----------------------------------------------------------*/
