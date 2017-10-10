@@ -178,7 +178,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     browser.sleep(constants.WAIT);
 
     OpenShiftIoSpaceHomePage.clickStackReportsButton();
-    browser.sleep(constants.WAIT);
+    browser.sleep(constants.LONG_WAIT);
 
     OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
       console.log("Stack report heading = " + text);
@@ -197,8 +197,9 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     });
 
     browser.sleep(constants.WAIT);
+
     OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
-    browser.sleep(constants.WAIT);
+    browser.sleep(constants.LONG_WAIT);
 
     OpenShiftIoSpaceHomePage.additionalComponentsTable.getText().then(function(text){
       console.log("Stack report additionalComponents table = " + text);
