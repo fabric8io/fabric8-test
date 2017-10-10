@@ -28,6 +28,7 @@ exports.config = {
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
       runTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js'],
+      terminalTest: ['src/tests/**/EE/*burr*terminal*.spec.js'],
       tempTest: ['src/tests/**/EE/*burr-pipeline.spec.js']
     },
 
