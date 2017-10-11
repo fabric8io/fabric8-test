@@ -4,7 +4,8 @@
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/vnd.api+json',
-          'wilinktype_parent':  '7479a9b9-8607-46fa-9535-d448fa8768ab'
+          'wilinktype_parent':  '7479a9b9-8607-46fa-9535-d448fa8768ab' ## On OSIO
+        #   'wilinktype_parent':  '25c326a7-6d03-4f5a-b23b-86a9ee4171e9' ## On local WIT setup
           }
         
 -   test:
