@@ -17,5 +17,5 @@ export PATH=/test/ee_tests/node_modules/protractor/bin:$PATH:/test/ee_tests:.
 
 echo "Running the E2E tests using fabric8-test-ee image as user ${USERNAME} on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
 
-local_run_EE_tests.sh  ${USERNAME} ${PASSWORD} ${TARGET_URL}
+local_run_EE_tests.sh  ${USERNAME} ${PASSWORD} ${TARGET_URL} ${TOKEN}
 
