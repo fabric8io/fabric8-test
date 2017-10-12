@@ -16,6 +16,7 @@ var reporter = new HtmlScreenshotReporter({
  *
  * USERNAME = the login name used to login to RHD / github / openshift
  * PASSWORD = the login password
+ * TOKEN = the openshift token
  * TARGET_URL = the URL of the console such as http://openshift.io/
  * TARGET_PLATFORM = the platform to test such as "osio", 'fabric8-openshift', 'fabric8-kubernetes' - will default to 'fabric8-openshift' if not using TARGET_URL of 'https://openshift.io/'
  * SPECS = the test specs to run 
@@ -79,6 +80,11 @@ exports.config = {
     },
 
   params: {
+    oso: {
+      username: username,
+      password: password,
+      token: process.env.TOKEN
+    },
     login: {
       user: username,
       password: password
