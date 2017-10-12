@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-# NOTE lets not do the set -x as then all passwords and tokens appear in the output on CI / CD!!!
-#set -x
+# Do not reveal secrets
+set +x
 
-# Default values for optional parameters
-
-DEFAULT_TEST_SUITE="runTest"
-TEST_SUITE=${6:-$DEFAULT_TEST_SUITE}
-
-DEFAULT_GITHUB_USERNAME="osiotestmachine"
-GITHUB_USERNAME=${7:-$DEFAULT_GITHUB_USERNAME}
-
-DEFAULT_OSO_USERNAME=$1
-OSO_USERNAME=${8:-$1}
+# Test execution parameters - taken from env variables - define ALL of these before running test
+osioUsername=$OSIO_USERNAME
+osioPassword=$OSIO_PASSWORD
+osioURL=$OSIO_URL
+osoToken=$OSO_TOKEN
+osioRefreshToken=$OSIO_REFRESH_TOKEN
+osoUsername=$OSO_USERNAME
+githubUsername=$GITHUB_USERNAME
+testSuite=$TEST_SUITE
 
 DIR="$(pwd)"
 if [ -z "$DIR" ]; then
@@ -22,12 +21,13 @@ fi
 LOGFILE=${DIR}/functional_tests.log
 echo Using logfile $LOGFILE 
 
+# webdriver-manager command commented out to save time - only needed periodically
 # lets make sure we use the local protractor webdriver-manager
-####export PATH=node_modules/protractor/bin:$PATH
+# export PATH=node_modules/protractor/bin:$PATH
 
 # Download dependencies
-#echo -n Updating Webdriver and Selenium...
-#node_modules/protractor/bin/webdriver-manager update
+# echo -n Updating Webdriver and Selenium...
+# node_modules/protractor/bin/webdriver-manager update
 
 # Start selenium server just for this test run
 echo -n Starting Webdriver and Selenium...
@@ -44,13 +44,11 @@ if [ -z "$PROTRACTOR_JS" ]; then
 fi
 
 # Finally run protractor
-echo Running protractor test suite ${PROTRACTOR_JS} with OpenShift username $OSO_USERNAME and GitHub username $GITHUB_USERNAME  ...
+echo Running protractor test suite ${PROTRACTOR_JS} with OpenShift username $osoUsername and GitHub username $githubUsername on server $osioURL  ...
 
 export PATH=$PATH:node_modules/protractor/bin
 
-## we should not list tokens or passwords on the command line to avoid them appearing in output logs!
-
-protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME --params.oso.username=$OSO_USERNAME
+protractor ${PROTRACTOR_JS} --suite "${testSuite}" --params.login.user="${osioUsername}" --params.login.password="${osioPassword}" --params.target.url="${osioURL}" --params.oso.token="${osioToken}" --params.kc.token="${osioRefreshToken}" --params.github.username=${githubUsername} --params.oso.username=${osoUsername}
 
 TEST_RESULT=$?
 
@@ -76,5 +74,4 @@ else
   echo 'Functional tests FAIL'
   exit 1
 fi
-
 
