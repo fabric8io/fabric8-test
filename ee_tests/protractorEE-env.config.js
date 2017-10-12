@@ -91,6 +91,9 @@ exports.config = {
       password: process.env.OSO_PASSWORD || password,
       token: process.env.TOKEN
     },
+    kc: {
+      token: process.env.KC_TOKEN
+    },
     github: {
       username: process.env.GITHUB_USERNAME,
       password: process.env.GITHUB_PASSWORD
