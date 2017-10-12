@@ -20,7 +20,7 @@ exports.config = {
     suites: {
       allTest: ['src/tests/**/EE/*burr*.spec.js'], 
       analyticTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
-      cheTest: ['src/tests/**/EE/*burr-che.spec.js'],
+      cheTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js'],
       chequickstartTest: ['src/tests/**/EE/*burr-che.spec.js'],
       importTest: ['src/tests/**/EE/*burr*import*.spec.js'],
       mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
@@ -29,7 +29,7 @@ exports.config = {
       runTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js'],
       terminalTest: ['src/tests/**/EE/*burr*terminal*.spec.js'],
-      tempTest: ['src/tests/**/EE/*burr-pipeline.spec.js']
+      tempTest: ['src/tests/**/EE/*burr-import-pipeline.spec.js']
     },
 
     jasmineNodeOpts: {
