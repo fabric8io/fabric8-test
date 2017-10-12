@@ -81,8 +81,8 @@ exports.config = {
 
   params: {
     oso: {
-      username: username || process.env.OSO_USERNAME,
-      password: password || process.env.OSO_PASSWORD,
+      username: process.env.OSO_USERNAME || process.env.OS_USERNAME || username,
+      password: process.env.OSO_PASSWORD || process.env.OS_PASSWORD || password,
       token: process.env.TOKEN
     },
     github: {
