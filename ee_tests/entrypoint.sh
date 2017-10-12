@@ -15,7 +15,8 @@ fi
 cd /test/ee_tests
 export PATH=/test/ee_tests/node_modules/protractor/bin:$PATH:/test/ee_tests:.
 
-echo "Running the E2E tests using fabric8-test-ee image as login user ${USERNAME} OpenShift User ${OS_USERNAME} with on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
+echo "Running the E2E tests using fabric8-test-ee image as login user ${USERNAME} OpenShift User ${OSO_USERNAME} with on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
 
-local_run_EE_tests.sh  ${USERNAME} ${PASSWORD} ${TARGET_URL} ${TOKEN}
+
+local_run_EE_tests.sh  ${USERNAME} ${PASSWORD} ${TARGET_URL} ${TOKEN} 
 

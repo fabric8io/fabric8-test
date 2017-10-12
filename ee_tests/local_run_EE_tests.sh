@@ -44,7 +44,7 @@ if [ -z "$PROTRACTOR_JS" ]; then
 fi
 
 # Finally run protractor
-echo Running protractor test suite ${PROTRACTOR_JS} ...
+echo Running protractor test suite ${PROTRACTOR_JS} with OpenShift username $OSO_USERNAME and GitHub username $GITHUB_USERNAME  ...
 
 export PATH=$PATH:node_modules/protractor/bin
 
