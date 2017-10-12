@@ -124,13 +124,18 @@ waitForText: function (elementFinder) {
    * the user name used to login into GitHub
    */
   userEntityName: function (username) {
+    // lets try use the $OSO_USERNAME for the openshift `whoami` name first
+    var whoami = browser.params.oso.username;
+    if (whoami) {
+      return whoami;
+    }
     if (!username) {
       username = browser.params.login.user;
     }
     var platform = this.targetPlatform();
     if (platform === "fabric8-openshift") {
       username = browser.params.login.openshiftUser || "developer";
-    }
+    } 
     return username;
   },
 
