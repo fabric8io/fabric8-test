@@ -3,6 +3,9 @@ FROM fabric8/fabric8-ui-builder:vff6c6fa
 # this dockerfile builds a docker image of the npm install so that we can run the E2E tests quickly from this image
 # without having to wait for npm to download the internet first
 
+RUN curl --retry 999 --retry-max-time 0  -sSL https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz | tar xzv && \
+mv openshift-origin-*/* /usr/bin/
+  
 RUN git clone https://github.com/fabric8io/fabric8-test.git /test
 RUN cd /test/ee_tests && npm install && ./node_modules/protractor/bin/webdriver-manager update --standalone true --versions.chrome 2.29
 
