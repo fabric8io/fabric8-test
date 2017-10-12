@@ -10,10 +10,10 @@ if [ -z "$QUICKSTART" ]; then
   QUICKSTART="Vert.x HTTP Booster"
 fi
 
-echo "Running the E2E tests in a pod as user ${USERNAME} on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
-
 /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
-export PATH=node_modules/protractor/bin:$PATH:/test/ee_tests
+export PATH=node_modules/protractor/bin:$PATH:/test/ee_tests:.
+
+echo "Running the E2E tests using fabric8-test-ee image as user ${USERNAME} on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
 
 local_run_EE_tests.sh  ${USERNAME} ${PASSWORD} ${TARGET_URL}
 
