@@ -54,7 +54,10 @@ if (process.env.DISABLE_CHE === "true") {
   disableChe = "true";
 }
 
-console.log("Running as user " + username + " against server URL: " + targetUrl + " specs: " + testSpecs + " platform: " + platform + " quickstart: " + quickstart);
+var githubUsername = process.env.GITHUB_USERNAME;
+var osoUserName = process.env.OSO_USERNAME;
+
+console.log("Running as user " + username + " OpenShift user: " + osoUserName + " github username " + githubUsername + " against server URL: " + targetUrl + " specs: " + testSpecs + " platform: " + platform + " quickstart: " + quickstart);
 
 exports.config = {
     useAllAngular2AppRoots: true,
