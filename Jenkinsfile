@@ -56,14 +56,16 @@ dockerTemplate{
         //   }
         // }
 
-        def imageName = "fabric8/fabric8-test-ee:${v}"
+        def imageName = "fabric8/fabric8-test-ee"
 
         container('docker'){
           stage('build image'){
-            sh "cd ee_tests && docker build -t ${imageName} -f Dockerfile.pipeline ."
+            sh "cd ee_tests && docker build -t ${imageName}:${v} -f Dockerfile.pipeline ."
           }
           stage('push image'){
-            sh "docker push ${imageName}"
+            sh "docker push ${imageName}:${v}"
+            sh "docker tag ${imageName}:${v} ${imageName}:latest"
+            sh "docker push ${imageName}:latest"
           }
         }
       }
