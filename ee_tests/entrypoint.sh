@@ -11,7 +11,9 @@ if [ -z "$QUICKSTART" ]; then
 fi
 
 /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
-export PATH=node_modules/protractor/bin:$PATH:/test/ee_tests:.
+
+cd /test/ee_tests
+export PATH=/test/ee_tests/node_modules/protractor/bin:$PATH:/test/ee_tests:.
 
 echo "Running the E2E tests using fabric8-test-ee image as user ${USERNAME} on console URL: ${TARGET_URL} platform: ${TEST_PLATFORM} quickstart: ${QUICKSTART}"
 

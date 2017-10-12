@@ -45,7 +45,9 @@ fi
 # Finally run protractor
 echo Running protractor test suite ${PROTRACTOR_JS} ...
 
-node_modules/protractor/bin/protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME --params.oso.username=$OSO_USERNAME
+export PATH=$PATH:node_modules/protractor/bin
+
+protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME --params.oso.username=$OSO_USERNAME
 
 TEST_RESULT=$?
 
