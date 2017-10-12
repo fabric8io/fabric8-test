@@ -28,24 +28,30 @@ webdriver-manager update --versions.chrome 2.29
 ```
 where username and password should be replaced by your OSIO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
 
-Given the large number of test parameters, you might find it easier to define the parameters as env variables, for example:
+Before running the tests, you must define these ALL env variables as the are needed by the local_run_EE_tests.sh script:
+
+OSIO_USERNAME
+OSIO_PASSWORD
+OSIO_URL
+OSO_TOKEN
+OSIO_REFRESH_TOKEN
+OSO_USERNAME
+GITHUB_USERNAME
+TEST_SUITE
+
+For example:
 ```
-export OSIO_URL=https://openshift.io
-export TEST_SUITE=<test suite name>                         (default value == "runTest")
-export RHD_USERNAME=<RedHatDeveloper Username>
-export RHD_PASSWORD=<RedHatDeveloper Password>
-export OSO_TOKEN=<OSO OpenShift Token>
-export KC_TOKEN=<KC Token>
-export GH_USERNAME=<GitHub user linked with RHD account>    (default value == RHD_USERNAME)
-export OSO_USERNAME=<OpenShift Online username>             (default value == RHD_USERNAME
-sh ./local_run_EE_tests.sh ${RHD_USERNAME} \
-                           ${RHD_PASSWORD} \
-                           ${OSIO_URL} \
-                           ${OSO_TOKEN} \
-                           ${KC_TOKEN} \
-                           ${TEST_SUITE} \
-                           ${GH_USERNAME} \
-                           ${OSO_USERNAME}
+export OSIO_USERNAME="your OSIO user"
+export OSIO_PASSWORD="your OSIO password"
+export OSIO_URL="https://openshift.io"
+export OSO_TOKEN="your OSO token"
+export OSIO_REFRESH_TOKEN="your OSIO/KC refresh token"
+export OSO_USERNAME="your oso username"
+export GITHUB_USERNAME="your github username"
+export TEST_SUITE="runTest"
+
+sh ./local_run_EE_tests.sh 
+
 ```
 ## Running the E2E tests inside a pod
 
