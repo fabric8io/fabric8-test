@@ -180,6 +180,11 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     OpenShiftIoSpaceHomePage.clickStackReportsButton();
     browser.sleep(constants.LONG_WAIT);
 
+    /* Save a screenshot */
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_report.png');
+    });
+    
     OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
       console.log("Stack report heading = " + text);
     });
@@ -200,6 +205,11 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
     OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
     browser.sleep(constants.LONG_WAIT);
+
+    /* Save a screenshot */
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_additionalreport.png');
+    });
 
     OpenShiftIoSpaceHomePage.additionalComponentsTable.getText().then(function(text){
       console.log("Stack report additionalComponents table = " + text);
