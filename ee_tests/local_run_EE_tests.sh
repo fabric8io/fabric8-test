@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -x
+# NOTE lets not do the set -x as then all passwords and tokens appear in the output on CI / CD!!!
+#set -x
 
 # Default values for optional parameters
 
@@ -46,6 +47,8 @@ fi
 echo Running protractor test suite ${PROTRACTOR_JS} ...
 
 export PATH=$PATH:node_modules/protractor/bin
+
+## we should not list tokens or passwords on the command line to avoid them appearing in output logs!
 
 protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}" --params.login.user="${1}" --params.login.password="${2}" --params.target.url="${3}" --params.oso.token="${4}" --params.kc.token="${5}" --params.github.username=$GITHUB_USERNAME --params.oso.username=$OSO_USERNAME
 
