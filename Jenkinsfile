@@ -1,44 +1,72 @@
-@Library('github.com/jstrachan/fabric8-pipeline-library@changes')
+#!/usr/bin/groovy
+/**
+ * Copyright (C) 2015 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@Library('github.com/fabric8io/fabric8-pipeline-library@master')
 def utils = new io.fabric8.Utils()
-def flow = new io.fabric8.Fabric8Commands()
-def project = 'fabric8io/fabric8-test'
-def ciDeploy = false
-def imageName
-def username="myuser"
-def password="mypassword"
-def consoleUrl="https://openshift.io"
+dockerTemplate{
+   clientsNode {
+    ws{
+      checkout scm
 
-node{
-    properties([
-        disableConcurrentBuilds()
-        ])
-}
-
-fabric8UITestNode{
-    timeout(time: 1, unit: 'HOURS') {
-        ws {
-            container('ui'){
-                stage('E2E test') {
-                    catchError {
-                        sh """
-                            git clone https://github.com/fabric8io/fabric8-test.git
-                            echo "about to run the E2E Tests as user ${username} on console URL: ${consoleUrl}"
-
-                            /usr/bin/Xvfb :99 -screen 0 1024x768x24 & 
-                            export PATH=node_modules/protractor/bin:$PATH
-                            cd fabric8-test/ee_tests &&
-                            npm install &&
-                            webdriver-manager update --standalone true --versions.chrome 2.29 &&
-                            export NODE_ENV=inmemory &&
-                            ./local_run_EE_tests.sh ${username} ${password} ${consoleUrl}
-                        """
-                    } 
-                    archiveArtifacts artifacts: 'target/screenshots/*.*,**/*.log', fingerprint: true
-
-                    echo "HERE IS THE TEST LOG!"
-                    sh "cat fabric8-test/ee_tests/functional_tests.log"
-                }
+      if (utils.isCI()){
+          /*
+        def snapshotImageName = "fabric8/fabric8-test:SNAPSHOT-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        container('docker'){
+          stage('build snapshot image'){
+            sh "docker build -t ${snapshotImageName} ."
+          }
+          stage('push snapshot image'){
+            sh "docker push ${snapshotImageName}"
+          }
+        }
+        stage('notify'){
+            def pr = env.CHANGE_ID
+            if (!pr){
+                error "no pull request number found so cannot comment on PR"
+            }
+            def message = "snapshot fabric8-test image is available for testing.  `docker pull ${snapshotImageName}`"
+            container('docker'){
+                flow.addCommentToPullRequest(message, pr, project)
             }
         }
+        */
+          
+      } else if (utils.isCD()){
+        
+        def v = getNewVersion{}
+        // stage('tag'){
+        //   container('clients'){
+        //     gitTag{
+        //       releaseVersion = v
+        //       skipVersionPrefix = true
+        //     }
+        //   }
+        // }
+
+        def imageName = "fabric8/fabric8-test-ee:${v}"
+
+        container('docker'){
+          stage('build image'){
+            sh "cd ee_tests && docker build -t ${imageName} -f Dockerfile.pipeline ."
+          }
+          stage('push image'){
+            sh "docker push ${imageName}"
+          }
+        }
+      }
     }
+  }
 }
