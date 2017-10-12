@@ -19,7 +19,7 @@ else
         echo "==> 2. start pre-requisites: create space WIZARD..."
         pyresttest https://api.openshift.io get_a_space.yaml --vars="{'token': '$2', 'userid': '$1', 'space_name_var': 'WIZARD'}" #--interactive true #--print-headers true
         echo "==> 3. start forge api testing..."
-        hasGitOrganisation=$(curl --header "Authorization: Bearer $2" https://forge.api.openshift.io/forge/commands/fabric8-import-git | grep -c 'GithubImportPickOrganisationStep')
+        hasGitOrganisation=$(curl --header "Authorization: Bearer $2" https://forge.api.openshift.io/forge/commands/fabric8-import-git | grep -c 'GitHubImportPickOrganisationStep')
         if [ "$hasGitOrganisation" -gt "0" ]; then 
             echo "==> Username belongs to a github organisation: $hasGitOrganisation"
             uuid="quickstart$(uuidgen | cut -c1-6 | tr [:upper:] [:lower:])" # TODO for ubuntu, use uuid-runtime 

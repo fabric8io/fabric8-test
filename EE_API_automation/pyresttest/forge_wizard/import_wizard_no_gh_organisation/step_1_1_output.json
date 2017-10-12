@@ -3,7 +3,7 @@
     "metadata": {
       "deprecated": false,
       "category": "Uncategorized",
-      "name": "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep",
+      "name": "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep",
       "description": "No Description"
     },
     "state": {
@@ -13,7 +13,7 @@
       "canMoveToNextStep": false,
       "canMoveToPreviousStep": false,
       "steps": [
-        "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"
+        "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"
       ]
     },
     "inputs": [

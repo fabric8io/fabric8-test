@@ -12,8 +12,8 @@
     "canMoveToNextStep": false,
     "canMoveToPreviousStep": true,
     "steps": [
-      "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep",
-      "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep",
+      "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep",
+      "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep",
       "Obsidian: Configure Pipeline",
       "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"
     ],
