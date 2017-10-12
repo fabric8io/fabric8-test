@@ -1,0 +1,36 @@
+
+{
+  "metadata": {
+    "deprecated": false,
+    "category": "Uncategorized",
+    "name": "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep",
+    "description": "No Description"
+  },
+  "state": {
+    "valid": true,
+    "canExecute": false,
+    "wizard": true,
+    "canMoveToNextStep": true,
+    "canMoveToPreviousStep": false,
+    "steps": [
+      "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep",
+      "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"
+    ]
+  },
+  "inputs": [
+    {
+      "name": "gitOrganisation",
+      "shortName": " ",
+      "valueType": "io.fabric8.forge.generator.git.GitOrganisationDTO",
+      "inputType": "org.jboss.forge.inputType.DEFAULT",
+      "enabled": true,
+      "required": true,
+      "deprecated": false,
+      "label": "Organisation",
+      "description": "The github organisation to import repositories from",
+      "class": "UISelectOne",
+      "value": "$selected_github_organisation"
+    }
+  ],
+  "stepIndex": 0
+}

@@ -1,0 +1,34 @@
+{
+    "state": {
+      "valid": true,
+      "canExecute": true,
+      "wizard": true,
+      "canMoveToNextStep": true,
+      "canMoveToPreviousStep": false,
+      "steps": [
+        "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep",
+        "Obsidian: Configure Pipeline",
+        "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"
+      ]
+    },
+    "messages": [ 
+    ],
+    "inputs": [
+      {
+        "name": "gitRepositoryPattern",
+        "shortName": " ",
+        "valueType": "io.fabric8.forge.generator.git.GitRepositoryDTO",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Repository name pattern",
+        "description": "The regex pattern to match repository names",
+        "class": "UISelectMany",
+        "value": [
+          "aaaaaaa",
+          "aug23"
+        ]
+      }
+    ]
+  }

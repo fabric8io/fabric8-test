@@ -1,6 +1,6 @@
 ---
 -   config:
-    -   testset:    "osio planner-platform api automation workshop"
+    -   testset:    "Forge import flow wizard when logged in with an OSiO user with a github organisation"
     -   variable_binds: {
           'headername': 'Content-Type',
           'headervalue':  'application/json'
@@ -43,7 +43,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_1_2_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_1_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
@@ -65,7 +65,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_1_3_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_1_3_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
@@ -90,7 +90,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_2_1_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_2_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
@@ -110,7 +110,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_2_2_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_2_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
@@ -153,7 +153,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_3_1_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_3_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
@@ -173,7 +173,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_3_2_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_3_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
@@ -216,7 +216,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/validate"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_4_1_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_4_1_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header:    "content-type", comparator: "contains",   expected:   "application/json"}
@@ -236,7 +236,7 @@
     -   url:    {'template':  "/forge/commands/fabric8-import-git/next"}
     -   method: "POST"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   body:   {'template':{'file':'./import_wizard/step_4_2_input.json'}}
+    -   body:   {'template':{'file':'./forge_wizard/import_wizard/step_4_2_input.json'}}
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
