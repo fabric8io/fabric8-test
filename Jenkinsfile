@@ -60,7 +60,7 @@ dockerTemplate{
 
         container('docker'){
           stage('build image'){
-            sh "cd ee_tests && docker build -t ${imageName}:${v} -f Dockerfile.pipeline ."
+            sh "cd ee_tests && docker build -t ${imageName}:${v} -f Dockerfile.pipeline --no-cache ."
           }
           stage('push image'){
             sh "docker push ${imageName}:${v}"
