@@ -9,27 +9,8 @@ Functional tests for OSiO (OpenShift.io) platform.
 
 * Build and install
 
-```
-cd ee_tests
-npm install
-npm install webdriver-manager
-webdriver-manager update
-webdriver-manager update --versions.chrome 2.29
-
-.sh ./local_run_EE_tests.sh USERNAME PASSWORD openShiftToken OSIOtoken https://openshift.io testSuiteName githubUsername
-```
-
-> Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed in the tests' local directory. 
-
-* Run on prod
-
-```
-.sh ./local_run_EE_tests.sh username password openShiftToken OSIOtoken targetUrl testSuiteName githubUsername openshiftOnlineUsername
-```
-where username and password should be replaced by your OSIO credentials. Test suite names are defined in protractorEE.config.js - default is "runTest"
-
 Before running the tests, you must define these ALL env variables as the are needed by the local_run_EE_tests.sh script:
-
+```
 OSIO_USERNAME
 OSIO_PASSWORD
 OSIO_URL
@@ -38,7 +19,42 @@ OSIO_REFRESH_TOKEN
 OSO_USERNAME
 GITHUB_USERNAME
 TEST_SUITE
+```
+For example:
+```
+export OSIO_USERNAME="your OSIO user"
+export OSIO_PASSWORD="your OSIO password"
+export OSIO_URL="https://openshift.io"
+export OSO_TOKEN="your OSO token"
+export OSIO_REFRESH_TOKEN="your OSIO/KC refresh token"
+export OSO_USERNAME="your oso username"
+export GITHUB_USERNAME="your github username"
+export TEST_SUITE="runTest"
+```
+And then execute these build/run commands:
+```
+cd ee_tests
+npm install
+npm install webdriver-manager
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.29
 
+.sh ./local_run_EE_tests.sh 
+```
+
+> Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed in the tests' local directory. 
+
+Before running the tests, you must define these ALL env variables as the are needed by the local_run_EE_tests.sh script:
+```
+OSIO_USERNAME
+OSIO_PASSWORD
+OSIO_URL
+OSO_TOKEN
+OSIO_REFRESH_TOKEN
+OSO_USERNAME
+GITHUB_USERNAME
+TEST_SUITE
+```
 For example:
 ```
 export OSIO_USERNAME="your OSIO user"
