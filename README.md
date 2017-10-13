@@ -44,31 +44,6 @@ webdriver-manager update --versions.chrome 2.29
 
 > Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed in the tests' local directory. 
 
-Before running the tests, you must define these ALL env variables as the are needed by the local_run_EE_tests.sh script:
-```
-OSIO_USERNAME
-OSIO_PASSWORD
-OSIO_URL
-OSO_TOKEN
-OSIO_REFRESH_TOKEN
-OSO_USERNAME
-GITHUB_USERNAME
-TEST_SUITE
-```
-For example:
-```
-export OSIO_USERNAME="your OSIO user"
-export OSIO_PASSWORD="your OSIO password"
-export OSIO_URL="https://openshift.io"
-export OSO_TOKEN="your OSO token"
-export OSIO_REFRESH_TOKEN="your OSIO/KC refresh token"
-export OSO_USERNAME="your oso username"
-export GITHUB_USERNAME="your github username"
-export TEST_SUITE="runTest"
-
-sh ./local_run_EE_tests.sh 
-
-```
 ## Running the E2E tests inside a pod
 
 You can run the E2E tests on a running fabric8 cluster using the [gofabric8](https://github.com/fabric8io/gofabric8/releases) CLI tool.
