@@ -48,7 +48,7 @@ echo Running protractor test suite ${PROTRACTOR_JS} with OpenShift username $oso
 
 export PATH=$PATH:node_modules/protractor/bin
 
-protractor ${PROTRACTOR_JS} --suite "${testSuite}" --params.login.user="${osioUsername}" --params.login.password="${osioPassword}" --params.target.url="${osioURL}" --params.oso.token="${osioToken}" --params.kc.token="${osioRefreshToken}" --params.github.username=${githubUsername} --params.oso.username=${osoUsername}
+protractor ${PROTRACTOR_JS} --suite "${testSuite}" --params.login.user="${osioUsername}" --params.login.password="${osioPassword}" --params.target.url="${osioURL}" --params.oso.token="${osoToken}" --params.kc.token="${osioRefreshToken}" --params.github.username=${githubUsername} --params.oso.username=${osoUsername}
 
 TEST_RESULT=$?
 
