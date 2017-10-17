@@ -100,19 +100,19 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
 //      runTheTest(page, "Vert.x - HTTP & Config Map");
 //    });
 //
-//    /* Quickstart test */
-//    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Basic", function () {
-//      runTheTest(page, "Spring Boot - HTTP");
-//    });
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Basic", function () {
+      runTheTest(page, "Spring Boot - HTTP");
+    });
 //
 //    /* Quickstart test */
 //    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function () {
 //      runTheTest(page, "Vert.x Health Check Example");
 //    })
-    /* Quickstart test */
-    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
-      runTheTest(page, "Spring Boot Health Check Example");
-    });
+//    /* Quickstart test */
+//    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
+//      runTheTest(page, "Spring Boot Health Check Example");
+//    });
   }
 
 });
@@ -221,7 +221,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
       OpenShiftIoPipelinePage.clickPromoteButton();
       
       browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
-      browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
+//      browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
           
     }
 

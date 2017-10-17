@@ -248,7 +248,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
 
   importCodebaseByName (nameString) {
-    var xpathString = "//app-generator-multiple-selection-label-list/ul/li/label/span[contains(text(),'" + nameString + "')]";
+    var xpathString = ".//multiple-selection-list/div/ul/li/label/span[contains(text(),'" + nameString + "')]";
     browser.wait(until.presenceOf(element(by.xpath(xpathString)), constants.LONGEST_WAIT, 'Failed to find element codebase by name'));
     return element(by.xpath(xpathString));
   }
@@ -534,8 +534,7 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
 
   /* Quickstarts by name */
   quickStartByName (nameString) {
-    var xpathString = ".//*[contains (@class,'item-name')][contains (text(),'" + nameString + "')]";
-    //var xpathString = ".//*[contains (text(),'" + nameString + "')]";
+    var xpathString = ".//*[contains(@class,'card-pf-body')][contains(text(),'" + nameString + "')]/../..";
     return element(by.xpath(xpathString));
   }
   clickQuickStartByName (nameString) {
@@ -569,9 +568,10 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     });
     return;
   }
-
+  
   get quickStartNextButton2 () {
-    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-next-button']"));
+    return element.all(by.xpath(".//button[contains(text(),'Next >')]")).last();
+    //    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-next-button']"));
 //    return element(by.id("forge-next-button"));
   }
   clickQuickStartNextButton2 () {
@@ -582,8 +582,20 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get quickStartNextButton3 () {
+    return element.all(by.xpath(".//button[contains(text(),'Next >')]")).first();
+  }
+  clickQuickStartNextButton3 () {
+    browser.wait(until.elementToBeClickable(this.quickStartNextButton3), constants.LONGEST_WAIT, 'Failed to find element quickStartNextButton3');
+    this.quickStartNextButton3.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartNextButton3");
+    });
+    return;
+  }
+
   get quickStartFinishButton () {
     return element(by.id("forge-finish-button"));
+    
   }
   clickQuickStartFinishButton () {
       browser.wait(until.elementToBeClickable(this.quickStartFinishButton), constants.LONG_WAIT, 'Failed to find element quickStartFinishButton');
@@ -594,7 +606,8 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
   }
 
   get quickStartFinishButton2 () {
-    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-finish-button']"));
+//    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-finish-button']"));
+    return element(by.xpath(".//button[contains(text(),'Finish')]"));
   }
   clickQuickStartFinishButton2 () {
       browser.wait(until.elementToBeClickable(this.quickStartFinishButton2), constants.LONGEST_WAIT, 'Failed to find element quickStartFinishButton2');
@@ -604,8 +617,20 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     return;
   }
 
+  get quickStartOkButton () {
+    //    return element(by.xpath(".//forge-app-generator[contains (@class,'active')]/form/footer/div/div/*[@id='forge-finish-button']"));
+        return element(by.xpath(".//button[contains(text(),'Ok')]"));
+      }
+  clickQuickStartOkButton () {
+      browser.wait(until.elementToBeClickable(this.quickStartOkButton), constants.LONGEST_WAIT, 'Failed to find element quickStartOkButton');
+      this.quickStartOkButton.click().then(function(){
+      console.log("OpenShiftIoSpaceHomePage - clicked element: quickStartOkButton");
+    });
+    return;
+  }
+
   get pipelineStrategy () {
-    return element(by.xpath(".//input[contains(@title,'Release, Stage, Approve and Promote')]"));
+    return element(by.xpath(".//li[contains(@title,'Release, Stage, Approve and Promote')]"));
   }
   clickPipelineStrategy () {
       browser.wait(until.elementToBeClickable(this.pipelineStrategy), constants.LONG_WAIT, 'Failed to find element pipelineStrategy');

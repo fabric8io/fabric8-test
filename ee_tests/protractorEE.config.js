@@ -32,7 +32,10 @@ exports.config = {
 
       justChe: ['src/tests/**/EE/*burr-che.spec.js','src/tests/**/EE/*burr-import-che.spec.js', 'src/tests/**/EE/*burr-che-quickstart.spec.js'],
 
-      justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js']
+      justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
+
+      tempTest: ['src/tests/**/EE/*burr-import-che.spec.js']
+
     },
 
     jasmineNodeOpts: {

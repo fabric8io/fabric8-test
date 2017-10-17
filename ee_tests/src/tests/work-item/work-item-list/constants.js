@@ -26,7 +26,7 @@ define("LONGER_WAIT", 300000);     /* 5 min */
 define("LONGEST_WAIT", 600000);      /* 10 minutes */
 define("PIPELINE_COMPLETE_WAIT", 6000000);      /* 100 minutes */
 define("RESET_TENANT_WAIT", 300000);     /* 5 min */
-define("JASMINE_TIMEOUT", 900000);      /* 15 minutes */
+define("JASMINE_TIMEOUT", 1200000);      /* 20 minutes */
 
 /* Pre-test cleanup types */
 define("CLEAN_CHE", "CLEAN_CHE");
