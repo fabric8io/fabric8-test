@@ -485,13 +485,14 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage.clickPrimaryAddToSpaceButton();  
 
     OpenShiftIoSpaceHomePage.clickTechnologyStack();
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/3
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/3
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/3
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
 
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
-      console.error("Failed to find appGenerationSuccess: " + err);
+    // TODO - Find a success value to verify - change required due to new app dialog change - Oct 16, 2017
+    // browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+    //  console.error("Failed to find appGenerationSuccess: " + err);
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
@@ -505,9 +506,9 @@ waitForText: function (elementFinder) {
         stream.end();
       });
 
-    });
+    // });
 
-    OpenShiftIoSpaceHomePage.clickOkButton();
+    OpenShiftIoSpaceHomePage.clickQuickStartOkButton();
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
         
@@ -524,13 +525,16 @@ waitForText: function (elementFinder) {
 
     OpenShiftIoSpaceHomePage.clickImportCodebaseButton();
     OpenShiftIoSpaceHomePage.clickImportCodebaseByName (projectName);
-    OpenShiftIoSpaceHomePage.clickQuickStartNextButton2();  // End of dialog page 2/3
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton3();  // End of dialog page 
     browser.sleep(constants.LONG_WAIT);
-    OpenShiftIoSpaceHomePage.clickPipelineStrategy();
+//    OpenShiftIoSpaceHomePage.clickPipelineStrategy();
+
+    OpenShiftIoSpaceHomePage.clickQuickStartNextButton3();  // End of dialog page 
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
 
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
-      console.error("Failed to find appGenerationSuccess: " + err);
+    // TODO - Find a success value to verify - change required due to new app dialog change - Oct 16, 2017
+    // browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+    //  console.error("Failed to find appGenerationSuccess: " + err);
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
@@ -544,9 +548,9 @@ waitForText: function (elementFinder) {
         stream.end();
       });
 
-    });
+    // });
 
-    OpenShiftIoSpaceHomePage.clickOkButton();
+    OpenShiftIoSpaceHomePage.clickQuickStartOkButton();
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 
@@ -563,15 +567,19 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage.clickTechnologyStack();
  
     // Select quickstart by name
-    OpenShiftIoSpaceHomePage.clickQuickStartList();
+//    OpenShiftIoSpaceHomePage.clickQuickStartList();
+
+browser.sleep(10000);
     OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
+    browser.sleep(10000);
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4
     OpenShiftIoSpaceHomePage.clickQuickStartFinishButton2();
     
-    browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
-      console.error("Failed to find appGenerationSuccess: " + err);
+    // TODO - Find a success value to verify - change required due to new app dialog change - Oct 16, 2017
+    //  browser.wait(until.presenceOf(OpenShiftIoDashboardPage.appGenerationSuccess), constants.LONGEST_WAIT, 'Failed to find appGenerationSuccess').then(null, function(err) {
+    //  console.error("Failed to find appGenerationSuccess: " + err);
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
@@ -585,9 +593,9 @@ waitForText: function (elementFinder) {
         stream.end();
       });    
 
-    });
+    // });
 
-    OpenShiftIoSpaceHomePage.clickOkButton();
+    OpenShiftIoSpaceHomePage.clickQuickStartOkButton();
     OpenShiftIoDashboardPage.waitForToastToClose();
   },
 

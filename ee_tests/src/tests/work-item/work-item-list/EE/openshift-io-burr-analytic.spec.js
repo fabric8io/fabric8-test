@@ -189,6 +189,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
       console.log("Stack report heading = " + text);
     });
 
+    /* TODO - Replace this with a valid/reliabe test - what is here is really a POC 
     OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 1).getText().then(function(text){
       console.log("Stack report item = " + text);
     });
@@ -206,7 +207,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
     browser.sleep(constants.LONG_WAIT);
 
-    /* Save a screenshot */
+    // Save a screenshot
     browser.takeScreenshot().then(function (png) {
       testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_additionalreport.png');
     });
@@ -222,7 +223,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
     OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 3).getText().then(function(text){
       console.log("Stack report element = " + text);
     });
-
+*/
     OpenShiftIoSpaceHomePage.clickAnalyticsCloseButton();
 
     OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
