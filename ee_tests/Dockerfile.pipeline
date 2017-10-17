@@ -8,7 +8,7 @@ mv openshift-origin-*/* /usr/bin/
   
 RUN git clone https://github.com/fabric8io/fabric8-test.git /test
 RUN cd /test/ee_tests && npm install && ./node_modules/protractor/bin/webdriver-manager update --standalone true --versions.chrome 2.29
-RUN chmod 777 /test/ee_tests
+RUN chmod -R 777 /test/ee_tests
 
 WORKDIR /test/ee_tests
 
