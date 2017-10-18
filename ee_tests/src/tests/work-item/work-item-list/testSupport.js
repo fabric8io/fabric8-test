@@ -569,9 +569,8 @@ waitForText: function (elementFinder) {
     // Select quickstart by name
 //    OpenShiftIoSpaceHomePage.clickQuickStartList();
 
-browser.sleep(10000);
+    browser.sleep(30000);
     OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
-    browser.sleep(10000);
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4

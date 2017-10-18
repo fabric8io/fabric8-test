@@ -28,8 +28,8 @@ class OpenShiftIoCodebasePage {
   
   /* List of codebases on page */
   get codebaseList () {
-    browser.wait(until.elementToBeClickable(element(by.css(".pfng-list-item.list-pf-item"))), constants.LONGEST_WAIT, 'Failed to find element codebases');
-    return element.all(by.css(".pfng-list-item.list-pf-item"));
+    browser.wait(until.elementToBeClickable(element(by.css(".list-pf-item"))), constants.LONGEST_WAIT, 'Failed to find element codebases');
+    return element.all(by.css(".list-pf-item"));
   }
 
   /* Codebases list heading */
