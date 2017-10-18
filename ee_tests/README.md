@@ -28,12 +28,10 @@ To run the tests locally, execute these commands:
 
 ```
 cd ee_tests
-npm install
-npm install webdriver-manager
-webdriver-manager update
-webdriver-manager update --versions.chrome 2.29
+npm install -g yarn
+yarn
 
-.sh ./local_run_EE_tests.sh 
+.sh ./local_run_EE_tests.sh
 ```
 
 > Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed int he tests' local directory. 
