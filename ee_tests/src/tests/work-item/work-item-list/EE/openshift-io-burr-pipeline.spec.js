@@ -177,7 +177,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
    OpenShiftIoPipelinePage.clickPromoteButton();
    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
-//   browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
+   browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGEST_WAIT, 'Failed to find runIcon');
    testSupport.outputOcData(username);
 
     /* ----------------------------------------------------------*/

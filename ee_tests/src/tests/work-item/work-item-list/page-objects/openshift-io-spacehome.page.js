@@ -534,7 +534,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
 
   /* Quickstarts by name */
   quickStartByName (nameString) {
-    var xpathString = ".//*[contains(@class,'card-pf-body')][contains(text(),'" + nameString + "')]/../..";
+//    var xpathString = ".//*[contains(@class,'card-pf-body')][contains(text(),'" + nameString + "')]/../..";
+//    return element(by.xpath(xpathString));
+    var xpathString = ".//*[contains(@id, '" + nameString + "')]/div";
     return element(by.xpath(xpathString));
   }
   clickQuickStartByName (nameString) {
