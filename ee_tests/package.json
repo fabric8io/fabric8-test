@@ -93,7 +93,7 @@
     "url": "https://github.com/fabric8io/fabric8-test/issues"
   },
   "engines": {
-    "node": ">= 4.2.1",
+    "node": ">= 6.11.4",
     "npm": ">= 3"
   },
   "release": {
