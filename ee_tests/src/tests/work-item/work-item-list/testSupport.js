@@ -150,7 +150,7 @@ waitForText: function (elementFinder) {
     if (!platform) {
       var url = browser.params.target.url;
       if (url) {
-        if (url === "https://openshift.io" || url === "https://openshift.io/") {
+        if (url === "https://openshift.io" || url === "https://openshift.io/" || url === "https://prod-preview.openshift.io" || url === "https://prod-preview.openshift.io/") {
           return "osio";
         } else {
           // lets assume fabric8 on openshift as its better than assuming OSIO when not using OSIO :)
