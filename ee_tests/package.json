@@ -31,9 +31,8 @@
     "tscw": "tsc -w",
     "tslint": "tslint",
     "typedoc": "typedoc",
-    "webdriver-manager": "webdriver-manager",
-    "webdriver:start": "npm run webdriver-manager start",
-    "webdriver:update": "npm run webdriver-manager update"
+    "webdriver:start": "webdriver-manager start --versions.chrome 2.29",
+    "webdriver:update": "webdriver-manager update"
   },
   "devDependencies": {
     "@types/jasmine": "2.5.47",
