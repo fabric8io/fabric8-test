@@ -82,4 +82,21 @@ Then in IDEA:
 * now just click the Run / Debug button in IDEA!
 * if a test fails you should have nice links in the output to source lines - you can also set breakpoints and debug the tests!
   
- 
+### End-to-End Test Coverage
+
+
+| Test File  | EE Feature Coverage |
+| ---------- | ------------------- |
+| openshift-io-burr-analytic.spec.js | Basic test for analytical report
+| openshift-io-burr-che-quickstart.spec.js | Runs the Vert.x Basic quickstart
+| openshift-io-burr-che.spec.js | Creates a Che workspace, runs the Vert.x Basic quickstart
+| openshift-io-burr-che-terminal.spec.js | Creates a Che workspace, runs the Vert.x Basic quickstart from the Che terminal window
+| openshift-io-burr-import-che.spec.js | Imports a project, creates a Che workspace
+| openshift-io-burr-import-pipeline.spec.js | Imports a project, runs the build pipeline
+| openshift-io-burr-login.spec.js | Logins and logs out
+| openshift-io-burr-new-space.spec.js | Creates a new space
+| openshift-io-burr-pipeline.spec.js | Runs the build pipeline
+| openshift-io-burr-quickstart.spec.js | Runs the build pipeline for each quickstart
+| openshift-io-burr-setup.spec.js | Reets the user account
+| openshift-io-burr-template.spec.js | Template for new tests
+
