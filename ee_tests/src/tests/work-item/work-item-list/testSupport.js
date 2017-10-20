@@ -567,10 +567,23 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage.clickTechnologyStack();
  
     // Select quickstart by name
-//    OpenShiftIoSpaceHomePage.clickQuickStartList();
-
     browser.sleep(30000);
-    OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
+
+    /* The October 2017 new app redesign requires the test to scroll for some quickstart icons */
+     OpenShiftIoSpaceHomePage.quickStartByName (quickstartName).isDisplayed().then(function (isVisible) {
+      if (isVisible) {
+          // element is visible
+          OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
+      } else {
+          // element is not visible
+          browser.executeScript('window.scrollTo(0,1000);').then(function () {
+          OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
+    });
+      }
+  });
+
+//    browser.sleep(30000);
+//    OpenShiftIoSpaceHomePage.clickQuickStartByName (quickstartName);
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 1/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 2/4
     OpenShiftIoSpaceHomePage.clickQuickStartNextButton2()  // End of dialog page 3/4

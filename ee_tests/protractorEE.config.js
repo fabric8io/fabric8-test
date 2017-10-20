@@ -34,7 +34,7 @@ exports.config = {
 
       justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
 
-      tempTest: ['src/tests/**/EE/*burr-pipeline.spec.js']
+      tempTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js']
 
     },
 
