@@ -7,9 +7,6 @@ declare -r SCRIPT_DIR=$(cd $(dirname "$SCRIPT_PATH") && pwd)
 
 source "$SCRIPT_DIR/common.inc.sh"
 
-# add all node binaries to path
-export PATH="$PATH:$(npm bin)"
-
 start_webdriver() {
   local log_file="$1"; shift
 
@@ -17,15 +14,7 @@ start_webdriver() {
   log.info "Starting Webdriver and Selenium..."
   log.info "Webdriver will log to:$GREEN $log_file"
 
-  webdriver-manager start --versions.chrome 2.33 >> "$log_file" 2>&1 &
-
-  # webdriver-manager command commented out to save time - only needed periodically
-  # lets make sure we use the local protractor webdriver-manager
-
-  # Download dependencies
-  # echo -n Updating Webdriver and Selenium...
-  # node_modules/protractor/bin/webdriver-manager update
-
+  npm run webdriver:start >> "$log_file" 2>&1 &
 }
 
 webdriver_running() {
@@ -121,7 +110,9 @@ main() {
     GitHub username $GITHUB_USERNAME  \
     on server $OSIO_URL  ...
 
-  protractor "$PROTRACTOR_CONFIG_JS" \
+  # NOTE: npm has difficulty escaping the strings that contain '`'
+  # hence using npm bin hack
+  "$(npm bin)/protractor" "$PROTRACTOR_CONFIG_JS" \
     --suite "$TEST_SUITE" \
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \
