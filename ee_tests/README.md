@@ -62,8 +62,11 @@ To run the tests locally, execute these commands:
 
 ```
 cd ee_tests
+# using yarn as package manager instead of npm
+
 npm install -g yarn
 yarn
+npm run webdriver:update
 
 ./local_run_EE_tests.sh
 ```
@@ -101,8 +104,10 @@ Basically try this:
 
 ```
 cd ee_tests
-npm install
-node_modules/protractor/bin/webdriver-manager  start --versions.chrome 2.29
+npm install -g yarn
+yarn
+npm run webdriver:update
+npm run webdriver:start 2>&1 | tee webdriver.log
 ```
 
 Then in IDEA:
