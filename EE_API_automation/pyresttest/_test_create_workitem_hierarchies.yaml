@@ -10,7 +10,7 @@
         
 -   test:
     -   name:   "Get Workitem-5 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/5"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/5"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -28,7 +28,7 @@
 
 -   test:
     -   name:   "Get Workitem-11 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/11"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/11"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -46,7 +46,7 @@
 
 -   test:
     -   name:   "Get Workitem-17 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/17"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/17"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -64,7 +64,7 @@
 
 -   test:
     -   name:   "Get Workitem-19 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/19"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/19"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -82,7 +82,7 @@
 
 -   test:
     -   name:   "Get Workitem-7 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/7"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/7"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -100,7 +100,7 @@
 
 -   test:
     -   name:   "Get Workitem-13 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/13"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/13"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]
@@ -118,7 +118,7 @@
 
 -   test:
     -   name:   "Get Workitem-15 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/15"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/15"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]

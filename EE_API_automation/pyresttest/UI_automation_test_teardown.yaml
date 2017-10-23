@@ -8,7 +8,7 @@
 
 -   test:
     -   name:   "Find Space using the namedspaces api"
-    -   url:    {'template':  "/api/namedspaces/$userid/$userid-$space_name_var"}
+    -   url:    {'template':  "/api/namedspaces/$userid/$space_name_var"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   extract_binds:

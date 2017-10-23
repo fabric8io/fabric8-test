@@ -17,7 +17,7 @@
 
 -   test:
     -   name:   "Find Space using the namedspaces api"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var"}
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
     -   validators:
@@ -65,7 +65,7 @@
 
 -   test:
     -   name:   "Get Workitem-18 URL"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$userid-$space_name_var/workitems/18"}
+    -   url:    {'template':  "$sut/api/namedspaces/$userid/$space_name_var/workitems/18"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [301, 304]

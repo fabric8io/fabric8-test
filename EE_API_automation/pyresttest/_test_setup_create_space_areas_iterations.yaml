@@ -73,7 +73,7 @@
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
         # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jsonpath_mini: "data",   comparator: "type",   expected:   "dict"}
-        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$userid-$space_name_var'}}
+        -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$space_name_var'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
     -   extract_binds:
         -   'spaceid': {'jsonpath_mini': 'data.id'}
@@ -97,26 +97,26 @@
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
     -   expected_status:    [200]
 
--   test:
-    -   name:   "Get space collaborators URL"
-    -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators"}
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   expected_status:    [307]
-    -   extract_binds:       
-        -   'collabs_url':   {header: 'Location'}
+# -   test:
+#     -   name:   "Get space collaborators URL"
+#     -   url:    {'template':  "$sut/api/spaces/$spaceid/collaborators"}
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [307]
+#     -   extract_binds:       
+#         -   'collabs_url':   {header: 'Location'}
 
--   test:
-    -   name:   "Get space collaborators - Must be only 1"
-    -   url:    {'template':  "$collabs_url"}
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   expected_status:    [200, 304]
-    -   validators:
-        -   compare:    {jsonpath_mini: "meta.totalCount", comparator: "eq",   expected:   1}
-    -   extract_binds:
-        -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
-        -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
-        -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
-        -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
+# -   test:
+#     -   name:   "Get space collaborators - Must be only 1"
+#     -   url:    {'template':  "$collabs_url"}
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [200, 304]
+#     -   validators:
+#         -   compare:    {jsonpath_mini: "meta.totalCount", comparator: "eq",   expected:   1}
+#     -   extract_binds:
+#         -   'userid': {'jsonpath_mini': 'data.0.attributes.identityID'}
+#         -   'username': {'jsonpath_mini': 'data.0.attributes.username'}
+#         -   'userfullname': {'jsonpath_mini': 'data.0.attributes.fullName'}
+#         -   'useremail': {'jsonpath_mini': 'data.0.attributes.email'}
 
 -   test:
     -   name:   "Get Parent-Root Iteration details"
