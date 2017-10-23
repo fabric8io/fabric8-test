@@ -154,7 +154,7 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pip
     /* Verify that Jenkins is still up and running */
     /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
     console.log ("verify that Jenkins pod is still running");
-    browser.sleep(constants.LONG_WAIT);
+    //browser.sleep(constants.LONG_WAIT);
     OpenShiftIoDashboardPage.clickStatusIcon();
     expect(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn.isPresent()).toBe(true);
 

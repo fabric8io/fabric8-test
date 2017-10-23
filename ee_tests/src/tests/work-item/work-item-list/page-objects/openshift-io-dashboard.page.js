@@ -273,9 +273,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     browser.wait(until.elementToBeClickable(statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
     statusIcon.click().then(function () {
       console.log("OpenShiftIoDashboardPage - clicked element:statusIcon");
-    }, function (err) {
+      }, function (err) {
       console.log("Failed to click the status icon due to modal issues: " + err);
-      browser.driver.sleep(2000);
+      ////browser.driver.sleep(2000);
       browser.wait(until.presenceOf(statusIcon), constants.LONG_WAIT, 'Failed to find element statusIcon');
       browser.wait(until.elementToBeClickable(statusIcon), constants.LONG_WAIT, 'Failed waiting for the statusIcon to be clickable');
       statusIcon.click().then(function () {
@@ -340,6 +340,10 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
 
   get cheStatusPoweredOn () {
     return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[1]/status-info/span/span[contains(@class,'pficon-ok')]"));
+  }
+
+  get cheStatusPending () {
+    return element(by.xpath(".//*[@id='header_status']/div/ul/fabric8-status-list/li[1]/status-info/span/span[contains(@class,'status-icon-pending fa fa-clock-o')]"));
   }
 
   get jenkinsStatusPoweredOn () {
