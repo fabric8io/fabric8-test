@@ -250,7 +250,10 @@ waitForText: function (elementFinder) {
     if (browser.params.target.disableChe) {
       console.log("Disabling waiting for Che to start");
     } else {
-      browser.wait(until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
+      /* Have to handle pending as Che may be idle */
+      var powerOn = until.presenceOf(OpenShiftIoDashboardPage.cheStatusPoweredOn);
+      var idleOn  = until.presenceOf(OpenShiftIoDashboardPage.cheStatusPending);
+      browser.wait(until.or(powerOn, idleOn), constants.RESET_TENANT_WAIT, "Timeout waiting for Che to start after tenant update - see: https://github.com/openshiftio/openshift.io/issues/595");
     }
     
     if ("osio" !== platform) {
