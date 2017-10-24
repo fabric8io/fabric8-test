@@ -499,14 +499,17 @@ waitForText: function (elementFinder) {
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
-      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-
-      /* Save a screenshot */
-      browser.takeScreenshot().then(function (png) {
-        var fs = require('fs');
-        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
-        stream.write(new Buffer(png, 'base64'));
-        stream.end();
+      OpenShiftIoDashboardPage.executeForgeCommandError.isPresent().then(function(result) {
+        if (result) {
+           browser.takeScreenshot().then(function (png) {
+             var fs = require('fs');
+             var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_forge_error.png');
+             stream.write(new Buffer(png, 'base64'));
+             stream.end();
+           });
+        } else {
+          //do nothing
+        }
       });
 
     // });
@@ -541,14 +544,17 @@ waitForText: function (elementFinder) {
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
-      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-
-      /* Save a screenshot */
-      browser.takeScreenshot().then(function (png) {
-        var fs = require('fs');
-        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
-        stream.write(new Buffer(png, 'base64'));
-        stream.end();
+      OpenShiftIoDashboardPage.executeForgeCommandError.isPresent().then(function(result) {
+        if (result) {
+           browser.takeScreenshot().then(function (png) {
+             var fs = require('fs');
+             var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_forge_error.png');
+             stream.write(new Buffer(png, 'base64'));
+             stream.end();
+           });
+        } else {
+          //do nothing
+        }
       });
 
     // });
@@ -598,15 +604,18 @@ waitForText: function (elementFinder) {
 
       /* Trap application generation errors here - if found, fail test and exit */
       expect(OpenShiftIoDashboardPage.executeForgeCommandError.isPresent()).toBe(false);
-      expect(OpenShiftIoDashboardPage.appGenerationError.isPresent()).toBe(false);
-
-      /* Save a screenshot */
-      browser.takeScreenshot().then(function (png) {
-        var fs = require('fs');
-        var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_app_generation_fail.png');
-        stream.write(new Buffer(png, 'base64'));
-        stream.end();
-      });    
+      OpenShiftIoDashboardPage.executeForgeCommandError.isPresent().then(function(result) {
+        if (result) {
+           browser.takeScreenshot().then(function (png) {
+             var fs = require('fs');
+             var stream = fs.createWriteStream('target/screenshots/' + spaceName + '_forge_error.png');
+             stream.write(new Buffer(png, 'base64'));
+             stream.end();
+           });
+        } else {
+          //do nothing
+        }
+      });
 
     // });
 
