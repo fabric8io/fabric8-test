@@ -38,6 +38,7 @@
     "@types/jasmine": "2.5.47",
     "@types/lodash": "4.14.61",
     "@types/node": "7.0.12",
+    "codelyzer": "^3.2.2",
     "jasmine-protractor-matchers": "^1.0.1",
     "jasmine-reporters": "^2.2.1",
     "jasmine-spec-reporter": "4.2.1",
