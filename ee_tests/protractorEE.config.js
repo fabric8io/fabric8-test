@@ -18,13 +18,13 @@ exports.config = {
     exclude: ['src/tests/**/EXCLUDE/*.js'],
 
     suites: {
-      allTest: ['src/tests/**/EE/*burr*.spec.js'], 
+      allTest: ['src/tests/**/EE/*burr*.spec.js'],
       analyticTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       cheTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js'],
       chequickstartTest: ['src/tests/**/EE/*burr-che.spec.js'],
       importTest: ['src/tests/**/EE/*burr*import*.spec.js'],
       mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
-      quickstartTest: ['src/tests/**/EE/*burr-quickstart.spec.js'],    
+      quickstartTest: ['src/tests/**/EE/*burr-quickstart.spec.js'],
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
       runTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js'],
@@ -34,8 +34,8 @@ exports.config = {
 
       justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
 
-      tempTest: ['src/tests/**/EE/*burr-import-pipeline.spec.js']
-
+      tempTest: ['src/tests/**/EE/*burr-import-pipeline.spec.js'],
+      specs: ['src/specs/**/*.js'],   // new typescript based specs
     },
 
     jasmineNodeOpts: {
@@ -69,6 +69,10 @@ exports.config = {
       }
     }));
 
+    beforeEach(()=> {
+      let matchers = require('jasmine-protractor-matchers')
+      jasmine.addMatchers(matchers);
+    })
   },
 
   // Close the report after all tests finish
@@ -76,9 +80,7 @@ exports.config = {
     return new Promise(function(resolve){
       reporter.afterLaunch(resolve.bind(this, exitCode));
     });
-  }
+  },
 
 };
-
-
 
