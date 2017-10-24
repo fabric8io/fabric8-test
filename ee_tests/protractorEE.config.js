@@ -35,7 +35,7 @@ exports.config = {
       justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
 
       tempTest: ['src/tests/**/EE/*burr-import-pipeline.spec.js'],
-      specs: ['src/specs/**/*.js'],   // new typescript based specs
+      specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
     },
 
     jasmineNodeOpts: {
