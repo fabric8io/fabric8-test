@@ -2,7 +2,6 @@ import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
 import * as support from './support';
 
 import { HomePage } from './page_objects/home.page';
-import { LoginPage } from './page_objects/login.page';
 
 describe('HomePage', () => {
   let homePage: HomePage;
@@ -10,7 +9,9 @@ describe('HomePage', () => {
   beforeEach( async () => {
     support.desktopTestSetup();
     homePage = new HomePage(browser.params.target.url);
+    support.debug('... HomePage.Open');
     await homePage.open();
+    support.debug('... HomePage.Open - DONE');
   });
 
   it('shows the title', async () => {
@@ -22,7 +23,7 @@ describe('HomePage', () => {
     await expect( homePage.loginButton).toAppear('Login must be present');
   });
 
-  fit('can navigate to login page', async () => {
+  it('can navigate to login page', async () => {
     let loginPage = await homePage.gotoLoginPage();
 
     // poc: can wait on multiple promises to resolve
@@ -33,8 +34,10 @@ describe('HomePage', () => {
     ]);
   });
 
-  fit('can login using correct username and password', async () => {
+  it('can login using correct username and password', async () => {
+    support.debug('... starting test; loginPage');
     let loginPage = await homePage.gotoLoginPage();
-    loginPage.login(browser.params.login.user, browser.params.login.password);
+    support.debug('... back from gotoLoginPage');
+    await loginPage.login(browser.params.login.user, browser.params.login.password);
   });
 });

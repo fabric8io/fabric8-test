@@ -1,4 +1,4 @@
-import { $ } from 'protractor';
+import { browser, $ } from 'protractor';
 import { BasePage } from './base.page';
 import { LoginPage } from './login.page';
 
@@ -11,6 +11,9 @@ export class HomePage extends BasePage {
 
   async gotoLoginPage(): Promise<LoginPage> {
     await this.loginButton.click();
-    return new LoginPage();
+
+    let loginPage =  new LoginPage();
+    await loginPage.validate();
+    return loginPage;
   }
 }

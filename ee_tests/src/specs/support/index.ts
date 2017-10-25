@@ -30,3 +30,10 @@ export function desktopTestSetup() {
 }
 
 
+function debugEnabled(...msg: any[]) {
+  console.log(`[${new Date().toUTCString()}]:`, ...msg);
+}
+
+function debugNoop(...msg: any[]) {}
+
+export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
