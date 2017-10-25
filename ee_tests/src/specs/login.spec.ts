@@ -16,7 +16,7 @@ describe('HomePage', () => {
   });
 
   it('shows the title', async () => {
-    await expect(browser.getTitle()).toEqual('OpenShift.io');
+    await expect(await browser.getTitle()).toEqual('OpenShift.io');
   });
 
   it('show login button', async () => {
