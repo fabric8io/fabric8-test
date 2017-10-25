@@ -1,7 +1,7 @@
 FROM centos:7
 ENV LANG=en_US.utf8
 #ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.5.0
+ENV NODE_VERSION 6.11.4
 ENV DISPLAY=:99
 
 ENTRYPOINT ["/opt/fabric8-test/docker-entrypoint.sh"]
@@ -51,7 +51,7 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 #  && yum install -y firefox \
 #  && npm install -g karma-firefox-launcher
 
-RUN npm install -g jasmine-node protractor
+RUN npm install -g  yarn jasmine-node protractor
 
 WORKDIR /opt/fabric8-test/
 
@@ -64,4 +64,4 @@ RUN wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-
     tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
     mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
 
-RUN npm install
+RUN yarn
