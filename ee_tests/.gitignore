@@ -1,2 +1,5 @@
 src/specs/**/*.js
 src/specs/**/*.js.map
+protractorTS.config.js
+protractorTS.config.js.map
+.vscode/
