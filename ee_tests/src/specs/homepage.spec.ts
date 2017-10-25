@@ -4,8 +4,6 @@ import * as support from './support';
 import { HomePage } from './page_objects/home.page';
 import { LoginPage } from './page_objects/login.page';
 
-// declare let expect:any
-
 describe('HomePage', () => {
   let homePage: HomePage;
 
@@ -19,14 +17,26 @@ describe('HomePage', () => {
     await expect(await browser.getTitle()).toEqual('OpenShift.io');
   });
 
-  it('show login button', async () => {
+  it('shows login button', async () => {
     await expect($$('div').first()).toAppear('Atleast one div should appear on the page');
     await expect( homePage.login).toAppear('Login must be present');
   });
 
-  it('can login using correct username and password', async () => {
+  fit('can navigate to login page', async () => {
     await homePage.login.click();
 
+    let loginPage = new LoginPage();
+
+    // poc: can wait on multiple promises to resolve
+    await Promise.all([
+      expect(loginPage.usernameInput).toAppear('Username input must be present'),
+      expect(loginPage.passwordInput).toAppear('Password input must be present'),
+      expect(loginPage.loginButton).toAppear('Login button must be present'),
+    ]);
+  });
+
+  it('can login using correct username and password', async () => {
+    await homePage.login.click();
     let loginPage = new LoginPage();
     await loginPage.login(browser.params.login.user, browser.params.login.password);
   });
