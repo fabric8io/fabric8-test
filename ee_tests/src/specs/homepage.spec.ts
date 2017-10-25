@@ -19,13 +19,11 @@ describe('HomePage', () => {
 
   it('shows login button', async () => {
     await expect($$('div').first()).toAppear('Atleast one div should appear on the page');
-    await expect( homePage.login).toAppear('Login must be present');
+    await expect( homePage.loginButton).toAppear('Login must be present');
   });
 
   fit('can navigate to login page', async () => {
-    await homePage.login.click();
-
-    let loginPage = new LoginPage();
+    let loginPage = await homePage.gotoLoginPage();
 
     // poc: can wait on multiple promises to resolve
     await Promise.all([
@@ -35,9 +33,8 @@ describe('HomePage', () => {
     ]);
   });
 
-  it('can login using correct username and password', async () => {
-    await homePage.login.click();
-    let loginPage = new LoginPage();
-    await loginPage.login(browser.params.login.user, browser.params.login.password);
+  fit('can login using correct username and password', async () => {
+    let loginPage = await homePage.gotoLoginPage();
+    loginPage.login(browser.params.login.user, browser.params.login.password);
   });
 });
