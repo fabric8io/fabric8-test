@@ -8,6 +8,7 @@
     "strict": true
   },
   "exclude": [
-    "node_modules/"
+    "src/tests/",
+    "./*.js"
   ]
 }
