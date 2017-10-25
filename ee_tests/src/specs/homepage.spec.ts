@@ -34,10 +34,11 @@ describe('HomePage', () => {
     ]);
   });
 
-  it('can login using correct username and password', async () => {
+  it('can login using a valid username and password', async () => {
     support.debug('... starting test; loginPage');
     let loginPage = await homePage.gotoLoginPage();
     support.debug('... back from gotoLoginPage');
-    await loginPage.login(browser.params.login.user, browser.params.login.password);
+    let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
+    await dashboardPage.validate();
   });
 });
