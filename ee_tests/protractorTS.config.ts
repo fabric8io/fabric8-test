@@ -1,7 +1,12 @@
-var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
-var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+import { Config, browser } from 'protractor';
+import { SpecReporter } from 'jasmine-spec-reporter';
 
-var reporter = new HtmlScreenshotReporter({
+// NOTE: weird import as documented in
+// https://github.com/Xotabu4/jasmine-protractor-matchers
+import ProtractorMatchers = require('jasmine-protractor-matchers');
+import HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
+
+let reporter = new HtmlScreenshotReporter({
   dest: 'target/screenshots',
   filename: 'my-report.html',
   reportOnlyFailedSpecs: false,
@@ -9,7 +14,9 @@ var reporter = new HtmlScreenshotReporter({
   inlineImages: true
 });
 
-exports.config = {
+// Full protractor configuration file reference could be found here:
+// https://github.com/angular/protractor/blob/master/lib/config.ts
+let conf: Config = {
     restartBrowserBetweenTests: true,
     useAllAngular2AppRoots: true,
     getPageTimeout: 30000,
@@ -23,23 +30,35 @@ exports.config = {
       cheTest: ['src/tests/**/EE/*burr-che-quickstart.spec.js'],
       chequickstartTest: ['src/tests/**/EE/*burr-che.spec.js'],
       importTest: ['src/tests/**/EE/*burr*import*.spec.js'],
-      mainTest: ['src/tests/**/EE/*burr*che.spec.js', 'src/tests/**/EE/*burr*pipeline.spec.js', 'src/tests/**/EE/*burr*quickstart.spec.js'],
+      mainTest: [
+        'src/tests/**/EE/*burr*che.spec.js',
+        'src/tests/**/EE/*burr*pipeline.spec.js',
+        'src/tests/**/EE/*burr*quickstart.spec.js'
+      ],
       quickstartTest: ['src/tests/**/EE/*burr-quickstart.spec.js'],
       pipelineTest: ['src/tests/**/EE/*burr*pipeline*.spec.js'],
       runTest: ['src/tests/**/EE/*burr*analytic*.spec.js'],
       setupTest: ['src/tests/**/EE/*setup*.spec.js'],
       terminalTest: ['src/tests/**/EE/*burr*terminal*.spec.js'],
 
-      justChe: ['src/tests/**/EE/*burr-che.spec.js','src/tests/**/EE/*burr-import-che.spec.js', 'src/tests/**/EE/*burr-che-quickstart.spec.js'],
+      justChe: [
+        'src/tests/**/EE/*burr-che.spec.js',
+        'src/tests/**/EE/*burr-import-che.spec.js',
+        'src/tests/**/EE/*burr-che-quickstart.spec.js'
+      ],
 
-      justJenkins: ['src/tests/**/EE/*burr-pipeline.spec.js','src/tests/**/EE/*burr-import-pipeline.spec.js', 'src/tests/**/EE/*burr-quickstart.spec.js'],
+      justJenkins: [
+        'src/tests/**/EE/*burr-pipeline.spec.js',
+        'src/tests/**/EE/*burr-import-pipeline.spec.js',
+        'src/tests/**/EE/*burr-quickstart.spec.js'
+      ],
 
       tempTest: ['src/tests/**/EE/*burr-import-pipeline.spec.js'],
-      specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
+      specs: ['src/specs/**/*.spec.js']   // new typescript based specs
     },
 
     jasmineNodeOpts: {
-        defaultTimeoutInterval: 60000
+      defaultTimeoutInterval: 60000
     },
     capabilities: {
       'browserName': 'chrome',
@@ -50,9 +69,7 @@ exports.config = {
 
   // Setup the report before any tests start
   beforeLaunch: function() {
-    return new Promise(function(resolve){
-      reporter.beforeLaunch(resolve);
-    });
+    return new Promise(resolve => reporter.beforeLaunch(resolve));
   },
 
   // Assign the test reporter to each running instance
@@ -62,25 +79,23 @@ exports.config = {
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
         displayStacktrace: true,
-        displayDuration: true,
+        displayDuration: true
       },
       summary: {
         displayDuration: true
       }
     }));
 
-    beforeEach(()=> {
-      let matchers = require('jasmine-protractor-matchers')
-      jasmine.addMatchers(matchers);
-    })
+    beforeEach(() => {
+      jasmine.addMatchers(ProtractorMatchers);
+    });
   },
 
   // Close the report after all tests finish
   afterLaunch: function(exitCode) {
-    return new Promise(function(resolve){
-      reporter.afterLaunch(resolve.bind(this, exitCode));
-    });
-  },
-
+    return new Promise(resolve => reporter.afterLaunch(resolve(exitCode)));
+  }
 };
+
+exports.config = conf;
 

@@ -173,7 +173,7 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
     /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
        https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
        Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(importQuickstartName)), constants.LONGER_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(importQuickstartName)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
       console.error("Failed to find inputRequiredByPipelineByName: " + err);
     
       /* Save a screenshot */
