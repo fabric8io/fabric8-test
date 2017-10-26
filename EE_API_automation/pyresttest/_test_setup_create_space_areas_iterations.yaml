@@ -23,23 +23,32 @@
           'collab_user_id': 'd4ec98d4-2705-40ea-a8b4-f09f7494b24a'
           }
 
--   test:
-    -   name:   "Find logged-in User Details URL"
-    -   url:    {'template':  "$sut/api/users?filter[username]=$userid"}
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   expected_status:    [307]
-    -   extract_binds:
-        -   'user_url':   {header: 'Location'}
+# -   test:
+#     -   name:   "Find logged-in User Details URL"
+#     -   url:    {'template':  "$sut/api/users?filter[username]=$userid"}
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [200, 307]
+#     -   extract_binds:
+#         -   'user_url':   {header: 'Location'}
 
+# -   test:
+#     -   name:   "Get logged-in User Details"
+#     -   url:    {'template':  "$user_url"}
+#     -   method: "GET"
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [200, 304]    
+#     -   extract_binds:
+#         -   'loggedin_user_id': {'jsonpath_mini': 'data.0.id'}
+#         -   'loggedin_user_name': {'jsonpath_mini': 'data.0.attributes.username'}
 -   test:
-    -   name:   "Get logged-in User Details"
-    -   url:    {'template':  "$user_url"}
+    -   name:   "Find logged-in User Details"
+    -   url:    {'template':  "$sut/api/users?filter[username]=$userid"}
     -   method: "GET"
     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   expected_status:    [200, 304]    
+    -   expected_status:    [200]
     -   extract_binds:
         -   'loggedin_user_id': {'jsonpath_mini': 'data.0.id'}
-        -   'loggedin_user_name': {'jsonpath_mini': 'data.0.attributes.username'}
+        -   'loggedin_user_name':   {'jsonpath_mini': 'data.0.attributes.username'}
 
 ###### The following two test do NOt work in the local test setup. Needs a fix ############
 # -   test:
@@ -88,14 +97,14 @@
         -   compare:    {header:    "content-type", comparator: contains,   expected:   'application/vnd.api+json'}
         # -   json_schema:    {schema:    {file: 'jsonapi_schema.json'}}
         -   compare:    {jsonpath_mini: "data.attributes.name", comparator: "eq",   expected:   {template: '$spacename'}}
-        -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$loggedin_user_id'}}
+        # -   compare:    {jsonpath_mini: "data.relationships.owned-by.data.id",   comparator: "eq",   expected:   {template: '$loggedin_user_id'}}
         -   compare:    {jsonpath_mini: "data.type",   comparator: "eq",   expected:   "spaces"}
 
--   test:
-    -   name:   "Find Space using the namedspaces api"
-    -   url:    {'template':  "$sut/api/namedspaces/$userid/$spacename"}
-    -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
-    -   expected_status:    [200]
+# -   test:
+#     -   name:   "Find Space using the namedspaces api"
+#     -   url:    {'template':  "$sut/api/namedspaces/$userid/$spacename"}
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [200]
 
 # -   test:
 #     -   name:   "Get space collaborators URL"
