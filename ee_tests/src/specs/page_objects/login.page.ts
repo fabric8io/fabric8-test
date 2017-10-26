@@ -1,12 +1,24 @@
-import { browser, ExpectedConditions as until, $ } from 'protractor';
+import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
 import * as support from '../support';
 import { BasePage } from './base.page';
 import { DashboardPage } from './dashboard.page';
 
 export class LoginPage extends BasePage {
+
+  /* RHD login page UI elements */
   usernameInput = $('#username');
   passwordInput = $('#password');
   loginButton = $('#kc-login');
+  everythingOnPage = element(by.xpath('.//*'));
+
+  /* Social media login options */
+  githubLoginButton = $('#social-github');
+  stackoverflowLoginButton = $('#social-stackoverflow');
+  linkedinLoginButton = $('.fa.fa-linkedin-square');
+  twitterLoginButton = $('#social-twitter');
+  facebookLoginButton = $('#social-facebook');
+  microsoftLoginButton = $('#social-microsoft');
+  jbossdeveloperLoginButton = $('#social-jbossdeveloper');
 
 
   // checks if the PageObject is valid
