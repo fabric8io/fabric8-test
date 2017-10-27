@@ -1,7 +1,7 @@
 import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
 import * as support from '../support';
 import { BasePage } from './base.page';
-import { DashboardPage } from './dashboard.page';
+import { MainDashboardPage } from './main_dashboard.page';
 
 export class LoginPage extends BasePage {
 
@@ -30,13 +30,13 @@ export class LoginPage extends BasePage {
     ]);
   }
 
-  async login(username: string, password: string): Promise<DashboardPage> {
+  async login(username: string, password: string): Promise<MainDashboardPage> {
     await this.usernameInput.sendKeys(username);
     await this.passwordInput.sendKeys(password);
     await this.loginButton.click();
     support.debug('  ... clicking loginButton - DONE');
 
-    let dashboardPage = new DashboardPage();
+    let dashboardPage = new MainDashboardPage();
 
     support.debug('  ... validate dashboard');
     await dashboardPage.validate();

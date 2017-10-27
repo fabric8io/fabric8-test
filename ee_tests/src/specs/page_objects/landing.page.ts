@@ -2,7 +2,7 @@ import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinde
 import { BasePage } from './base.page';
 import { LoginPage } from './login.page';
 
-export class HomePage extends BasePage {
+export class LandingPage extends BasePage {
   loginButton = $('#login');
 
 /*

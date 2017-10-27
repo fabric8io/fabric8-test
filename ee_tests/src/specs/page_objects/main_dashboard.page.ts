@@ -1,7 +1,7 @@
 import { browser, ExpectedConditions as until, $ } from 'protractor';
 import { BasePage } from './base.page';
 
-export class DashboardPage extends BasePage {
+export class MainDashboardPage extends BasePage {
   appTag = $('f8-app');
 
   async validate() {
@@ -9,5 +9,4 @@ export class DashboardPage extends BasePage {
   }
 
 }
-
 
