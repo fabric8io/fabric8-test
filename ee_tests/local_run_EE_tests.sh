@@ -83,7 +83,7 @@ main() {
     --params.oso.username="${OSO_USERNAME}"
   local test_result=$?
 
-  [[ "$CAT_LOGFILE" == "true" ]]&& show_logs "$log_file"
+  [[ "${CAT_LOGFILE:-false}" == "true" ]] && show_logs "$log_file"
 
 
   # Return test result
