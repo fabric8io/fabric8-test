@@ -10,6 +10,7 @@ import { browser, element, by, By, ExpectedConditions as until, $ } from 'protra
 import * as support from '../support';
 import { BasePage } from './base.page';
 import { MainDashboardPage } from './main_dashboard.page';
+import { SpaceDashboardPage } from './space_dashboard.page';
 
 export class LoginPage extends BasePage {
 
@@ -51,4 +52,6 @@ export class LoginPage extends BasePage {
     support.debug('  ... validate dashboard - OK');
     return dashboardPage;
   }
+
+
 }
