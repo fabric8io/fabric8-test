@@ -25,9 +25,9 @@ export abstract class AppPage extends BasePage {
 
   async gotoUserProfile(): Promise<UserProfilePage> {
     await this.ready();
-    support.debug('>>> Select "Profile" menu item');
+    support.debug('... Select "Profile" menu item');
     await this.header.profileDropdown.select('Profile');
-    support.debug('>>> Select "Profile" menu item - OK');
+    support.debug('... Select "Profile" menu item - OK');
 
     // tslint:disable-next-line:no-use-before-declare
     let page = new UserProfilePage();
