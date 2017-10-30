@@ -4,14 +4,22 @@ import * as support from '../../support';
 
 
 export class DropdownItem extends BaseElement {
-  constructor(element: ElementFinder) {
+  constructor(element: ElementFinder, dropdown: ElementFinder) {
     super(element);
+    this.dropdown = dropdown;
   }
 
   async ready() {
     support.debug(' ... check if DropdownItem is clickable');
     await this.untilClickable();
     support.debug(' ... check if DropdownItem is clickable - OK');
+  }
+
+  async select(){
+    await this.dropdown.ready();
+    await this.dropdown.click();
+    await this.ready();
+    await this.click();
   }
 }
 
@@ -26,18 +34,12 @@ export class Dropdown extends BaseElement {
 
   item(text: string): DropdownItem {
     let item = this.dropdownMenu.element(by.cssContainingText('li', text));
-    return new DropdownItem(item);
+    return new DropdownItem(item, this);
   }
 
   async select(text: string) {
     support.debug(`Selecting dropdown item: '${text}'`);
-
-    await this.ready();
-    await this.click();
-
-    let item = this.item(text);
-    await item.ready();
-    await item.click();
+    await this.item(text).select();
   }
 
   async ready() {
