@@ -84,7 +84,7 @@ function debugEnabled(...msg: any[]) {
 
 function debugNoop(...msg: any[]) {}
 
-function info(...msg: any[]) {
+export const  info = (...msg: any[]) => {
   console.info(`[${timestamp()}]:`, ...msg);
 }
 
