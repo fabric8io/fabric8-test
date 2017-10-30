@@ -54,43 +54,39 @@ export function desktopTestSetup() {
     return answer;
   }
 
-/*
-* Get system time in seconds since 1970 - to generate unique space names.
-*/
-export function returnTime () {
 
-        let month = new Array();
-        month[0] = 'jan';
-        month[1] = 'feb';
-        month[2] = 'mar';
-        month[3] = 'apr';
-        month[4] = 'may';
-        month[5] = 'jun';
-        month[6] = 'jul';
-        month[7] = 'aug';
-        month[8] = 'sep';
-        month[9] = 'oct';
-        month[10] = 'nov';
-        month[11] = 'dec';
+/**
+ * Get system time in seconds since 1970 - to generate unique space names.
+ */
+export function newWorkspaceName(): string {
+  let d = new Date();
+  let month = d.toLocaleString('en-US', {month: 'short'}).toLowerCase();
+  let day = d.getDate();
+  let time = d.getTime();
+  let workspaceName = `test${month}${day}${time}`;
 
-        let d = new Date();
-        let m = month[d.getMonth()];
-        let day = d.getDate();
-        let n = d.getTime();
+  info('New workpace name: ', workspaceName);
+  return workspaceName;
+}
 
-        console.log ('EE test - Creating space: ' + m + day.toString() + n.toString());
-        return 'test' +  m + day.toString() + n.toString();
-      }
 
-function debugEnabled(...msg: any[]) {
+function timestamp(): string {
   let date = new Date();
   let time = date.toLocaleTimeString('en-US', {hour12: false});
   let ms = (date.getMilliseconds() + 1000).toString().substr(1);
+  return `${time}.${ms}`;
 
-  console.log(`[${time}.${ms}]:`, ...msg);
+}
+
+function debugEnabled(...msg: any[]) {
+  console.log(`[${timestamp()}]:`, ...msg);
 }
 
 function debugNoop(...msg: any[]) {}
+
+function info(...msg: any[]) {
+  console.info(`[${timestamp()}]:`, ...msg);
+}
 
 export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
 

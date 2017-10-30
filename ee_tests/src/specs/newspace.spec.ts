@@ -23,12 +23,14 @@ describe('Creating new spaces in OSIO', () => {
     await dashboardPage.ready();
 
     // tslint:disable:max-line-length
-    let spaceDashboardPage = await dashboardPage.createNewSpace(browser.params.target.url, browser.params.login.user, support.returnTime());
+    let url = browser.params.target.url;
+    let user = browser.params.login.user;
+
     // tslint:enable:max-line-length
+    let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, support.newWorkspaceName());
 
     browser.getCurrentUrl().then(function (text) {
         console.log ('EE test - new space URL = ' + text);
      });
-
   });
 });
