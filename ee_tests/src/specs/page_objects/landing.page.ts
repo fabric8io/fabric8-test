@@ -20,8 +20,8 @@ export class LandingPage extends BasePage {
   async gotoLoginPage(): Promise<LoginPage> {
     await this.loginButton.click();
 
-    let loginPage =  new LoginPage();
-    await loginPage.validate();
+    let loginPage = new LoginPage();
+    await loginPage.ready();
     return loginPage;
   }
 }

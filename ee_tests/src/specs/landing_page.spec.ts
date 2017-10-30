@@ -39,6 +39,6 @@ describe('Landing Page', () => {
     let loginPage = await landingPage.gotoLoginPage();
     support.debug('... back from gotoLoginPage');
     let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
-    await dashboardPage.validate();
+    await dashboardPage.ready();
   });
 });

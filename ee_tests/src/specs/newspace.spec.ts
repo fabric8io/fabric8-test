@@ -20,7 +20,7 @@ describe('Creating new spaces in OSIO', () => {
     let loginPage = await landingPage.gotoLoginPage();
     support.debug('... back from gotoLoginPage');
     let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
-    await dashboardPage.validate();
+    await dashboardPage.ready();
 
     // tslint:disable:max-line-length
     let spaceDashboardPage = await dashboardPage.createNewSpace(browser.params.target.url, browser.params.login.user, support.returnTime());
