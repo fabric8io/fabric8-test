@@ -4,6 +4,8 @@ import * as ui from '../ui';
 
 export class ProfileDropdown extends ui.Dropdown {
   profileItem = this.item('Profile');
+  aboutItem = this.item('About');
+  logoutItem = this.item('Logout');
 
   constructor(element: ElementFinder) {
     super(element);
@@ -36,9 +38,15 @@ export class RecentItemsDropdown extends ui.Dropdown {
   }
 }
 
+// export class StatusDropdown extends ui.Dropdown {
+
+// }
+
+
 export class Header extends ui.BaseElement {
   profileDropdown = new ProfileDropdown(this.$('.pull-right.dropdown'));
   recentItemsDropdown = new RecentItemsDropdown(this.$$('.dropdown').get(0));
+  // statusDropdown = new Dropdown(this.$$('.dropdown').get(0));
 
   constructor(app: ElementFinder) {
     super(app.$('header > alm-app-header > nav'));

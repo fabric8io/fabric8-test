@@ -7,10 +7,9 @@
 */
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import { BasePage } from './base.page';
+import { AppPage } from './app.page';
 
-export class SpaceDashboardPage extends BasePage {
-  appTag = $('f8-app');
+export class SpaceDashboardPage extends AppPage {
 
 /*
 Page layout
@@ -34,9 +33,6 @@ Page layout
 |                                       |                                    |                                       |
 |--------------------------------------------------------------------------------------------------------------------|
 */
-
-  /* Header dropdown - leftmost in navigation bar - displys current space name */
-  headerDropDownToggle = element(by.id('header_dropdownToggle'));
 
   /* Dialog to create new space and project */
   newSpaceName = $('#name');
@@ -148,6 +144,13 @@ Page layout
   /* Workspaces tab under Create */
   createWorkspace = element(by.xpath('.//codebases-item-workspaces[1]'));
 
+  spaceName: string;
+
+  constructor(spaceName: string) {
+    super();
+    this.spaceName = spaceName;
+  }
+
   /* Quickstarts by name */
   quickStartByName (nameString: string): ElementFinder {
     let xpathString = './/*[contains(@id, \'' + nameString + '\')]/div';
@@ -159,8 +162,5 @@ Page layout
     return element(by.xpath(xpathString));
   }
 
-  async validate() {
-    await browser.wait(until.presenceOf(this.appTag));
-  }
 
 }

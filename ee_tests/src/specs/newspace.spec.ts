@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
+import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -10,27 +10,31 @@ describe('Creating new spaces in OSIO', () => {
   beforeEach( async () => {
     support.desktopTestSetup();
     landingPage = new LandingPage(browser.params.target.url);
-    support.debug('... Landing Page Open');
+    support.debug('>>> Landing Page Open');
     await landingPage.open();
-    support.debug('... Landing Page Open - DONE');
+    support.debug('>>> Landing Page Open - DONE');
   });
+
 
   it('Create a new space without creating a new quickstart', async () => {
-    support.debug('... starting test; loginPage');
+    support.debug('>>> starting test; loginPage');
     let loginPage = await landingPage.gotoLoginPage();
-    support.debug('... back from gotoLoginPage');
-    let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
-    await dashboardPage.ready();
+    support.debug('>>> back from gotoLoginPage');
 
-    // tslint:disable:max-line-length
     let url = browser.params.target.url;
-    let user = browser.params.login.user;
+    let { user, password } = browser.params.login;
+    let dashboardPage = await loginPage.login(user, password);
 
-    // tslint:enable:max-line-length
-    let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, support.newWorkspaceName());
+    let spaceName = support.newSpaceName();
+    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
-    browser.getCurrentUrl().then(function (text) {
-      support.debug ('EE test - new space URL = ' + text);
-     });
+    let currentUrl = await browser.getCurrentUrl();
+    support.debug ('>>> browser is URL: ' + currentUrl);
+
+    let expectedUrl = support.joinURIPath(url, user, spaceName);
+    expect(browser.getCurrentUrl()).toEqual(expectedUrl);
+
+    support.info('EE test - new space URL:', currentUrl);
   });
+
 });

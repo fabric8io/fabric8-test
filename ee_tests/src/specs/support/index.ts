@@ -58,15 +58,15 @@ export function desktopTestSetup() {
 /**
  * Get system time in seconds since 1970 - to generate unique space names.
  */
-export function newWorkspaceName(): string {
+export function newSpaceName(): string {
   let d = new Date();
   let month = d.toLocaleString('en-US', {month: 'short'}).toLowerCase();
   let day = d.getDate();
   let time = d.getTime();
-  let workspaceName = `test${month}${day}${time}`;
+  let spaceName = `test${month}${day}${time}`;
 
-  info('New workpace name: ', workspaceName);
-  return workspaceName;
+  info('New space name: ', spaceName);
+  return spaceName;
 }
 
 
@@ -84,7 +84,7 @@ function debugEnabled(...msg: any[]) {
 
 function debugNoop(...msg: any[]) {}
 
-export const  info = (...msg: any[]) => {
+export function info(...msg: any[]) {
   console.info(`[${timestamp()}]:`, ...msg);
 }
 

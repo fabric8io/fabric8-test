@@ -11,6 +11,7 @@ import * as support from '../support';
 
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
+import { TextInput, Button } from './ui';
 
 export class MainDashboardPage extends AppPage {
 
@@ -37,15 +38,14 @@ Page layout
 |--------------------------------------------------------------------------------------------------------------------|
 */
 
-    /* Header dropdown - leftmost in navigation bar - displys current space name */
-    // headerDropDownToggle = element(by.id('header_dropdownToggle'));
-    headerDropDownToggle = $('#header_dropdownToggle');
-
     /* Dialog to create new space and project */
-    newSpaceName = $('#name');
-    createSpaceButton = element(by.id('createSpaceButton'));
-    devProcessPulldown = $('#developmentProcess');
-    noThanksButton = element(by.xpath('.//a[contains(text(),\'No thanks, take me to\')]'));
+    newSpaceName = new TextInput($('#name'), 'Name of Space');
+    createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
+
+    // TODO: create a UI component that abstracts this element
+    devProcessPulldown = new TextInput($('#developmentProcess'));
+
+    noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
 
     /* Are any warning displayed? */
     alertToastElements = element(by.xpath('.//*[contains(@class, \'toast-pf\')]'));
@@ -65,10 +65,6 @@ Page layout
     /* Recent items under Left Navigation Bar */
     recentItemsUnderLeftNavigationBar = element(by.xpath('.//*[contains(@class, \'navbar-left\')]//*[contains(@class,\'recent-items\')]//*[contains(@class,\'nav-item-icon\')]'));
     // tslint:enable:max-line-length
-
-    /* Create space in Left Navigation Bar */
-//    createSpaceUnderLeftNavigationBar = element(by.id('header_createSpace'));
-    createSpaceUnderLeftNavigationBar = $('#header_createSpace');
 
     /* View all spaces in Left Navigation Bar */
     viewAllSpacesUnderLeftNavigationBar = $('#header_viewAllSpaces');
@@ -120,45 +116,27 @@ Page layout
     // tslint:enable:max-line-length
 
   /* Helper function to create a new OSIO space */
-  async createNewSpace (targetUrl: string, username: string, spaceName: string) {
-    await this.clickElement(this.headerDropDownToggle, 'headerDropDownToggle');
-    browser.sleep(support.WAIT);
-    await this.clickElement(this.createSpaceUnderLeftNavigationBar, 'createSpaceUnderLeftNavigationBar');
-    this.sendKeysElement (this.newSpaceName, spaceName);
-    this.sendKeysElement (this.devProcessPulldown, 'Scenario Driven Planning');
-    await this.clickElement(this.createSpaceButton, 'createSpaceButton');
-    await this.clickElement(this.noThanksButton, 'noThanksButton');
-    browser.getCurrentUrl().then(function (text) {
-      support.debug ('EE test - new space URL = ' + text);
-     });
+  async createNewSpace(spaceName: string): Promise<SpaceDashboardPage> {
+    await this.header.recentItemsDropdown.createSpaceItem.select();
 
-    let urlText = support.joinURIPath(targetUrl, username, spaceName);
-    support.debug ('Lets wait for the URL to contain the space URL: ' + urlText);
+    // TODO: create a new BaseFragment for the model Dialog
 
-    // tslint:disable:max-line-length
-    browser.wait(until.urlContains(urlText), support.LONG_WAIT, 'Failed waiting to move to the space page with URL: ' + urlText + ' Did create space not work?').then(function () {
-    // tslint:enable:max-line-length
-      browser.getCurrentUrl().then(function (text) {
-        support.debug ('The browser was at URL: ' + text);
-      });
-    });
-    browser.wait(until.urlIs(urlText), 10000);
-    expect(browser.getCurrentUrl()).toEqual(urlText);
-    return new SpaceDashboardPage();
+    await this.newSpaceName.enterText(spaceName);
+    await this.devProcessPulldown.enterText('Scenario Driven Planning');
+
+    await this.createSpaceButton.clickWhenReady();
+    await this.noThanksButton.clickWhenReady();
+
+    let url = await browser.getCurrentUrl();
+    support.debug('... current url:', url);
+
+    support.debug('... waiting for the url to contain spacename: ', spaceName);
+
+    // TODO: make the timeout a config
+    await browser.wait(until.urlContains(spaceName), 10000);
+
+    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    await spaceDashboard.open();
+    return spaceDashboard;
   }
-
-  /* Helper function to click on a UI element */
-  async clickElement (theElement: ElementFinder, elementString: string) {
-    await browser.wait(until.presenceOf(theElement));
-    await browser.wait(until.elementToBeClickable(theElement));
-    await theElement.click();
-    support.debug ('clicked ' + elementString);
-  }
-
-  /* Helper function to send keys/string to a UI element */
-  async sendKeysElement (theElement: ElementFinder, elementString: string) {
-    await browser.wait(until.presenceOf(theElement));
-    theElement.sendKeys(elementString);
-  }
-
 }
