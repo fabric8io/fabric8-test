@@ -10,27 +10,25 @@ describe('Creating new spaces in OSIO', () => {
   beforeEach( async () => {
     support.desktopTestSetup();
     landingPage = new LandingPage(browser.params.target.url);
-    support.debug('... Landing Page Open');
+    support.debug('>>> Landing Page Open');
     await landingPage.open();
-    support.debug('... Landing Page Open - DONE');
+    support.debug('>>> Landing Page Open - DONE');
   });
 
+
   it('Create a new space without creating a new quickstart', async () => {
-    support.debug('... starting test; loginPage');
+    support.debug('>>> starting test; loginPage');
     let loginPage = await landingPage.gotoLoginPage();
-    support.debug('... back from gotoLoginPage');
-    let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
-    await dashboardPage.ready();
+    support.debug('>>> back from gotoLoginPage');
 
-    // tslint:disable:max-line-length
     let url = browser.params.target.url;
-    let user = browser.params.login.user;
+    let { user, password } = browser.params.login;
+    let dashboardPage = await loginPage.login(user, password);
 
-    // tslint:enable:max-line-length
-    let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, support.newWorkspaceName());
+    let workspace = support.newSpaceName();
+    let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, workspace);
 
-    browser.getCurrentUrl().then(function (text) {
-      support.debug ('EE test - new space URL = ' + text);
-     });
+    let currentUrl = await browser.getCurrentUrl()
+    support.info('EE test - new space URL = ', currentUrl);
   });
 });

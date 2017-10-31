@@ -9,19 +9,26 @@
 import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinder } from 'protractor';
 import { BasePage } from './base.page';
 import { LoginPage } from './login.page';
+import { Button } from './ui';
 
 export class LandingPage extends BasePage {
-  loginButton = $('#login');
+  loginButton = new Button($('#login'), 'Login');
 
   constructor(url: string) {
     super(url);
+    this.name = this.url
+  }
+
+  async open() {
+    await browser.get(this.url);
+    super.open()
   }
 
   async gotoLoginPage(): Promise<LoginPage> {
-    await this.loginButton.click();
+    await this.loginButton.clickWhenReady();
 
     let loginPage = new LoginPage();
-    await loginPage.ready();
+    await loginPage.open();
     return loginPage;
   }
 }

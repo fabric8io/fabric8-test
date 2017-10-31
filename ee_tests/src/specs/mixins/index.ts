@@ -8,5 +8,5 @@ export const applyMixins = (derivedCtor: any, baseCtors: any[]) => {
             derivedCtor.prototype[name] = baseCtor.prototype[name];
         });
     });
-}
+};
 

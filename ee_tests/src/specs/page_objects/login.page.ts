@@ -8,16 +8,16 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
 import * as support from '../support';
+import * as ui from './ui';
 import { BasePage } from './base.page';
 import { MainDashboardPage } from './main_dashboard.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
 
 export class LoginPage extends BasePage {
-
   /* RHD login page UI elements */
-  usernameInput = $('#username');
-  passwordInput = $('#password');
-  loginButton = $('#kc-login');
+  usernameInput = new ui.TextInput($('#username'), 'username');
+  passwordInput = new ui.TextInput($('#password'), 'password');
+  loginButton = new ui.Button($('#kc-login'), 'Login');
   everythingOnPage = element(by.xpath('.//*'));
 
   /* Social media login options */
@@ -41,18 +41,18 @@ export class LoginPage extends BasePage {
 
   async login(username: string, password: string): Promise<MainDashboardPage> {
     support.debug('... Login: input details and click Login');
-    await this.usernameInput.sendKeys(username);
-    await this.passwordInput.sendKeys(password);
-    await this.loginButton.click();
+    await this.usernameInput.enterText(username);
+    await this.passwordInput.enterText(password);
+    await this.loginButton.clickWhenReady();
     support.debug('... Login: input details and click Login - OK');
 
     let dashboardPage = new MainDashboardPage();
 
     support.debug('... Wait for MainDashboard');
-    await dashboardPage.ready();
+    await dashboardPage.open();
     support.debug('... Wait for MainDashboard - OK');
+
     return dashboardPage;
   }
-
 
 }

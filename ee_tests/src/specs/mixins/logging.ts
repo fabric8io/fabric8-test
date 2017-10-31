@@ -1,4 +1,4 @@
-import {info} from '../support'
+import {info} from '../support';
 
 export class Logging {
   name: string = '';

@@ -4,8 +4,8 @@ import * as support from '../../support';
 
 
 export class DropdownItem extends BaseElement {
-  constructor(element: ElementFinder, dropdown: ElementFinder) {
-    super(element);
+  constructor(element: ElementFinder, dropdown: ElementFinder, name: string = '') {
+    super(element, name);
     this.dropdown = dropdown;
   }
 
@@ -20,21 +20,26 @@ export class DropdownItem extends BaseElement {
     await this.dropdown.click();
     await this.ready();
     await this.click();
+    this.dropdown.log('Selected', `item: ${this.name}`)
   }
 }
 
+// <ul class="dropdown">
+  // <ul class="dropdown-menu">
+    // <li class=""> <a> </li>
+//
 
 // TODO: move to fragments since this is generic
 export class Dropdown extends BaseElement {
   dropdownMenu = this.$('ul.dropdown-menu');
 
-  constructor(element: ElementFinder) {
-    super(element);
+  constructor(element: ElementFinder, name: string = '') {
+    super(element, name);
   }
 
   item(text: string): DropdownItem {
     let item = this.dropdownMenu.element(by.cssContainingText('li', text));
-    return new DropdownItem(item, this);
+    return new DropdownItem(item, this, text);
   }
 
   async select(text: string) {
