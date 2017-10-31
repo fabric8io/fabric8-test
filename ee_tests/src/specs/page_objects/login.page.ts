@@ -31,7 +31,7 @@ export class LoginPage extends BasePage {
 
 
   // checks if the PageObject is valid
-  async validate() {
+  async ready() {
     await Promise.all([
       browser.wait(until.presenceOf(this.usernameInput)),
       browser.wait(until.presenceOf(this.passwordInput)),
@@ -40,16 +40,17 @@ export class LoginPage extends BasePage {
   }
 
   async login(username: string, password: string): Promise<MainDashboardPage> {
+    support.debug('... Login: input details and click Login');
     await this.usernameInput.sendKeys(username);
     await this.passwordInput.sendKeys(password);
     await this.loginButton.click();
-    support.debug('  ... clicking loginButton - DONE');
+    support.debug('... Login: input details and click Login - OK');
 
     let dashboardPage = new MainDashboardPage();
 
-    support.debug('  ... validate dashboard');
-    await dashboardPage.validate();
-    support.debug('  ... validate dashboard - OK');
+    support.debug('... Wait for MainDashboard');
+    await dashboardPage.ready();
+    support.debug('... Wait for MainDashboard - OK');
     return dashboardPage;
   }
 

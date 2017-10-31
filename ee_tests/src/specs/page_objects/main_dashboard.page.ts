@@ -7,14 +7,12 @@
 */
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import { BasePage } from './base.page';
-import { LoginPage } from './login.page';
-import { SpaceDashboardPage } from './space_dashboard.page';
 import * as support from '../support';
 
-export class MainDashboardPage extends BasePage {
-  appTag = $('f8-app');
+import { AppPage } from './app.page';
+import { SpaceDashboardPage } from './space_dashboard.page';
 
+export class MainDashboardPage extends AppPage {
 
 /*
 Page layout
@@ -120,10 +118,6 @@ Page layout
       return element(by.xpath(xpathString));
     }
     // tslint:enable:max-line-length
-
-  async validate() {
-    await browser.wait(until.presenceOf(this.appTag));
-  }
 
   /* Helper function to create a new OSIO space */
   async createNewSpace (targetUrl: string, username: string, spaceName: string) {
