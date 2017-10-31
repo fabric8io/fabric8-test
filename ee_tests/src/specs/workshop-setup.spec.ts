@@ -10,7 +10,7 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
     support.desktopTestSetup();
   });
 
-  fit("should perform Burr's demo - setup", async () => {
+  it("should perform Burr's demo - setup", async () => {
     support.debug('>>> LandingPage.Open');
     let homePage = new LandingPage(browser.params.target.url);
     await homePage.open();

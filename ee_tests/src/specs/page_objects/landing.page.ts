@@ -16,12 +16,12 @@ export class LandingPage extends BasePage {
 
   constructor(url: string) {
     super(url);
-    this.name = this.url
+    this.name = this.url;
   }
 
   async open() {
     await browser.get(this.url);
-    super.open()
+    super.open();
   }
 
   async gotoLoginPage(): Promise<LoginPage> {

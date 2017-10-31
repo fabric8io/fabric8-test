@@ -15,21 +15,16 @@ export class DropdownItem extends BaseElement {
     support.debug(' ... check if DropdownItem is clickable - OK');
   }
 
-  async select(){
+  async select() {
     await this.dropdown.ready();
     await this.dropdown.click();
     await this.ready();
     await this.click();
-    this.dropdown.log('Selected', `item: ${this.name}`)
+    this.dropdown.log('Selected', `item: ${this.name}`);
   }
 }
 
-// <ul class="dropdown">
-  // <ul class="dropdown-menu">
-    // <li class=""> <a> </li>
-//
 
-// TODO: move to fragments since this is generic
 export class Dropdown extends BaseElement {
   dropdownMenu = this.$('ul.dropdown-menu');
 

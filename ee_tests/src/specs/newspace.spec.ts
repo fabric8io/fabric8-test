@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
+import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -25,10 +25,16 @@ describe('Creating new spaces in OSIO', () => {
     let { user, password } = browser.params.login;
     let dashboardPage = await loginPage.login(user, password);
 
-    let workspace = support.newSpaceName();
-    let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, workspace);
+    let spaceName = support.newSpaceName();
+    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
-    let currentUrl = await browser.getCurrentUrl()
-    support.info('EE test - new space URL = ', currentUrl);
+    let currentUrl = await browser.getCurrentUrl();
+    support.debug ('>>> browser is URL: ' + currentUrl);
+
+    let expectedUrl = support.joinURIPath(url, user, spaceName);
+    expect(browser.getCurrentUrl()).toEqual(expectedUrl);
+
+    support.info('EE test - new space URL:', currentUrl);
   });
+
 });

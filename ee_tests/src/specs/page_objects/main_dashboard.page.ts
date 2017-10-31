@@ -39,13 +39,13 @@ Page layout
 */
 
     /* Dialog to create new space and project */
-    newSpaceName = new TextInput($('#name'));
-    createSpaceButton = new Button($('#createSpaceButton'));
+    newSpaceName = new TextInput($('#name'), 'Name of Space');
+    createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
 
     // TODO: create a UI component that abstracts this element
     devProcessPulldown = new TextInput($('#developmentProcess'));
 
-    noThanksButton = element(by.xpath('.//a[contains(text(),\'No thanks, take me to\')]'));
+    noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
 
     /* Are any warning displayed? */
     alertToastElements = element(by.xpath('.//*[contains(@class, \'toast-pf\')]'));
@@ -116,39 +116,27 @@ Page layout
     // tslint:enable:max-line-length
 
   /* Helper function to create a new OSIO space */
-  async createNewSpace(targetUrl: string, username: string, spaceName: string) {
-    await this.header.recentItemsDropdown.createSpaceItem.select()
+  async createNewSpace(spaceName: string): Promise<SpaceDashboardPage> {
+    await this.header.recentItemsDropdown.createSpaceItem.select();
 
     // TODO: create a new BaseFragment for the model Dialog
 
     await this.newSpaceName.enterText(spaceName);
     await this.devProcessPulldown.enterText('Scenario Driven Planning');
 
-    await browser.sleep(5000)
-
     await this.createSpaceButton.clickWhenReady();
     await this.noThanksButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
-    support.info('EE test - new space URL = ', url);
+    support.debug('... current url:', url);
 
-    let urlText = support.joinURIPath(targetUrl, username, spaceName);
+    support.debug('... waiting for the url to contain spacename: ', spaceName);
 
-    support.debug ('Lets wait for the URL to contain the space URL: ' + urlText);
+    // TODO: make the timeout a config
+    await browser.wait(until.urlContains(spaceName), 10000);
 
-    // tslint:disable:max-line-length
-    await browser.wait(until.urlContains(urlText),
-      support.LONG_WAIT,
-      'Failed waiting to move to the space page with URL: ' + urlText + ' Did create space not work?')
-
-    let url = browser.getCurrentUrl()
-    support.debug ('The browser was at URL: ' + url);
-
-    await browser.wait(until.urlIs(urlText), 10000);
-
-    // TODO: should move to the test
-    expect(browser.getCurrentUrl()).toEqual(urlText);
-
-    return new SpaceDashboardPage();
+    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    await spaceDashboard.open();
+    return spaceDashboard;
   }
 }
