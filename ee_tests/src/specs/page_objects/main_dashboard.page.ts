@@ -121,25 +121,25 @@ Page layout
 
   /* Helper function to create a new OSIO space */
   async createNewSpace (targetUrl: string, username: string, spaceName: string) {
-    this.clickElement(this.headerDropDownToggle, 'headerDropDownToggle');
+    await this.clickElement(this.headerDropDownToggle, 'headerDropDownToggle');
     browser.sleep(support.WAIT);
-    this.clickElement(this.createSpaceUnderLeftNavigationBar, 'createSpaceUnderLeftNavigationBar');
+    await this.clickElement(this.createSpaceUnderLeftNavigationBar, 'createSpaceUnderLeftNavigationBar');
     this.sendKeysElement (this.newSpaceName, spaceName);
     this.sendKeysElement (this.devProcessPulldown, 'Scenario Driven Planning');
-    this.clickElement(this.createSpaceButton, 'createSpaceButton');
-    this.clickElement(this.noThanksButton, 'noThanksButton');
+    await this.clickElement(this.createSpaceButton, 'createSpaceButton');
+    await this.clickElement(this.noThanksButton, 'noThanksButton');
     browser.getCurrentUrl().then(function (text) {
-        console.log ('EE test - new space URL = ' + text);
+      support.debug ('EE test - new space URL = ' + text);
      });
 
     let urlText = support.joinURIPath(targetUrl, username, spaceName);
-    console.log('Lets wait for the URL to contain the space URL: ' + urlText);
+    support.debug ('Lets wait for the URL to contain the space URL: ' + urlText);
 
     // tslint:disable:max-line-length
     browser.wait(until.urlContains(urlText), support.LONG_WAIT, 'Failed waiting to move to the space page with URL: ' + urlText + ' Did create space not work?').then(function () {
     // tslint:enable:max-line-length
       browser.getCurrentUrl().then(function (text) {
-         console.log ('The browser was at URL: ' + text);
+        support.debug ('The browser was at URL: ' + text);
       });
     });
     browser.wait(until.urlIs(urlText), 10000);
@@ -151,8 +151,8 @@ Page layout
   async clickElement (theElement: ElementFinder, elementString: string) {
     await browser.wait(until.presenceOf(theElement));
     await browser.wait(until.elementToBeClickable(theElement));
-    theElement.click();
-    console.log ('clicked ' + elementString);
+    await theElement.click();
+    support.debug ('clicked ' + elementString);
   }
 
   /* Helper function to send keys/string to a UI element */

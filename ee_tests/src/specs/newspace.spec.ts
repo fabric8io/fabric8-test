@@ -30,7 +30,7 @@ describe('Creating new spaces in OSIO', () => {
     let spaceDashboardPage = await dashboardPage.createNewSpace(url, user, support.newWorkspaceName());
 
     browser.getCurrentUrl().then(function (text) {
-        console.log ('EE test - new space URL = ' + text);
+      support.debug ('EE test - new space URL = ' + text);
      });
   });
 });
