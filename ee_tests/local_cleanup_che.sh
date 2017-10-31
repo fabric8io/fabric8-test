@@ -11,7 +11,7 @@
 ## Delete Che workspaces
 
 # Do not reveal secrets
-set -x
+set +x
 
 # Do not exit on failure so that artifacts can be archived
 set +e
