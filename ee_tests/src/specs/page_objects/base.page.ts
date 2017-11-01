@@ -15,9 +15,10 @@ export abstract class BasePage {
   async ready() {
   }
 
-  async open() {
+  async open(): Promise<BasePage> {
     await this.ready();
     this.log('Opened');
+    return this;
   }
 
 }

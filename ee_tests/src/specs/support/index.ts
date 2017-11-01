@@ -6,7 +6,7 @@ export enum BrowserMode {
   Desktop
 }
 
-export const WAIT = 3000;
+export const WAIT = 5000;
 export const LONG_WAIT = 10000;
 
 export function setBrowserMode(mode: BrowserMode): void {
