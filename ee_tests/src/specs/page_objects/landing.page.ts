@@ -21,7 +21,7 @@ export class LandingPage extends BasePage {
 
   async open() {
     await browser.get(this.url);
-    super.open();
+    return super.open();
   }
 
   async gotoLoginPage(): Promise<LoginPage> {
