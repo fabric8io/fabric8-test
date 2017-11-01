@@ -1,8 +1,9 @@
-import { browser, ExpectedConditions as until, $ } from 'protractor';
+import { browser, ExpectedConditions as until, $, by } from 'protractor';
 import * as support from '../support';
 
 import { BasePage } from './base.page';
 import { Header } from './app/header';
+import { BaseElement } from './ui';
 
 export abstract class AppPage extends BasePage {
   appTag = $('f8-app');
@@ -15,6 +16,20 @@ export abstract class AppPage extends BasePage {
    */
   constructor() {
     super();
+  }
+
+  /**
+   * Returns an instance of the BaseElement that can be found using
+   * the {css} and contains the {text}.
+   *
+   * @param {UI} The Base Element Class e.g. Button, TextInput
+   * @param {css}  Css within the appTag that identifies the element
+   * @param {text} text in the element
+   *
+   */
+  innerElement(UI: typeof BaseElement, css: string, text: string): BaseElement {
+    const element = this.appTag.element(by.cssContainingText(css, text));
+    return new UI(element, text);
   }
 
   async ready() {
