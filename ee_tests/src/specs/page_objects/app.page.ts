@@ -46,8 +46,8 @@ export abstract class AppPage extends BasePage {
 
     // tslint:disable-next-line:no-use-before-declare
     let page = new UserProfilePage();
-    await page.ready();
-    return page;
+    await page.open();
+    return page
   }
 
 }
