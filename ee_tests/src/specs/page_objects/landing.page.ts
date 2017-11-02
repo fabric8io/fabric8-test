@@ -7,21 +7,29 @@
 */
 
 import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinder } from 'protractor';
-import { BasePage } from './base.page';
+import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from './ui';
 
 export class LandingPage extends BasePage {
+
   loginButton = new Button($('#login'), 'Login');
 
-  constructor(url: string) {
+  constructor(url: string = '') {
+    // '' is relative to base url so it means baseUrl
     super(url);
-    this.name = this.url;
+
+    // NOTE: can't call async methods in construtor
+    browser.getProcessedConfig()
+      .then(config => this.name = config.baseUrl);
+  }
+
+  async ready() {
+    await this.loginButton.untilClickable()
   }
 
   async open() {
-    await browser.get(this.url);
-    return super.open();
+    return super.open(PageOpenMode.RefreshBrowser)
   }
 
   async gotoLoginPage(): Promise<LoginPage> {

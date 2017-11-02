@@ -38,6 +38,8 @@ Page layout
 |--------------------------------------------------------------------------------------------------------------------|
 */
 
+    url = '_home';
+
     /* Dialog to create new space and project */
     newSpaceName = new TextInput($('#name'), 'Name of Space');
     createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');

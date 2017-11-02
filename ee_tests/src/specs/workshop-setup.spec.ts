@@ -1,6 +1,5 @@
-import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
+import { browser }  from 'protractor';
 import * as support from './support';
-
 import { LandingPage, MainDashboardPage } from './page_objects';
 
 describe('openshift.io End-to-End POC test - Scenario - Login user: ', function () {
@@ -12,7 +11,7 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
 
   it("should perform Burr's demo - setup", async () => {
     support.debug('>>> LandingPage.Open');
-    let homePage = new LandingPage(browser.params.target.url);
+    let homePage = new LandingPage();
     await homePage.open();
     support.debug('>>> LandingPage.Open - DONE');
 

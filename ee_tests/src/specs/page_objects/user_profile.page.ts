@@ -27,6 +27,8 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 }
 
 export class CleanupUserEnvPage extends AppPage {
+  url = '_cleanup'
+
   eraseEnvButton = this.innerElement(
     ui.Button, '#overview button',
     'Erase My OpenShift.io Environment'
