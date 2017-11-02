@@ -15,7 +15,7 @@ class CleanupConfirmationModal extends ui.ModalDialog {
     this.bodyContent.$('form button'), 'I understand my actions ...');
 
   constructor(element: ui.BaseElement) {
-    super(element, 'Cleanup confirmation Dialog')
+    super(element, 'Cleanup confirmation Dialog');
   }
 
   async ready() {
@@ -27,19 +27,19 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 }
 
 export class CleanupUserEnvPage extends AppPage {
-  url = '_cleanup'
+  url = '_cleanup';
 
   eraseEnvButton = this.innerElement(
     ui.Button, '#overview button',
     'Erase My OpenShift.io Environment'
   );
 
-  alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box')
+  alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
 
   async ready() {
-    support.debug('... checking if erase button is there')
+    support.debug('... checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
-    support.debug('... checking if erase button is there - OK')
+    support.debug('... checking if erase button is there - OK');
   }
 
   async cleanup(username: string) {
@@ -51,10 +51,11 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
-    support.debug('... waiting for alert box')
-    await this.alertBox.untilPresent(15*1000);
-    support.debug('... waiting for alert box - OK')
-    await this.alertBox.untilTextIsPresent('Your OpenShift.io environment has been erased!')
+
+    support.debug('... waiting for alert box');
+    await this.alertBox.untilPresent(15 * 1000);
+    support.debug('... waiting for alert box - OK');
+    await this.alertBox.untilTextIsPresent('Your OpenShift.io environment has been erased!');
   }
 
 }
@@ -68,15 +69,15 @@ export class EditUserProfilePage extends AppPage {
   }
 
   async gotoResetEnvironment() {
-    await this.ready()
-    support.debug('... going to click', 'Reset Environment')
-    await this.resetEnvButton.clickWhenReady()
-    support.debug('... going to click', 'Reset Environment', 'OK')
+    await this.ready();
+    support.debug('... going to click', 'Reset Environment');
+    await this.resetEnvButton.clickWhenReady();
+    support.debug('... going to click', 'Reset Environment', 'OK');
 
     let page = new CleanupUserEnvPage();
-    support.debug('... going to open: CleanupUserEnvPage')
+    support.debug('... going to open: CleanupUserEnvPage');
     await page.open();
-    support.debug('... going to open: CleanupUserEnvPage - OK')
+    support.debug('... going to open: CleanupUserEnvPage - OK');
     return page;
   }
 
@@ -88,19 +89,19 @@ export class UserProfilePage extends AppPage {
     ui.Button,
     'alm-overview > div > div > button',
     'Update Profile'
-  )
+  );
 
-  async ready(){
+  async ready() {
     await super.ready();
     await this.updateProfileButton.untilClickable();
   }
 
   async gotoEditProfile() {
     this.updateProfileButton.clickWhenReady();
-    support.debug('... showing up Edit User Profile')
-    let page =  new EditUserProfilePage()
-    await page.open()
-    return page
+    support.debug('... showing up Edit User Profile');
+    let page =  new EditUserProfilePage();
+    await page.open();
+    return page;
   }
 
 }

@@ -22,8 +22,8 @@ export abstract class BasePage {
   protected url: string|undefined;
 
   constructor(url?: string) {
-    support.debug(`... BasePage: ${this.constructor.name}: '${url}'`)
-    this.url = url
+    support.debug(`... BasePage: ${this.constructor.name}: '${url}'`);
+    this.url = url;
   }
 
   async ready() {
@@ -32,8 +32,8 @@ export abstract class BasePage {
 
   async open(mode: PageOpenMode =  PageOpenMode.AlreadyOpened): Promise<BasePage> {
 
-    if(mode == PageOpenMode.RefreshBrowser) {
-      this.openInBrowser()
+    if (mode === PageOpenMode.RefreshBrowser) {
+      this.openInBrowser();
     }
 
     await this.ready();
@@ -42,17 +42,17 @@ export abstract class BasePage {
   }
 
   async openInBrowser() {
-    if(this.url === undefined ) {
-      throw Error('Trying to open and undefined url')
+    if (this.url === undefined ) {
+      throw Error('Trying to open and undefined url');
     }
 
-    let currentUrl = await browser.getCurrentUrl()
+    let currentUrl = await browser.getCurrentUrl();
     support.debug('... Current Browser URL:', currentUrl);
 
     support.debug(`... Browser goto URL: '${this.url}'`);
     await browser.get(this.url);
 
-    let urlNow = await browser.getCurrentUrl()
+    let urlNow = await browser.getCurrentUrl();
     support.debug('... Now the Browser URL:', urlNow);
   }
 }

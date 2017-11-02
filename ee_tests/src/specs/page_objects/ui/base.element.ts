@@ -45,8 +45,8 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   async untilTextIsPresent(text: string) {
-    let condition = until.textToBePresentInElement(this, text )
-    await browser.wait(condition)
+    let condition = until.textToBePresentInElement(this, text );
+    await browser.wait(condition);
   }
 
 }

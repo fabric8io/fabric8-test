@@ -6,7 +6,7 @@ export class ModalDialog extends BaseElement {
   body = this.content.$('.modal-body');
 
   // NOTE: bodyContent is a tag
-  bodyContent = this.body.$('modal-content')
+  bodyContent = this.body.$('modal-content');
 
   constructor(element: ElementFinder, name?: string) {
     super(element, name);
@@ -26,6 +26,6 @@ export class ModalDialog extends BaseElement {
 
   async open() {
     await this.ready();
-    this.log('Opened')
+    this.log('Opened');
   }
 }

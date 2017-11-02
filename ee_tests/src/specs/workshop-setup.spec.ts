@@ -31,14 +31,14 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
     let userProfilePage = await dashboardPage.gotoUserProfile();
     support.debug(">>> Go to user's Profile Page - OK");
 
-    support.debug(">>> Go to Edit Profile Page");
+    support.debug('>>> Go to Edit Profile Page');
     let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug(">>> Go to Edit Profile Page - OK");
-    support.debug(">>> Go to Reset Env Page");
+    support.debug('>>> Go to Edit Profile Page - OK');
+    support.debug('>>> Go to Reset Env Page');
     let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug(">>> Go to Reset Env Page - OK");
+    support.debug('>>> Go to Reset Env Page - OK');
 
-    await cleanupEnvPage.cleanup(browser.params.login.user)
+    await cleanupEnvPage.cleanup(browser.params.login.user);
 
   });
 

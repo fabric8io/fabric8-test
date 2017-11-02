@@ -25,11 +25,11 @@ export class LandingPage extends BasePage {
   }
 
   async ready() {
-    await this.loginButton.untilClickable()
+    await this.loginButton.untilClickable();
   }
 
   async open() {
-    return super.open(PageOpenMode.RefreshBrowser)
+    return super.open(PageOpenMode.RefreshBrowser);
   }
 
   async gotoLoginPage(): Promise<LoginPage> {
