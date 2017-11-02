@@ -36,6 +36,8 @@ export function desktopTestSetup() {
  * Joins the arguments as URI paths ensuring there's exactly one '/' between each path entry
  */
   export function joinURIPath (...args: string[]) {
+    // TODO: improve this method using available modules for uri operations
+
     let answer = null;
     for (let i = 0, j = arguments.length; i < j; i++) {
       let arg = arguments[i];
