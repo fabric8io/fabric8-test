@@ -63,7 +63,10 @@ let conf: Config = {
     capabilities: {
       'browserName': 'chrome',
       'chromeOptions': {
-        'args': [ '--no-sandbox', 'disable-popup-blocking=true' ]
+        'args': [
+          // '--headless', '--disable-gpu',
+          '--no-sandbox', 'disable-popup-blocking=true'
+         ]
       }
     },
 

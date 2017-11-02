@@ -1,6 +1,5 @@
 {
   "rulesDirectory": [
-    "node_modules/codelyzer",
     "node_modules/tslint/lib/rules"
   ],
   "rules": {
@@ -41,14 +40,6 @@
     "no-arg": true,
     "no-bitwise": true,
     "no-conditional-assignment": true,
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
@@ -122,7 +113,6 @@
       "check-operator",
       "check-separator",
       "check-type"
-    ],
-    "import-destructuring-spacing": true
+    ]
   }
 }

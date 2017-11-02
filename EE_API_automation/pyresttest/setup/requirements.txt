@@ -1,4 +1,0 @@
-python-pycurl >= 7.43.0
-PyYAML >= 3.12
-jmespath >= 0.9.3
-jsonschema >= 2.6.0

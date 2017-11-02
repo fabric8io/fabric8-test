@@ -6,21 +6,35 @@ declare -r SCRIPT_DIR=$(cd $(dirname "$SCRIPT_PATH") && pwd)
 
 source "$SCRIPT_DIR/common.inc.sh"
 
-webdriver_running() {
-  curl --output /dev/null --silent --head --fail 127.0.0.1:4444
+validate_config() {
+  local ret=0
+  validate_test_config OSIO_USERNAME "$OSIO_USERNAME" || ret=1
+  validate_test_config OSIO_PASSWORD "$OSIO_PASSWORD" || ret=1
+  return $ret
 }
 
 
 main() {
   local suite=${1:-specs}
 
-  webdriver_running || {
-    log.info 'Run: npm run webdriver:start 2>&1 | tee webdriver.log'
-    log.fail "Can't proceed - no webdriver running"
+  source "$SCRIPT_DIR/config/local_osio.conf.sh"
+  validate_config || {
+    log.info "Please set test configs and re-run $0"
     exit 1
   }
 
-  source "$SCRIPT_DIR/config/local_osio.conf.sh"
+  # NOTE: DO NOT start and kill webdriver if it is aleady started
+  webdriver_running || {
+    local log_file="${SCRIPT_DIR}/webdriver.log"
+    start_webdriver "$log_file"
+    wait_for_webdriver
+  }
+
+  log.info "Running tsc ... "
+  tsc || {
+    log.warn "ts -> js compilation failed; fix it and rerun $0"
+    exit 1
+  }
 
   "$(npm bin)/protractor" protractorTS.config.js \
     --suite "${suite}" \

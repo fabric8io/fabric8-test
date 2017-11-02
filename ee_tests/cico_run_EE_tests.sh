@@ -58,7 +58,7 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
 
 echo -n Updating Webdriver and Selenium...
 docker exec fabric8-test webdriver-manager update
-docker exec fabric8-test webdriver-manager update --versions.chrome 2.29
+docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 
 # Exec EE tests
 docker exec fabric8-test ./run_EE_tests.sh $1 $TEST_SUITE

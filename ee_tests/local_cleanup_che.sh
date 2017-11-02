@@ -18,7 +18,7 @@ set +e
 
 ACCEPT_TOKEN=`curl -H "Content-Type: application/json" -X POST -d "{\"refresh_token\":\"$2\"}" https://auth.openshift.io/api/token/refresh | grep -oP '"access_token":"[\S]+"' | sed 's/"access_token":"//g' | sed 's/","expires_in.*//'`
 
-WORKSPACES=`curl -L --header "Authorization: Bearer $ACCEPT_TOKEN" http://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"che","id":"[\w-]+' | sed 's/"che","id":"//g' `
+WORKSPACES=`curl -L --header "Authorization: Bearer $ACCEPT_TOKEN" http://che-$1-che.8a09.starter-us-east-2.openshiftapps.com/api/workspace | grep -oP '"id":"[\w-]+' | sed 's/"id":"//g' `
 
 
 echo "*****************************************************"
