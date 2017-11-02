@@ -36,7 +36,10 @@ main() {
     exit 1
   }
 
-  "$(npm bin)/protractor" protractorTS.config.js \
+  # TODO: may be target.url isn't needed at all since baseUrl can be set
+  # using --baseUrl
+
+  "$(npm bin)/protractor" --baseUrl "$OSIO_URL" protractorTS.config.js \
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \
