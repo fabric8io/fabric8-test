@@ -16,6 +16,16 @@
         -   'spacename':    {'jsonpath_mini':   data.attributes.name'}
         -   'spacelink':    {'jsonpath_mini':   data.links.self'}
 
+# -   test:
+#     -   name:   "Get New Space details using the spaces api"
+#     -   url:    {'template':  "$sut/api/spaces"}
+#     -   headers:  {template:  {'$headername': '$headervalue', 'Authorization':  'Bearer $token'}}
+#     -   expected_status:    [200]
+#     -   extract_binds:
+#         -   'spaceid':  {'jsonpath_mini':    'data.0.id'}
+#         -   'spacename':    {'jsonpath_mini':   data.0.attributes.name'}
+#         -   'spacelink':    {'jsonpath_mini':   data.0.links.self'}
+
 -   test:
     -   name:   "Get Iteration 1 ID"
     -   url:    {'template':  "$sut/api/spaces/$spaceid/iterations"}
