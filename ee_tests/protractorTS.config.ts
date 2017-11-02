@@ -57,8 +57,9 @@ let conf: Config = {
       specs: ['src/specs/**/*.spec.js']   // new typescript based specs
     },
 
+    // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
     jasmineNodeOpts: {
-      defaultTimeoutInterval: 60000
+      defaultTimeoutInterval: 2 * 60 * 1000 // 2 mins
     },
     capabilities: {
       'browserName': 'chrome',
