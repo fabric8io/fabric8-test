@@ -39,7 +39,9 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
     support.debug('>>> Go to Reset Env Page - OK');
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
+    let alertBox = cleanupEnvPage.alertBox
 
+    await expect(alertBox.getText()).toContain('environment has been erased!');
   });
 
 });
