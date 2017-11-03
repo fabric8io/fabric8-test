@@ -36,10 +36,16 @@ main() {
     exit 1
   }
 
+  local protractor="$(npm bin)/protractor"
+
+  [[ ${NODE_DEBUG:-false} == true ]] && protractor="node --inspect --debug-brk $protractor"
+
   # TODO: may be target.url isn't needed at all since baseUrl can be set
   # using --baseUrl
 
-  "$(npm bin)/protractor" --baseUrl "$OSIO_URL" protractorTS.config.js \
+  # NOTE: do NOT quote $protractor as we want spaces to be interpreted as
+  # seperate arguments
+  $protractor --baseUrl "$OSIO_URL" protractorTS.config.js \
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \

@@ -83,6 +83,31 @@ variable before you start script mentioned above:
 SELENIUM_BROWSER=firefox
 ```
 
+### Typescript specs ###
+
+Run using the `ts-protractor.sh` helper script
+
+
+#### tips and tricks ####
+
+##### debugging #####
+
+You can use chrome devtools to pause and debug typescript tests by inserting
+the `debugger` statement in the spec and running the test with `NODE_DEBUG`
+environment flag set. E.g.
+
+```
+NODE_DEBUG=true ./ts-protractor.sh
+```
+
+##### Turn debug statements on #####
+
+```
+DEBUG=true ./ts-protractor.sh
+```
+
+
+
 ### End-to-End tests on Fabric8
 
 To run against a fabric8 installation (e.g. via minishift) run the following command:
