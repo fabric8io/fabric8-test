@@ -49,6 +49,9 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     await browser.wait(condition);
   }
 
+  async ready() {
+    await this.untilPresent();
+  }
 }
 
 

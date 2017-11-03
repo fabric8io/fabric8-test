@@ -1,6 +1,5 @@
 import { browser, $$ } from 'protractor';
 import * as support from './support';
-
 import { LandingPage } from './page_objects/landing.page';
 
 describe('Landing Page', () => {
@@ -9,9 +8,9 @@ describe('Landing Page', () => {
   beforeEach( async () => {
     support.desktopTestSetup();
     landingPage = new LandingPage();
-    support.debug('... HomePage.Open');
+    support.debug('... LandingPage.Open');
     await landingPage.open();
-    support.debug('... HomePage.Open - DONE');
+    support.debug('... LandingPage.Open - DONE');
   });
 
   it('shows the title', async () => {
@@ -35,10 +34,14 @@ describe('Landing Page', () => {
   });
 
   it('can login using a valid username and password', async () => {
-    support.debug('... starting test; loginPage');
-    let loginPage = await landingPage.gotoLoginPage();
-    support.debug('... back from gotoLoginPage');
-    let dashboardPage = await loginPage.login(browser.params.login.user, browser.params.login.password);
-    await dashboardPage.ready();
+    let login = new support.LoginInteraction();
+    let mainDashboard = await login.run();
+    await mainDashboard.open();
+  });
+
+  it('can logout afer logging in', async () => {
+    let login = new support.LoginInteraction();
+    let mainDashboard = await login.run();
+    await mainDashboard.logout()
   });
 });

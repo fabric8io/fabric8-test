@@ -1,9 +1,10 @@
 import { browser, ExpectedConditions as until, $, by } from 'protractor';
 import * as support from '../support';
+import { BaseElement } from './ui';
 
 import { BasePage } from './base.page';
+import { LandingPage } from './landing.page';
 import { Header } from './app/header';
-import { BaseElement } from './ui';
 
 export abstract class AppPage extends BasePage {
   appTag = $('f8-app');
@@ -48,6 +49,32 @@ export abstract class AppPage extends BasePage {
     let page = new UserProfilePage();
     await page.open();
     return page;
+  }
+
+  async logout() {
+    await this.ready();
+    support.debug('... Selecting logout')
+    await this.header.profileDropdown.logoutItem.select();
+    support.debug('... Selecting logout', 'OK')
+
+
+    // ensure there is no f8-app tag after logout
+    let untilNoAppTag = until.not(until.presenceOf(this.appTag))
+    await browser.wait(untilNoAppTag);
+
+    // make sure we are back to the baseUrl
+    let baseUrl = browser.baseUrl;
+
+    support.debug('... Wait for base url:', baseUrl);
+    let untilBackToBaseUrl = until.or(
+      until.urlIs(baseUrl),
+      until.urlIs(`${baseUrl}/`)
+    )
+
+    await browser.wait(untilBackToBaseUrl, 5000, `Url is not ${baseUrl}`);
+    support.debug('... Wait for base url', 'OK')
+
+    return new LandingPage().open();
   }
 
 }
