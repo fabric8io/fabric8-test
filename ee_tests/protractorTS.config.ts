@@ -33,7 +33,7 @@ let conf: Config = {
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
     jasmineNodeOpts: {
-      defaultTimeoutInterval: 2 * 60 * 1000 // 2 mins
+      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins
     },
     capabilities: {
       'browserName': 'chrome',
@@ -53,7 +53,6 @@ let conf: Config = {
   // Assign the test reporter to each running instance
   onPrepare: function() {
     jasmine.getEnv().addReporter(reporter);
-
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
         displayStacktrace: true,
