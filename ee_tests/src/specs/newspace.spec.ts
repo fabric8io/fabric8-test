@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser } from 'protractor';
 import * as support from './support';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -9,7 +9,8 @@ describe('Creating new spaces in OSIO', () => {
 
   beforeEach( async () => {
     support.desktopTestSetup();
-    landingPage = new LandingPage(browser.params.target.url);
+    landingPage = new LandingPage();
+
     support.debug('>>> Landing Page Open');
     await landingPage.open();
     support.debug('>>> Landing Page Open - DONE');

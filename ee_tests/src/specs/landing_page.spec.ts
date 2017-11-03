@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
+import { browser, $$ } from 'protractor';
 import * as support from './support';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -8,7 +8,7 @@ describe('Landing Page', () => {
 
   beforeEach( async () => {
     support.desktopTestSetup();
-    landingPage = new LandingPage(browser.params.target.url);
+    landingPage = new LandingPage();
     support.debug('... HomePage.Open');
     await landingPage.open();
     support.debug('... HomePage.Open - DONE');

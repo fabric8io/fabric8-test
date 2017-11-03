@@ -1,6 +1,5 @@
-import { browser, ExpectedConditions as EC, $, $$ } from 'protractor';
+import { browser }  from 'protractor';
 import * as support from './support';
-
 import { LandingPage, MainDashboardPage } from './page_objects';
 
 describe('openshift.io End-to-End POC test - Scenario - Login user: ', function () {
@@ -12,7 +11,7 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
 
   it("should perform Burr's demo - setup", async () => {
     support.debug('>>> LandingPage.Open');
-    let homePage = new LandingPage(browser.params.target.url);
+    let homePage = new LandingPage();
     await homePage.open();
     support.debug('>>> LandingPage.Open - DONE');
 
@@ -32,15 +31,17 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
     let userProfilePage = await dashboardPage.gotoUserProfile();
     support.debug(">>> Go to user's Profile Page - OK");
 
-    support.debug(">>> Go to Edit Profile Page");
+    support.debug('>>> Go to Edit Profile Page');
     let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug(">>> Go to Edit Profile Page - OK");
-    support.debug(">>> Go to Reset Env Page");
+    support.debug('>>> Go to Edit Profile Page - OK');
+    support.debug('>>> Go to Reset Env Page');
     let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug(">>> Go to Reset Env Page - OK");
+    support.debug('>>> Go to Reset Env Page - OK');
 
-    await cleanupEnvPage.cleanup(browser.params.login.user)
+    await cleanupEnvPage.cleanup(browser.params.login.user);
+    let alertBox = cleanupEnvPage.alertBox
 
+    await expect(alertBox.getText()).toContain('environment has been erased!');
   });
 
 });

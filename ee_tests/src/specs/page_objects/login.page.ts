@@ -14,10 +14,14 @@ import { MainDashboardPage } from './main_dashboard.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
 
 export class LoginPage extends BasePage {
-  /* RHD login page UI elements */
+
+  // NOTE: url is undefined and .open will not result in browser opening a page
+
+  // RHD login page UI elements
   usernameInput = new ui.TextInput($('#username'), 'username');
   passwordInput = new ui.TextInput($('#password'), 'password');
   loginButton = new ui.Button($('#kc-login'), 'Login');
+
   everythingOnPage = element(by.xpath('.//*'));
 
   /* Social media login options */
@@ -28,7 +32,6 @@ export class LoginPage extends BasePage {
   facebookLoginButton = $('#social-facebook');
   microsoftLoginButton = $('#social-microsoft');
   jbossdeveloperLoginButton = $('#social-jbossdeveloper');
-
 
   // checks if the PageObject is valid
   async ready() {
