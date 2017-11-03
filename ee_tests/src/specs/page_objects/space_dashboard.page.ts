@@ -8,6 +8,7 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
+import { TextInput, Button } from './ui';
 
 export class SpaceDashboardPage extends AppPage {
 
@@ -34,7 +35,7 @@ Page layout
 |--------------------------------------------------------------------------------------------------------------------|
 */
 
-  /* Dialog to create new space and project */
+/* Dialog to create new space and project */
   newSpaceName = $('#name');
   createSpaceButton = $('#createSpaceButton');
   devProcessPulldown = $('#developmentProcess');
@@ -112,27 +113,30 @@ Page layout
   /* New project - 'how would you like to get started?' dialog */
   /* Quickstart - Select technology stack and pipeline */
 
+  /* Add to space actions */
+//  createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
+  primaryAddToSpaceButton = new Button($('#analyze-overview-add-to-space-button'), '"Add to Space' );
+
   /* Quickstarts list */
+
+  // tslint:disable:max-line-length
   quickStartList = element(by.xpath('.//app-generator-single-selection-dropdown'));
-  quickStartCancelButton = $('#forge-cancel-button');
-  quickStartNextButton = $('forge-next-button');
-  quickStartNextButton2 = element.all(by.xpath('.//button[contains(text(),\'Next >\')]')).last();
-  quickStartNextButton3 = element.all(by.xpath('.//button[contains(text(),\'Next >\')]')).first();
-  quickStartFinishButton = $('#forge-finish-button');
-  quickStartFinishButton2 = element(by.xpath('.//button[contains(text(),\'Finish\')]'));
-  quickStartOkButton = element(by.xpath('.//button[contains(text(),\'Ok\')]'));
-  pipelineStrategy = element(by.xpath('.//li[contains(@title,\'Release, Stage, Approve and Promote\')]'));
-  technologyStack = $('#forgeQuickStartButton');
-  importCodebaseButton = $('#importCodeButton');
-  okButton = element(by.xpath('.//*[contains(text(), \'OK\')]'));
-  syncButton = element(by.xpath('.//*[contains(text(), \'Sync\')]'));
-  associateRepoButton = element(by.xpath('.//*[contains(text(), \'Associate Repository to Space\')]'));
+  quickStartNextButton2 = new Button (element.all(by.xpath('.//button[contains(text(),\'Next >\')]')).last(), 'Next');
+  quickStartNextButton3 = new Button (element.all(by.xpath('.//button[contains(text(),\'Next >\')]')).first(), 'Next');
+  quickStartFinishButton2 = new Button (element(by.xpath('.//button[contains(text(),\'Finish\')]')), 'Finish');
+  quickStartOkButton = new Button (element(by.xpath('.//button[contains(text(),\'Ok\')]')), 'Ok');
+  pipelineStrategy = new Button (element(by.xpath('.//li[contains(@title,\'Release, Stage, Approve and Promote\')]')), 'Strategy');
+  technologyStack = new Button ($('#forgeQuickStartButton'), 'Technology Stack');
+  importCodebaseButton = new Button ($('#importCodeButton'), 'Import Code Button');
+  syncButton = new Button (element(by.xpath('.//*[contains(text(), \'Sync\')]')), 'Synch Button');
+  associateRepoButton = new Button (element(by.xpath('.//*[contains(text(), \'Associate Repository to Space\')]')), 'Associate Repo Button');
+ // tslint:enable:max-line-length
+
 
   /* Technology Stack project types */
   vertXbasic = element(by.xpath('Vert.x - Basic'));
   vertXcrud = element(by.xpath('Vert.x - CRUD'));
   vertXconfigmap = element(by.xpath('Vert.x - ConfigMap'));
-  nextButton = element(by.buttonText('Next'));
 
   /* The "Create" subpage of the space home page */
   headerCreate = element(by.xpath('.//*[contains(text(),\'Create\')]'));

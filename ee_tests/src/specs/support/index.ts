@@ -6,8 +6,9 @@ export enum BrowserMode {
   Desktop
 }
 
-export const WAIT = 5000;
-export const LONG_WAIT = 10000;
+export const WAIT = 30000;                   /* 30 seconds */
+export const LONG_WAIT = 60000;              /* 1 minute */
+export const LONGEST_WAIT = 900000;          /* 15 minutes */
 
 export function setBrowserMode(mode: BrowserMode): void {
 
@@ -69,6 +70,22 @@ export function newSpaceName(): string {
 
   info('New space name: ', spaceName);
   return spaceName;
+}
+
+
+/**
+ * Write screenshot to file
+ * Example usage:
+ *   let png = await browser.takeScreenshot();
+ *   support.writeScreenShot(png, 'exception1.png');
+ *
+ * Ref: http://blog.ng-book.com/taking-screenshots-with-protractor/
+ */
+  export function writeScreenShot (data: any, filename: string) {
+  let fs = require('fs');
+  let stream = fs.createWriteStream(filename);
+  stream.write(new Buffer(data, 'base64'));
+  stream.end();
 }
 
 
