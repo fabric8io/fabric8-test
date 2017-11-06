@@ -3,7 +3,7 @@ import * as support from '../support';
 
 import { AppPage } from './app.page';
 
-import * as ui from './ui';
+import * as ui from '../ui';
 
 
 class CleanupConfirmationModal extends ui.ModalDialog {

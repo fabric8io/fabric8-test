@@ -1,6 +1,6 @@
 import { browser, ExpectedConditions as until, ElementFinder } from 'protractor';
-import { info, WAIT } from '../../support';
-import * as mixins from '../../mixins';
+import { info, WAIT } from '../support';
+import * as mixins from '../mixins';
 
 export interface BaseElementInterface {
   untilPresent(): Promise<any>;

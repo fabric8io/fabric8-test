@@ -1,6 +1,6 @@
 import { browser, ExpectedConditions as until, $, by } from 'protractor';
 import * as support from '../support';
-import { BaseElement } from './ui';
+import { BaseElement } from '../ui';
 
 import { BasePage } from './base.page';
 import { LandingPage } from './landing.page';

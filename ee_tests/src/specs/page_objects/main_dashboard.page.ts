@@ -11,7 +11,7 @@ import * as support from '../support';
 
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
-import { TextInput, Button } from './ui';
+import { TextInput, Button } from '../ui';
 
 export class MainDashboardPage extends AppPage {
 

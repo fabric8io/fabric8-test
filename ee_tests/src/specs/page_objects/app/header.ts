@@ -1,6 +1,6 @@
 import { $, by, ElementFinder, browser, ExpectedConditions as until } from 'protractor';
 import * as support from '../../support';
-import * as ui from '../ui';
+import * as ui from '../../ui';
 
 export class ProfileDropdown extends ui.Dropdown {
   profileItem = this.item('Profile');

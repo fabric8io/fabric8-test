@@ -8,7 +8,7 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
 import * as support from '../support';
-import * as ui from './ui';
+import * as ui from '../ui';
 import { BasePage } from './base.page';
 import { MainDashboardPage } from './main_dashboard.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
