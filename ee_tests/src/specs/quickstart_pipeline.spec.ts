@@ -47,18 +47,29 @@ describe('Creating new quickstart in OSIO', () => {
     await spaceDashboardPage.quickStartFinishButton2.clickWhenReady();
     await spaceDashboardPage.quickStartOkButton.clickWhenReady();
 
-    // tslint:disable:max-line-length
-    browser.wait(until.presenceOf(spaceDashboardPage.pipelinesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
-    browser.wait(until.elementToBeClickable(spaceDashboardPage.pipelinesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
+    /* Remove this direct navigation to the pipeline page URL by navigating through the UI.
+       When the modal dialog through which the user creates a new quickstart is exited, there
+       is a delay before the "pipelines" link can be clicked. Protractor sees the link as
+       being clickable - but it is displayed "under" the modal dialog.
 
-    // TODO remove this statement - why is needed?
-    browser.sleep(10000);
+       This statement does not reliably wait for the modal dialog to disappear:
+       await browser.wait(until.not(until.visibilityOf(spaceDashboardPage.modalFade)), support.LONGEST_WAIT);
+
+       The above statement fails with this error: Failed: unknown error: Element <a id="spacehome-pipelines-title"
+       href="/username/spaceName/create/pipelines">...</a> is not clickable at point (725, 667). Other element would
+       receive the click: <modal-container class="modal fade" role="dialog" tabindex="-1" style="display:
+       block;">...</modal-container>
+
+       The only reliable way to avoid this is a sleep statement: await browser.sleep(5000);
+       In order to avoid using a sleep statement, the test navigates to the pipeline page URL */
+    await browser.sleep(5000);
+
+    // tslint:disable:max-line-length
+    await browser.wait(until.elementToBeClickable(spaceDashboardPage.pipelinesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
     await spaceDashboardPage.pipelinesSectionTitle.click();
     let spacePipelinePage = new SpacePipelinePage();
 
-    browser.wait(until.presenceOf(spacePipelinePage.pipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find pipelinesByNamee');
-    // TODO remove this sleep statement - should not be needed!
-    browser.sleep(10000);
+    await browser.wait(until.presenceOf(spacePipelinePage.pipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find pipelinesByNamee');
 
     /* Verify that only (1) new matching pipeline is created */
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
@@ -69,16 +80,15 @@ describe('Creating new quickstart in OSIO', () => {
 
     /* Find and click the 'promote' button */
     await until.elementToBeClickable(spacePipelinePage.pipelineByName(spaceName));
-    browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+    await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
 
     let png = await browser.takeScreenshot();
     support.writeScreenShot(png, 'promote.png');
 
     await spacePipelinePage.promoteButton.click();
-
-    browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
-    browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
+    await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
+    await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
 
     // tslint:disable:max-line-length
 

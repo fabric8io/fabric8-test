@@ -148,6 +148,11 @@ Page layout
   /* Workspaces tab under Create */
   createWorkspace = element(by.xpath('.//codebases-item-workspaces[1]'));
 
+  /* Fade-in background for when the add to space dialog is present */
+  fadeIn = element(by.xpath('.//*[contains(@class,\'modal-backdrop fade in\')]'));
+  modalFade = element(by.xpath('.//*[contains(@class,\'modal fade\')]'));
+  wizardSidebar = element(by.xpath('.//*[contains(@class,\'wizard-pf-sidebar\')]'));
+
   spaceName: string;
 
   constructor(spaceName: string) {
