@@ -1,5 +1,7 @@
 import { browser } from 'protractor';
 
+export * from './interactions'
+
 export enum BrowserMode {
   Phone,
   Tablet,

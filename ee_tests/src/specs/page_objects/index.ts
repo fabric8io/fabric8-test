@@ -1,4 +1,4 @@
-export { PageOpenMode } from './base.page';
+export { PageOpenMode, BasePage } from './base.page';
 export { LandingPage } from './landing.page';
 export { MainDashboardPage } from './main_dashboard.page';
 

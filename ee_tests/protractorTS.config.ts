@@ -21,6 +21,10 @@ let conf: Config = {
     useAllAngular2AppRoots: true,
     getPageTimeout: 30000,
     seleniumAddress: 'http://localhost:4444/wd/hub',
+
+    // Ref: https://github.com/angular/protractor/tree/master/exampleTypescript/asyncAwait
+    SELENIUM_PROMISE_MANAGER: false,
+
     specs: [
       'src/specs/*.js',
       'src/specs/**/*.js',
