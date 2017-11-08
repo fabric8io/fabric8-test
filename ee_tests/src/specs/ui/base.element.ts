@@ -83,7 +83,9 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   async ready() {
-    await this.untilPresent();
+    // TODO: may have to revert back to just until present
+    // await this.untilPresent();
+    await this.untilDisplayed();
   }
 }
 
