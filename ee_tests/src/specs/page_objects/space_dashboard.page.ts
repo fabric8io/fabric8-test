@@ -9,7 +9,7 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
-import { AddToSpaceWizard } from './app/add_to_space_wizard'
+import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog'
 
 /*
 Page layout
@@ -170,10 +170,10 @@ export class SpaceDashboardPage extends AppPage {
     await this.addToSpaceButton.untilClickable()
   }
 
-  async addToSpace(): Promise<AddToSpaceWizard> {
+  async addToSpace(): Promise<AddToSpaceDialog> {
     await this.addToSpaceButton.clickWhenReady()
     // NOTE: outside the dialog is outside of $(this)
-    let wizard  = new AddToSpaceWizard($('body > modal-container > div.modal-dialog'))
+    let wizard  = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'))
 
     await wizard.open();
     return wizard;

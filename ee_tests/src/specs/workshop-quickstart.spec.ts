@@ -27,7 +27,12 @@ describe(' new spaces in OSIO', () => {
     let wizard = await spaceDashboard.addToSpace()
 
     support.info("Creating a Vert.x HTTP Booster")
-    await wizard.newQuickstartProject('Vert.x HTTP Booster')
+    await wizard.newQuickstartProject({
+      project: 'Vert.x HTTP Booster'
+    })
+
+    await spaceDashboard.ready()
+    // TODO: add a verification to check if the quickstart succeeded
 
   }, 15 * 60 * 1000);
 

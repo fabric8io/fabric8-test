@@ -16,16 +16,24 @@ export class Wizard extends ui.BaseElement {
 
 }
 
+export interface ProjectDetail {
+  project: string
+  name?: string
+};
+
 const PROJECT_CARD = 'div.card-pf';
 
 export class QuickStartWizard extends Wizard {
-	filterTextInput = new ui.TextInput(this.$('input[type="text"]'))
-	nextButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'))
+	filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter')
+	primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next')
 
 	// TODO: may be turn this into a widget
   projectSelector = new ui.BaseElement(this.$('ob-project-select'))
-
   projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD))
+
+  projectInfoStep = new ui.BaseElement(this.$('project-info-step'))
+  // we worry about proj
+  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
 
 	async ready() {
 		await super.ready();
@@ -50,19 +58,40 @@ export class QuickStartWizard extends Wizard {
 		return card;
 	}
 
-	async newProject(name: string) {
-		let card = await this.findCard(name);
+  async waitForProjectInfoStep() {
+    await this.projectInfoStep.ready()
+    await this.projectNameInput.ready()
+    await this.primaryButton.ready()
+  }
+
+  async newProject({ project, name = '' }: ProjectDetail) {
+		let card = await this.findCard(project);
     await card.clickWhenReady()
 
-		this.nextButton.clickWhenReady();
+		this.primaryButton.clickWhenReady();
     support.debug(' .... waiting ')
     await browser.sleep(2000)
+    await this.waitForProjectInfoStep()
+    await this.projectNameInput.enterText(name);
+		await this.primaryButton.clickWhenReady();
+		await this.primaryButton.clickWhenReady();
 
+    await this.primaryButton.untilTextIsPresent('Finish');
+
+    // call it 'Finish' to match what is seen on UI
+    this.primaryButton.name = 'Finish';
+    await this.primaryButton.clickWhenReady();
+
+    await this.primaryButton.untilTextIsPresent('Ok');
+
+    // call it 'Ok' to match what is seen on UI
+    this.primaryButton.name = 'Ok';
+    await this.primaryButton.clickWhenReady();
 	}
 }
 
 
-export class AddToSpaceWizard extends ui.ModalDialog {
+export class AddToSpaceDialog extends ui.ModalDialog {
 
   noThanksButton = new ui.Button($('#noThanksButton'), 'No Thanks ...');
   importExistingCodeButton = new ui.Button($('#importCodeButton'));
@@ -84,12 +113,11 @@ export class AddToSpaceWizard extends ui.ModalDialog {
   }
 
 
-  async newQuickstartProject(name: string) {
+  async newQuickstartProject(details: ProjectDetail) {
     await this.newQuickstartButton.clickWhenReady();
 		await this.quickStartWizard.ready();
     await browser.sleep(1000)
-		await this.quickStartWizard.newProject(name);
-
+    await this.quickStartWizard.newProject(details);
   }
 
 }
