@@ -2,30 +2,22 @@ import { ExpectedConditions as until, ElementFinder } from 'protractor';
 import { BaseElement } from './base.element';
 
 export class ModalDialog extends BaseElement {
-  content = this.$('.modal-content');
-  body = this.content.$('.modal-body');
-
-  // NOTE: bodyContent is a tag
-  bodyContent = this.body.$('modal-content');
+  content = new BaseElement(this.$('.modal-content'));
+  // optional
+  footer = new BaseElement(this.content.$('.modal-footer'));
 
   constructor(element: ElementFinder, name?: string) {
     super(element, name);
   }
 
   async ready() {
-    await this.isPresent();
-    await this.content.isPresent();
-    await this.body.isPresent();
-    await this.bodyContent.isPresent();
-
-    await this.isDisplayed();
-    await this.body.isDisplayed();
-    await this.content.isDisplayed();
-    await this.bodyContent.isDisplayed();
+		await super.ready();
+    await this.content.ready();
   }
 
   async open() {
     await this.ready();
     this.log('Opened');
+    return this;
   }
 }

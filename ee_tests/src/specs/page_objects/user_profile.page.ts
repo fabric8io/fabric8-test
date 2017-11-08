@@ -8,6 +8,10 @@ import * as ui from '../ui';
 
 class CleanupConfirmationModal extends ui.ModalDialog {
 
+  // NOTE: bodyContent is a tag
+  body = this.content.$('.modal-body');
+  bodyContent = this.body.$('modal-content');
+
   confirmationInput = new ui.TextInput(
     this.bodyContent.$('form input'), 'username confirmation');
 
@@ -20,6 +24,10 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 
   async ready() {
     await super.ready();
+    await this.body.isPresent();
+    await this.body.isDisplayed();
+    await this.bodyContent.isPresent();
+    await this.bodyContent.isDisplayed();
     await this.confirmationInput.untilPresent();
     await this.confirmEraseButton.untilPresent();
   }
