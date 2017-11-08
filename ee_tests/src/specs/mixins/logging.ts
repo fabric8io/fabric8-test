@@ -1,4 +1,4 @@
-import {info} from '../support';
+import {debug, info} from '../support';
 
 export class Logging {
   name: string = '';
@@ -6,5 +6,10 @@ export class Logging {
   log(action: string, ...msg: string[]) {
     let className = this.constructor.name;
     info(`${action}: ${className}('${this.name}')`, ...msg);
+  }
+
+  debug(action: string, ...msg: string[]) {
+    let className = this.constructor.name;
+    debug(`${action}: ${className}('${this.name}')`, ...msg);
   }
 }
