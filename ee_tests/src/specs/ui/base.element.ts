@@ -30,9 +30,10 @@ function untilCount(elements: ElementArrayFinder, expectation: NumberComparer) {
 }
 
 export interface BaseElementInterface {
-  untilPresent(): Promise<any>;
-  untilClickable(): Promise<any>;
-  clickWhenReady(): Promise<any>;
+  untilDisplayed(wait?: number): Promise<any>;
+  untilPresent(wait?: number): Promise<any>;
+  untilClickable(wait?: number): Promise<any>;
+  clickWhenReady(wait?: number): Promise<any>;
 }
 
 
@@ -48,25 +49,30 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
    * @param {ElementFinder} elementFinder ElementFinder that you want to extend
    * @param {string} name to indentify the element in the logs
    */
-  constructor(elementFinder: ElementFinder, name?: string) {
+  constructor(wrapped: ElementFinder, name: string = 'unnamed') {
     // Basically we are recreating ElementFinder again with same parameters
-    super(elementFinder.browser_, elementFinder.elementArrayFinder_);
-    this.name = name || 'unnamed';
+    super(wrapped.browser_, wrapped.elementArrayFinder_);
+    this.name = name;
   }
 
-  async untilClickable(wait: number = WAIT) {
+  async untilClickable(wait?: number) {
     let condition = until.elementToBeClickable(this);
     await browser.wait(condition, wait);
   }
 
-  async untilPresent(wait: number = WAIT) {
+  async untilPresent(wait?: number) {
     let condition = until.presenceOf(this);
     await browser.wait(condition, wait);
   }
 
-  async clickWhenReady() {
-    await this.untilPresent();
-    await this.untilClickable();
+  async untilDisplayed(wait?: number) {
+    let condition = until.visibilityOf(this);
+    await browser.wait(condition, wait);
+  }
+
+  async clickWhenReady(wait?: number) {
+    await this.untilDisplayed(wait);
+    await this.untilClickable(wait);
     await this.click();
     this.log('Clicked');
   }
