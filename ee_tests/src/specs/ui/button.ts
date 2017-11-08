@@ -1,11 +1,12 @@
 import { ExpectedConditions as until, ElementFinder } from 'protractor';
-import { BaseElement } from './base.element';
+import { Clickable } from './base.element';
 
-export class Button extends BaseElement {
+export class Button extends Clickable {
 
   constructor(element: ElementFinder, name?: string) {
     super(element, name);
   }
+
 
 }
 

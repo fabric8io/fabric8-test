@@ -107,6 +107,12 @@ export class BaseElementArray extends ElementArrayFinder {
 
 }
 
+export class Clickable extends BaseElement {
+  async ready() {
+    await super.ready();
+    await this.untilClickable();
+  }
+}
 
 mixins.applyMixins(BaseElement, [mixins.Logging]);
 mixins.applyMixins(BaseElementArray, [mixins.Logging]);
