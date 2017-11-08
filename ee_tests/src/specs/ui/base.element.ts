@@ -1,6 +1,33 @@
-import { browser, ExpectedConditions as until, ElementFinder } from 'protractor';
-import { info, WAIT } from '../support';
+import {
+  browser, ExpectedConditions as until,
+  ElementFinder, ElementArrayFinder
+} from 'protractor';
+
 import * as mixins from '../mixins';
+
+
+// todo move to a different module
+
+type NumberComparerFn = (x: number) => boolean;
+type NumberComparer = number|NumberComparerFn;
+
+function makeNumberComparer(compare: NumberComparer): NumberComparerFn {
+  if (typeof(compare) == "number") {
+    return (n: number) =>  n >= compare;
+  }
+  return compare;
+}
+
+/**
+ * to use with browser.wait to wait for multiple elements to present
+ * e.g.
+ *  browser.wait(untilCount($('foobar'), n => n >= 5 ))
+ *  browser.wait(untilCount($('foobar'), 5)) // same as above
+ */
+function untilCount(elements: ElementArrayFinder, expectation: NumberComparer) {
+  let compare: NumberComparerFn = makeNumberComparer(expectation);
+  return  () => elements.count().then(compare);
+}
 
 export interface BaseElementInterface {
   untilPresent(): Promise<any>;
@@ -54,5 +81,24 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 }
 
+export class BaseElementArray extends ElementArrayFinder {
+  constructor(wrapped: ElementArrayFinder) {
+    // see: clone https://github.com/angular/protractor/blob/5.2.0/lib/element.ts#L106
+    super(
+      wrapped.browser_, wrapped.getWebElements,
+      wrapped.locator_, wrapped.actionResults_);
+  }
+
+  async untilCount(compare: NumberComparer, wait?: number, msg?: string) {
+    await browser.wait(untilCount(this, compare), wait, msg);
+  }
+
+  async ready(count: number = 1) {
+    await this.untilCount(count)
+  }
+
+}
+
 
 mixins.applyMixins(BaseElement, [mixins.Logging]);
+mixins.applyMixins(BaseElementArray, [mixins.Logging]);
