@@ -9,7 +9,7 @@
 import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinder } from 'protractor';
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
-import { Button } from './ui';
+import { Button } from '../ui';
 
 export class LandingPage extends BasePage {
 

@@ -9,7 +9,7 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
 // tslint:ensable:max-line-length
 import { AppPage } from './app.page';
-import { TextInput, Button } from './ui';
+import { TextInput, Button } from '../ui';
 
 export class SpacePipelinePage extends AppPage {
 

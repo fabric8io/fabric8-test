@@ -17,6 +17,8 @@ let reporter = new HtmlScreenshotReporter({
 // Full protractor configuration file reference could be found here:
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 let conf: Config = {
+
+    directConnect: process.env.DIRECT_CONNECTION === 'true',
     restartBrowserBetweenTests: true,
     useAllAngular2AppRoots: true,
     getPageTimeout: 30000,

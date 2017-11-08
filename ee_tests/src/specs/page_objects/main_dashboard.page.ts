@@ -8,10 +8,10 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import * as support from '../support';
-
+import { TextInput, Button } from '../ui';
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
-import { TextInput, Button } from './ui';
+
 
 export class MainDashboardPage extends AppPage {
 
@@ -122,7 +122,6 @@ Page layout
     await this.header.recentItemsDropdown.createSpaceItem.select();
 
     // TODO: create a new BaseFragment for the model Dialog
-
     await this.newSpaceName.enterText(spaceName);
     await this.devProcessPulldown.enterText('Scenario Driven Planning');
 
@@ -141,4 +140,5 @@ Page layout
     await spaceDashboard.open();
     return spaceDashboard;
   }
+
 }

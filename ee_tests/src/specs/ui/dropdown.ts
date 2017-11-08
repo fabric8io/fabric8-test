@@ -1,6 +1,6 @@
 import { ElementFinder, by, $ } from 'protractor';
 import { BaseElement } from './base.element';
-import * as support from '../../support';
+import * as support from '../support';
 
 
 export class DropdownItem extends BaseElement {

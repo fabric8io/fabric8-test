@@ -8,9 +8,8 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
-import { TextInput, Button } from './ui';
-
-export class SpaceDashboardPage extends AppPage {
+import { TextInput, Button } from '../ui';
+import { AddToSpaceWizard } from './app/add_to_space_wizard'
 
 /*
 Page layout
@@ -36,10 +35,14 @@ Page layout
 */
 
 /* Dialog to create new space and project */
+
+export class SpaceDashboardPage extends AppPage {
+
+
+ /* Dialog to create new space and project */
   newSpaceName = $('#name');
   createSpaceButton = $('#createSpaceButton');
   devProcessPulldown = $('#developmentProcess');
-  noThanksButton = element(by.xpath('.//a[contains(text(),\'No thanks, take me to\')]'));
 
   /* Analyze/Plan/Create - Navigation bar elements unique to space home display */
   headerAnalyze = element(by.xpath('.//*[contains(text(),\'Analyze\')]'));
@@ -102,7 +105,7 @@ Page layout
 
   /* Pipelines section title/link */
   pipelinesSectionTitle = $('#spacehome-pipelines-title');
-  addToSpaceButton = $('#spacehome-pipelines-add-button');
+  addToSpaceButton = new Button($('#analyze-overview-add-to-space-button'), 'Add to Space')
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');
@@ -158,18 +161,21 @@ Page layout
   constructor(spaceName: string) {
     super();
     this.spaceName = spaceName;
+    // TODO: create a better way to access globals like username
+    this.url = `${browser.params.login.user}/${spaceName}`
   }
 
-  /* Quickstarts by name */
-  quickStartByName (nameString: string): ElementFinder {
-    let xpathString = './/*[contains(@id, \'' + nameString + '\')]/div';
-    return element(by.xpath(xpathString));
+  async ready() {
+    await super.ready()
+    await this.addToSpaceButton.untilClickable()
   }
 
-  importCodebaseByName (nameString: string): ElementFinder {
-    let xpathString = './/multiple-selection-list/div/ul/li/label/span[contains(text(),\'' + nameString + '\')]';
-    return element(by.xpath(xpathString));
+  async addToSpace(): Promise<AddToSpaceWizard> {
+    await this.addToSpaceButton.clickWhenReady()
+    // NOTE: outside the dialog is outside of $(this)
+    let wizard  = new AddToSpaceWizard($('body > modal-container > div.modal-dialog'))
+
+    await wizard.open();
+    return wizard;
   }
-
-
 }

@@ -91,7 +91,7 @@ describe('Page', function () {
       support.info('>>> Failed open as expected:', e.message);
     }
 
-    cleanupPage.open(PageOpenMode.RefreshBrowser);
+    await cleanupPage.open(PageOpenMode.RefreshBrowser);
     support.debug('>>> Go directly to cleanup', 'OK');
   });
 });
