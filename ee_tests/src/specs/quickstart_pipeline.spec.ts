@@ -39,13 +39,11 @@ describe('Creating new quickstart in OSIO', () => {
 
     support.info('EE test - new space URL:', currentUrl);
 
-    await spaceDashboardPage.primaryAddToSpaceButton.clickWhenReady();
-    await spaceDashboardPage.technologyStack.clickWhenReady();
-    await spaceDashboardPage.quickStartNextButton2.clickWhenReady();
-    await spaceDashboardPage.quickStartNextButton2.clickWhenReady();
-    await spaceDashboardPage.quickStartNextButton2.clickWhenReady();
-    await spaceDashboardPage.quickStartFinishButton2.clickWhenReady();
-    await spaceDashboardPage.quickStartOkButton.clickWhenReady();
+    let wizard = await spaceDashboardPage.addToSpace()
+
+    support.info("Creating a Vert.x HTTP Booster")
+    await wizard.newQuickstartProject({ project: 'Vert.x HTTP Booster' })
+    await spaceDashboardPage.ready()
 
     /* Remove this direct navigation to the pipeline page URL by navigating through the UI.
        When the modal dialog through which the user creates a new quickstart is exited, there
