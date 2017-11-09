@@ -16,25 +16,26 @@ export const WAIT = seconds(30);
 export const LONG_WAIT = minutes(1);
 export const LONGEST_WAIT = minutes(15);
 
+export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
   switch (mode) {
   case BrowserMode.Phone:
-    window.setSize(430, 667);
+    await window.setSize(430, 667);
     break;
   case BrowserMode.Tablet:
-    window.setSize(768, 1024);
+    await window.setSize(768, 1024);
     break;
   case BrowserMode.Desktop:
-    window.setSize(1920, 1080);
+    await window.setSize(1920, 1080);
     break;
   default:
     throw Error('Unknown mode');
   }
 }
 
-export function desktopTestSetup() {
+export async function desktopTestSetup() {
   browser.ignoreSynchronization = true;
-  setBrowserMode(BrowserMode.Desktop);
+  await setBrowserMode(BrowserMode.Desktop);
 }
 
 /*

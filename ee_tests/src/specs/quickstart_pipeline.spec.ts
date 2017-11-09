@@ -11,7 +11,7 @@ describe('Creating new quickstart in OSIO', () => {
   let landingPage: LandingPage;
 
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
     landingPage = new LandingPage(browser.params.target.url);
     support.debug('>>> Landing Page Open');
     await landingPage.open();

@@ -6,7 +6,7 @@ describe('Landing Page', () => {
   let landingPage: LandingPage;
 
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
     landingPage = new LandingPage();
     support.debug('... LandingPage.Open');
     await landingPage.open();
