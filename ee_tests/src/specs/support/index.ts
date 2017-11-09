@@ -9,11 +9,12 @@ export enum BrowserMode {
   Desktop
 }
 
-export const WAIT = 30000;                   /* 30 seconds */
-export const LONG_WAIT = 60000;              /* 1 minute */
-export const LONGEST_WAIT = 900000;          /* 15 minutes */
+const seconds = (n: number) => n * 1000;
+const minutes = (n: number) => n * seconds(60);
 
-export function setBrowserMode(mode: BrowserMode): void {
+export const WAIT = seconds(30);
+export const LONG_WAIT = minutes(1);
+export const LONGEST_WAIT = minutes(15);
 
   let window = browser.driver.manage().window();
   switch (mode) {
