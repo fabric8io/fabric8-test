@@ -6,7 +6,7 @@ import { LandingPage, CleanupUserEnvPage, PageOpenMode } from '../specs/page_obj
 
 describe('Page', function () {
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
   });
 
   it('open can be called mulitple times', async () => {

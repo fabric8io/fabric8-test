@@ -1,4 +1,5 @@
 import { browser } from 'protractor';
+import * as fs from 'fs';
 
 export * from './interactions'
 
@@ -8,31 +9,33 @@ export enum BrowserMode {
   Desktop
 }
 
-export const WAIT = 30000;                   /* 30 seconds */
-export const LONG_WAIT = 60000;              /* 1 minute */
-export const LONGEST_WAIT = 900000;          /* 15 minutes */
+const seconds = (n: number) => n * 1000;
+const minutes = (n: number) => n * seconds(60);
 
-export function setBrowserMode(mode: BrowserMode): void {
+export const WAIT = seconds(30);
+export const LONG_WAIT = minutes(1);
+export const LONGEST_WAIT = minutes(15);
 
+export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
   switch (mode) {
   case BrowserMode.Phone:
-    window.setSize(430, 667);
+    await window.setSize(430, 667);
     break;
   case BrowserMode.Tablet:
-    window.setSize(768, 1024);
+    await window.setSize(768, 1024);
     break;
   case BrowserMode.Desktop:
-    window.setSize(1920, 1080);
+    await window.setSize(1920, 1080);
     break;
   default:
     throw Error('Unknown mode');
   }
 }
 
-export function desktopTestSetup() {
+export async function desktopTestSetup() {
   browser.ignoreSynchronization = true;
-  setBrowserMode(BrowserMode.Desktop);
+  await setBrowserMode(BrowserMode.Desktop);
 }
 
 /*
@@ -74,29 +77,26 @@ export function newSpaceName(): string {
   return spaceName;
 }
 
-
 /**
  * Write screenshot to file
  * Example usage:
- *   let png = await browser.takeScreenshot();
- *   support.writeScreenShot(png, 'exception1.png');
+ *   support.writeScreenshot('exception1.png');
  *
  * Ref: http://blog.ng-book.com/taking-screenshots-with-protractor/
  */
-  export function writeScreenShot (data: any, filename: string) {
-  let fs = require('fs');
+export async function writeScreenshot(filename: string) {
+  let png = await browser.takeScreenshot();
   let stream = fs.createWriteStream(filename);
-  stream.write(new Buffer(data, 'base64'));
+  stream.write(new Buffer(png, 'base64'));
   stream.end();
+  info(`Saved screenshot to: ${filename}`);
 }
-
 
 function timestamp(): string {
   let date = new Date();
   let time = date.toLocaleTimeString('en-US', {hour12: false});
   let ms = (date.getMilliseconds() + 1000).toString().substr(1);
   return `${time}.${ms}`;
-
 }
 
 function debugEnabled(...msg: any[]) {

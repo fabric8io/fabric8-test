@@ -9,7 +9,7 @@ describe(' new spaces in OSIO', () => {
   let mainDashboard: MainDashboardPage;
 
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
     let landingPage = new LandingPage();
     await landingPage.open();
 

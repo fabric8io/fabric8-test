@@ -6,7 +6,7 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
   let dashboardPage: MainDashboardPage;
 
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
   });
 
   it("should perform Burr's demo - setup", async () => {

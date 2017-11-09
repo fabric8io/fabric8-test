@@ -8,7 +8,7 @@ describe('Creating new spaces in OSIO', () => {
   let landingPage: LandingPage;
 
   beforeEach( async () => {
-    support.desktopTestSetup();
+    await support.desktopTestSetup();
     landingPage = new LandingPage();
 
     support.debug('>>> Landing Page Open');
