@@ -4,6 +4,7 @@ import {
 } from 'protractor';
 
 import * as mixins from '../mixins';
+import * as support from '../support';
 
 
 // todo move to a different module
@@ -87,6 +88,7 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     // await this.untilPresent();
     await this.untilDisplayed();
   }
+
 }
 
 export class BaseElementArray extends ElementArrayFinder {

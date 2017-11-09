@@ -80,9 +80,7 @@ describe('Creating new quickstart in OSIO', () => {
     await until.elementToBeClickable(spacePipelinePage.pipelineByName(spaceName));
     await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
     await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
-
-    let png = await browser.takeScreenshot();
-    support.writeScreenShot(png, 'promote.png');
+    support.writeScreenshot('promote.png');
 
     await spacePipelinePage.promoteButton.click();
     await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');

@@ -1,4 +1,5 @@
 import { browser } from 'protractor';
+import * as fs from 'fs';
 
 export * from './interactions'
 
@@ -74,29 +75,26 @@ export function newSpaceName(): string {
   return spaceName;
 }
 
-
 /**
  * Write screenshot to file
  * Example usage:
- *   let png = await browser.takeScreenshot();
- *   support.writeScreenShot(png, 'exception1.png');
+ *   support.writeScreenshot('exception1.png');
  *
  * Ref: http://blog.ng-book.com/taking-screenshots-with-protractor/
  */
-  export function writeScreenShot (data: any, filename: string) {
-  let fs = require('fs');
+export async function writeScreenshot(filename: string) {
+  let png = await browser.takeScreenshot();
   let stream = fs.createWriteStream(filename);
-  stream.write(new Buffer(data, 'base64'));
+  stream.write(new Buffer(png, 'base64'));
   stream.end();
+  info(`Saved screenshot to: ${filename}`);
 }
-
 
 function timestamp(): string {
   let date = new Date();
   let time = date.toLocaleTimeString('en-US', {hour12: false});
   let ms = (date.getMilliseconds() + 1000).toString().substr(1);
   return `${time}.${ms}`;
-
 }
 
 function debugEnabled(...msg: any[]) {
