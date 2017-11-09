@@ -95,7 +95,7 @@ export class UserProfilePage extends AppPage {
   // TODO is there a better way to find the button? can we get devs to add an id?
   updateProfileButton = this.innerElement(
     ui.Button,
-    'alm-overview > div > div > button',
+    'alm-overview button.profile-update-button',
     'Update Profile'
   );
 
