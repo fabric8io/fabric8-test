@@ -106,7 +106,7 @@ export class SpaceDashboardPage extends AppPage {
   /* Pipelines section title/link */
   pipelinesSectionTitle = $('#spacehome-pipelines-title');
   addToSpaceButton = this.innerElement(
-    Button, '#analyze-overview-add-to-space-button', 'Add to Space')
+    Button, '#analyze-overview-add-to-space-button', 'Add to space')
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');
@@ -140,7 +140,7 @@ export class SpaceDashboardPage extends AppPage {
 
   async ready() {
     await super.ready()
-    await this.addToSpaceButton.untilClickable()
+    await this.addToSpaceButton.ready()
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {
