@@ -34,7 +34,7 @@ describe(' new spaces in OSIO', () => {
     await spaceDashboard.ready()
     // TODO: add a verification to check if the quickstart succeeded
 
-  }, 15 * 60 * 1000);
+  }, support.minutes(5));
 
 });
 
