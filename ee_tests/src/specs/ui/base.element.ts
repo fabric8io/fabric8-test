@@ -111,8 +111,10 @@ export class BaseElementArray extends ElementArrayFinder {
 
 export class Clickable extends BaseElement {
   async ready() {
+    support.debug(`... waiting for '${this.name}' to be ready`)
     await super.ready();
     await this.untilClickable();
+    support.debug(`... waiting for '${this.name}' to be ready - OK`)
   }
 }
 
