@@ -35,14 +35,18 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 }
 
 export class CleanupUserEnvPage extends AppPage {
-  url = '_cleanup';
-
   eraseEnvButton = this.innerElement(
     ui.Button, '#overview button',
     'Erase My OpenShift.io Environment'
   );
 
   alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
+
+
+  constructor() {
+    super();
+    this.url = `${browser.params.login.user}/_cleanup`;
+  }
 
   async ready() {
     support.debug('... checking if erase button is there');
