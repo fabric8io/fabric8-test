@@ -22,19 +22,6 @@ describe('import codebase', function () {
     dashboardPage = await login.perform()
   });
 
-  it('fooobar', async () =>{
-    let spaceName = 'testnov111510329356856'
-    let spaceDashboard = new SpaceDashboardPage('foobar')
-    await spaceDashboard.open(PageOpenMode.RefreshBrowser)
-
-    let wizard = await spaceDashboard.addToSpace()
-
-    await wizard.importExistingCode({
-      org: browser.params.github.username,
-      repositories: [spaceName]
-    })
-
-  });
 
   async function resetEnv() {
 
