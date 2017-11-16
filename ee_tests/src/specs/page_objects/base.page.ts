@@ -13,6 +13,7 @@ export abstract class BasePage {
 
   name: string = '...';
   log: (action: string, ...msg: string[]) => void;
+  debug: (context: string, ...msg: string[]) => void;
 
   // Use undefined to indicate the url has not been set
   // Will use be in openInBrowser to throw error if the caller forgot

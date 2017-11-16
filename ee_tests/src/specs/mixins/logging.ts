@@ -8,8 +8,8 @@ export class Logging {
     info(`${action}: ${className}('${this.name}')`, ...msg);
   }
 
-  debug(action: string, ...msg: string[]) {
+  debug(context: string, ...msg: string[]) {
     let className = this.constructor.name;
-    debug(`${action}: ${className}('${this.name}')`, ...msg);
+    debug(`${context}: ${className}('${this.name}')`, ...msg);
   }
 }
