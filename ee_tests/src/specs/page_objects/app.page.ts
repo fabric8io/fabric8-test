@@ -8,7 +8,7 @@ import { Header } from './app/header';
 
 export abstract class AppPage extends BasePage {
   appTag = $('f8-app');
-  header = new Header(this.appTag);
+  header = new Header(this.appTag.$('header > alm-app-header > nav'));
 
   /**
    * Extend this class, to describe Application Page(after logging in)
