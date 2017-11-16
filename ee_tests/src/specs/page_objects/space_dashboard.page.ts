@@ -76,7 +76,7 @@ export class SpaceDashboardPage extends AppPage {
 
   /* Stack/Analytical Reports */
   stackReportsSectionTitle = $('#spacehome-analytical-report-title');
-  stackReportsButton = $('#stack-reports-btn');
+  stackReportsButton = element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
   stackReportSection = $('#fabric8-stack-analysis');
   stackReportSummaries = $('#stack-report-inshort');
   stackReportFindingsInShort = $('#findings-inshort');

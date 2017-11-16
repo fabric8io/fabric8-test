@@ -40,6 +40,9 @@ export class SpacePipelinePage extends AppPage {
   abortButton = element(by.xpath('.//button[contains(text(),\'Abort\')]'));
   promoteButton = element(by.xpath('.//button[contains(text(),\'Promote\')]'));
 
+  /* Link to analytics report */
+  stackReportsButton = element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
+
   /* Links displayed in the promote dialog */
   viewApplicationOnStage = element(by.xpath('.//a[contains(text(),\'View application on stage\')]'));
   seeAdditionalDetailsInJenkins = element(by.xpath('.//a[contains(text(),\'See additional details in jenkins\')]'));
