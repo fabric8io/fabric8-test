@@ -43,6 +43,7 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   // add logging mixin
   name: string = '';
   log: (action: string, ...msg: string[]) => void;
+  debug: (context: string, ...msg: string[]) => void;
 
   /**
    * Extend this class, to describe single custom fragment on your page
@@ -82,6 +83,15 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     let condition = until.textToBePresentInElement(this, text );
     await browser.wait(condition);
   }
+
+  async untilHidden(wait?: number) {
+    await browser.wait(until.invisibilityOf(this), wait);
+  }
+
+  async untilAbsent(wait?: number) {
+    await browser.wait(until.stalenessOf(this), wait);
+  }
+
 
   async ready() {
     // TODO: may have to revert back to just until present
