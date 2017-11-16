@@ -84,6 +84,15 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     await browser.wait(condition);
   }
 
+  async untilHidden(wait?: number) {
+    await browser.wait(until.invisibilityOf(this), wait);
+  }
+
+  async untilAbsent(wait?: number) {
+    await browser.wait(until.stalenessOf(this), wait);
+  }
+
+
   async ready() {
     // TODO: may have to revert back to just until present
     // await this.untilPresent();
