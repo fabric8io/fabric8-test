@@ -33,7 +33,6 @@ let conf: Config = {
     ],
 
     suites: {
-      temp: ['src/specs/**/quickstart_analytic.spec.js'],
       specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
       functional: ['src/functional/**/*.spec.js']   // new typescript based specs
     },
