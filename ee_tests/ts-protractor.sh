@@ -41,7 +41,7 @@ main() {
   fi
 
   log.info "Running tsc ... "
-  tsc || {
+  npm run tsc || {
     log.warn "ts -> js compilation failed; fix it and rerun $0"
     exit 1
   }
