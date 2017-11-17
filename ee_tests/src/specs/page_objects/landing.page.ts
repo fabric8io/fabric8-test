@@ -40,3 +40,11 @@ export class LandingPage extends BasePage {
     return loginPage;
   }
 }
+
+export class OsioLandingPage extends LandingPage {
+  loginButton = new Button($('#header_rightDropdown > li.login-block > a'), 'Login');
+
+  constructor(url: string = '/openshiftio') {
+    super(url);
+  }
+}

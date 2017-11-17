@@ -9,7 +9,7 @@
 import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
 import * as support from '../support';
 import * as ui from '../ui';
-import { BasePage } from './base.page';
+import { BasePage, PageOpenMode } from './base.page';
 import { MainDashboardPage } from './main_dashboard.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
 
@@ -49,7 +49,7 @@ export class LoginPage extends BasePage {
     let dashboardPage = new MainDashboardPage();
 
     support.debug('... Wait for MainDashboard');
-    await dashboardPage.open();
+    await dashboardPage.open(PageOpenMode.RefreshBrowser);
     support.debug('... Wait for MainDashboard - OK');
 
     return dashboardPage;

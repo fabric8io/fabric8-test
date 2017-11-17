@@ -1,5 +1,5 @@
 export { PageOpenMode, BasePage } from './base.page';
-export { LandingPage } from './landing.page';
+export * from './landing.page';
 export { MainDashboardPage } from './main_dashboard.page';
 export * from './space_dashboard.page';
 export * from './space_dashboard/add_to_space_dialog';
