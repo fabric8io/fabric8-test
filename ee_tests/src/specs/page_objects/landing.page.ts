@@ -10,10 +10,29 @@ import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinde
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from '../ui';
+import { UserProfilePage } from './user_profile.page';
+import * as support from '../support';
 
 export class LandingPage extends BasePage {
 
+  /* ------ Elements in the landing page navigation bar ------ */
+
+  /* Elements visible when user is not logged in */
   loginButton = new Button($('#login'), 'Login');
+  registerButton = new Button($('#registerNav'), 'Register');
+
+  /* Elements visible when user logged in */
+  logoutButton = new Button($('#logout'), 'Logout');
+  userName = new Button($('#userName'), 'Username');
+  loggedInUserName = new Button($('#loggedInUserName'), 'LoggedInUserName');
+  features = new Button(element(by.xpath('.//*[contains(@class, \'navbar-nav-links--features uppercase\')]')));
+  contribute = new Button(element(by.xpath('.//*[contains(@class, \'navbar-nav-links--contribute uppercase\')]')));
+
+  /* Elements always visible */
+  corporateLogo = new Button(element(by.xpath('.//*[contains(@class, \'corporate-logo\')]')));
+  osioLogo = new Button (element(by.xpath('.//*[contains(@class, \'navbar-brand openshiftio-logo\')]')));
+
+  /* ------ Elements in the landing page navigation bar ------ */
 
   constructor(url: string = '') {
     // '' is relative to base url so it means baseUrl
@@ -39,4 +58,16 @@ export class LandingPage extends BasePage {
     await loginPage.open();
     return loginPage;
   }
+
+  async gotoUserProfile(): Promise<UserProfilePage> {
+    await this.ready();
+    support.debug('... Select LoggedInUserName menu item');
+    await this.loggedInUserName.click();
+
+    // tslint:disable-next-line:no-use-before-declare
+    let page = new UserProfilePage();
+    await page.open();
+    return page;
+  }
+
 }
