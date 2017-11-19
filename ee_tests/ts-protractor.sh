@@ -59,12 +59,7 @@ main() {
     protractorTS.config.js \
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
-    --params.login.password="$OSIO_PASSWORD" \
-    --params.target.url="${OSIO_URL}" \
-    --params.oso.token="${OSO_TOKEN}" \
-    --params.kc.token="${OSIO_REFRESH_TOKEN}" \
-    --params.github.username="${GITHUB_USERNAME}" \
-    --params.oso.username="${OSO_USERNAME}"
+    --params.login.password="$OSIO_PASSWORD"
 
   return $?
 }
