@@ -2,36 +2,27 @@ import { browser } from 'protractor';
 import * as support from './support';
 
 import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
+import { MainDashboardPage, SpaceDashboardPage } from './page_objects';
 
-describe('Creating new spaces in OSIO', () => {
-  let landingPage: LandingPage;
+fdescribe('Creating new spaces in OSIO', () => {
+  let dashboardPage: MainDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    landingPage = new LandingPage();
-
-    support.debug('>>> Landing Page Open');
-    await landingPage.open();
-    support.debug('>>> Landing Page Open - DONE');
+    let login = new support.LoginInteraction();
+    dashboardPage = await login.run();
   });
 
 
   it('Create a new space without creating a new quickstart', async () => {
-    support.debug('>>> starting test; loginPage');
-    let loginPage = await landingPage.gotoLoginPage();
-    support.debug('>>> back from gotoLoginPage');
-
-    let url = browser.params.target.url;
-    let { user, password } = browser.params.login;
-    let dashboardPage = await loginPage.login(user, password);
-
     let spaceName = support.newSpaceName();
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let currentUrl = await browser.getCurrentUrl();
     support.debug ('>>> browser is URL: ' + currentUrl);
 
+    let url = browser.baseUrl;
+    let user = browser.params.login.user;
     let expectedUrl = support.joinURIPath(url, user, spaceName);
     expect(browser.getCurrentUrl()).toEqual(expectedUrl);
 
