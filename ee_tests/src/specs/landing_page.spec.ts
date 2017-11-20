@@ -3,26 +3,33 @@ import * as support from './support';
 import { LandingPage } from './page_objects/landing.page';
 
 describe('Landing Page', () => {
-  let landingPage: LandingPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    landingPage = new LandingPage();
-    support.debug('... LandingPage.Open');
-    await landingPage.open();
-    support.debug('... LandingPage.Open - DONE');
   });
 
   it('shows the title', async () => {
+    let landingPage = new LandingPage();
+    support.debug('... LandingPage.Open');
+    await landingPage.open();
+    support.debug('... LandingPage.Open - DONE');
     await expect(await browser.getTitle()).toEqual('OpenShift.io');
   });
 
   it('shows login button', async () => {
+    let landingPage = new LandingPage();
+    support.debug('... LandingPage.Open');
+    await landingPage.open();
+    support.debug('... LandingPage.Open - DONE');
     await expect($$('div').first()).toAppear('Atleast one div should appear on the page');
     await expect( landingPage.loginButton).toAppear('Login must be present');
   });
 
   it('can navigate to login page', async () => {
+    let landingPage = new LandingPage();
+    support.debug('... LandingPage.Open');
+    await landingPage.open();
+    support.debug('... LandingPage.Open - DONE');
     let loginPage = await landingPage.gotoLoginPage();
 
     // poc: can wait on multiple promises to resolve

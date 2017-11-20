@@ -34,7 +34,7 @@ export abstract class BasePage {
   async open(mode: PageOpenMode =  PageOpenMode.AlreadyOpened): Promise<BasePage> {
 
     if (mode === PageOpenMode.RefreshBrowser) {
-      this.openInBrowser();
+      await this.openInBrowser();
     }
 
     await this.ready();

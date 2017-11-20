@@ -1,7 +1,6 @@
 import { browser }  from 'protractor';
 import * as support from './support';
 import {
-  LandingPage,
   MainDashboardPage,
   SpaceDashboardPage,
   CleanupUserEnvPage,
@@ -14,9 +13,6 @@ describe('import codebase', function () {
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-
-    let landingPage = new LandingPage();
-    await landingPage.open();
 
     let login = new support.LoginInteraction()
     dashboardPage = await login.perform()

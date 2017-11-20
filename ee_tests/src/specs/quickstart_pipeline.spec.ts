@@ -1,21 +1,20 @@
 import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
 
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
+import {
+  MainDashboardPage,
+  SpaceDashboardPage, SpacePipelinePage
+} from './page_objects';
 
-/* Tests to verify the build pipeline */
+// Tests to verify the build pipeline
 
 describe('Creating new quickstart in OSIO', () => {
-  let landingPage: LandingPage;
+  let dashboardPage: MainDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    landingPage = new LandingPage(browser.params.target.url);
-    support.debug('>>> Landing Page Open');
-    await landingPage.open();
-    support.debug('>>> Landing Page Open - DONE');
+    let login = new support.LoginInteraction();
+    dashboardPage = await login.run();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
@@ -24,32 +23,15 @@ describe('Creating new quickstart in OSIO', () => {
      but to ensure that the test does not collide with other tests. TODO - to
      resolve these collisions */
 
-//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
-//    await runTest(landingPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-//  });
   it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
-    await runTest(landingPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
+    try {
+      await runTest('Vert.x - HTTP & Config Map')
+    } catch (e) {
+      support.info('Error:', e);
+    }
   });
-//  it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
-//    await runTest(landingPage, 'Spring Boot - HTTP').catch(error => console.log(error));
-//  });
-//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(landingPage, 'Vert.x Health Check Example').catch(error => console.log(error));
-//  });
-//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(landingPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
-//  });
 
-  async function runTest (theLandingPage: LandingPage, quickstartName: string) {
-    console.log('hi ' + quickstartName);
-
-    support.debug('>>> starting test; loginPage');
-    let loginPage = await landingPage.gotoLoginPage();
-    support.debug('>>> back from gotoLoginPage');
-
-    let url = browser.params.target.url;
-    let { user, password } = browser.params.login;
-    let dashboardPage = await loginPage.login(user, password);
+  async function runTest (quickstartName: string) {
 
     let spaceName = support.newSpaceName();
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
@@ -57,10 +39,12 @@ describe('Creating new quickstart in OSIO', () => {
     let currentUrl = await browser.getCurrentUrl();
     support.debug ('>>> browser is URL: ' + currentUrl);
 
+    let url = browser.baseUrl;
+    let user = browser.params.login.user;
     let expectedUrl = support.joinURIPath(url, user, spaceName);
     expect(browser.getCurrentUrl()).toEqual(expectedUrl);
 
-    support.info('EE test - new space URL:', currentUrl);
+    support.info('EE test - new space URL:', expectedUrl);
 
     let wizard = await spaceDashboardPage.addToSpace();
 
@@ -98,11 +82,11 @@ describe('Creating new quickstart in OSIO', () => {
     await until.elementToBeClickable(spacePipelinePage.pipelineByName(spaceName));
 
     try {
-    await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
-    await spacePipelinePage.promoteButton.click();
-    await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
-    await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
+      await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
+      await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
+      await spacePipelinePage.promoteButton.click();
+      await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
+      await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
     } catch (e) {
       support.writeScreenshot('target/promote_fail_' + spaceName + '.png');
     }

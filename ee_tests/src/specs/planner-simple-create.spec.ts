@@ -3,19 +3,17 @@ import * as support from './support';
 
 import {
   LandingPage,
+  OsioLandingPage,
   PageOpenMode,
   SpaceDashboardPage,
 } from './page_objects';
-// import { , PageOpenMode, MainDashboardPag, } from './page_objects';
+
 
 describe('Planner Tab', () => {
   let spaceDashboard: SpaceDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let landingPage = new LandingPage();
-    await landingPage.open();
-
     let login = new support.LoginInteraction();
     let mainDashboard = await login.run();
 
