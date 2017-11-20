@@ -10,6 +10,7 @@ import { browser, element, by, By, ExpectedConditions as until, $ } from 'protra
 import * as support from '../support';
 import * as ui from '../ui';
 import { BasePage, PageOpenMode } from './base.page';
+import { LandingPage } from './landing.page';
 import { MainDashboardPage } from './main_dashboard.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
 
@@ -40,19 +41,24 @@ export class LoginPage extends BasePage {
   }
 
   async login(username: string, password: string): Promise<MainDashboardPage> {
-    support.debug('... Login: input details and click Login');
+    this.debug('... Login: input details and click Login');
     await this.usernameInput.enterText(username);
     await this.passwordInput.enterText(password);
     await this.loginButton.clickWhenReady();
-    support.debug('... Login: input details and click Login - OK');
 
-    let dashboardPage = new MainDashboardPage();
+    this.debug('... Login: input details and click Login - OK');
 
-    support.debug('... Wait for MainDashboard');
-    await dashboardPage.open(PageOpenMode.RefreshBrowser);
-    support.debug('... Wait for MainDashboard - OK');
+    // HACK: https://github.com/openshiftio/openshift.io/issues/1402
+    // the landing page is deleting the tokens so after using the
+    // workaround 'openshift.io/openshiftio/' url, force open the landing page
 
-    return dashboardPage;
+    let nextPage = new LandingPage();
+    await nextPage.open();
+
+    let mainDashboard = new MainDashboardPage()
+    // NOTE: change to mainDashboard.open() once this issue is fixed
+    await mainDashboard.open(PageOpenMode.RefreshBrowser)
+    return mainDashboard;
   }
 
 }
