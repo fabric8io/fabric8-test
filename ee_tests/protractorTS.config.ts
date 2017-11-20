@@ -18,6 +18,15 @@ let reporter = new HtmlScreenshotReporter({
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 let conf: Config = {
 
+    framework: 'jasmine2',
+
+    jasmineNodeOpts: {
+      showColors: true,
+      silent: true,
+      isVerbose: true,
+      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins
+    },
+
     directConnect: process.env.DIRECT_CONNECTION === 'true',
     restartBrowserBetweenTests: true,
     useAllAngular2AppRoots: true,
@@ -38,9 +47,6 @@ let conf: Config = {
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
-    jasmineNodeOpts: {
-      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins
-    },
     capabilities: {
       'browserName': 'chrome',
       'chromeOptions': {
