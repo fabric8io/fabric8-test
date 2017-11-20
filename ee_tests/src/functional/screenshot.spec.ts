@@ -11,7 +11,7 @@ describe('Landing Page', () => {
     await landingPage.open();
   });
 
-  fit('writes the screenshot of landing page', async () => {
+  it('writes the screenshot of landing page', async () => {
     await expect(await browser.getTitle()).toEqual('OpenShift.io');
     await support.writeScreenshot('page.png');
   });
