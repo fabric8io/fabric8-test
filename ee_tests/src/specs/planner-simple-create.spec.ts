@@ -14,10 +14,7 @@ describe('Planner Tab', () => {
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let landingPage = new OsioLandingPage();
-    await landingPage.open();
-
-    let login = new support.LoginInteraction(landingPage);
+    let login = new support.LoginInteraction();
     let mainDashboard = await login.run();
 
     let spaceName = support.newSpaceName();

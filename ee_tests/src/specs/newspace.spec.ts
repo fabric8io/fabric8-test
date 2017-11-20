@@ -1,10 +1,8 @@
 import { browser } from 'protractor';
 import * as support from './support';
-
-import { LandingPage } from './page_objects/landing.page';
 import { MainDashboardPage, SpaceDashboardPage } from './page_objects';
 
-fdescribe('Creating new spaces in OSIO', () => {
+describe('Creating new spaces in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
   beforeEach( async () => {

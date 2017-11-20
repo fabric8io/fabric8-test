@@ -3,7 +3,6 @@ import * as support from './support';
 import { LandingPage } from './page_objects/landing.page';
 
 describe('Landing Page', () => {
-  let landingPage: LandingPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();

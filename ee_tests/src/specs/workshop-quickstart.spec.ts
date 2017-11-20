@@ -1,18 +1,12 @@
 import { browser } from 'protractor';
 import * as support from './support';
-import {
-  LandingPage, SpaceDashboardPage, PageOpenMode,
-  MainDashboardPage,
-} from './page_objects';
+import { SpaceDashboardPage, MainDashboardPage } from './page_objects';
 
 describe(' new spaces in OSIO', () => {
   let mainDashboard: MainDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let landingPage = new LandingPage();
-    await landingPage.open();
-
     let login = new support.LoginInteraction();
     mainDashboard = await login.run();
   });
