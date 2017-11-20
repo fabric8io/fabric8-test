@@ -163,6 +163,20 @@ Then in IDEA:
 | openshift-io-burr-new-space.spec.js | Creates a new space
 | openshift-io-burr-pipeline.spec.js | Runs the build pipeline
 | openshift-io-burr-quickstart.spec.js | Runs the build pipeline for each quickstart
-| openshift-io-burr-setup.spec.js | Reets the user account
+| openshift-io-burr-setup.spec.js | Rseets the user account
 | openshift-io-burr-template.spec.js | Template for new tests
+
+TBD tests:
+* Edit source files in Che to force rebuild/redeploy
+* Verify all defined workflows
+* Import, build, run all Obsidian "boosters" as quickstarts
+* EE tests for idle Che and Jenkins - https://openshift.io/openshiftio/openshiftio/plan/detail/1709
+* Refactor EE tests page object model code into npm module - to enable the code to be shared more easil - https://openshift.io/openshiftio/openshiftio/plan/detail/1702
+* Create/configure EE tests to verify operation of different OSIO clusters - https://openshift.io/openshiftio/openshiftio/plan/detail/1695
+* Resolve when tests fail to login when openshift.io login name is different than github - https://openshift.io/openshiftio/openshiftio/plan/detail/1642
+* Implement mechanism to verify thru the API actions taken in the UI by the EE tests, https://openshift.io/openshiftio/openshiftio/plan/detail/1637
+* Extend EE tests to exercise deployed app on stage and run  - https://openshift.io/openshiftio/openshiftio/plan/detail/1634
+
+The full set of outstanding tasks for the EE tests are tracked here: https://openshift.io/openshiftio/openshiftio/plan?label=EE_test
+
 
