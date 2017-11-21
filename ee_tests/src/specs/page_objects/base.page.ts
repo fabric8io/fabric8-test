@@ -23,8 +23,8 @@ export abstract class BasePage {
   protected url: string|undefined;
 
   constructor(url?: string) {
-    support.debug(`... BasePage: ${this.constructor.name}: '${url}'`);
     this.url = url;
+    this.debug(`url: '${url}'`);
   }
 
   async ready() {
@@ -47,14 +47,15 @@ export abstract class BasePage {
       throw Error('Trying to open and undefined url');
     }
 
+    this.log('Opening', this.url)
     let currentUrl = await browser.getCurrentUrl();
-    support.debug('... Current Browser URL:', currentUrl);
+    this.debug('at  :', currentUrl);
 
-    support.debug(`... Browser goto URL: '${this.url}'`);
+    this.debug(`goto: '${this.url}'`);
     await browser.get(this.url);
 
     let urlNow = await browser.getCurrentUrl();
-    support.debug('... Now the Browser URL:', urlNow);
+    this.debug('now :', urlNow);
   }
 }
 

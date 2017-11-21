@@ -49,6 +49,7 @@ export class CleanupUserEnvPage extends AppPage {
   }
 
   async ready() {
+    await super.ready();
     support.debug('... checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
     support.debug('... checking if erase button is there - OK');

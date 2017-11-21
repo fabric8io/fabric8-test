@@ -24,13 +24,13 @@ let conf: Config = {
       showColors: true,
       silent: true,
       isVerbose: true,
-      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins
+      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins for spec to run
     },
 
     directConnect: process.env.DIRECT_CONNECTION === 'true',
     restartBrowserBetweenTests: true,
     useAllAngular2AppRoots: true,
-    getPageTimeout: 30000,
+    getPageTimeout: 1 * 60 *1000, // must load within 1 min
     seleniumAddress: 'http://localhost:4444/wd/hub',
 
     // Ref: https://github.com/angular/protractor/tree/master/exampleTypescript/asyncAwait

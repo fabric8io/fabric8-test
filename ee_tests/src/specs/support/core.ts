@@ -11,7 +11,7 @@ export enum BrowserMode {
 export const seconds = (n: number) => n * 1000;
 export const minutes = (n: number) => n * seconds(60);
 
-export const WAIT = seconds(30);
+export const DEFAULT_WAIT = seconds(30);
 export const LONG_WAIT = minutes(1);
 export const LONGEST_WAIT = minutes(15);
 
@@ -25,7 +25,7 @@ export async function setBrowserMode(mode: BrowserMode) {
     await window.setSize(768, 1024);
     break;
   case BrowserMode.Desktop:
-    await window.setSize(1920, 900);
+    await window.setSize(1920, 1080);
     break;
   default:
     throw Error('Unknown mode');

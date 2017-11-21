@@ -38,10 +38,10 @@ export class LoginInteraction extends Interaction {
     expect(this.username === "").toBe(false, 'must provide username');
     expect(this.password === "").toBe(false, 'must provide password');
     expect(this.page).toBeDefined('page must be intialised');
-    await this.page.open();
   }
 
   async perform(): Promise<MainDashboardPage> {
+    await this.page.open();
     let loginPage = await this.page.gotoLoginPage();
     let dashboard = await loginPage.login(this.username, this.password);
     await dashboard.open()

@@ -15,7 +15,7 @@ describe('import codebase', function () {
     await support.desktopTestSetup();
 
     let login = new support.LoginInteraction()
-    dashboardPage = await login.perform()
+    dashboardPage = await login.run()
   });
 
 

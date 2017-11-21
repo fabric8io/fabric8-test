@@ -10,6 +10,6 @@ export class Logging {
 
   debug(context: string, ...msg: string[]) {
     let className = this.constructor.name;
-    debug(`${context}: ${className}('${this.name}')`, ...msg);
+    debug(`... ${className}('${this.name}'): ${context}`, ...msg);
   }
 }
