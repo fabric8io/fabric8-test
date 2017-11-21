@@ -48,16 +48,8 @@ export class LoginPage extends BasePage {
 
     this.debug('... Login: input details and click Login - OK');
 
-    // HACK: https://github.com/openshiftio/openshift.io/issues/1402
-    // the landing page is deleting the tokens so after using the
-    // workaround 'openshift.io/openshiftio/' url, force open the landing page
-
-    let nextPage = new LandingPage();
-    await nextPage.open();
-
     let mainDashboard = new MainDashboardPage()
-    // NOTE: change to mainDashboard.open() once this issue is fixed
-    await mainDashboard.open(PageOpenMode.RefreshBrowser)
+    await mainDashboard.open()
     return mainDashboard;
   }
 

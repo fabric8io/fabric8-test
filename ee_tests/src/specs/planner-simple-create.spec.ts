@@ -1,12 +1,6 @@
 import { browser } from 'protractor';
 import * as support from './support';
-
-import {
-  LandingPage,
-  OsioLandingPage,
-  PageOpenMode,
-  SpaceDashboardPage,
-} from './page_objects';
+import { PageOpenMode, SpaceDashboardPage } from './page_objects';
 
 
 describe('Planner Tab', () => {
