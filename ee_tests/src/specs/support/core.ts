@@ -25,7 +25,7 @@ export async function setBrowserMode(mode: BrowserMode) {
     await window.setSize(768, 1024);
     break;
   case BrowserMode.Desktop:
-    await window.setSize(1920, 900);
+    await window.setSize(1920, 1080);
     break;
   default:
     throw Error('Unknown mode');
