@@ -125,10 +125,11 @@ clickmainMenuRunButton () {
 
 /* Main Menu Panel run button run selection*/
 get mainMenuRunButtonRunSelection () {
-//  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GJ5I-CRBBAB')]"));
-  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GLJLMPIDEAB')]"));
+  return element(by.xpath(".//*[contains(@class,'gwt-PopupPanel GDPEHSMCJAB')]"));
 }
+
 clickmainMenuRunButtonRunSelection () {
+  //browser.sleep(60000);
   browser.wait(until.elementToBeClickable(this.mainMenuRunButtonRunSelection), constants.LONG_WAIT, 'Failed to find element mainMenuRunButtonRunSelection');
   this.mainMenuRunButtonRunSelection.click().then(function(){
     console.log("OpenShiftIoChePage - clicked element: mainMenuRunButtonRunSelection");
@@ -176,8 +177,7 @@ get bottomPanel () {
 
 /* Bottom Panel run tab */
 get bottomPanelRunTab () {
-//  return element(by.xpath(".//*[contains(@class,'GJ5I-CRBCGC')][contains(text(),'run')]"));
-  return element(by.xpath(".//*[contains(@class,'GLJLMPIDCHC')][contains(text(),'run')]"));
+  return element(by.xpath(".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'run')]"));
 }
 clickBottomPanelRunTab () {
   browser.wait(until.elementToBeClickable(this.bottomPanelRunTab), constants.LONGER_WAIT, 'Failed to find element bottomPanelRunTab');
