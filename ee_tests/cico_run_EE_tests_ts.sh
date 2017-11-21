@@ -68,7 +68,7 @@ export OSIO_URL=$TEST_SUITE
 export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$EE_TEST_USERNAME
 
-docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN 
+docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_TOKEN -e OSIO_REFRESH_TOKEN \
           -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \

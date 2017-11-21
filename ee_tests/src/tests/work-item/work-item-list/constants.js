@@ -23,7 +23,7 @@ function define(name, value) {
 define("WAIT", 3000);   /* 3 seconds */
 define("LONG_WAIT", 30000);     /* 30 sec */
 define("LONGER_WAIT", 300000);     /* 5 min */
-define("LONGEST_WAIT", 600000);      /* 10 minutes */
+define("LONGEST_WAIT", 900000);      /* 15 minutes */
 define("PIPELINE_COMPLETE_WAIT", 6000000);      /* 100 minutes */
 define("RESET_TENANT_WAIT", 300000);     /* 5 min */
 define("JASMINE_TIMEOUT", 1200000);      /* 20 minutes */
