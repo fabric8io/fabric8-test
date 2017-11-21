@@ -20,7 +20,7 @@ abstract class Interaction {
 }
 
 export class LoginInteraction extends Interaction {
-  page: OsioLandingPage
+  page: LandingPage
   username: string
   password: string
 
@@ -31,7 +31,7 @@ export class LoginInteraction extends Interaction {
     // HACK: https://github.com/openshiftio/openshift.io/issues/1402
     // TODO: remove the hack and use LandingPage instead of OsioLandingPage
     // when the bug that deletes the tokens is fixed
-    this.page = page || new OsioLandingPage()
+    this.page = page || new LandingPage()
   }
 
   async validate() {
