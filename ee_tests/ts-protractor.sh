@@ -10,6 +10,9 @@ validate_config() {
   local ret=0
   validate_test_config OSIO_USERNAME "$OSIO_USERNAME" || ret=1
   validate_test_config OSIO_PASSWORD "$OSIO_PASSWORD" || ret=1
+
+  # NOTE: github login is used by the import codebase test
+  validate_test_config GITHUB_USERNAME "$GITHUB_USERNAME" || ret=1
   return $ret
 }
 
@@ -59,7 +62,8 @@ main() {
     protractorTS.config.js \
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
-    --params.login.password="$OSIO_PASSWORD"
+    --params.login.password="$OSIO_PASSWORD" \
+    --params.github.username="$GITHUB_USERNAME"
 
   return $?
 }
