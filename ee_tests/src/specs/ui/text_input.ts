@@ -8,8 +8,10 @@ export class TextInput extends BaseElement {
   }
 
   async enterText(text: string) {
-    await this.untilPresent();
-    await this.sendKeys(text);
+    await this.run('enter text', async()=> {
+      await this.ready();
+      await this.sendKeys(text);
+    })
     this.log('Entered Text');
   }
 }

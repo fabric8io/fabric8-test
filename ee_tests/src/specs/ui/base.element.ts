@@ -1,10 +1,9 @@
 import {
-  browser, ExpectedConditions as until,
+  browser, ExpectedConditions as EC,
   ElementFinder, ElementArrayFinder
 } from 'protractor';
 
 import * as mixins from '../mixins';
-import * as support from '../support';
 
 
 // todo move to a different module
@@ -57,46 +56,55 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     this.name = name;
   }
 
-  async untilClickable(wait?: number) {
-    let condition = until.elementToBeClickable(this);
-    await browser.wait(condition, wait);
+  async untilClickable(timeout?: number) {
+    await this.waitFor('clickable', EC.elementToBeClickable(this), timeout)
   }
 
-  async untilPresent(wait?: number) {
-    let condition = until.presenceOf(this);
-    await browser.wait(condition, wait);
+  async untilPresent(timeout?: number) {
+    await this.waitFor('present', EC.presenceOf(this), timeout);
   }
 
-  async untilDisplayed(wait?: number) {
-    let condition = until.visibilityOf(this);
-    await browser.wait(condition, wait);
+  async untilDisplayed(timeout?: number) {
+    await this.waitFor('visible', EC.visibilityOf(this), timeout);
   }
 
-  async clickWhenReady(wait?: number) {
-    await this.untilDisplayed(wait);
-    await this.untilClickable(wait);
-    await this.click();
+  async untilTextIsPresent(text: string, timeout?: number) {
+    let condition = EC.textToBePresentInElement(this, text);
+    await this.waitFor(`text ${text}`, condition, timeout);
+  }
+
+  async untilHidden(timeout?: number) {
+    await this.waitFor('hidden', EC.invisibilityOf(this), timeout);
+  }
+
+  async untilAbsent(timeout?: number) {
+    await this.waitFor('absence', EC.stalenessOf(this), timeout);
+  }
+
+  async clickWhenReady(timeout?: number) {
+    await this.run('click', async () => {
+      await this.untilClickable(timeout);
+      await this.click();
+    })
     this.log('Clicked');
   }
-
-  async untilTextIsPresent(text: string) {
-    let condition = until.textToBePresentInElement(this, text );
-    await browser.wait(condition);
-  }
-
-  async untilHidden(wait?: number) {
-    await browser.wait(until.invisibilityOf(this), wait);
-  }
-
-  async untilAbsent(wait?: number) {
-    await browser.wait(until.stalenessOf(this), wait);
-  }
-
 
   async ready() {
     // TODO: may have to revert back to just until present
     // await this.untilPresent();
     await this.untilDisplayed();
+  }
+
+  private async waitFor(msg: string, condition: Function, timeout?: number) {
+    this.debug(`waiting for "${msg}"`, `  | timeout: '${timeout}'`);
+    await browser.wait(condition, timeout);
+    this.debug(`waiting for "${msg}"`, '  - OK');
+  }
+
+  async run(msg: string, fn: () => Promise<any>) {
+    this.debug(msg);
+    await fn()
+    this.debug(msg, '- DONE');
   }
 
 }
@@ -121,10 +129,11 @@ export class BaseElementArray extends ElementArrayFinder {
 
 export class Clickable extends BaseElement {
   async ready() {
-    support.debug(`... waiting for '${this.name}' to be ready`)
-    await super.ready();
-    await this.untilClickable();
-    support.debug(`... waiting for '${this.name}' to be ready - OK`)
+    await this.run('ready', async () => {
+      await super.ready();
+      await this.untilClickable();
+
+    })
   }
 }
 
