@@ -24,9 +24,10 @@
   "homepage": "https://github.com/fabric8io/fabric8-test",
   "license": "Apache-2.0",
   "scripts": {
-    "postinstall": "tsc",
+    "postinstall": "tsc && npm run webdriver:update",
     "image:build": "docker build -t fabric-ui-test:latest -f Dockerfile.builder .",
     "protractor": "protractor",
+    "start": "./ts-protractor.sh",
     "tsc": "tsc",
     "tscw": "tsc -w",
     "tslint": "tslint",
@@ -34,22 +35,24 @@
     "webdriver:start": "webdriver-manager start --versions.chrome 2.33",
     "webdriver:update": "webdriver-manager update --versions.chrome 2.33"
   },
-  "devDependencies": {
-    "@types/jasmine": "^2.8.2",
-    "@types/jasminewd2": "^2.0.3",
-    "@types/lodash": "4.14.61",
-    "@types/node": "7.0.12",
-    "jasmine-protractor-matchers": "^1.0.1",
+  "dependencies": {
+    "jasmine-protractor-matchers": "^2.0.0",
     "jasmine-reporters": "^2.2.1",
     "jasmine-spec-reporter": "4.2.1",
     "jasmine2-reporter": "^0.3.0",
     "protractor": "^5.1.1",
-    "protractor-jasmine2-screenshot-reporter": "0.3.5",
+    "protractor-jasmine2-screenshot-reporter": "0.3.5"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.8.2",
+    "@types/jasminewd2": "^2.0.3",
+    "@types/lodash": "4.14.61",
+    "@types/node": "^8.0.53",
     "rimraf": "^2.6.2",
     "ts-helpers": "1.1.2",
     "tslint": "5.8.0",
     "tslint-loader": "^3.5.0",
-    "typescript": "^2.6.0"
+    "typescript": "2.5.3"
   },
   "repository": {
     "type": "git",

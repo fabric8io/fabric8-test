@@ -66,7 +66,6 @@ cd ee_tests
 
 npm install -g yarn
 yarn
-npm run webdriver:update
 
 ./local_run_EE_tests.sh
 ```
@@ -85,8 +84,20 @@ SELENIUM_BROWSER=firefox
 
 ### Typescript specs ###
 
-Run using the `ts-protractor.sh` helper script
+### setup ###
 
+```
+npm install -g yarn
+yarn
+
+```
+### run the tests ###
+
+Run using the `npm start` helper which runs `ts-protractor.sh` script
+
+```
+npm start
+```
 
 #### tips and tricks ####
 
@@ -97,15 +108,14 @@ the `debugger` statement in the spec and running the test with `NODE_DEBUG`
 environment flag set. E.g.
 
 ```
-NODE_DEBUG=true ./ts-protractor.sh
+NODE_DEBUG=true npm start
 ```
 
 ##### Turn debug statements on #####
 
 ```
-DEBUG=true ./ts-protractor.sh
+DEBUG=true npm start
 ```
-
 
 
 ### End-to-End tests on Fabric8
