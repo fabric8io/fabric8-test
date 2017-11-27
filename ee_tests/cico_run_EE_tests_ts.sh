@@ -30,7 +30,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -64,7 +64,7 @@ echo "Run test container"
 export OSIO_USERNAME=$EE_TEST_USERNAME
 export OSIO_PASSWORD=$EE_TEST_PASSWORD
 export OSO_TOKEN=$EE_TEST_OSO_TOKEN
-export OSIO_URL=$TEST_SUITE
+export OSIO_URL=$TEST_URL
 export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$EE_TEST_USERNAME
 
