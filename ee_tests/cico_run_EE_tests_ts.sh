@@ -74,8 +74,8 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
-docker exec fabric8-ui-builder npm install
-docker exec fabric8-ui-builder npm install -g typescript
+docker exec fabric8-test npm install
+docker exec fabric8-test npm install -g typescript
 
 echo -n Updating Webdriver and Selenium...
 docker exec fabric8-test webdriver-manager update
@@ -83,7 +83,7 @@ docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 
 # Exec EE tests
 ### docker exec fabric8-test ./run_EE_tests.sh $1 $TEST_SUITE
-docker exec fabric8-ui-builder ./ts-protractor.sh
+docker exec fabric8-test ./ts-protractor.sh
 RTN_CODE=$?
 
 # Archive test reuslts file
@@ -99,10 +99,6 @@ files=`docker exec fabric8-test ls -1 ./target/screenshots`
 for file in $files;
 do docker exec fabric8-test rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2_$file;
 done
-
-# Test results to archive - TODO - how to archive these results?
-# docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/target/ .
-# docker cp fabric8-ui-builder:/home/fabric8/fabric8-ui/functional_tests.log target
 
 exit $RTN_CODE
 
