@@ -67,6 +67,7 @@ export OSO_TOKEN=$EE_TEST_OSO_TOKEN
 export OSIO_URL=$TEST_URL
 export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$EE_TEST_USERNAME
+export GITHUB_USERNAME="osiotestmachine"
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_TOKEN -e OSIO_REFRESH_TOKEN \
