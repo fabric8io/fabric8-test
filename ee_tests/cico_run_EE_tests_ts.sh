@@ -84,7 +84,7 @@ docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 
 # Exec EE tests
 ### docker exec fabric8-test ./run_EE_tests.sh $1 $TEST_SUITE
-docker exec fabric8-test ./ts-protractor.sh
+docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE
 RTN_CODE=$?
 
 # Archive test reuslts file
