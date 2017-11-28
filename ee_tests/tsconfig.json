@@ -10,6 +10,7 @@
   },
   "exclude": [
     "src/tests/",
+    "node_modules/",
     "./*.js"
   ]
 }
