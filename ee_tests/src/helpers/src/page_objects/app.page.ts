@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as until, $, by } from 'protractor';
+import { browser, ElementFinder, ExpectedConditions as until, $, by } from 'protractor';
 import * as support from '../support';
 import { BaseElement } from '../ui';
 
@@ -41,9 +41,9 @@ export abstract class AppPage extends BasePage {
 
   async gotoUserProfile(): Promise<UserProfilePage> {
     await this.ready();
-    support.debug('... Select "Profile" menu item');
+    this.debug('goto profile', '... Select "Profile" menu item');
     await this.header.profileDropdown.select('Profile');
-    support.debug('... Select "Profile" menu item - OK');
+    this.debug('goto profile', '... Select "Profile" menu item - OK');
 
     // tslint:disable-next-line:no-use-before-declare
     let page = new UserProfilePage();
@@ -53,9 +53,8 @@ export abstract class AppPage extends BasePage {
 
   async logout() {
     await this.ready();
-    support.debug('... Selecting logout')
     await this.header.profileDropdown.logoutItem.select();
-    support.debug('... Selecting logout', 'OK')
+    this.debug('logout', 'selecting logout', 'OK')
 
 
     // ensure there is no f8-app tag after logout

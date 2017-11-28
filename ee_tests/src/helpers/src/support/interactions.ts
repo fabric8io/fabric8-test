@@ -1,7 +1,7 @@
 import { browser } from 'protractor'
 import { OsioLandingPage, LandingPage, MainDashboardPage } from '../page_objects'
 
-abstract class Interaction {
+export abstract class Interaction {
 
   async validate() {};
   async cleanup() {};

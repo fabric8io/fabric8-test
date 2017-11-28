@@ -8,9 +8,14 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
-import * as ui from '../ui';
-import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
-import { TextInput, Button } from '../ui';
+import {
+  BaseElement,
+  Button,
+  Clickable,
+  TextInput,
+} from '../ui';
+
+import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog'
 
 /*
 Page layout
@@ -36,15 +41,15 @@ Page layout
 */
 
 
-abstract class SpaceTabPage extends AppPage {
+export abstract class SpaceTabPage extends AppPage {
 
-  mainNavBar = new ui.BaseElement(
+  mainNavBar = new BaseElement(
     this.header.$('ul.nav.navbar-nav.navbar-primary.persistent-secondary'),
     'Main Navigation Bar'
 
   )
 
-  planTab = new ui.Clickable(
+  planTab = new Clickable(
     this.mainNavBar.element(by.cssContainingText('li', 'Plan')),
     'Plan'
   );
@@ -70,19 +75,19 @@ abstract class SpaceTabPage extends AppPage {
 
 }
 
-type WorkItemType = 'task' | 'feature' | 'bug'
+export type WorkItemType = 'task' | 'feature' | 'bug'
 
-interface WorkItem {
+export interface WorkItem {
   title: string
   description?: string
   type?: WorkItemType
 }
 
-class WorkItemQuickAdd extends ui.Clickable {
-  titleTextInput = new ui.TextInput(this.$('input.f8-quickadd-input'), 'Work item Title')
+export class WorkItemQuickAdd extends Clickable {
+  titleTextInput = new TextInput(this.$('input.f8-quickadd-input'), 'Work item Title')
   buttonsDiv = this.$('div.f8-quickadd__wiblk-btn.pull-right')
-  acceptButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓')
-  cancelButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-default'), 'x')
+  acceptButton = new Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓')
+  cancelButton = new Button(this.buttonsDiv.$('button.btn.btn-default'), 'x')
 
   constructor(el: ElementFinder, name = 'Work Item Quick Add') {
     super(el, name)
@@ -109,8 +114,8 @@ class WorkItemQuickAdd extends ui.Clickable {
   }
 }
 
-class WorkItemList extends ui.BaseElement {
-  overlay = new ui.BaseElement(this.$('div.lock-overlay-list'));
+export class WorkItemList extends BaseElement {
+  overlay = new BaseElement(this.$('div.lock-overlay-list'));
 
   quickAdd =  new WorkItemQuickAdd(
     this.$('#workItemList_quickAdd > alm-work-item-quick-add > div'));
@@ -127,7 +132,7 @@ class WorkItemList extends ui.BaseElement {
 }
 
 // this is what you see when you click on the Plan Tab button
-class PlannerTab extends SpaceTabPage {
+export class PlannerTab extends SpaceTabPage {
   workItemList = new WorkItemList(this.appTag.$('alm-work-item-list'));
 
   constructor(public spaceName: string) {
@@ -204,7 +209,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
   /* Pipelines section title/link */
   pipelinesSectionTitle = $('#spacehome-pipelines-title');
   addToSpaceButton = this.innerElement(
-    ui.Button, '#analyze-overview-add-to-space-button', 'Add to space')
+    Button, '#analyze-overview-add-to-space-button', 'Add to space')
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');

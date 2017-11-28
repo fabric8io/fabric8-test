@@ -98,11 +98,11 @@ function timestamp(): string {
   return `${time}.${ms}`;
 }
 
-function debugEnabled(...msg: any[]) {
+export function debugEnabled(...msg: any[]) {
   console.log(`[${timestamp()}]:`, ...msg);
 }
 
-function debugNoop(...msg: any[]) {}
+export function debugNoop(...msg: any[]) {}
 
 export function info(...msg: any[]) {
   console.info(`[${timestamp()}]:`, ...msg);
