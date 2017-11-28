@@ -5,7 +5,8 @@
     "sourceMap": false,
     "strict": true,
     "strictNullChecks": true,
-    "declaration": true
+    "declaration": true,
+    "lib": [ "es2015" ]
   },
 
   "exclude": [
