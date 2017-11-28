@@ -1,6 +1,6 @@
 import { browser } from 'protractor';
-import * as support from './support';
-import { MainDashboardPage, SpaceDashboardPage } from './page_objects';
+import * as support from '../helpers/src/support';
+import { MainDashboardPage, SpaceDashboardPage } from '../helpers/src/page_objects';
 
 describe('Creating new spaces in OSIO', () => {
   let dashboardPage: MainDashboardPage;
