@@ -9,7 +9,8 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
 import * as ui from '../ui';
-import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog'
+import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
+import { TextInput, Button } from '../ui';
 
 /*
 Page layout
@@ -185,22 +186,10 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* Stack/Analytical Reports */
   stackReportsSectionTitle = $('#spacehome-analytical-report-title');
-  stackReportsButton = element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
-  stackReportSection = $('#fabric8-stack-analysis');
-  stackReportSummaries = $('#stack-report-inshort');
-  stackReportFindingsInShort = $('#findings-inshort');
-  stackReportSummaryInShort = $('#summary-inshort');
-  stackReportRecommendationsInShort = $('#recommendations-inshort');
-  stackReportDetailedReport = $('#modal.in.fade');
-  detailedReportHeading = element (by.xpath('.//*[contains(text(),\'Stack report\')]/..'));
-  detailedAnalysisHeading = element (by.xpath('.//*[contains(text(),\'Detail analysis of your stack components\')]'));
-  additionalComponentsHeading = element (by.xpath('.//*[contains(text(),\'Additional components recommended by Openshift IO\')]'));
-  dependenciesTable = element (by.xpath('.//*[contains(text(),\'Detail analysis of your stack components\')]/../../../../../div[2]/div/component-level-information/div/div/table'));
-  dependenciesTableViewToggle = element (by.xpath('.//*[contains(text(),\'Detail analysis of your stack components\')]/../i'));
-  additionalComponentsTable = element (by.xpath('.//*[contains(text(),\'Additional components recommended by Openshift IO\')]/../../../../../div[2]/div/component-level-information/div/div/table'));
-  additionalComponentsTableViewToggle = element (by.xpath('.//*[contains(text(),\'Additional components recommended by Openshift IO\')]/../i'));
-  analyticsCloseButton = element (by.xpath('.//h4[contains(text(),\'Report title on Application\')]/../button'));
-  // tslint:enable:max-line-length
+  stackReportsButton = new Button(element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
+  analyticsCloseButton = new Button(element (by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
+  detailedReportHeading = element (by.xpath('.//*[contains(text(),\'Show complete stack report\')]/..'));
+   // tslint:enable:max-line-length
 
   /* UI Page Section: My Workitems */
   workitems = $('#spacehome-my-workitems-card');
