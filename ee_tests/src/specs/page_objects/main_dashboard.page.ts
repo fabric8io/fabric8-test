@@ -141,4 +141,11 @@ Page layout
     return spaceDashboard;
   }
 
+  async ready() {
+    // ensure that the _gettingStarted Page is gone before checking for
+    // headers and dropdown
+    await browser.wait(until.urlContains(this.url), support.minutes(2));
+    super.ready()
+  }
+
 }
