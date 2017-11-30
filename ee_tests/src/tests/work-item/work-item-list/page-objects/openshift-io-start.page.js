@@ -319,11 +319,12 @@ class OpenShiftIoStartPage {
     var platform = testSupport.targetPlatform();
     console.log("logging in to platform " + platform);
 
-    if ("osio" === platform) {
+/* Commenting out in an effort to workaround Fabric8-ui login failures */    
+//    if ("osio" === platform) {
       return new OpenShiftIoRHDLoginPage();
-    } else {
-      return new OpenShiftIoF8OSLoginPage();
-    }
+//    } else {
+//      return new OpenShiftIoF8OSLoginPage();
+//    }
   }
 
   /* Botton of the page Login button */
