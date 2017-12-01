@@ -30,13 +30,25 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-  //  Vert.x HTTP Booster
-  it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
-    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
-  });
-  //  Spring Boot - HTTP
-  //  Vert.x Health Check Example
-  //  Spring Boot Health Check Example
+//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+ it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
+  await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+ });
+
+// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+//   });
 
 // tslint:enable:max-line-length
 
@@ -102,6 +114,7 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.sleep(support.DEFAULT_WAIT);
     try {
       await expect(spaceDashboardPage.detailedReportHeading.getText()).toContain(expectedReportSummary);
+      support.writeScreenshot('target/screenshots/analytic_report_success_' + spaceName + '.png');
     } catch (e) {
         support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
     }
