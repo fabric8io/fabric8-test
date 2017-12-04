@@ -28,12 +28,12 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
-        -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
     -   extract_binds:
         -   'selected_github_organisation': {'jsonpath_mini': 'inputs.0.valueChoices.0.id'}
 
@@ -50,8 +50,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   false}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectOne"}
         -   compare:    {jmespath: "inputs[0].inputType", comparator: "eq",   expected:  "org.jboss.forge.inputType.DEFAULT"}
         -   compare:    {jmespath: "inputs[0].valueType", comparator: "eq",   expected:  "io.fabric8.forge.generator.git.GitOrganisationDTO"}
@@ -69,12 +69,12 @@
     -   expected_status:    [200]
     -   validators:
         -   compare:    {header: "content-type", comparator: "contains",   expected:   "application/json"}
-        -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "metadata.name", comparator: "eq",   expected:  "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   false} # validation for next should be skipped
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectMany"}
     -   extract_binds:
         -   'selected_github_repo_1': {'jsonpath_mini': 'inputs.0.valueChoices.0.id'}
@@ -97,8 +97,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
         -   compare:    {jmespath: "messages", comparator: "type",   expected:  array}
@@ -118,8 +118,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true} 
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
         -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectOne"}
@@ -160,8 +160,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
         -   compare:    {jmespath: "messages", comparator: "type",   expected:  array}
@@ -181,8 +181,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true} 
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false}
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
         -   compare:    {jmespath: "inputs[0].class", comparator: "eq",   expected:  "UISelectOne"}
@@ -223,8 +223,8 @@
         -   compare:    {jmespath: "state.valid", comparator: "eq",   expected:   true}
         -   compare:    {jmespath: "state.canMoveToNextStep", comparator: "eq",   expected:   false} # bc final step
         -   compare:    {jmespath: "state.canMoveToPreviousStep", comparator: "eq",   expected:   true}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickOrganisationStep"}
-        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GithubImportPickRepositoriesStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickOrganisationStep"}
+        -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.github.GitHubImportPickRepositoriesStep"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "Obsidian: Configure Pipeline"}
         -   compare:    {jmespath: "state.steps", comparator: "contains",   expected:   "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"}
         -   compare:    {jmespath: "messages", comparator: "type",   expected:  array}
