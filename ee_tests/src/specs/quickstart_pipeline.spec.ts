@@ -18,8 +18,8 @@ describe('Creating new quickstart in OSIO', () => {
   });
 
   afterEach( async () => {
-    // await browser.sleep(support.DEFAULT_WAIT);
-    // await dashboardPage.logout();
+    await browser.sleep(support.DEFAULT_WAIT);
+    await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
