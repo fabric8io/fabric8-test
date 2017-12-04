@@ -1,4 +1,4 @@
- /**
+/**
  * POC test for automated UI tests for openshift.io
  *  
  * Note on screen resolutions - See: http://www.itunesextractor.com/iphone-ipad-resolution.html
@@ -12,33 +12,38 @@
  * @author ldimaggi, bsutter
  */
 
-/* Actions to be performed by this EE Demo/Test - As suggested by Pavel T. August - June 2017
-
-We use the following steps to check the basic stack analysis functionality:
-
-1       Login to openshift.io with username/password
-2       Open user Profile page and click on "Update Profile"
-3       From "Edit Profile", click on "Update Tenant". Wait for 10 minutes
-4       Click on "Create Space" and provide name
-5       Select "Create a New Quickstart project"
-6       Select technology stack "Vert.x - Basic"
-7       Select Build pipeline strategy "Release"
-8       Finish space creation with other default options
-9       Click on pipelines link from the space dashboard
-10      Build succeeds
-11      Stack Reports link exists
-12      Wait for 5 minutes
-13      Clicking on stack reports shows recommendations and stack data
-14      Create workitem on one of the recommendations
-15      Verify that the planner workitem is created for the recommendation
-16      Go to the newly created space's dashboard
-17      Verify that the recommendations appear on the space dashboard
-
-Actually most of these steps are already part of the workshop script, so only
-last 6 steps are new.
-
-Cheers,
-Pavel
+/* Actions to be performed by this EE Demo/Test - As suggested by Burr - June 2017
+  https://vimeo.com/221033408
+  Step 1) Login to openshift.io
+  Step 2) In OSIO, create new space
+  Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults
+  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project
+  Step 5) In OSIO, create new workitem, type = bug, assign to current user, set status to “in progress”
+  Step 6) In OSIO, create Che workspace for project 
+  Step 7) In OSIO, open Che workspace for project
+  Step 8) In Che editor, edit index.html to alter message displayed by Vert.X project
+  Step 9) In Che terminal window, execute: mvn clean compile test
+  Step 10) In Che, execute Junit test
+  Step 11) In Che, run the Vert.X application
+  Step 12) In Che terminal window, execute: curl localhost:8080/api/greeting?name=test
+  Step 13) In Che, commit changes to git
+  Step 14) In Che, execute git push
+  Step 15) In github, verify code changes were saved
+  Step 16) In OSIO, verify that github webhook fired and project pipeline is running
+  Step 17) In OSIO, access Jenkins log
+  Step 18) In Jenkins, verify that log shows the application has built and tests have run 
+  Step 19) 1In Che, locate realtime analysis of bad dependency - ch.qos.logstack
+  Step 20) In Che, verify that CVE is caught
+  Step 21) In Jenkins, locate OSIO Analytics (Bayesian) in Jenkins log
+  Step 22) In OSIO, verify that rollout to stage was successful
+  Step 23) In OSIO, in “Applications” tab, verify project is successful on stage
+  Step 24) In OpenShift console, verify project is running on stage
+  Step 25) In OpenShift console, click on deployed application to access the app on stage
+  Step 26) In OSIO, approve promotion to production
+  Step 27) In OpenShift console, click on deployed application to access the app on production
+  Step 28) In OSIO, under pipelines, select “Stack Reports”
+  Step 29) In OSIO, verify contents of Stack Report Recommendations for unresolved CVE
+  Step 30) In OSIO, log out
 */
 
 var until = protractor.ExpectedConditions;
@@ -51,16 +56,13 @@ var OpenShiftIoStartPage = require('../page-objects/openshift-io-start.page'),
     OpenShiftIoPipelinePage = require('../page-objects/openshift-io-pipeline.page'),
     OpenShiftIoCodebasePage = require('../page-objects/openshift-io-codebase.page'),
     OpenShiftIoChePage = require('../page-objects/openshift-io-che.page'),
-    OpenShiftProfilePage = require('../page-objects/openshift-io-profile.page'),
-    OpenShiftUpdateProfilePage = require('../page-objects/openshift-io-update-profile.page'),
-    OpenShiftIoCleanTenantPage = require('../page-objects/openshift-io-clean-tenant.page'),
     testSupport = require('../testSupport'),
     constants = require("../constants");
 
 /* TODO - convert this into a test parameter */
 var GITHUB_NAME = browser.params.github.username;
 
-describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify Analytic report: ', function () {
+describe('openshift.io End-to-End POC test - Scenario - CREATE project - Run Pipeline: ', function () {
   var page, items, browserMode;
 
   /* Set up for each function */
@@ -75,12 +77,49 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
   
   /* Tests must reset the browser so that the test can logout/login cleanly */
   afterEach(function () { 
-    //browser.restart();
+//    browser.restart();
   });
 
-  /* Simple test for registered user */
-  it("should perform Burr's demo - CREATE project - Verify Analytic report", function() {
+  var quickstartName = browser.params.target.quickstart;
+  if (quickstartName) {
+    console.log("Running quickstart test: " + quickstartName);
+    
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - " + quickstartName, function () {
+      runTheTest(page, quickstartName);
+    });
 
+  } else {
+    /* Quickstart test */
+//    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.X Basic", function () {
+//      runTheTest(page, "Vert.x HTTP Booster");
+//    });
+//
+//    /* Quickstart test */
+//    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x - ConfigMap", function () {
+//      runTheTest(page, "Vert.x - HTTP & Config Map");
+//    });
+
+    /* Quickstart test */
+    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Basic", function () {
+      runTheTest(page, "Spring Boot - HTTP");
+    });
+
+//    /* Quickstart test */
+//    it("should perform Quickstart test - CREATE project - Run Pipeline - Vert.x Health Check Example", function () {
+//      runTheTest(page, "Vert.x Health Check Example");
+//    })
+//    /* Quickstart test */
+//    it("should perform Quickstart test - CREATE project - Run Pipeline - Spring Boot - Health Check", function () {
+//      runTheTest(page, "Spring Boot Health Check Example");
+//    });
+  }
+
+});
+
+  /* Run the test */
+  var runTheTest = function (page, quickStartName) {
+      
     /* Protractor must recreate its ExpectedConditions if the browser is restarted */
     until = protractor.ExpectedConditions;
     
@@ -88,24 +127,34 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
 
     /* ----------------------------------------------------------*/
     /* Step 1) Login to openshift.io */
-    OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password, constants.CLEAN_ALL );
+    OpenShiftIoDashboardPage = testSupport.loginCleanUpdate (page, browser.params.login.user, browser.params.login.password );
+    //testSupport.cleanEnvironment();
 
     /* ----------------------------------------------------------*/
     /* Step 2) In OSIO, create new space */
 
     var spaceTime = testSupport.returnTime();
     var username = testSupport.userEntityName(browser.params.login.user);
-    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, browser.params.login.user, browser.params.login.password, browser.params.target.url);
+    var githubname = GITHUB_NAME;
+    var platform = testSupport.targetPlatform();
+    if (platform !== "osio") {
+      githubname = browser.params.login.user || username;
+    }
+
+    OpenShiftIoSpaceHomePage = testSupport.createNewSpace (OpenShiftIoDashboardPage, spaceTime, username, browser.params.login.password, browser.params.target.url);
 
     /* ----------------------------------------------------------*/
-    /* Step 3) In OSIO, add quickstart to space - Vert.X - accept all defaults */
+    /* Step 3) In OSIO, add quickstart to space  */
 
-    testSupport.createQuickstartDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, spaceTime);  
-        
+    testSupport.createQuickstartByNameDefaults (OpenShiftIoSpaceHomePage, OpenShiftIoDashboardPage, quickStartName);
+   
+   /* ----------------------------------------------------------*/
+   /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
+
     /* Verify that Jenkins is still up and running */
     /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
     console.log ("verify that Jenkins pod is still running");
-    browser.sleep(constants.LONG_WAIT);
+    //browser.sleep(constants.LONG_WAIT);
     OpenShiftIoDashboardPage.clickStatusIcon();
     expect(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn.isPresent()).toBe(true);
 
@@ -113,7 +162,6 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();
     browser.get(testSupport.joinURIPath(browser.params.target.url, username, spaceTime));
-
     OpenShiftIoPipelinePage = OpenShiftIoSpaceHomePage.clickPipelinesSectionTitle();  
 
     /* Verify that only 1 build pipeline is created - this test was added in response to this bug:
@@ -130,112 +178,98 @@ describe('openshift.io End-to-End POC test - Scenario - CREATE project - Verify 
       expect(text).not.toContain("No pipeline builds have run for");
 
       /* Verify that the source repo is referenced */
-      console.log ("Verify that source repository is displayed");
-      expect(text).toContain("Source Repository: https://github.com/" + GITHUB_NAME + "/" + spaceTime + ".git");
-
+      console.log ("Verify that source repository is displayed for: " + githubname + "/" + spaceTime);
+      expect(text).toContain("Source Repository: https://github.com/" + githubname + "/" + spaceTime + ".git");
     });
 
     /* If the input require buttons are not displayed, the build has either failed or the build pipeline
        is not being displayed - see: https://github.com/openshiftio/openshift.io/issues/431   */
     console.log("Verify that pipeline is displayed - https://github.com/openshiftio/openshift.io/issues/431");
     browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.pipelineByName(spaceTime)), constants.WAIT, 'Failed to find PipelineByName');
+
+    browser.takeScreenshot().then(function (png) {
+      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_created.png');
+    });
    
-    /* Seeing intermittent issues here - take a screenshot to debug - sometime pipeline is never created */
-    browser.sleep(constants.LONGER_WAIT);
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_1_pipeline_promote.png');
-    });
+    /* There is a recurring/intermittent problem where build pipelines are not created.
+      https://github.com/openshiftio/openshift.io/issues/517 */ 
 
-    browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-    expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true);
-
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_2_pipeline_promote.png');
-    });
-
-    OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
-    OpenShiftIoPipelinePage.clickPromoteButton();
+    /* Take a screenshot by using a workaround to this issue with the Jasmine HTML reporter:
+       https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  
+       Ref: https://stackoverflow.com/questions/20882688/need-help-on-try-catch */
+       browser.wait(until.presenceOf(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime)), constants.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName').then(null, function(err) {
+        console.error("Failed to find inputRequiredByPipelineByName: " + err);
     
-    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
-//    browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
+        /* Save a screenshot */
+        browser.takeScreenshot().then(function (png) {
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote_fail.png');
+          throw err;
+        });
+      });
   
-    browser.sleep(constants.LONG_WAIT);
+      /* Take a screenshot if the test expect fails with a workaround to an issue with the Jasmine HTML reporter:
+         https://github.com/Kenzitron/protractor-jasmine2-html-reporter/issues/59  */
+      if (!expect(OpenShiftIoPipelinePage.inputRequiredByPipelineByName(spaceTime).isPresent()).toBe(true)) { 
+        browser.takeScreenshot().then(function (png) {
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_pipeline_promote.png');
+        });
+      }
 
-   /* ----------------------------------------------------------*/
-   /*  Step 4) In OSIO, verify creation of analytic report */
-
-        /* Return to the account home page */
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoDashboardPage.clickRecentSpaceByName (spaceTime);
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoSpaceHomePage.clickStackReportsButton();
-    browser.sleep(constants.LONG_WAIT);
-
-    /* Save a screenshot */
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_report.png');
-    });
-    
-    OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
-      console.log("Stack report heading = " + text);
-    });
-
-    /* TODO - Replace this with a valid/reliabe test - what is here is really a POC 
-    OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 1).getText().then(function(text){
-      console.log("Stack report item = " + text);
-    });
-
-    OpenShiftIoSpaceHomePage.dependenciesTableElement (1, 2).getText().then(function(text){
-      console.log("Stack report item = " + text);
-    });
-
-    OpenShiftIoSpaceHomePage.dependenciesTable.getText().then(function(text){
-      console.log("Stack report dependencies table = " + text);
-    });
-
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoSpaceHomePage.clickAdditionalComponentsViewToggle();
-    browser.sleep(constants.LONG_WAIT);
-
-    // Save a screenshot
-    browser.takeScreenshot().then(function (png) {
-      testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_additionalreport.png');
-    });
-
-    OpenShiftIoSpaceHomePage.additionalComponentsTable.getText().then(function(text){
-      console.log("Stack report additionalComponents table = " + text);
-    });
-
-    OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 1).getText().then(function(text){
-       console.log("Stack report element = " + text);
-    });
-
-    OpenShiftIoSpaceHomePage.additionalComponentsTableElement (1, 3).getText().then(function(text){
-      console.log("Stack report element = " + text);
-    });
-*/
-    OpenShiftIoSpaceHomePage.clickAnalyticsCloseButton();
-
-    OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
-    browser.sleep(constants.WAIT);
-
-    OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
-    browser.sleep(constants.WAIT);
+      // TODO input button not yet working on kubernetes */
+    if (platform !== "fabric8-kubernetes") {
+      OpenShiftIoPipelinePage.clickInputRequiredByPipelineByName(spaceTime);
+      OpenShiftIoPipelinePage.clickPromoteButton();
+      
+      browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.stageIcon), constants.WAIT, 'Failed to find stageIcon');
+      browser.wait(until.elementToBeClickable(OpenShiftIoPipelinePage.runIcon), constants.LONGER_WAIT, 'Failed to find runIcon');
           
+    }
+
+    browser.sleep(constants.LONG_WAIT);
+    
+       /* ----------------------------------------------------------*/
+       /*  Step 4) In OSIO, verify creation of analytic report */
+    
+        /* Return to the account home page */
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+    
+        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+        browser.sleep(constants.WAIT);
+    
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+    
+        OpenShiftIoDashboardPage.clickRecentSpaceByName (spaceTime);
+        browser.sleep(constants.WAIT);
+    
+        OpenShiftIoSpaceHomePage.clickStackReportsButton();
+        browser.sleep(constants.LONG_WAIT);
+    
+        /* Save a screenshot */
+        browser.takeScreenshot().then(function (png) {
+          testSupport.writeScreenShot(png, 'target/screenshots/' + spaceTime + '_analytic_report.png');
+        });
+        
+        OpenShiftIoSpaceHomePage.detailedReportHeading.getText().then(function(text){
+          console.log("Stack report heading = " + text);
+        });
+    
+        OpenShiftIoSpaceHomePage.clickAnalyticsCloseButton();
+    
+        OpenShiftIoDashboardPage.clickHeaderDropDownToggle();
+        browser.sleep(constants.WAIT);
+    
+        OpenShiftIoDashboardPage.clickAccountHomeUnderLeftNavigationBar();
+        browser.sleep(constants.WAIT);
+
     /* ----------------------------------------------------------*/
     /* Step 30) In OSIO, log out */
-    testSupport.logoutUser(OpenShiftIoDashboardPage);
 
-  });
+    // TODO logout only works on OSIO so far
+    if (platform === "osio") {
+      testSupport.logoutUser(OpenShiftIoDashboardPage);
+    }
 
-});
+    
+  }

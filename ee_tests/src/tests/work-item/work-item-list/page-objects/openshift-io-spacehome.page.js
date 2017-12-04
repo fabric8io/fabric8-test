@@ -386,9 +386,9 @@ Page layout as of April 24, 2017 - UI elements for Nav bar are in: openshift-io-
     var xpathString = ".//*[contains(text(),'Additional components recommended by Openshift IO')]/../../../../../div[2]/div/component-level-information/div/div/table/tbody/tr[" + row + "]/td[" + column + "]";
     return element (by.xpath (xpathString));
   }
-  
+
   get analyticsCloseButton () {
-    return element (by.xpath(".//h4[contains(text(),'Report title on Application')]/../button"));
+    return element (by.xpath(".//h4[contains(text(),'Stack report for')]/../button"));
   }
   clickAnalyticsCloseButton () {
     browser.wait(until.elementToBeClickable(this.analyticsCloseButton), constants.LONG_WAIT, 'Failed to find element analyticsCloseButton');
