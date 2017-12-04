@@ -19,7 +19,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     // await browser.sleep(support.DEFAULT_WAIT);
-    await dashboardPage.logout();
+    // await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
@@ -30,23 +30,23 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
+//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline, verify analytic report created', async () => {
 //    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
 //  });
 
- it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
+ it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline, verify analytic report created', async () => {
   await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
  });
 
-// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
+// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline, verify analytic report created', async () => {
 //    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
 //  });
 
-//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
+//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline, verify analytic report created', async () => {
 //    await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
 //  });
 
-//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
+//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline, verify analytic report created', async () => {
 //    await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
 //   });
 

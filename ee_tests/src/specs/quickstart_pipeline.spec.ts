@@ -1,12 +1,12 @@
 import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
 
-import {
-  MainDashboardPage,
-  SpaceDashboardPage, SpacePipelinePage
-} from './page_objects';
+import { LandingPage } from './page_objects/landing.page';
+import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
+import { SpacePipelinePage } from './page_objects/space_pipeline.page';
+import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
-// Tests to verify the build pipeline
+/* Tests to verify the build pipeline */
 
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
@@ -17,39 +17,50 @@ describe('Creating new quickstart in OSIO', () => {
     dashboardPage = await login.run();
   });
 
+  afterEach( async () => {
+    // await browser.sleep(support.DEFAULT_WAIT);
+    // await dashboardPage.logout();
+  });
+
   /* Simple test - accept all defaults for new quickstarts */
 
   /* The majority of these tests are commented out not due to any bugs,
      but to ensure that the test does not collide with other tests. TODO - to
      resolve these collisions */
 
-  it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
-    try {
-      await runTest('Vert.x - HTTP & Config Map')
-    } catch (e) {
-      support.info('Error:', e);
-    }
-  });
+  // tslint:disable:max-line-length
 
-  async function runTest (quickstartName: string) {
+//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+ it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
+  await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+ });
+
+// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+//  });
+
+//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
+//    await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+//   });
+
+// tslint:enable:max-line-length
+
+  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
 
     let spaceName = support.newSpaceName();
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
-    let currentUrl = await browser.getCurrentUrl();
-    support.debug ('>>> browser is URL: ' + currentUrl);
-
-    let url = browser.baseUrl;
-    let user = browser.params.login.user;
-    let expectedUrl = support.joinURIPath(url, user, spaceName);
-    expect(browser.getCurrentUrl()).toEqual(expectedUrl);
-
-    support.info('EE test - new space URL:', expectedUrl);
-
     let wizard = await spaceDashboardPage.addToSpace();
 
-    support.info('Creating a Vert.x HTTP Booster');
-    await wizard.newQuickstartProject({ project: 'Vert.x HTTP Booster' });
+    support.info('Creating quickstart: ' + quickstartName);
+    await wizard.newQuickstartProject({ project: quickstartName });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -60,8 +71,7 @@ describe('Creating new quickstart in OSIO', () => {
        receive the click: <modal-container class="modal fade" role="dialog" tabindex="-1" style="display:
        block;">...</modal-container>
 
-       The only reliable way to avoid this is a sleep statement: await browser.sleep(5000);
-       In order to avoid using a sleep statement, the test navigates to the pipeline page URL */
+       The only reliable way to avoid this is a sleep statement: await browser.sleep(5000); */
     await browser.sleep(5000);
 
     // tslint:disable:max-line-length
@@ -88,9 +98,15 @@ describe('Creating new quickstart in OSIO', () => {
       await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
       await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
     } catch (e) {
-      support.writeScreenshot('target/promote_fail_' + spaceName + '.png');
+      support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
     }
-    // tslint:disable:max-line-length
+
+    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
+    await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
+    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
+    await dashboardPage.recentSpaceByName(spaceName).click();
+    await spaceDashboardPage.stackReportsButton.clickWhenReady();
+
   }
 
 });
