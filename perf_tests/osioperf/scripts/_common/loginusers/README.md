@@ -20,8 +20,8 @@ $ mvn clean compile exec:java (-Dauth.server.address=...) (-Dauth.server.port=..
 ```
 
 where:
- * `auth.server.address` = server of Auth Services (e.g. "http://auth.prod-preview.openshift.io")
- * `auth.server.port` = a port number of the service endpoints (e.g. "443")
+ * `auth.server.address` = server of Auth Services (e.g. "`https://auth.prod-preview.openshift.io`")
+ * `auth.server.port` = a port number of the service endpoints (e.g. "`443`")
  * `user.tokens.file` = an output file where the generated auth and refresh tokens were written after succesfull login of each user
 
 Example:
