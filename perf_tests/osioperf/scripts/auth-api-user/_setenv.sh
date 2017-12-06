@@ -48,13 +48,13 @@ export ENV_FILE=/tmp/osioperftest.users.env
 #export ZABBIX_REPORT_ENABLED=false
 
 # An address of Zabbix server
-#export ZABBIX_SERVER=
+#export ZABBIX_SERVER=zabbix.devshift.net
 
 # A port of Zabbix server used by zabbix_sender utility
-#export ZABBIX_PORT=
+#export ZABBIX_PORT=10051
 
 # A hostname in Zabbix the report is for
-#export ZABBIX_HOST=
+#export ZABBIX_HOST=auth.prod-preview
 
 # A number of seconds for how long the test should run
 #export DURATION=300
