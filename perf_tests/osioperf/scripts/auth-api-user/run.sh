@@ -14,7 +14,7 @@ echo " Login users and get auth tokens"
 LOGIN_USERS=$COMMON/loginusers
 
 mvn -f $LOGIN_USERS/pom.xml clean compile
-cat ./$USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
+cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
 export TOKENS_FILE=`readlink -f osioperftest.tokens`
 mvn -f $LOGIN_USERS/pom.xml exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
 echo "#!/bin/bash
