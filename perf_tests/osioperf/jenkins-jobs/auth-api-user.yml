@@ -83,8 +83,8 @@
             url: https://github.com/pmacik/fabric8-test.git
             branches:
                 - '*/master'
-#    triggers:
-#        - timed: H 0,12 * * *
+    triggers:
+        - timed: H 0,12 * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
