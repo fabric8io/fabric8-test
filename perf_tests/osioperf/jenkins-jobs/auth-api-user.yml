@@ -80,12 +80,11 @@
            description: A hostname in Zabbix the report is for
     scm:
         - git:
-            url: git@gitlab.cee.redhat.com:pmacik/osio-perf.git
+            url: https://github.com/pmacik/fabric8-test.git
             branches:
                 - '*/master'
-            credentials-id: osioperf-jenkins-ssh
-    triggers:
-        - timed: H 0,12 * * *
+#    triggers:
+#        - timed: H 0,12 * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
