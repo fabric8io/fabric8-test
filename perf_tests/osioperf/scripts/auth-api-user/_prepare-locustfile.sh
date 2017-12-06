@@ -11,4 +11,3 @@ echo "Filtering $LOCUST_FILE"
 sed -i -e 's,@@SERVER_SCHEME@@,'$SERVER_SCHEME',g' $LOCUST_FILE;
 sed -i -e 's,@@SERVER_HOST@@,'$SERVER_HOST',g' $LOCUST_FILE;
 sed -i -e 's,@@AUTH_PORT@@,'$AUTH_PORT',g'  $LOCUST_FILE;
-sed -i -e 's,@@USER_TOKEN@@,'$USER_TOKEN',g' $LOCUST_FILE;
