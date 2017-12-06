@@ -101,12 +101,6 @@ describe('Creating new quickstart in OSIO', () => {
       support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
     }
 
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.recentSpaceByName(spaceName).click();
-    await spaceDashboardPage.stackReportsButton.clickWhenReady();
-
   }
 
 });
