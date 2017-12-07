@@ -1,12 +1,20 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import * as ui from '../../ui'
-import * as support from '../../support'
+import {
+  BaseElement,
+  BaseElementArray,
+  Button,
+  Clickable,
+  SingleSelectionDropdown,
+  ModalDialog,
+  MultipleSelectionList,
+  TextInput,
+} from '../../ui'
 
 
-export class Wizard extends ui.BaseElement {
+export class Wizard extends BaseElement {
 
-  footer = new ui.BaseElement(this.$('div.modal-footer'));
-  primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next')
+  footer = new BaseElement(this.$('div.modal-footer'));
+  primaryButton = new Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next')
 
   constructor(element: ElementFinder, name: string = '') {
     super(element, name);
@@ -29,15 +37,15 @@ export interface ProjectDetail {
 const PROJECT_CARD = 'div.card-pf';
 
 export class QuickStartWizard extends Wizard {
-  filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter')
+  filterTextInput = new TextInput(this.$('input[type="text"]'), 'filter')
 
   // TODO: may be turn this into a widget
-  projectSelector = new ui.BaseElement(this.$('ob-project-select'))
-  projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD))
+  projectSelector = new BaseElement(this.$('ob-project-select'))
+  projectCards = new BaseElementArray(this.projectSelector.$$(PROJECT_CARD))
 
-  projectInfoStep = new ui.BaseElement(this.$('project-info-step'))
+  projectInfoStep = new BaseElement(this.$('project-info-step'))
   // we worry about proj
-  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
+  projectNameInput = new TextInput(this.projectInfoStep.$('#named'))
 
   async ready() {
     await super.ready();
@@ -52,13 +60,13 @@ export class QuickStartWizard extends Wizard {
     this.debug(' .... cards ', 'ok')
   }
 
-  async findCard(name: string): Promise<ui.Clickable> {
-    support.debug(' .... finding card', name)
+  async findCard(name: string): Promise<Clickable> {
+    this.debug('finding card', name)
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
     let element = this.projectSelector.element(cardFinder)
-    let card =  new ui.Clickable(element, name);
+    let card =  new Clickable(element, name);
     await card.ready();
-    support.debug(' .... found card', name)
+    this.debug('found card', name)
     return card;
   }
 
@@ -102,10 +110,10 @@ export interface RepoDetail {
 
 export class ImportCodeWizard extends Wizard {
 
-  githubOrg = new ui.SingleSelectionDropdown(
+  githubOrg = new SingleSelectionDropdown(
     this.$('organisation-step single-selection-dropdown'), 'Github Org')
 
-  repoList = new ui.MultipleSelectionList(
+  repoList = new MultipleSelectionList(
     this.$('multiple-selection-list'), 'Repository List')
 
   async ready() {
@@ -140,13 +148,13 @@ export class ImportCodeWizard extends Wizard {
 
 }
 
-export class AddToSpaceDialog extends ui.ModalDialog {
+export class AddToSpaceDialog extends ModalDialog {
 
-  noThanksButton = new ui.Button($('#noThanksButton'), 'No Thanks ...');
-  importExistingCodeButton = new ui.Button(
+  noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
+  importExistingCodeButton = new Button(
     $('#importCodeButton'), 'Import Existing Code');
 
-  newQuickstartButton = new ui.Button(
+  newQuickstartButton = new Button(
     $('#forgeQuickStartButton'), 'New Quickstart Project');
 
   // NOTE: not visible initially
@@ -174,7 +182,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   async importExistingCode(details: RepoDetail) {
     await this.importExistingCodeButton.clickWhenReady();
     await this.importCodeWizard.ready();
-    support.debug("... going to import repo", details.repositories)
+    this.debug('import repo', "going to import repo", details.repositories.join(', '))
     await this.importCodeWizard.importCode(details);
   }
 

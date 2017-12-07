@@ -1,6 +1,6 @@
 import { browser }  from 'protractor';
-import * as support from './support';
-import { MainDashboardPage } from './page_objects';
+import * as support from '../helpers/src/support';
+import { MainDashboardPage } from '../helpers/src/page_objects';
 
 describe('openshift.io End-to-End POC test - Scenario - Login user: ', function () {
 

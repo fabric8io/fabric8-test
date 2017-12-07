@@ -1,24 +1,21 @@
 import { browser, by, ExpectedConditions as until, $ } from 'protractor';
-import * as support from '../support';
-
 import { AppPage } from './app.page';
+import {BaseElement, ModalDialog, Button, TextInput} from '../ui';
 
-import * as ui from '../ui';
 
-
-class CleanupConfirmationModal extends ui.ModalDialog {
+class CleanupConfirmationModal extends ModalDialog {
 
   // NOTE: bodyContent is a tag
   body = this.content.$('.modal-body');
   bodyContent = this.body.$('modal-content');
 
-  confirmationInput = new ui.TextInput(
+  confirmationInput = new TextInput(
     this.bodyContent.$('form input'), 'username confirmation');
 
-  confirmEraseButton = new ui.Button(
+  confirmEraseButton = new Button(
     this.bodyContent.$('form button'), 'I understand my actions ...');
 
-  constructor(element: ui.BaseElement) {
+  constructor(element: BaseElement) {
     super(element, 'Cleanup confirmation Dialog');
   }
 
@@ -36,11 +33,11 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 
 export class CleanupUserEnvPage extends AppPage {
   eraseEnvButton = this.innerElement(
-    ui.Button, '#overview button',
+    Button, '#overview button',
     'Erase My OpenShift.io Environment'
   );
 
-  alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
+  alertBox = new BaseElement($('#overview div.alert'), 'Alert Box');
 
 
   constructor() {
@@ -50,24 +47,24 @@ export class CleanupUserEnvPage extends AppPage {
 
   async ready() {
     await super.ready();
-    support.debug('... checking if erase button is there');
+    this.debug('ready', '... checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
-    support.debug('... checking if erase button is there - OK');
+    this.debug('ready', '... checking if erase button is there - OK');
   }
 
   async cleanup(username: string) {
     await this.eraseEnvButton.clickWhenReady();
 
-    let confirmationElement =  this.innerElement(ui.BaseElement, 'modal', '');
+    let confirmationElement =  this.innerElement(BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
 
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
-    support.debug('... waiting for alert box');
+    this.debug('wait', 'for alert box');
     await this.alertBox.untilPresent(15 * 1000);
-    support.debug('... waiting for alert box - OK');
+    this.debug('wait', 'for alert box - OK');
     await this.alertBox.untilTextIsPresent('Your OpenShift.io environment has been erased!');
   }
 
@@ -75,7 +72,7 @@ export class CleanupUserEnvPage extends AppPage {
 
 export class EditUserProfilePage extends AppPage {
 
-  resetEnvButton = this.innerElement(ui.Button, '#overview button', 'Reset Environment');
+  resetEnvButton = this.innerElement(Button, '#overview button', 'Reset Environment');
 
   async ready() {
     await this.resetEnvButton.untilClickable();
@@ -83,14 +80,10 @@ export class EditUserProfilePage extends AppPage {
 
   async gotoResetEnvironment() {
     await this.ready();
-    support.debug('... going to click', 'Reset Environment');
     await this.resetEnvButton.clickWhenReady();
-    support.debug('... going to click', 'Reset Environment', 'OK');
 
     let page = new CleanupUserEnvPage();
-    support.debug('... going to open: CleanupUserEnvPage');
     await page.open();
-    support.debug('... going to open: CleanupUserEnvPage - OK');
     return page;
   }
 
@@ -99,7 +92,7 @@ export class EditUserProfilePage extends AppPage {
 export class UserProfilePage extends AppPage {
   // TODO is there a better way to find the button? can we get devs to add an id?
   updateProfileButton = this.innerElement(
-    ui.Button,
+    Button,
     'alm-overview button.profile-update-button',
     'Update Profile'
   );
@@ -111,7 +104,7 @@ export class UserProfilePage extends AppPage {
 
   async gotoEditProfile() {
     this.updateProfileButton.clickWhenReady();
-    support.debug('... showing up Edit User Profile');
+    this.debug('open', 'showing up Edit User Profile');
     let page =  new EditUserProfilePage();
     await page.open();
     return page;

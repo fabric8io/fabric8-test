@@ -1,7 +1,7 @@
 import { browser } from 'protractor';
-import * as support from '../specs/support';
+import * as support from '../helpers/src/support';
 
-import { LandingPage, CleanupUserEnvPage, PageOpenMode } from '../specs/page_objects';
+import { LandingPage, CleanupUserEnvPage, PageOpenMode } from '../helpers/src/page_objects';
 
 
 describe('Page', function () {

@@ -9,8 +9,8 @@ import { DEFAULT_WAIT } from '../support';
 
 // todo move to a different module
 
-type NumberComparerFn = (x: number) => boolean;
-type NumberComparer = number|NumberComparerFn;
+export type NumberComparerFn = (x: number) => boolean;
+export type NumberComparer = number|NumberComparerFn;
 
 function makeNumberComparer(compare: NumberComparer): NumberComparerFn {
   if (typeof(compare) == "number") {

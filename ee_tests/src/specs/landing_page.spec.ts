@@ -1,6 +1,6 @@
 import { browser, $$ } from 'protractor';
-import * as support from './support';
-import { LandingPage } from './page_objects/landing.page';
+import * as support from '../helpers/src/support';
+import { LandingPage } from '../helpers/src/page_objects/landing.page';
 
 describe('Landing Page', () => {
 

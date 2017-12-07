@@ -7,8 +7,12 @@
 */
 
 import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
-import * as support from '../support';
-import * as ui from '../ui';
+import {
+ DropdownItem,
+ Button,
+ TextInput,
+
+} from '../ui';
 import { BasePage, PageOpenMode } from './base.page';
 import { LandingPage } from './landing.page';
 import { MainDashboardPage } from './main_dashboard.page';
@@ -16,20 +20,9 @@ import { SpaceDashboardPage } from './space_dashboard.page';
 
 export class LoginPage extends BasePage {
   /* RHD login page UI elements */
-  usernameInput = new ui.TextInput($('#username'), 'username');
-  passwordInput = new ui.TextInput($('#password'), 'password');
-  loginButton = new ui.Button($('#kc-login'), 'Login');
-  everythingOnPage = element(by.xpath('.//*'));
-
-  /* Social media login options */
-  githubLoginButton = $('#social-github');
-  stackoverflowLoginButton = $('#social-stackoverflow');
-  linkedinLoginButton = $('.fa.fa-linkedin-square');
-  twitterLoginButton = $('#social-twitter');
-  facebookLoginButton = $('#social-facebook');
-  microsoftLoginButton = $('#social-microsoft');
-  jbossdeveloperLoginButton = $('#social-jbossdeveloper');
-
+  usernameInput = new TextInput($('#username'), 'username');
+  passwordInput = new TextInput($('#password'), 'password');
+  loginButton = new Button($('#kc-login'), 'Login');
 
   // checks if the PageObject is valid
   async ready() {

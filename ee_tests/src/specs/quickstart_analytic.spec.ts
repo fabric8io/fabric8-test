@@ -1,10 +1,10 @@
 import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
-import * as support from './support';
-
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
-import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import * as support from '../helpers/src/support';
+import {
+  LandingPage,
+  MainDashboardPage,
+  SpaceDashboardPage, SpacePipelinePage
+} from '../helpers/src/page_objects';
 
 /* Tests to verify the build pipeline */
 

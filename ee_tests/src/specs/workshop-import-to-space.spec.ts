@@ -1,12 +1,12 @@
 import { browser }  from 'protractor';
-import * as support from './support';
+import * as support from '../helpers/src/support';
 import {
   MainDashboardPage,
   SpaceDashboardPage,
   CleanupUserEnvPage,
   AddToSpaceDialog,
   PageOpenMode
-} from './page_objects';
+} from '../helpers/src/page_objects';
 
 describe('import codebase', function () {
   let dashboardPage: MainDashboardPage;

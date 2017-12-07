@@ -1,8 +1,7 @@
 import { $, by, ElementFinder, browser, ExpectedConditions as until } from 'protractor';
-import * as support from '../../support';
-import * as ui from '../../ui';
+import { BaseElement, DropdownItem, Dropdown } from '../../ui';
 
-export class ProfileDropdown extends ui.Dropdown {
+export class ProfileDropdown extends Dropdown {
   profileItem = this.item('Profile');
   aboutItem = this.item('About');
   logoutItem = this.item('Log Out')
@@ -12,16 +11,16 @@ export class ProfileDropdown extends ui.Dropdown {
   }
 
   async ready() {
-    support.debug(' ... check if ProfileDropdown is Ready');
+    this.debug('ready', ' ... check if ProfileDropdown is Ready');
     await super.ready();
     await this.profileItem.ready();
     await this.aboutItem.ready();
     await this.logoutItem.ready();
-    support.debug(' ... check if ProfileDropdown is Ready - OK');
+    this.debug('ready', ' ... check if ProfileDropdown is Ready - OK');
   }
 }
 
-export class RecentItemsDropdown extends ui.Dropdown {
+export class RecentItemsDropdown extends Dropdown {
   accountHomeItem = this.item('Account home');
   createSpaceItem = this.item('Create space');
   viewAllSpaces = this.item('View all spaces');
@@ -31,21 +30,21 @@ export class RecentItemsDropdown extends ui.Dropdown {
   }
 
   async ready() {
-    support.debug(' ... check if RecentItems is ready');
+    this.debug('ready', '... check if RecentItems is ready');
     await super.ready();
     await this.accountHomeItem.ready();
     await this.createSpaceItem.ready();
     await this.viewAllSpaces.ready();
-    support.debug(' ... check if RecentItems is ready');
+    this.debug('ready', '... check if RecentItems is ready - OK');
   }
 }
 
-// export class StatusDropdown extends ui.Dropdown {
+// export class StatusDropdown extends Dropdown {
 
 // }
 
 
-export class Header extends ui.BaseElement {
+export class Header extends BaseElement {
   profileDropdown = new ProfileDropdown(this.$('.pull-right.dropdown'));
   recentItemsDropdown = new RecentItemsDropdown(this.$$('.dropdown').get(0));
   // statusDropdown = new Dropdown(this.$$('.dropdown').get(0));
@@ -55,10 +54,10 @@ export class Header extends ui.BaseElement {
   }
 
   async ready() {
-    support.debug(' ... check if Header is ready');
+    this.debug('ready', '... check if Header is ready');
     await this.profileDropdown.ready();
     await this.recentItemsDropdown.ready();
-    support.debug(' ... check if Header is ready - OK');
+    this.debug('ready', ' ... check if Header is ready - OK');
   }
 }
 
