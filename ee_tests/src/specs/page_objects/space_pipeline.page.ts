@@ -27,18 +27,18 @@ export class SpacePipelinePage extends AppPage {
 
   /* Stage icon */
   // tslint:disable:max-line-length
-  stageIcon = element(by.xpath('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a'));
+  stageIcon = new Button (element(by.xpath('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
 
   /* Run icon */
-  runIcon = element(by.xpath('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a'));
+  runIcon = new Button (element(by.xpath('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
 
   /* Button displayed after build pipeline performs stage and test */
   inputRequiredButton = element(by.xpath('.//a[contains(text(),\'Input Required\')][1]'));
 
   /* Buttons displayed in the promote dialog */
-  closeButton = element(by.xpath('.//button[contains(text(),\'Close\')]'));
-  abortButton = element(by.xpath('.//button[contains(text(),\'Abort\')]'));
-  promoteButton = element(by.xpath('.//button[contains(text(),\'Promote\')]'));
+  closeButton = new Button (element(by.xpath('.//button[contains(text(),\'Close\')]')), 'Close button');
+  abortButton = new Button (element(by.xpath('.//button[contains(text(),\'Abort\')]')), 'Abort button');
+  promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
   /* Link to analytics report */
   stackReportsButton = element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
