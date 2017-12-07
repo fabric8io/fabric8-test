@@ -16,9 +16,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Login OSIO users
@@ -26,10 +29,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Pavel Macík <mailto:pavel.macik@gmail.com>
  */
 public class LoginUsers {
+   private static final Logger log = Logger.getLogger("login-users-log");
 
-   private static final AtomicInteger i = new AtomicInteger(1);
+   static {
+      System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] %5$s %6$s%n");
+   }
 
    public static void main(String[] args) throws Exception {
+      final LinkedList<Long> openLoginPageTimes = new LinkedList<>();
+      final LinkedList<Long> loginTimes = new LinkedList<>();
+
       final StringBuffer tokens = new StringBuffer();
 
       Properties usersProperties = new Properties();
@@ -44,22 +53,25 @@ public class LoginUsers {
          final WebDriver driver = new ChromeDriver(op);
 
          final String startUrl = System.getProperty("auth.server.address") + ":" + System.getProperty("auth.server.port") + "/api/login?redirect=http%3A%2F%2Flocalhost%3A8090%2Flink.html";
-         System.out.println(startUrl);
-         System.out.println("Logging user " + uName + " in...");
+         log.log(Level.FINE, startUrl);
+         log.log(Level.FINE, "Logging user " + uName + " in...");
 
          driver.get(startUrl);
-         long a = System.currentTimeMillis();
+         long start = System.currentTimeMillis();
 
          new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.id("kc-login")));
-
-         System.out.println(uName + "-open-login-page:" + (System.currentTimeMillis() - a) + "ms");
+         final long openLoginPageTime = System.currentTimeMillis() - start;
+         openLoginPageTimes.add(openLoginPageTime);
+         log.info(uName + "-open-login-page:" + openLoginPageTime + "ms");
          driver.findElement(By.id("username")).sendKeys(uName);
          WebElement pass = driver.findElement(By.id("password"));
          pass.sendKeys(uPasswd);
-         a = System.currentTimeMillis();
+         start = System.currentTimeMillis();
          pass.submit();
          (new WebDriverWait(driver, 10)).until(ExpectedConditions.urlContains("access_token"));
-         System.out.println(uName + "-login:" + (System.currentTimeMillis() - a) + "ms");
+         final long loginTime = System.currentTimeMillis() - start;
+         loginTimes.add(loginTime);
+         log.info(uName + "-login:" + loginTime + "ms");
          String tokenJson = null;
          String[] queryParams = new String[0];
          try {
@@ -85,6 +97,14 @@ public class LoginUsers {
                   .append("\n");
          }
       }
+      Collections.sort(openLoginPageTimes);
+      final int olpt = openLoginPageTimes.size();
+      Collections.sort(loginTimes);
+      final int lt = loginTimes.size();
+
+      log.info("All users done.\n");
+      log.info("open-login-page-time-stats:count=" + olpt + ";min=" + openLoginPageTimes.getFirst() + ";med=" + openLoginPageTimes.get(olpt / 2) + ";max=" + openLoginPageTimes.getLast());
+      log.info("login-time-stats:count=" + lt + ";min=" + loginTimes.getFirst() + ";med=" + loginTimes.get(olpt / 2) + ";max=" + loginTimes.getLast() + "\n");
       final FileWriter fw = new FileWriter(new File(System.getProperty("user.tokens.file", "user.tokens")), false);
       fw.append(tokens.toString());
       fw.close();
