@@ -4,12 +4,17 @@
 - `sudo yum install python2` OR
 - `sudo dnf install python2`
 
-2. **Install Requests**
+2. **Install Pytest framework**
+
+- `sudo dnf install python2-pytest` OR
+- `sudo yum install python2-pytest` OR
+
+3. **Install Requests**
 
 - `sudo dnf install python2-requests` OR
 - `sudo yum install python2-requests` OR
 
-3. **Install Jmespath**
+4. **Install Jmespath**
 
 - `sudo dnf install python2-jmespath` OR
 - `sudo yum install python2-jmespath` OR
