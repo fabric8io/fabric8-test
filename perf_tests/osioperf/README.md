@@ -15,5 +15,5 @@
      * `osioperf-client-1`, …, `osioperf-client-10`: Used as slaves for the performance testing tool simulating multiple concurrent users accessing the tested service from multiple places.
    The slaves provides the means to simulate large number of concurrent users (500, 1000, … ) to hit not only the OsioPerf servers but the OSIO (prod-like environment) itself, as well.
    The rest of the resources kept ready for ad-hoc needs.
- * [Zabbix](https://zabbix.devshift.net) - A place where to place results to keep track.
+ * [Zabbix](https://zabbix.devshift.net:9443/zabbix/index.php) - A place where to place results to keep track.
  * [Locust](https://locust.io/) - An open source load testing tool capable of distributed testing (1 master - N slaves).
