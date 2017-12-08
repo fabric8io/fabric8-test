@@ -3,8 +3,6 @@ Fabric8-Test
 
 Functional tests for OSiO (OpenShift.io) platform.
 
-# Installation
-
 ## End to end test on OSiO
 
 * Build and install
@@ -104,6 +102,9 @@ gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-re
 *  `jenkins-version` : the Jenkins YAML version for the tenant
 *  `team-version` : the Team YAML version for the tenant
 *  `maven-repo` : the maven repository used for tenant YAML if using a PR or custom build
+
+See: https://github.com/fabric8io/fabric8-test/blob/master/ee_tests/README.md
+
 
 ## API tests on OSiO
 
