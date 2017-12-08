@@ -125,13 +125,15 @@ waitForText: function (elementFinder) {
    */
   userEntityName: function (username) {
     // lets try use the $OSO_USERNAME for the openshift `whoami` name first
-    var whoami = browser.params.oso.username;
-    if (whoami) {
-      return whoami;
-    }
-    if (!username) {
-      username = browser.params.login.user;
-    }
+
+// Commenting this out as it blocks all users with the @ char in their username - have to review with James S.
+//    var whoami = browser.params.oso.username;
+//    if (whoami) {
+//      return whoami;
+//    }
+//    if (!username) {
+//      username = browser.params.login.user;
+//    }
     var platform = this.targetPlatform();
     if (platform === "fabric8-openshift") {
       username = browser.params.login.openshiftUser || "developer";
@@ -459,6 +461,10 @@ waitForText: function (elementFinder) {
     OpenShiftIoSpaceHomePage = page.clickNoThanksButton();
 
     /* In the space home page, verify URL and end the test */
+
+    console.log ("USERNAME = " + username);
+
+
     var urlText = this.joinURIPath(targetUrl, username, spaceName);
 
     console.log("Lets wait for the URL to contain the space URL: " + urlText);
