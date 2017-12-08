@@ -1,5 +1,6 @@
-import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
+import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
@@ -74,12 +75,14 @@ describe('Creating new quickstart in OSIO', () => {
        The only reliable way to avoid this is a sleep statement: await browser.sleep(5000); */
     await browser.sleep(5000);
 
+
     // tslint:disable:max-line-length
-    await browser.wait(until.elementToBeClickable(spaceDashboardPage.pipelinesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
+    await spaceDashboardPage.pipelinesSectionTitle.untilClickable(support.LONGEST_WAIT);
     await spaceDashboardPage.pipelinesSectionTitle.click();
     let spacePipelinePage = new SpacePipelinePage();
 
-    await browser.wait(until.presenceOf(spacePipelinePage.pipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find pipelinesByNamee');
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName));
+    await pipelineByName.untilPresent(support.LONGEST_WAIT);
 
     /* Verify that only (1) new matching pipeline is created */
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
@@ -89,14 +92,19 @@ describe('Creating new quickstart in OSIO', () => {
     support.debug('Pipelines page contents = ' + pipelineText);
 
     /* Find and click the 'promote' button */
-    await until.elementToBeClickable(spacePipelinePage.pipelineByName(spaceName));
+    await pipelineByName.untilClickable(support.LONGEST_WAIT);
 
     try {
-      await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-      await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
-      await spacePipelinePage.promoteButton.click();
-      await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
-      await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
+      let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName));
+      await inputRequired.untilPresent(support.LONGEST_WAIT);
+      await inputRequired.clickWhenReady();
+
+      await spacePipelinePage.promoteButton.clickWhenReady();
+
+      await spacePipelinePage.stageIcon.untilClickable();
+      await spacePipelinePage.runIcon.untilClickable();
+//      expect (spacePipelinePage.stageIcon.isDisplayed).toBe(true);
+//      expect (spacePipelinePage.runIcon.isDisplayed).toBe(true);
     } catch (e) {
       support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
     }
