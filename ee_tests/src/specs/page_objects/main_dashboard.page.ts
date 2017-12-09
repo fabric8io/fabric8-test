@@ -135,6 +135,7 @@ Page layout
 
     // TODO: make the timeout a config
     await browser.wait(until.urlContains(spaceName), 10000);
+    support.debug('... waiting for the url to contain spacename: ', spaceName , ' - OK');
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();

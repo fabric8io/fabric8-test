@@ -16,7 +16,7 @@ export abstract class BasePage {
   debug: (context: string, ...msg: string[]) => void;
 
   // Use undefined to indicate the url has not been set
-  // Will use be in openInBrowser to throw error if the caller forgot
+  // It will use be in openInBrowser to throw error if the caller forgot
   // to set the url. Need to do this because '' is a valid url and
   // refers to the baseUrl
 

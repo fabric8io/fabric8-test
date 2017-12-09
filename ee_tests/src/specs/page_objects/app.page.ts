@@ -13,10 +13,10 @@ export abstract class AppPage extends BasePage {
   /**
    * Extend this class, to describe Application Page(after logging in)
    *
-   * @param {url} elementFinder ElementFinder that you want to extend
+   * @param {url} string URL where the extended page resides
    */
-  constructor() {
-    super();
+  constructor(url?: string) {
+    super(url);
   }
 
   /**

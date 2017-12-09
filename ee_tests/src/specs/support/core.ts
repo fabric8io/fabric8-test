@@ -234,4 +234,3 @@ export function targetPlatform(): string {
   // than assuming OSIO when not using OSIO :)
   return 'fabric8-openshift';
 }
-

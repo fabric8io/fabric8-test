@@ -8,9 +8,9 @@
 
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
+import { SpaceDashboardHeader, AddToSpaceDialog } from './../ui/space_dashboard';
 import * as ui from '../ui';
-import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
-import { TextInput, Button } from '../ui';
+import * as support from '../support';
 
 /*
 Page layout
@@ -35,121 +35,11 @@ Page layout
 |--------------------------------------------------------------------------------------------------------------------|
 */
 
-
-abstract class SpaceTabPage extends AppPage {
-
-  mainNavBar = new ui.BaseElement(
-    this.header.$('ul.nav.navbar-nav.navbar-primary.persistent-secondary'),
-    'Main Navigation Bar'
-
-  )
-
-  planTab = new ui.Clickable(
-    this.mainNavBar.element(by.cssContainingText('li', 'Plan')),
-    'Plan'
-  );
-
-  constructor(public spaceName: string) {
-    super();
-  }
-
-  // todo: add ready when we can consider the headers ready
-  async ready() {
-    await super.ready()
-    await this.mainNavBar.ready()
-    await this.planTab.ready()
-  }
-
-  async gotoPlanTab(): Promise<PlannerTab> {
-    await this.planTab.clickWhenReady()
-    // NOTE: outside the dialog is outside of $(this)
-    let planner  = new PlannerTab(this.spaceName)
-    await planner.open();
-    return planner;
-  }
-
-}
-
-type WorkItemType = 'task' | 'feature' | 'bug'
-
-interface WorkItem {
-  title: string
-  description?: string
-  type?: WorkItemType
-}
-
-class WorkItemQuickAdd extends ui.Clickable {
-  titleTextInput = new ui.TextInput(this.$('input.f8-quickadd-input'), 'Work item Title')
-  buttonsDiv = this.$('div.f8-quickadd__wiblk-btn.pull-right')
-  acceptButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓')
-  cancelButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-default'), 'x')
-
-  constructor(el: ElementFinder, name = 'Work Item Quick Add') {
-    super(el, name)
-  }
-
-  async ready() {
-    await super.ready()
-    await this.untilClickable()
-  }
-
-  async createWorkItem({ title, description = '', type = 'feature' }: WorkItem) {
-    await this.clickWhenReady();
-    await this.titleTextInput.ready()
-    await this.titleTextInput.enterText(title)
-    await this.cancelButton.untilClickable();
-
-    await this.acceptButton.clickWhenReady()
-
-    // TODO add more confirmation that the item has been added
-    await this.cancelButton.clickWhenReady()
-
-    // TODO choose the type of item
-    this.log('New WorkItem', `${title} added`)
-  }
-}
-
-class WorkItemList extends ui.BaseElement {
-  overlay = new ui.BaseElement(this.$('div.lock-overlay-list'));
-
-  quickAdd =  new WorkItemQuickAdd(
-    this.$('#workItemList_quickAdd > alm-work-item-quick-add > div'));
-
-  constructor(el: ElementFinder, name = 'Work Item List') {
-    super(el, name)
-  }
-
-  async ready() {
-    await super.ready()
-    await this.overlay.untilAbsent()
-    await this.quickAdd.ready()
-  }
-}
-
-// this is what you see when you click on the Plan Tab button
-class PlannerTab extends SpaceTabPage {
-  workItemList = new WorkItemList(this.appTag.$('alm-work-item-list'));
-
-  constructor(public spaceName: string) {
-    super(spaceName);
-    this.url = `${browser.params.login.user}/${spaceName}/plan`
-  }
-
-  async ready() {
-    await super.ready();
-    await this.workItemList.ready();
-  }
-
-  async createWorkItem(item: WorkItem) {
-    this.debug('create item', JSON.stringify(item))
-    await this.workItemList.quickAdd.createWorkItem(item)
-  }
-}
-
 // The main page that represents a Space
-export class SpaceDashboardPage extends SpaceTabPage {
-
- /* Dialog to create new space and project */
+export class SpaceDashboardPage extends AppPage {
+  spaceName: string;
+  header = new SpaceDashboardHeader(this.appTag.$('alm-app-header'), this.spaceName, 'Space Dashboard page header');
+  /* Dialog to create new space and project */
   newSpaceName = $('#name');
   createSpaceButton = $('#createSpaceButton');
   devProcessPulldown = $('#developmentProcess');
@@ -175,7 +65,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* Codebases section title/link */
 //  codebasesSectionTitle = $('#spacehome-codebases-title');
-  codebasesSectionTitle = new Button ($('#spacehome-codebases-title'), 'Codebases Section Title');
+  codebasesSectionTitle = new ui.Button ($('#spacehome-codebases-title'), 'Codebases Section Title');
 
   /* Codebases create code base link */
   // tslint:disable:max-line-length
@@ -187,8 +77,8 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* Stack/Analytical Reports */
   stackReportsSectionTitle = $('#spacehome-analytical-report-title');
-  stackReportsButton = new Button(element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
-  analyticsCloseButton = new Button(element (by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
+  stackReportsButton = new ui.Button(element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
+  analyticsCloseButton = new ui.Button(element (by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
   detailedReportHeading = element (by.xpath('.//*[contains(text(),\'Show complete stack report\')]/..'));
    // tslint:enable:max-line-length
 
@@ -203,7 +93,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
   pipelines = $('#spacehome-pipelines-card');
 
   /* Pipelines section title/link */
-  pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
+  pipelinesSectionTitle = new ui.Button($('#spacehome-pipelines-title'), 'Pipeline Section Title');
 
   addToSpaceButton = this.innerElement(
     ui.Button, '#analyze-overview-add-to-space-button', 'Add to space');
@@ -229,18 +119,17 @@ export class SpaceDashboardPage extends SpaceTabPage {
   modalFade = element(by.xpath('.//*[contains(@class,\'modal fade\')]'));
   wizardSidebar = element(by.xpath('.//*[contains(@class,\'wizard-pf-sidebar\')]'));
 
-  spaceName: string;
-
   constructor(spaceName: string) {
-    super(spaceName);
-
     // TODO: create a better way to access globals like username
-    this.url = `${browser.params.login.user}/${spaceName}`
+    super(`${browser.params.login.user}/${spaceName}`);
+    this.spaceName = spaceName;
   }
 
   async ready() {
+    support.debug(' ... check if SpaceDashboard page is Ready');
     await super.ready()
     await this.addToSpaceButton.ready()
+    support.debug(' ... check if SpaceDashboard page is Ready - OK');
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {

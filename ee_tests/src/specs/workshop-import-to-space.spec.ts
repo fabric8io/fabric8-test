@@ -4,9 +4,9 @@ import {
   MainDashboardPage,
   SpaceDashboardPage,
   CleanupUserEnvPage,
-  AddToSpaceDialog,
   PageOpenMode
 } from './page_objects';
+import { AddToSpaceDialog } from './ui/space_dashboard';
 
 describe('import codebase', function () {
   let dashboardPage: MainDashboardPage;
