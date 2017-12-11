@@ -1,4 +1,6 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import {WebDriver, error as SE} from 'selenium-webdriver';
+
 import * as support from './support';
 import { TextInput, Button } from './ui';
 
@@ -76,14 +78,14 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.sleep(5000);
 
     // tslint:disable:max-line-length
-    await spaceDashboardPage.pipelinesSectionTitle.untilClickable(support.LONGEST_WAIT);
-    await spaceDashboardPage.pipelinesSectionTitle.click();
-    let spacePipelinePage = new SpacePipelinePage();
 
+    /* OPen the pipeline page, select the pipeline by name */
+    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGEST_WAIT);
+    let spacePipelinePage = new SpacePipelinePage();
     let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName));
     await pipelineByName.untilPresent(support.LONGEST_WAIT);
 
-    /* Verify that only (1) new matching pipeline is created */
+    /* Verify that only (1) new matching pipeline is found */
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
 
     /* Save the page output to stdout for logging purposes */
@@ -93,20 +95,21 @@ describe('Creating new quickstart in OSIO', () => {
     /* Find and click the 'promote' button */
     await pipelineByName.untilClickable(support.LONGEST_WAIT);
 
-    try {
-      let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName));
-      await inputRequired.untilPresent(support.LONGEST_WAIT);
-      await inputRequired.clickWhenReady();
+    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
 
-      await spacePipelinePage.promoteButton.clickWhenReady();
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName));
+    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
 
-      await spacePipelinePage.stageIcon.untilClickable();
-      await spacePipelinePage.runIcon.untilClickable();
-      expect (spacePipelinePage.stageIcon.isDisplayed).toBe(true);
-      expect (spacePipelinePage.runIcon.isDisplayed).toBe(true);
-    } catch (e) {
-      support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
-    }
+      // TODO - Error conditions to trap
+      // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
+      // 2) Build reports error - grep for "ERROR" in Jenkins pod log
+      // 3) Timeout on build - write build duration to stdout and grep for "ERROR" in Jenkins pod log
+
+    await browser.sleep(5000);
+    support.writeScreenshot('target/screenshots/pipeline_fail_' + spaceName + '.png');
 
   }
 

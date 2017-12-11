@@ -35,6 +35,9 @@ export class SpacePipelinePage extends AppPage {
   /* Button displayed after build pipeline performs stage and test */
   inputRequiredButton = element(by.xpath('.//a[contains(text(),\'Input Required\')][1]'));
 
+  /* View the Jenkins Log */
+  viewLog = new Button (element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
+
   /* Buttons displayed in the promote dialog */
   closeButton = new Button (element(by.xpath('.//button[contains(text(),\'Close\')]')), 'Close button');
   abortButton = new Button (element(by.xpath('.//button[contains(text(),\'Abort\')]')), 'Abort button');
