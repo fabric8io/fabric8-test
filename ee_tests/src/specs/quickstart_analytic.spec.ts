@@ -20,6 +20,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+    support.info('============ End of test reached, logging out ============');
     await dashboardPage.logout();
   });
 
@@ -75,16 +76,15 @@ describe('Creating new quickstart in OSIO', () => {
        The only reliable way to avoid this is a sleep statement: await browser.sleep(5000); */
     await browser.sleep(5000);
 
-
     // tslint:disable:max-line-length
-    await spaceDashboardPage.pipelinesSectionTitle.untilClickable(support.LONGEST_WAIT);
-    await spaceDashboardPage.pipelinesSectionTitle.click();
-    let spacePipelinePage = new SpacePipelinePage();
 
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName));
+    /* OPen the pipeline page, select the pipeline by name */
+    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGEST_WAIT);
+    let spacePipelinePage = new SpacePipelinePage();
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
     await pipelineByName.untilPresent(support.LONGEST_WAIT);
 
-    /* Verify that only (1) new matching pipeline is created */
+    /* Verify that only (1) new matching pipeline is found */
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
 
     /* Save the page output to stdout for logging purposes */
@@ -94,25 +94,25 @@ describe('Creating new quickstart in OSIO', () => {
     /* Find and click the 'promote' button */
     await pipelineByName.untilClickable(support.LONGEST_WAIT);
 
-    try {
-      let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName));
-      await inputRequired.untilPresent(support.LONGEST_WAIT);
-      await inputRequired.clickWhenReady();
+    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
 
-      await spacePipelinePage.promoteButton.clickWhenReady();
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGEST_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
-      await spacePipelinePage.stageIcon.untilClickable();
-      await spacePipelinePage.runIcon.untilClickable();
-//      expect (spacePipelinePage.stageIcon.isDisplayed).toBe(true);
-//      expect (spacePipelinePage.runIcon.isDisplayed).toBe(true);
-    } catch (e) {
-      support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
-    }
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
+
+    // TODO - Error conditions to trap
+    // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
+    // 2) Build reports error - grep for "ERROR" in Jenkins pod log
+    // 3) Timeout on build - write build duration to stdout and grep for "ERROR" in Jenkins pod log
 
     /* Verify that the analytics report was created - TODO - expand to test of report contents */
 
     /* TODO remove sleep statements */
-
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
