@@ -78,7 +78,6 @@ describe('Creating new quickstart in OSIO', () => {
     /* Open Che display page */
 
     // tslint:disable:max-line-length
-//    codebasesSectionTitle
     await browser.wait(until.elementToBeClickable(spaceDashboardPage.codebasesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
     await spaceDashboardPage.codebasesSectionTitle.click();
 
@@ -86,9 +85,9 @@ describe('Creating new quickstart in OSIO', () => {
 
     let spaceChePage = new SpaceChePage();
 
-    await spaceChePage.createCodebase.untilPresent();
-    await spaceChePage.createCodebase.untilClickable(support.LONGEST_WAIT);
-    await spaceChePage.createCodebase.click();
+//    await spaceChePage.createCodebase.untilPresent();
+//    await spaceChePage.createCodebase.untilClickable(support.LONGEST_WAIT);
+    await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);

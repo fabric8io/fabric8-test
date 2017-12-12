@@ -22,6 +22,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+    support.info('============ End of test reached, logging out ============');
     await dashboardPage.logout();
   });
 
@@ -82,7 +83,7 @@ describe('Creating new quickstart in OSIO', () => {
     /* OPen the pipeline page, select the pipeline by name */
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGEST_WAIT);
     let spacePipelinePage = new SpacePipelinePage();
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName));
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
     await pipelineByName.untilPresent(support.LONGEST_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
@@ -97,11 +98,14 @@ describe('Creating new quickstart in OSIO', () => {
 
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
 
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName));
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
     await spacePipelinePage.promoteButton.clickWhenReady(support.LONGEST_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
+
     await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
     await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
       // TODO - Error conditions to trap
       // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
@@ -109,7 +113,7 @@ describe('Creating new quickstart in OSIO', () => {
       // 3) Timeout on build - write build duration to stdout and grep for "ERROR" in Jenkins pod log
 
     await browser.sleep(5000);
-    support.writeScreenshot('target/screenshots/pipeline_fail_' + spaceName + '.png');
+    support.writeScreenshot('target/screenshots/pipeline_final_' + spaceName + '.png');
 
   }
 
