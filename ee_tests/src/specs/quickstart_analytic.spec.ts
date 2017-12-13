@@ -20,7 +20,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
-    support.info('============ End of test reached, logging out ============');
+    support.info('\n ============ End of test reached, logging out ============ \n');
     await dashboardPage.logout();
   });
 
@@ -78,31 +78,43 @@ describe('Creating new quickstart in OSIO', () => {
 
     // tslint:disable:max-line-length
 
-    /* OPen the pipeline page, select the pipeline by name */
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGEST_WAIT);
+    /* Open the pipeline page, select the pipeline by name */
+    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    support.debug('Accessed pipeline page');
+
     let spacePipelinePage = new SpacePipelinePage();
     let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
-    await pipelineByName.untilPresent(support.LONGEST_WAIT);
+
+    support.debug('Looking for the pipeline name');
+    await pipelineByName.untilPresent(support.LONGER_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
+    support.debug('Verifying that only 1 pipeline is found with a matching name');
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
 
-    /* Save the page output to stdout for logging purposes */
+    /* Save the pipeline page output to stdout for logging purposes */
     let pipelineText = await spacePipelinePage.pipelinesPage.getText();
     support.debug('Pipelines page contents = ' + pipelineText);
 
-    /* Find and click the 'promote' button */
-    await pipelineByName.untilClickable(support.LONGEST_WAIT);
+    /* Find the pipeline name */
+    await pipelineByName.untilClickable(support.LONGER_WAIT);
 
-    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
+    /* If the build log link is not viewable - the build failed to start */
+    support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
+    await spacePipelinePage.viewLog.untilClickable(support.LONGER_WAIT);
 
+    /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
+    support.debug('Verifying that the promote dialog is opened');
     let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
     support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    /* Verify stage and run icons are present - these will timeout and cause failures if missing */
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGER_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGER_WAIT);
+
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
     // TODO - Error conditions to trap
