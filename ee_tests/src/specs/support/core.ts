@@ -13,6 +13,7 @@ export const minutes = (n: number) => n * seconds(60);
 
 export const DEFAULT_WAIT = seconds(30);
 export const LONG_WAIT = minutes(1);
+export const LONGER_WAIT = minutes(5);
 export const LONGEST_WAIT = minutes(15);
 
 export async function setBrowserMode(mode: BrowserMode) {

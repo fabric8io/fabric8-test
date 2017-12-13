@@ -1,5 +1,6 @@
 import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
+import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
@@ -19,8 +20,9 @@ describe('Creating new quickstart in OSIO', () => {
   });
 
   afterEach( async () => {
-//    await browser.sleep(support.DEFAULT_WAIT);
-//    await dashboardPage.logout();
+    await browser.sleep(support.DEFAULT_WAIT);
+    support.info('\n ============ End of test reached, logging out ============ \n');
+    await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
@@ -31,29 +33,29 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+  it('Create a new workspace, new Vert.x HTTP Booster quickstart, run the app and test it in Che', async () => {
+    await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
+  });
+
+// it('Create a new workspace, new Spring Boot - HTTP quickstart, run the app and test it in Che', async () => {
+//  await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
+// });
+
+// it('Create a new workspace, new Vert.x - HTTP & Config Map quickstart, run the app and test it in Che', async () => {
+//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
 //  });
 
- it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
-  await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
- });
-
-// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+//  it('Create a new workspace, new Vert.x Health Check Example quickstart, run the app and test it in Che', async () => {
+//    await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
 //  });
 
-//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
-//  });
-
-//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+//  it('Create a new workspace, new Spring Boot Health Check Example quickstart, run the app and test it in Che', async () => {
+//    await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
 //   });
 
 // tslint:enable:max-line-length
 
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
+  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
 
     let spaceName = support.newSpaceName();
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
@@ -78,38 +80,51 @@ describe('Creating new quickstart in OSIO', () => {
     /* Open Che display page */
 
     // tslint:disable:max-line-length
-    await browser.wait(until.elementToBeClickable(spaceDashboardPage.codebasesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
-    await spaceDashboardPage.codebasesSectionTitle.click();
+    await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
 
 //    await browser.sleep(60000);
-
     let spaceChePage = new SpaceChePage();
-
-//    await spaceChePage.createCodebase.untilPresent();
-//    await spaceChePage.createCodebase.untilClickable(support.LONGEST_WAIT);
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
+    /* A new browser window is opened when Che opens - switch to that new window now */
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);
 
+    /* TODO - Need to create a query to look for/wait for the 2nd browser window and remove the sleep statement */
     await browser.sleep(60000);
-
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
     support.writeScreenshot('target/screenshots/che_workspace_parta_' + spaceName + '.png');
 
+    /* Switch to the Che browser window */
     await browser.switchTo().window(handles[1]);
-
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
 //    await browser.sleep(60000);
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
 
-    await browser.wait(until.presenceOf(spaceCheWorkSpacePage.recentProjectRootByName(spaceName)), support.LONGEST_WAIT, 'Failed to find project name text');
-    await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText();
-
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
+    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
-    // await browser.switchTo().window(handles[0]);
+
+    expect (await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toBe(spaceName);
+
+    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
+//    await browser.sleep(30000);
+
+    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
+//    await browser.sleep(30000);
+
+    await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
+    await browser.sleep(60000);
+
+    support.debug(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText());
+//    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), support.LONG_WAIT);
+//    expect(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+
+    /* Switch back to the OSIO browser window */
+    await browser.switchTo().window(handles[0]);
 
   }
 

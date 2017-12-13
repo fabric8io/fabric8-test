@@ -50,6 +50,10 @@ export class SpacePipelinePage extends AppPage {
   viewApplicationOnStage = element(by.xpath('.//a[contains(text(),\'View application on stage\')]'));
   seeAdditionalDetailsInJenkins = element(by.xpath('.//a[contains(text(),\'See additional details in jenkins\')]'));
 
+  /* If a build fails - these are displayed */
+  buildDanger = element(by.xpath('.//*[contains(@class,\'fa fa-times-circle text-danger\')]'));
+  buildError = element(by.xpath('.//*[contains(@class,\'pficon-error-circle-o\')]'));
+
   /* Locate a codebase by name */
   importCodebaseByName (nameString: string): ElementFinder {
     let xpathString = './/multiple-selection-list/div/ul/li/label/span[contains(text(),\'' + nameString + '\')]';
