@@ -8,7 +8,9 @@ locally in a shell, locally in a docker container, and in a docker container in
 Centos CI. The tests can be run against a local or remove server by specifying
 the server's URL as a parameter to the tests.
 
-### End-to-End (EE) tests
+Note: The tests are being migrated from JavaScript to TypeScript (December 2017). The JavaScript tests will be maintained, but not extended. New tests will only be written in TypeScript.
+
+### JavaScript End-to-End (EE) tests
 
 The EE tests simulate a user's actions by creating spaces and projects in the
 UI. The tests are implemented to run either in a docker container (either
@@ -120,7 +122,7 @@ variable before you start script mentioned above:
 SELENIUM_BROWSER=firefox
 ```
 
-### Typescript specs ###
+### Typescript EE Tests ###
 
 ### setup ###
 
@@ -258,11 +260,7 @@ gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-re
 *  `team-version` : the Team YAML version for the tenant
 *  `maven-repo` : the maven repository used for tenant YAML if using a PR or custom build
 
-
-
-
 ### End-to-End Test Coverage
-
 
 | Test File  | EE Feature Coverage |
 | ---------- | ------------------- |
@@ -279,17 +277,4 @@ gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-re
 | openshift-io-burr-setup.spec.js | Rseets the user account
 | openshift-io-burr-template.spec.js | Template for new tests
 
-TBD tests:
-* Edit source files in Che to force rebuild/redeploy
-* Verify all defined workflows
-* Import, build, run all Obsidian "boosters" as quickstarts
-* EE tests for idle Che and Jenkins - https://openshift.io/openshiftio/openshiftio/plan/detail/1709
-* Refactor EE tests page object model code into npm module - to enable the code to be shared more easil - https://openshift.io/openshiftio/openshiftio/plan/detail/1702
-* Create/configure EE tests to verify operation of different OSIO clusters - https://openshift.io/openshiftio/openshiftio/plan/detail/1695
-* Resolve when tests fail to login when openshift.io login name is different than github - https://openshift.io/openshiftio/openshiftio/plan/detail/1642
-* Implement mechanism to verify thru the API actions taken in the UI by the EE tests, https://openshift.io/openshiftio/openshiftio/plan/detail/1637
-* Extend EE tests to exercise deployed app on stage and run  - https://openshift.io/openshiftio/openshiftio/plan/detail/1634
-
 The full set of outstanding tasks for the EE tests are tracked here: https://openshift.io/openshiftio/openshiftio/plan?label=EE_test
-
-
