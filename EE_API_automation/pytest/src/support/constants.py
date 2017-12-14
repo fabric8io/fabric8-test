@@ -1,25 +1,21 @@
 import datetime, requests, os, jmespath, json
 
-test_on_prod = True
-
 class launch_details:
-    if test_on_prod:
-        userid_primary = 'rgarg-osiotest1'  ####  ENTER YOUR OSIO USER ID HERE
-        base_url = r"https://api.openshift.io"
-        auth_url = r"https://auth.openshift.io"
-    else:
-        userid_primary = 'testuser'
-        userid_secondary = 'testuser2'
-        base_url = r"http://192.168.42.211:30000"  ####  ENTER YOUR LOCALLY RUNNING WIT TARGET HERE
+    test_on_prod = True  #### Set this flag if running tests on prod
     
-    def __init__(self):
-        self.space_name = self.create_space_name()
-        if test_on_prod:
-            self.offref_token_userid_primary = "OFFLINE REFRESH TOKEN" #### Enter your offline refresh tokenfor prod here
-            self.token_userid_primary = self.get_access_token_from_refresh()
-        else:
-            self.token_userid_primary = self.get_keycloak_token()
-        
+    ###USERID
+    userid_prod_primary_default = 'rgarg-osiotest1'  ####  DEFAULT PROD OSIO USER ID
+    userid_local_primary_default = 'testuser'   ####  DEFAULT LOCAL OSIO USER ID
+    userid_primary = userid_prod_primary_default
+    
+    ###TOKEN
+    offref_token_userid_primary = None
+    token_userid_primary = None
+    
+    ###SUT
+    base_prod_url_default = r"https://api.openshift.io"
+    base_url = base_prod_url_default
+    auth_prod_url_default = r"https://auth.openshift.io"
 
     def get_keycloak_token(self):
         url = self.create_url('api/login/generate')
@@ -28,17 +24,10 @@ class launch_details:
     
     def get_access_token_from_refresh(self):
         api = "api/token/refresh"
-        url = os.path.join(self.auth_url, api)
+        url = os.path.join(self.auth_prod_url_default, api)
         payload = {"refresh_token":self.offref_token_userid_primary}
         r = requests.post(url, headers={'Content-Type': r'application/json'}, data = json.dumps(payload))
         return self.extract_value("token.access_token", r)
-    
-    def create_space_name(self):
-        var = datetime.datetime.now()
-        var = var.isoformat().rsplit('.')[0]
-        space = self.userid_primary + "-space-" + var
-        print "Space Name = ", space
-        return space
     
     def create_url(self, api):
         return os.path.join(self.base_url, api)
@@ -56,13 +45,13 @@ class launch_details:
 launch_detail = launch_details()
  
 class requests_constants:
-    base_url_default = r'https://api.openshift.io'
     content_type_key_default = 'Content-Type'
     content_type_default = r'application/vnd.api+json'
     content_header_default = {'Content-Type': 'application/vnd.api+json'}
     authorization_key_default = 'Authorization'
     authorization_carrier_default = 'Bearer '
-    headers_default = {content_type_key_default:content_type_default, authorization_key_default:authorization_carrier_default+launch_detail.token_userid_primary}
+    headers_default = None
+#     headers_default = {content_type_key_default:content_type_default, authorization_key_default:authorization_carrier_default+launch_detail.token_userid_primary}
 
 request_detail = requests_constants()
 

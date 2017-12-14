@@ -1,9 +1,16 @@
-import os
+import os, datetime
 import requests as req
 import json, jmespath, operator
 import constants
 
 count = 1
+
+def create_space_name():
+        var = datetime.datetime.now()
+        var = var.isoformat().rsplit('.')[0]
+        space = constants.launch_detail.userid_primary + "-space-" + var
+        print "\nSpace Name = ", space
+        return space
 
 def find_in_obj(obj, condition, path=None):
 
