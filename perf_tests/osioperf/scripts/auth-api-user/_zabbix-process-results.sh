@@ -29,6 +29,26 @@ echo "$ZABBIX_HOST $METRIC_PREFIX-rt_median $TIMESTAMP $VAL_MED" >> $ZABBIX_LOG_
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_min $TIMESTAMP $VAL_MIN" >> $ZABBIX_LOG_FILE
 echo "$ZABBIX_HOST $METRIC_PREFIX-rt_max $TIMESTAMP $VAL_MAX" >> $ZABBIX_LOG_FILE
 echo "$ZABBIX_HOST $METRIC_PREFIX-users $TIMESTAMP $USERS" >> $ZABBIX_LOG_FILE
-#echo "$ZABBIX_HOST $METRIC_PREFIX-users `echo "$TIMESTAMP - $DURATION" | bc -l` 0" >> $ZABBIX_LOG_FILE
 echo "$ZABBIX_HOST $METRIC_PREFIX-slaves $TIMESTAMP $SLAVES" >> $ZABBIX_LOG_FILE
-#echo "$ZABBIX_HOST $METRIC_PREFIX-slaves `echo "$TIMESTAMP - $DURATION" | bc -l` 0" >> $ZABBIX_LOG_FILE
+
+LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
+OPEN_LOGIN_PAGE_TIME_STATS=(`cat $LOGIN_USERS_LOG | grep "open-login-page-time-stats" | sed -e 's,.*stats:\(.*\),\1,g' | tr ';' ' '`)
+LOGIN_TIME_STATS=(`cat $LOGIN_USERS_LOG | grep "login-time-stats" | sed -e 's,.*stats:\(.*\),\1,g' | tr ';' ' '`)
+
+echo -n "$ZABBIX_HOST open-login-page-time.min $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${OPEN_LOGIN_PAGE_TIME_STATS[1]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE
+
+echo -n "$ZABBIX_HOST open-login-page-time.median $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${OPEN_LOGIN_PAGE_TIME_STATS[2]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE
+
+echo -n "$ZABBIX_HOST open-login-page-time.max $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${OPEN_LOGIN_PAGE_TIME_STATS[3]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE
+
+echo -n "$ZABBIX_HOST login-time.min $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${LOGIN_TIME_STATS[1]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE
+
+echo -n "$ZABBIX_HOST login-time.median $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${LOGIN_TIME_STATS[2]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE
+
+echo -n "$ZABBIX_HOST login-time.max $TIMESTAMP " >> $ZABBIX_LOG_FILE
+echo ${LOGIN_TIME_STATS[3]} | cut -d "=" -f 2 >> $ZABBIX_LOG_FILE

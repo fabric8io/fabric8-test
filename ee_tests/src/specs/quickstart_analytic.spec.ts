@@ -1,5 +1,6 @@
-import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
+import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
@@ -19,6 +20,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+    support.info('\n ============ End of test reached, logging out ============ \n');
     await dashboardPage.logout();
   });
 
@@ -75,36 +77,54 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.sleep(5000);
 
     // tslint:disable:max-line-length
-    await browser.wait(until.elementToBeClickable(spaceDashboardPage.pipelinesSectionTitle), support.LONGEST_WAIT, 'Failed to find pipelinesSectionTitle');
-    await spaceDashboardPage.pipelinesSectionTitle.click();
+
+    /* Open the pipeline page, select the pipeline by name */
+    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    support.debug('Accessed pipeline page');
+
     let spacePipelinePage = new SpacePipelinePage();
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
 
-    await browser.wait(until.presenceOf(spacePipelinePage.pipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find pipelinesByNamee');
+    support.debug('Looking for the pipeline name');
+    await pipelineByName.untilPresent(support.LONGER_WAIT);
 
-    /* Verify that only (1) new matching pipeline is created */
+    /* Verify that only (1) new matching pipeline is found */
+    support.debug('Verifying that only 1 pipeline is found with a matching name');
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
 
-    /* Save the page output to stdout for logging purposes */
+    /* Save the pipeline page output to stdout for logging purposes */
     let pipelineText = await spacePipelinePage.pipelinesPage.getText();
     support.debug('Pipelines page contents = ' + pipelineText);
 
-    /* Find and click the 'promote' button */
-    await until.elementToBeClickable(spacePipelinePage.pipelineByName(spaceName));
+    /* Find the pipeline name */
+    await pipelineByName.untilClickable(support.LONGER_WAIT);
 
-    try {
-      await browser.wait(until.presenceOf(spacePipelinePage.inputRequiredByPipelineByName(spaceName)), support.LONGEST_WAIT, 'Failed to find inputRequiredByPipelineByName');
-      await spacePipelinePage.inputRequiredByPipelineByName(spaceName).click();
-      await spacePipelinePage.promoteButton.click();
-      await browser.wait(until.elementToBeClickable(spacePipelinePage.stageIcon), support.LONGEST_WAIT, 'Failed to find stageIcon');
-      await browser.wait(until.elementToBeClickable(spacePipelinePage.runIcon), support.LONGEST_WAIT, 'Failed to find runIcon');
-    } catch (e) {
-      support.writeScreenshot('target/screenshots/promote_fail_' + spaceName + '.png');
-    }
+    /* If the build log link is not viewable - the build failed to start */
+    support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
+    await spacePipelinePage.viewLog.untilClickable(support.LONGER_WAIT);
+
+    /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
+    support.debug('Verifying that the promote dialog is opened');
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+
+    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
+
+    /* Verify stage and run icons are present - these will timeout and cause failures if missing */
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGER_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGER_WAIT);
+
+    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
+
+    // TODO - Error conditions to trap
+    // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
+    // 2) Build reports error - grep for "ERROR" in Jenkins pod log
+    // 3) Timeout on build - write build duration to stdout and grep for "ERROR" in Jenkins pod log
 
     /* Verify that the analytics report was created - TODO - expand to test of report contents */
 
     /* TODO remove sleep statements */
-
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();

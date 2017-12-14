@@ -174,7 +174,8 @@ export class SpaceDashboardPage extends SpaceTabPage {
   codebases = $('#spacehome-codebases-card');
 
   /* Codebases section title/link */
-  codebasesSectionTitle = $('#spacehome-codebases-title');
+//  codebasesSectionTitle = $('#spacehome-codebases-title');
+  codebasesSectionTitle = new Button ($('#spacehome-codebases-title'), 'Codebases Section Title');
 
   /* Codebases create code base link */
   // tslint:disable:max-line-length
@@ -202,9 +203,10 @@ export class SpaceDashboardPage extends SpaceTabPage {
   pipelines = $('#spacehome-pipelines-card');
 
   /* Pipelines section title/link */
-  pipelinesSectionTitle = $('#spacehome-pipelines-title');
+  pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
+
   addToSpaceButton = this.innerElement(
-    ui.Button, '#analyze-overview-add-to-space-button', 'Add to space')
+    ui.Button, '#analyze-overview-add-to-space-button', 'Add to space');
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');

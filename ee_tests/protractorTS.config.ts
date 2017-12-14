@@ -44,6 +44,8 @@ let conf: Config = {
     suites: {
       runTest: ['src/specs/**/quickstart_analytic.spec.js'],
       quickstartTest: ['src/specs/**/quickstart_pipeline.spec.js'],
+      chequickstartTest: ['src/specs/**/quickstart_che.spec.js'],
+      allTest: ['src/specs/**/quickstart_analytic.spec.js', 'src/specs/**/quickstart_pipeline.spec.js', 'src/specs/**/quickstart_che.spec.js'],
       specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
       functional: ['src/functional/**/*.spec.js']   // new typescript based specs
     },

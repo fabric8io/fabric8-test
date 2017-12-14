@@ -130,13 +130,6 @@ describe('openshift.io End-to-End POC test - Scenario - IMPORT project - Run Pip
    /* ----------------------------------------------------------*/
    /*  Step 4) In OSIO, verify creation of pipeline and build. promote build to "run" project */
 
-    /* Verify that Jenkins is still up and running */
-    /* See issue: https://github.com/openshiftio/openshift.io/issues/595#issuecomment-323123432  */
-    console.log ("verify that Jenkins pod is still running");
-    browser.sleep(constants.LONG_WAIT);
-    OpenShiftIoDashboardPage.clickStatusIcon();
-    expect(OpenShiftIoDashboardPage.jenkinsStatusPoweredOn.isPresent()).toBe(true);
-
     /* Navigating thru the Plan/Create/Analyze tabs is not working in the UI - due to 
        Angular bug with Protractor? Navigate directly to the URL instead */
     // OpenShiftIoSpaceHomePage.clickHeaderAnalyze();

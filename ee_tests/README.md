@@ -8,31 +8,70 @@ locally in a shell, locally in a docker container, and in a docker container in
 Centos CI. The tests can be run against a local or remove server by specifying
 the server's URL as a parameter to the tests.
 
-### Planner UI Tests (tbd)
+Note: The tests are being migrated from JavaScript to TypeScript (December 2017). The JavaScript tests will be maintained, but not extended. New tests will only be written in TypeScript.
 
-### Performance/Throughput Tests (tbd)
-
-### End-to-End (EE) tests
-
+### JavaScript End-to-End (EE) tests
 
 The EE tests simulate a user's actions by creating spaces and projects in the
 UI. The tests are implemented to run either in a docker container (either
 locally or in a CI/CO system), or locally from a shell.
 
-#### Run tests locally ####
+This README includes detailed instructions on how to run the EE tests. If you're
+in a hurry, please read the following (2) sections as they contain all the 
+instructions you need to run the tests in about 5 minutes.
 
-Scripts that include the string "local" in their filename are used to run
-the tests locally.
+#### 5-Minute Guide to Running the EE Tests Locally ####
 
-#### CI/CI tests ####
+Before running the tests, you must define these env variables as the are needed by the local_run_EE_tests.sh script:
 
-Scripts that include the string "cico" in their names are used to run the tests
-in a CI/CO system. These scripts do not pass the required test account username
-and password as parameters as we do not want to expose this information in
-cleantest. The username and password for tests running in CI/CO must be handled
-as Jenkins secrets.
+```
+OSIO_USERNAME
+OSIO_PASSWORD
+OSIO_URL
+OSO_TOKEN
+OSIO_REFRESH_TOKEN
+OSO_USERNAME
+GITHUB_USERNAME
+TEST_SUITE
+```
 
-### Running tests ####
+For example:
+
+```
+export OSIO_USERNAME="your OSIO user"
+export OSIO_PASSWORD="your OSIO password"
+export OSIO_URL="https://openshift.io"
+export OSO_TOKEN="your OSO token"
+export OSIO_REFRESH_TOKEN="your OSIO/KC refresh token"
+export OSO_USERNAME="your oso username"
+export GITHUB_USERNAME="your github username"
+export TEST_SUITE="runTest"
+```
+
+After you define these env variables, execute these commands:
+
+```
+git@github.com:fabric8io/fabric8-test.git
+cd ee_tests
+npm install
+npm install webdriver-manager
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.33
+
+.sh ./local_run_EE_tests.sh 
+```
+
+If you want to run the EE tests in docker, just execute this command:
+
+```
+local_cico_run_EE_tests.sh
+
+```
+
+Note: Note that since the test scripts are primarily run on Centocs CI, they assume/require that a copy of the OpenShift client (oc) is installed in the tests' local directory.
+
+
+### Detailed Notes on Running tests ####
 
 Before running the tests, you must define these ALL env variables as the are
 needed by the local_run_EE_tests.sh script: e.g see `config/local_osio.conf.sh`
@@ -62,6 +101,7 @@ To run the tests locally, execute these commands:
 
 ```
 cd ee_tests
+
 # using yarn as package manager instead of npm
 
 npm install -g yarn
@@ -82,7 +122,7 @@ variable before you start script mentioned above:
 SELENIUM_BROWSER=firefox
 ```
 
-### Typescript specs ###
+### Typescript EE Tests ###
 
 ### setup ###
 
@@ -158,8 +198,69 @@ Then in IDEA:
 * now just click the Run / Debug button in IDEA!
 * if a test fails you should have nice links in the output to source lines - you can also set breakpoints and debug the tests!
 
-### End-to-End Test Coverage
 
+## Running the E2E tests inside a pod
+
+You can run the E2E tests on a running fabric8 cluster using the [gofabric8](https://github.com/fabric8io/gofabric8/releases) CLI tool.
+
+First you need to add a `Secret` for a username/password you wish to use to test your cluster. If you've not created one yet you can do that via the CLI:
+
+```
+gofabric8 e2e-secret --user=MYUSER --password=MYPWD --secret=MYNAME
+```
+
+This command will generate a secret called `MYNAME` using your username/password values of `MYUSER/MYPWD`
+
+Now that there is a `Secret` defined in your current namespace you can run the E2E tests using this secret via:
+
+```
+gofabric8 e2e
+```
+
+if you have your own fork of this repository you can refer to your own fork and a branch of the tests via something like this:
+
+```
+gofabric8 e2e --repo https://github.com/jstrachan/fabric8-test.git --branch new-script
+```
+
+### Arguments
+
+You can specify a number of different CLI arguments to parameterize the E2E tests to configure things like custom Tenant YAMLs to test (e.g. PRs against the YAMLs) or custom boosters.
+
+To see a list of all the current options type:
+
+```
+gofabric8 help e2e
+```
+
+For each argument name `foo` you pass the argument using `--foo=value` or `--foo value` like the above examples for passing in `repo` and `branch` arguments.
+
+#### Cluster
+
+* `url` : the URL of the remote fabric8 console. If not specified it uses the URL of the current `fabric8` service in the current namespace (or the specified `namespace` argument)
+* `platform` : the kind of platform to test. e.g. `osio`, `fabric8-openshift` or `fabric8-kubernetes`. Typically you can ignore this argument as gofabric8 will deadfult this for you
+
+#### Custom boosters
+
+*  `booster` : the name of the booster (quickstart) to use in the tests
+*  `booster-git-ref` : the booster git repository reference (branch, tag, sha)
+*  `booster-git-repo` : the booster git repository URL to use for the tests - when using a fork or custom catalog"
+
+e.g. to test a custom booster in your own fork try:
+
+```
+gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-repo=https://github.com/myuser/booster-catalog.git
+```
+
+
+#### Custom Tenant YAML
+
+*  `che-version` : the Che YAML version for the tenant
+*  `jenkins-version` : the Jenkins YAML version for the tenant
+*  `team-version` : the Team YAML version for the tenant
+*  `maven-repo` : the maven repository used for tenant YAML if using a PR or custom build
+
+### End-to-End Test Coverage
 
 | Test File  | EE Feature Coverage |
 | ---------- | ------------------- |
@@ -176,17 +277,4 @@ Then in IDEA:
 | openshift-io-burr-setup.spec.js | Rseets the user account
 | openshift-io-burr-template.spec.js | Template for new tests
 
-TBD tests:
-* Edit source files in Che to force rebuild/redeploy
-* Verify all defined workflows
-* Import, build, run all Obsidian "boosters" as quickstarts
-* EE tests for idle Che and Jenkins - https://openshift.io/openshiftio/openshiftio/plan/detail/1709
-* Refactor EE tests page object model code into npm module - to enable the code to be shared more easil - https://openshift.io/openshiftio/openshiftio/plan/detail/1702
-* Create/configure EE tests to verify operation of different OSIO clusters - https://openshift.io/openshiftio/openshiftio/plan/detail/1695
-* Resolve when tests fail to login when openshift.io login name is different than github - https://openshift.io/openshiftio/openshiftio/plan/detail/1642
-* Implement mechanism to verify thru the API actions taken in the UI by the EE tests, https://openshift.io/openshiftio/openshiftio/plan/detail/1637
-* Extend EE tests to exercise deployed app on stage and run  - https://openshift.io/openshiftio/openshiftio/plan/detail/1634
-
 The full set of outstanding tasks for the EE tests are tracked here: https://openshift.io/openshiftio/openshiftio/plan?label=EE_test
-
-

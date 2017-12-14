@@ -16,7 +16,11 @@ LOGIN_USERS=$COMMON/loginusers
 mvn -f $LOGIN_USERS/pom.xml clean compile
 cat $USERS_PROPERTIES_FILE > $LOGIN_USERS/target/classes/users.properties
 export TOKENS_FILE=`readlink -f /tmp/osioperftest.tokens`
-mvn -f $LOGIN_USERS/pom.xml exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
+MVN_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-mvn.log
+mvn -f $LOGIN_USERS/pom.xml -l $MVN_LOG exec:java -Dauth.server.address=$SERVER_SCHEME://$SERVER_HOST -Dauth.server.port=$AUTH_PORT -Duser.tokens.file=$TOKENS_FILE
+LOGIN_USERS_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-login-users.log
+cat $MVN_LOG | grep login-users-log > $LOGIN_USERS_LOG
+
 echo "#!/bin/bash
 export USER_TOKENS=\"$(cat $TOKENS_FILE)\"
 " > $ENV_FILE
@@ -66,9 +70,10 @@ rm -rvf *-zabbix.log
 ./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","api-user-by-id"' "api-user-by-id"
 ./_zabbix-process-results.sh $JOB_BASE_NAME-$BUILD_NUMBER-report_requests.csv '"GET","api-user-by-name"' "api-user-by-name"
 
+ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
 if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 	echo "  Uploading report to zabbix...";
-	zabbix_sender -vv -i $JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
+	zabbix_sender -vv -i $ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
 fi
 
 echo " Shut Locust slaves down"
