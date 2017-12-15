@@ -5,13 +5,14 @@ from support.constants import request_detail, launch_detail, dynamic_vars, worki
 
 class TestClass_Setup(object):
     def test_setup(self, sut, offline_token, userid):
-        print "\n\nPerforming Test Setup....\n"
+        print "\n\nTest Setup Start....\n"
         if sut is None:
             launch_detail.base_url = launch_detail.base_prod_url_default
             print "SUT not provided!!! Using default prod SUT = ", launch_detail.base_prod_url_default
         else:
             if "openshift" not in sut:
                 launch_detail.test_on_prod = False
+                print "Running tests on non-prod target"
             launch_detail.base_url = sut
             print "SUT set to = ", sut
         
@@ -25,6 +26,7 @@ class TestClass_Setup(object):
         else:
             if launch_detail.test_on_prod:
                 launch_detail.userid_primary = userid
+                print "USERID set to = ", launch_detail.userid_primary
             else:
                 pytest.exit("USERID provided for non-prod run!!! Terminating the run!!!!!!!!!!!")
          
@@ -38,11 +40,14 @@ class TestClass_Setup(object):
             if launch_detail.test_on_prod:
                 launch_detail.offref_token_userid_primary = offline_token
                 launch_detail.token_userid_primary = launch_detail.get_access_token_from_refresh()
+                print "OFFLINE_TOKEN set to = A secret in Jenkins ;)"
             else:
                 pytest.exit("OFFLINE_TOKEN provided for non-prod run!!! Terminating the run!!!!!!!!!!!")
         
         #### Define Request Header, that includes Access Token
         request_detail.headers_default = {request_detail.content_type_key_default:request_detail.content_type_default, request_detail.authorization_key_default:request_detail.authorization_carrier_default+launch_detail.token_userid_primary}
+        print "\nTest Setup Complete....\n"
+        print "+++++++++++++++++ Running API Tests ++++++++++++++++\n"
 
 class TestClass_CreateSpace(object):
     def test_get_user_details(self):
@@ -298,4 +303,23 @@ class TestClass_CreateWorkitems(object):
         r = helpers.add_workitem_parent_link("Workitem_Title_13", "Workitem_Title_15")
         ##Validate the response
         assert r.status_code == 201
+
+class TestClass_Teardown(object):
+    def test_teardown(self):
+        import os, json
+        launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
+        launch_detail.launch_details_dict["user_name"] = dynamic_vars.username
+        launch_detail.launch_details_dict["user_id"] = dynamic_vars.userid
+        launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
+        
+        try:
+            curr_dir = os.path.dirname(__file__)
+            filepath = os.path.join(curr_dir, '..' , 'launch_info_dump.json')
+            with open(filepath, 'w') as f:
+                json.dump(launch_detail.launch_details_dict, f, sort_keys=True, indent=4)
+        except:
+            print "Exception creating launch_info_dump.json"
+        
+        print "\n+++++++++++++++++ API Tests Complete ++++++++++++++++\n"
+        
         

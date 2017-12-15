@@ -11,7 +11,7 @@ def pytest_addoption(parser):
         help="sut: the url of the WIT server to connect to")
     parser.addoption("--offline_token", action="store", default=None,
         help="offline_token: token to generate an access token")
-    parser.addoption("--userid", action="append", default=None,
+    parser.addoption("--userid", action="store", default=None,
         help="userid: OSIO userid of the primary test user")
       
 @pytest.fixture

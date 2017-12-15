@@ -1,6 +1,7 @@
-import datetime, requests, os, jmespath, json
+import requests, os, jmespath, json
 
 class launch_details:
+    launch_details_dict = {}  ###A dict that would be dumped on teh disk for UI tests to use
     test_on_prod = True  #### Set this flag if running tests on prod
     
     ###USERID
@@ -51,10 +52,10 @@ class requests_constants:
     authorization_key_default = 'Authorization'
     authorization_carrier_default = 'Bearer '
     headers_default = None
-#     headers_default = {content_type_key_default:content_type_default, authorization_key_default:authorization_carrier_default+launch_detail.token_userid_primary}
 
 request_detail = requests_constants()
 
+###To-DO: The following UUIDs will be later fetched using an API
 class workitem_constants:
     witypescenario = "71171e90-6d35-498f-a6a7-2083b5267c18"
     witypefundamental =  "ee7ca005-f81d-4eea-9b9b-1965df0988d0"
@@ -65,7 +66,7 @@ class workitem_constants:
     witypebug =  "26787039-b68f-4e28-8814-c2f93be1ef4e"
     witypetask = "bbf35418-04b6-426c-a60b-7f80beb0b624"
     
-    wilinktype_parent = "25c326a7-6d03-4f5a-b23b-86a9ee4171e9" ## On Prod
+    wilinktype_parent = "25c326a7-6d03-4f5a-b23b-86a9ee4171e9"
     
     label_1 = "sample_label_1"
     label_2 = "sample_label_2"
