@@ -24,31 +24,37 @@
 
 1. Browse to the directory pytest/ and run the command:
 
-- sh run_me.sh "SYSTEM_UNDER_TEST" "TEST_USER_ID" "OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER"
+   *sh run_me.sh "SYSTEM_UNDER_TEST" "TEST_USER_ID" "OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER"*
 
-Where,
+   Where,
 
-*SYSTEM_UNDER_TEST* is the WIT/Core Target
-*TEST_USER_ID* is the OSIO UserID you wish to use
-*OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER* is the Offline Token for the UserID
+   *SYSTEM_UNDER_TEST* is the WIT/Core Target
+   
+   *TEST_USER_ID* is the OSIO UserID you wish to use
+   
+   *OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER* is the Offline Token for the UserID
+   
+   Example:
 
-Example:
-
-sh run_me.sh "https://api.openshift.io" "dummyuser" "dummyuser_offline_osio_token"
+   *sh run_me.sh "https://api.openshift.io" "dummyuser" "dummyuser_offline_osio_token"*
 
 **OR ...**
 
 2. Browse to the directory pytest/src and run the command:
 
-- pytest -s --junitxml=../pytest_junit_logs.xml --offline_token="OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER" > ../pytest_cli_logs.log
+   *pytest -s --junitxml=../pytest_junit_logs.xml --offline_token="OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER" > ../pytest_cli_logs.log*
 
-Where,
+   Where,
 
-*SYSTEM_UNDER_TEST* is default set to "https://api.openshift.io"
-*TEST_USER_ID* is default set to "built in OSIO test account"
-*OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER* is the Offline Token for the *built in OSIO test account*
+   *SYSTEM_UNDER_TEST* is default set to "https://api.openshift.io"
+   
+   *TEST_USER_ID* is default set to "built in OSIO test account"
+   
+   *OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER* is the Offline Token for the *built in OSIO test account*
+   
 
 **Logging**
 
 *pytest_junit_logs.xml* is generated in the /pytest directory. To be used for Jenkins integration
+
 *pytest_cli_logs.log* is generated in the /pytest directory. This captures CLI logs and could be used to evaluate the run status
