@@ -42,6 +42,7 @@ let conf: Config = {
     ],
 
     suites: {
+      importTest: ['src/specs/**/workshop-import-to-space.spec.js'],
       runTest: ['src/specs/**/quickstart_analytic.spec.js'],
       quickstartTest: ['src/specs/**/quickstart_pipeline.spec.js'],
       chequickstartTest: ['src/specs/**/quickstart_che.spec.js'],
