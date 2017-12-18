@@ -104,6 +104,7 @@ describe('Creating new quickstart in OSIO', () => {
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
     await spacePipelinePage.viewLog.untilClickable(support.LONGER_WAIT);
+    expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
