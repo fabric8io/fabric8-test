@@ -134,10 +134,11 @@ waitForText: function (elementFinder) {
 //    if (!username) {
 //      username = browser.params.login.user;
 //    }
-    var platform = this.targetPlatform();
-    if (platform === "fabric8-openshift") {
-      username = browser.params.login.openshiftUser || "developer";
-    } 
+//    var platform = this.targetPlatform();
+//    if (platform === "fabric8-openshift") {
+//      username = browser.params.login.openshiftUser || "developer";
+//    } 
+    username = browser.params.login.user;
     return username;
   },
 
