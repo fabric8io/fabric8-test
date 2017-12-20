@@ -86,7 +86,6 @@ docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 # Exec EE tests
 ### docker exec fabric8-test ./run_EE_tests.sh $1 $TEST_SUITE
 docker exec fabric8-test sh ./local_cleanup.sh $OSO_USERNAME $OSO_TOKEN
-docker exec fabric8-test sh ./local_cleanup_che.sh $OSO_USERNAME $OSO_TOKEN
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE
 RTN_CODE=$?
 
