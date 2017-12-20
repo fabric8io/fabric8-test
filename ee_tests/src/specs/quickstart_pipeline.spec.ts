@@ -126,6 +126,8 @@ describe('Creating new quickstart in OSIO', () => {
       // 3) Presence of build errors in UI
       // 4) Follow the stage and run links */
 
+    /* Write the Jenkins build log to stdout */
+    await support.dumpLog(spacePipelinePage);
   }
 
 });

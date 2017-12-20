@@ -118,6 +118,9 @@ describe('Creating new quickstart in OSIO', () => {
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
+    /* Write the Jenkins build log to stdout */
+    await support.dumpLog(spacePipelinePage);
+
     // TODO - Error conditions to trap
     // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
     // 2) Build reports error - grep for "ERROR" in Jenkins pod log
