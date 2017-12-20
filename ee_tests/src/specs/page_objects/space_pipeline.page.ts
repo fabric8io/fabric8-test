@@ -54,6 +54,15 @@ export class SpacePipelinePage extends AppPage {
   buildDanger = element(by.xpath('.//*[contains(@class,\'fa fa-times-circle text-danger\')]'));
   buildError = element(by.xpath('.//*[contains(@class,\'pficon-error-circle-o\')]'));
 
+  /* Login with Openshift */
+  loginWithOpenshift = new Button (element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
+
+  /* Login with Key Cloak */
+  keyCloakButton = new Button (element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Promote button');
+
+  /* Build log output */
+  buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
+
   /* Locate a codebase by name */
   importCodebaseByName (nameString: string): ElementFinder {
     let xpathString = './/multiple-selection-list/div/ul/li/label/span[contains(text(),\'' + nameString + '\')]';

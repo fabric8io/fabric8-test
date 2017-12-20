@@ -1,5 +1,6 @@
 import { browser } from 'protractor';
 import * as fs from 'fs';
+import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 
 
 export enum BrowserMode {
@@ -32,6 +33,27 @@ export async function setBrowserMode(mode: BrowserMode) {
     throw Error('Unknown mode');
   }
 }
+
+/*
+ * Display the contents of the Jenkins build log.
+ */
+export async function dumpLog (spacePipelinePage: SpacePipelinePage) {
+  await spacePipelinePage.viewLog.clickWhenReady();
+  let handles = await browser.getAllWindowHandles();
+
+  /* Switch to the build log browser window */
+  await browser.switchTo().window(handles[1]);
+  await spacePipelinePage.loginWithOpenshift.clickWhenReady();
+
+//  handles = await browser.getAllWindowHandles();
+  let theText = await spacePipelinePage.buildLogOutput.getText();
+  await console.log ('1) console output ' + theText);
+  expect (theText).toContain('Finished: SUCCESS');
+
+  await browser.switchTo().window(handles[0]);
+}
+
+
 
 export async function desktopTestSetup() {
   browser.ignoreSynchronization = true;
