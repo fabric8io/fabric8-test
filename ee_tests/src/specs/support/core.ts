@@ -12,7 +12,7 @@ export enum BrowserMode {
 export const seconds = (n: number) => n * 1000;
 export const minutes = (n: number) => n * seconds(60);
 
-export const DEFAULT_WAIT = seconds(30);
+export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(5);
 export const LONGEST_WAIT = minutes(15);
@@ -47,12 +47,38 @@ export async function dumpLog (spacePipelinePage: SpacePipelinePage) {
 
 //  handles = await browser.getAllWindowHandles();
   let theText = await spacePipelinePage.buildLogOutput.getText();
-  await console.log ('1) console output ' + theText);
-  expect (theText).toContain('Finished: SUCCESS');
+  await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
+  await console.log (theText);
+  expect (await theText).toContain('Finished: SUCCESS');
 
   await browser.switchTo().window(handles[0]);
 }
 
+/*
+ * Display the contents of the Jenkins build log.
+ */
+export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName: string) {
+
+  // tslint:disable:max-line-length
+
+  // open build log URL - and then
+  //   https://jenkins-ldimaggi-osiotest1-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/osiotestmachine/job/dec21/job/master/1/console
+  let theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+  await browser.get(theUrl);
+
+  await spacePipelinePage.loginWithOpenshift.clickWhenReady();
+  browser.sleep(30000);
+
+  let theText = await spacePipelinePage.buildLogOutput.getText();
+  await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
+  await console.log (theText);
+  expect (await theText).toContain('Finished: SUCCESS');
+
+  let handles = await browser.getAllWindowHandles();
+  await browser.switchTo().window(handles[0]);
+
+  // tslint:enable:max-line-length
+}
 
 
 export async function desktopTestSetup() {

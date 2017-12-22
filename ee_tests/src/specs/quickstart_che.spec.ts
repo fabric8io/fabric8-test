@@ -8,6 +8,8 @@ import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
+let globalSpaceName: string;
+
 /* Tests to verify the build pipeline */
 
 describe('Creating new quickstart in OSIO', () => {
@@ -21,6 +23,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+    support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached, logging out ============ \n');
     await dashboardPage.logout();
   });
@@ -58,6 +61,7 @@ describe('Creating new quickstart in OSIO', () => {
   async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
 
     let spaceName = support.newSpaceName();
+    globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let wizard = await spaceDashboardPage.addToSpace();
