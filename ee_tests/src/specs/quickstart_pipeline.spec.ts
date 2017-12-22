@@ -9,6 +9,9 @@ import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
+let globalSpaceName: string;
+let globalSpacePipelinePage: SpacePipelinePage;
+
 /* Tests to verify the build pipeline */
 
 describe('Creating new quickstart in OSIO', () => {
@@ -22,8 +25,10 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
+    support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached, logging out ============ \n');
-    await dashboardPage.logout();
+    // await dashboardPage.logout();
   });
 
  /* The majority of these tests are commented out not due to any bugs,
@@ -58,6 +63,7 @@ describe('Creating new quickstart in OSIO', () => {
   async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
 
     let spaceName = support.newSpaceName();
+    globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let wizard = await spaceDashboardPage.addToSpace();
@@ -85,6 +91,8 @@ describe('Creating new quickstart in OSIO', () => {
     support.debug('Accessed pipeline page');
 
     let spacePipelinePage = new SpacePipelinePage();
+    globalSpacePipelinePage = spacePipelinePage;
+
     let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
@@ -126,8 +134,6 @@ describe('Creating new quickstart in OSIO', () => {
       // 3) Presence of build errors in UI
       // 4) Follow the stage and run links */
 
-    /* Write the Jenkins build log to stdout */
-    await support.dumpLog(spacePipelinePage);
   }
 
 });
