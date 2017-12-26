@@ -74,7 +74,7 @@ class TestClass_CreateSpace(object):
         api = "api/spaces"
         url = helpers.create_url(api)
         space_name = helpers.create_space_name()
-        f = helpers.read_post_data_file('create_space.json', replace={'$space_name_var':space_name, '$loggedin_user_id':loggedin_user_id})
+        f = helpers.read_post_data_file('create_space.json', replace={'$space_name_var':space_name, '$loggedin_user_id':dynamic_vars.userid})
         ##Make the request
         r = req.post(url, headers=request_detail.headers_default, json=f)
         ##Analyze the response
@@ -103,6 +103,16 @@ class TestClass_CreateSpace(object):
             assert helpers.extract_header("Content-Type", r) == request_detail.content_type_default
             assert helpers.extract_value("data.type", r) == "spaces"
             assert helpers.extract_value("data.attributes.name", r) == spacename
+            
+    def test_enable_experimental_features(self):
+        #Design the URL
+        api = "api/users"
+        url = helpers.create_url(api)
+        f = helpers.read_post_data_file('enable_experimental.json', replace={'$loggedin_user_id':dynamic_vars.userid})
+        ##Make the request
+        r = req.patch(url, headers=request_detail.headers_default, json=f)
+        ##Validate the response
+        assert r.status_code == 200
 
 class TestClass_CreateAreas(object):
       
