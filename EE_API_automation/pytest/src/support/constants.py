@@ -84,6 +84,7 @@ class workitem_constants:
 
 class dynamic_data:
     username = None
+    userfullname = None
     userid = None
     
     spaceid = None

@@ -64,6 +64,7 @@ class TestClass_CreateSpace(object):
         
         ##Save and retain dynamic data for later use
         dynamic_vars.username = loggedin_user_name
+        dynamic_vars.userfullname = helpers.extract_value("data[0].attributes.fullName", r)
         dynamic_vars.userid = loggedin_user_id
         ##Validate the response
         assert r.status_code == 200
@@ -318,9 +319,11 @@ class TestClass_Teardown(object):
     def test_teardown(self):
         import os, json
         launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
+        launch_detail.launch_details_dict["user_fullname"] = dynamic_vars.userfullname
         launch_detail.launch_details_dict["user_name"] = dynamic_vars.username
         launch_detail.launch_details_dict["user_id"] = dynamic_vars.userid
         launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
+        launch_detail.launch_details_dict["offline_token"] = launch_detail.offref_token_userid_primary
         
         try:
             curr_dir = os.path.dirname(__file__)
