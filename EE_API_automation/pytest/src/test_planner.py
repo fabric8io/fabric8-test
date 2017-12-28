@@ -64,6 +64,7 @@ class TestClass_CreateSpace(object):
         
         ##Save and retain dynamic data for later use
         dynamic_vars.username = loggedin_user_name
+        dynamic_vars.userfullname = helpers.extract_value("data[0].attributes.fullName", r)
         dynamic_vars.userid = loggedin_user_id
         ##Validate the response
         assert r.status_code == 200
@@ -74,7 +75,7 @@ class TestClass_CreateSpace(object):
         api = "api/spaces"
         url = helpers.create_url(api)
         space_name = helpers.create_space_name()
-        f = helpers.read_post_data_file('create_space.json', replace={'$space_name_var':space_name, '$loggedin_user_id':loggedin_user_id})
+        f = helpers.read_post_data_file('create_space.json', replace={'$space_name_var':space_name, '$loggedin_user_id':dynamic_vars.userid})
         ##Make the request
         r = req.post(url, headers=request_detail.headers_default, json=f)
         ##Analyze the response
@@ -103,6 +104,16 @@ class TestClass_CreateSpace(object):
             assert helpers.extract_header("Content-Type", r) == request_detail.content_type_default
             assert helpers.extract_value("data.type", r) == "spaces"
             assert helpers.extract_value("data.attributes.name", r) == spacename
+            
+    def test_enable_experimental_features(self):
+        #Design the URL
+        api = "api/users"
+        url = helpers.create_url(api)
+        f = helpers.read_post_data_file('enable_experimental.json', replace={'$loggedin_user_id':dynamic_vars.userid})
+        ##Make the request
+        r = req.patch(url, headers=request_detail.headers_default, json=f)
+        ##Validate the response
+        assert r.status_code == 200
 
 class TestClass_CreateAreas(object):
       
@@ -308,9 +319,11 @@ class TestClass_Teardown(object):
     def test_teardown(self):
         import os, json
         launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
+        launch_detail.launch_details_dict["user_fullname"] = dynamic_vars.userfullname
         launch_detail.launch_details_dict["user_name"] = dynamic_vars.username
         launch_detail.launch_details_dict["user_id"] = dynamic_vars.userid
         launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
+        launch_detail.launch_details_dict["offline_token"] = launch_detail.offref_token_userid_primary
         
         try:
             curr_dir = os.path.dirname(__file__)
