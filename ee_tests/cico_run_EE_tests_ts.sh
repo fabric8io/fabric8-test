@@ -86,7 +86,7 @@ docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 # Exec EE tests
 # Writing to and the grepping results required as webdriver fails
 # intermittently - which results is failure reported even if tests pass
-### docker exec fabric8-test sh ./local_cleanup.sh $OSO_USERNAME $OSO_TOKEN
+docker exec fabric8-test sh ./local_cleanup.sh $OSO_USERNAME $OSO_TOKEN
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
 grep "0 failures" theLog.txt
 RTN_CODE=$?
