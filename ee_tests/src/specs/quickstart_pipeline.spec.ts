@@ -111,7 +111,7 @@ describe('Creating new quickstart in OSIO', () => {
 
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
-    await spacePipelinePage.viewLog.untilClickable(support.LONGER_WAIT);
+    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
     expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
@@ -123,8 +123,8 @@ describe('Creating new quickstart in OSIO', () => {
     support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
     /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGER_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGER_WAIT);
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 

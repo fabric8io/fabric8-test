@@ -24,7 +24,7 @@ let conf: Config = {
       showColors: true,
       silent: true,
       isVerbose: true,
-      defaultTimeoutInterval: 10 * 60 * 1000 // 10 mins for spec to run
+      defaultTimeoutInterval: 30 * 60 * 1000 // 30 mins for spec to run
     },
 
     directConnect: process.env.DIRECT_CONNECTION === 'true',
