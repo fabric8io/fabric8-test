@@ -60,6 +60,20 @@ describe('Creating new quickstart in OSIO', () => {
 
   async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
 
+    let userProfilePage = await dashboardPage.gotoUserProfile();
+    support.debug(">>> Go to user's Profile Page - OK");
+    support.debug('>>> Go to Edit Profile Page');
+    let editProfilePage = await userProfilePage.gotoEditProfile();
+    support.debug('>>> Go to Edit Profile Page - OK');
+    support.debug('>>> Go to Reset Env Page');
+    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
+    support.debug('>>> Go to Reset Env Page - OK');
+
+    await cleanupEnvPage.cleanup(browser.params.login.user);
+    let alertBox = cleanupEnvPage.alertBox;
+//    await expect(alertBox.getText()).toContain('environment has been erased!');
+
+
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
