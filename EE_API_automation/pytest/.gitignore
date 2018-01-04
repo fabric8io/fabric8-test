@@ -2,3 +2,6 @@
 .vscode/*
 __pycache__/*
 *.pyc
+*.log
+*.xml
+launch_info_dump.json
