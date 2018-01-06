@@ -58,7 +58,7 @@ export class SpacePipelinePage extends AppPage {
   loginWithOpenshift = new Button (element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
 
   /* Login with Key Cloak */
-  keyCloakButton = new Button (element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Promote button');
+  keyCloakButton = new Button (element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Login with Keycloak button');
 
   /* Build log output */
   buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));

@@ -63,12 +63,23 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
 
   // open build log URL - and then
   //   https://jenkins-ldimaggi-osiotest1-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/osiotestmachine/job/dec21/job/master/1/console
+  //   https://jenkins-ldimaggi-osiotest1-jenkins.1b7d.free-stg.openshiftapps.com/job/osiotestmachine/job/testjan5/job/master/1/console
+
   let theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+
+  if (browser.params.target.url === 'https://prod-preview.openshift.io') {
+    theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.1b7d.free-stg.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+  }
+
   await browser.get(theUrl);
-
+//  await browser.sleep(30000);
   await spacePipelinePage.loginWithOpenshift.clickWhenReady();
-  browser.sleep(30000);
 
+  if (browser.params.target.url === 'https://prod-preview.openshift.io') {
+    await spacePipelinePage.keyCloakButton.clickWhenReady();
+  }
+
+  await browser.sleep(30000);
   let theText = await spacePipelinePage.buildLogOutput.getText();
   await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
   await console.log (theText);
@@ -76,6 +87,8 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
 
   let handles = await browser.getAllWindowHandles();
   await browser.switchTo().window(handles[0]);
+
+
 
   // tslint:enable:max-line-length
 }

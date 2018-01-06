@@ -63,7 +63,8 @@ main() {
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \
-    --params.github.username="$GITHUB_USERNAME"
+    --params.github.username="$GITHUB_USERNAME" \
+    --params.target.url="$OSIO_URL"
 
   return $?
 }
