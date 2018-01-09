@@ -4,38 +4,37 @@ class launch_details:
     launch_details_dict = {}  ###A dict that would be dumped on teh disk for UI tests to use
     test_on_prod = True  #### Set this flag if running tests on prod
     
-    ###USERID
+    ###USERIDs
     userid_prod_primary_default = 'rgarg-osiotest1'  ####  DEFAULT PROD OSIO USER ID
-    userid_local_primary_default = 'testuser'   ####  DEFAULT LOCAL OSIO USER ID
     userid_primary = userid_prod_primary_default
     
-    ###TOKEN
+    ###TOKENs
     offref_token_userid_primary = None
     token_userid_primary = None
     
-    ###SUT
-    base_prod_url_default = r"https://api.openshift.io"
-    base_url = base_prod_url_default
-    auth_prod_url_default = r"https://auth.openshift.io"
+    ###BASE URLs
+    base_wit = "base_wit"
+    base_url = {}
 
     def get_keycloak_token(self):
+        ###Used only for local token generation. Not used for prod or prod-preview
         url = self.create_url('api/login/generate')
         r = requests.get(url)
         return self.extract_value("[0].token.access_token", r)
     
     def get_access_token_from_refresh(self):
-        api = "api/token/refresh"
-        url = os.path.join(self.auth_prod_url_default, api)
+        ###Access the WIT endpoint to obtain access token from the refresh token
+        url = self.create_url("api/login/refresh")
         payload = {"refresh_token":self.offref_token_userid_primary}
         r = requests.post(url, headers={'Content-Type': r'application/json'}, data = json.dumps(payload))
         return self.extract_value("token.access_token", r)
     
     def create_url(self, api):
-        return os.path.join(self.base_url, api)
+        return os.path.join(self.base_url[self.base_wit], api)
 
     def extract_value(self, extract_path=None, json_response=None):
         if None in [json_response, extract_path]:
-            print "Either Jason response or the extractor path are None"
+            print "Either Json response or the extractor path are None"
             return None
         else:
             try:

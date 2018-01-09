@@ -1,49 +1,32 @@
 import pytest
 import requests as req
-import support.helpers as helpers
 from support.constants import request_detail, launch_detail, dynamic_vars, workitem_constants
+import support.helpers as helpers
 
 class TestClass_Setup(object):
     def test_setup(self, sut, offline_token, userid):
         print "\n\nTest Setup Start....\n"
         if sut is None:
-            launch_detail.base_url = launch_detail.base_prod_url_default
-            print "SUT not provided!!! Using default prod SUT = ", launch_detail.base_prod_url_default
+            launch_detail.base_url[launch_detail.base_wit] = r"https://api.openshift.io"
+            print "SUT (WIT Target) not provided!!! Using default production SUT = ", launch_detail.base_url[launch_detail.base_wit]
         else:
-            if "openshift" not in sut:
-                launch_detail.test_on_prod = False
-                print "Running tests on non-prod target"
-            launch_detail.base_url = sut
+            launch_detail.base_url[launch_detail.base_wit] = sut
             print "SUT set to = ", sut
         
         if userid is None:
-            if launch_detail.test_on_prod:
-                launch_detail.userid_primary = launch_detail.userid_prod_primary_default
-                print "USERID not provided! Going ahead with the default USERID = ", launch_detail.userid_prod_primary_default
-            else:
-                launch_detail.userid_primary = launch_detail.userid_local_primary_default
-                print "USERID not provided! Going ahead with the default USERID = ", launch_detail.userid_local_primary_default
+            launch_detail.userid_primary = launch_detail.userid_prod_primary_default
+            print "USERID not provided! Going ahead with the default USERID = ", launch_detail.userid_prod_primary_default
         else:
-            if launch_detail.test_on_prod:
-                launch_detail.userid_primary = userid
-                print "USERID set to = ", launch_detail.userid_primary
-            else:
-                pytest.exit("USERID provided for non-prod run!!! Terminating the run!!!!!!!!!!!")
+            launch_detail.userid_primary = userid
+            print "USERID set to = ", launch_detail.userid_primary   
          
         if offline_token is None:
-            if launch_detail.test_on_prod:
-                pytest.exit("OFFLINE_TOKEN not provided!!! Terminating the run!!!!!!!!!!!")
-            else:
-                launch_detail.token_userid_primary = launch_detail.get_keycloak_token()
-                print "OFFLINE_TOKEN not provided!!! Assuming run on non-prod and using credentials for default testuser!"
+            pytest.exit("OFFLINE_TOKEN not provided!!! Terminating the run!!!!!!!!!!!")
         else:
-            if launch_detail.test_on_prod:
-                launch_detail.offref_token_userid_primary = offline_token
-                launch_detail.token_userid_primary = launch_detail.get_access_token_from_refresh()
-                print "OFFLINE_TOKEN set to = A secret in Jenkins ;)"
-            else:
-                pytest.exit("OFFLINE_TOKEN provided for non-prod run!!! Terminating the run!!!!!!!!!!!")
-        
+            launch_detail.offref_token_userid_primary = offline_token
+            launch_detail.token_userid_primary = launch_detail.get_access_token_from_refresh()
+            print "OFFLINE_TOKEN set to = A secret in Jenkins ;)"
+
         #### Define Request Header, that includes Access Token
         request_detail.headers_default = {request_detail.content_type_key_default:request_detail.content_type_default, request_detail.authorization_key_default:request_detail.authorization_carrier_default+launch_detail.token_userid_primary}
         print "\nTest Setup Complete....\n"
@@ -53,7 +36,7 @@ class TestClass_CreateSpace(object):
     def test_get_user_details(self):
         #Design the URL
         api = "api/users?filter[username]=" + launch_detail.userid_primary
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         ##Make the request
         r = req.get(url, headers=request_detail.headers_default)
         ##Analyze the response
@@ -73,7 +56,7 @@ class TestClass_CreateSpace(object):
     def test_create_new_space(self):
         #Design the URL
         api = "api/spaces"
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         space_name = helpers.create_space_name()
         f = helpers.read_post_data_file('create_space.json', replace={'$space_name_var':space_name, '$loggedin_user_id':dynamic_vars.userid})
         ##Make the request
@@ -96,7 +79,7 @@ class TestClass_CreateSpace(object):
     def test_get_space_details(self):
             #Design the URL
             api = "api/spaces/" + spaceid
-            url = helpers.create_url(api)
+            url = launch_detail.create_url(api)
             ##Make the request
             r = req.get(url, headers=request_detail.headers_default)
             ##Validate the response
@@ -108,7 +91,7 @@ class TestClass_CreateSpace(object):
     def test_enable_experimental_features(self):
         #Design the URL
         api = "api/users"
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         f = helpers.read_post_data_file('enable_experimental.json', replace={'$loggedin_user_id':dynamic_vars.userid})
         ##Make the request
         r = req.patch(url, headers=request_detail.headers_default, json=f)
@@ -120,7 +103,7 @@ class TestClass_CreateAreas(object):
     def test_get_parent_area(self):
             #Design the URL
             api = "api/spaces/" + spaceid + "/areas"
-            url = helpers.create_url(api)
+            url = launch_detail.create_url(api)
             ##Make the request
             r = req.get(url, headers=request_detail.headers_default)
             ##Analyze the response
@@ -133,7 +116,7 @@ class TestClass_CreateAreas(object):
     def test_create_child_areas(self, area_name):
         #Design the URL
         api = "api/areas/" + dynamic_vars.parent_area_id
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         f = helpers.read_post_data_file('create_child_area.json', replace={'$area_name_generated':area_name})
         ##Make the request
         r = req.post(url, headers=request_detail.headers_default, json=f)
@@ -147,7 +130,7 @@ class TestClass_CreateIterations(object):
     def test_get_root_iter(self):
             #Design the URL
             api = "api/spaces/" + spaceid + "/iterations"
-            url = helpers.create_url(api)
+            url = launch_detail.create_url(api)
             ##Make the request
             r = req.get(url, headers=request_detail.headers_default)
             ##Analyze the response
@@ -160,7 +143,7 @@ class TestClass_CreateIterations(object):
     def test_create_child_iters(self, iter_name):
         #Design the URL
         api = "api/iterations/" + dynamic_vars.parent_iteration_id
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         f = helpers.read_post_data_file('create_child_iteration.json', replace={'$iteration_name_generated': iter_name, '$spaceid': spaceid})
         ##Make the request
         r = req.post(url, headers=request_detail.headers_default, json=f)
@@ -173,7 +156,7 @@ class TestClass_CreateIterations(object):
     def test_create_nested_iters(self, iter_name):
         #Design the URL
         api = "api/iterations/" + dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_1]
-        url = helpers.create_url(api)
+        url = launch_detail.create_url(api)
         f = helpers.read_post_data_file('create_child_iteration.json', replace={'$iteration_name_generated': iter_name, '$spaceid': spaceid})
         ##Make the request
         r = req.post(url, headers=request_detail.headers_default, json=f)
