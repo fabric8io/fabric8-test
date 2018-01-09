@@ -73,10 +73,10 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
 
   await browser.get(theUrl);
 //  await browser.sleep(30000);
-  await spacePipelinePage.loginWithOpenshift.clickWhenReady();
+  await spacePipelinePage.loginWithOpenshift.clickWhenReady(LONGER_WAIT);
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    await spacePipelinePage.keyCloakButton.clickWhenReady();
+    await spacePipelinePage.keyCloakButton.clickWhenReady(LONGER_WAIT);
   }
 
   await browser.sleep(30000);
