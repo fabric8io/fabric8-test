@@ -6,7 +6,6 @@ class launch_details:
     
     ###USERIDs
     userid_prod_primary_default = 'rgarg-osiotest1'  ####  DEFAULT PROD OSIO USER ID
-    #userid_local_primary_default = 'testuser'   ####  DEFAULT LOCAL OSIO USER ID
     userid_primary = userid_prod_primary_default
     
     ###TOKENs
