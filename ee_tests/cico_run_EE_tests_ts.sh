@@ -4,6 +4,7 @@
 # $2 = build number
 # $3 = test suite
 # $4 = github username
+# $5 = quickstart name
 
 # Define default variables
 
@@ -15,6 +16,9 @@ TEST_SUITE=${3:-$DEFAULT_TEST_SUITE}
 
 DEFAULT_GITHUB_USERNAME="osiotestmachine"
 GITHUB_USERNAME=${4:-$DEFAULT_GITHUB_USERNAME}
+
+DEFAULT_QUICKSTART_NAME="vertxHttp"
+QUICKSTART_NAME=${5:-$DEFAULT_QUICKSTART_NAME}
 
 # Do not reveal secrets
 set +x
@@ -30,7 +34,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -69,10 +73,11 @@ export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$EE_TEST_USERNAME
 export GITHUB_USERNAME="osiotestmachine"
 export DEBUG="true"
+export QUICKSTART_NAME=$QUICKSTART_NAME
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_TOKEN -e OSIO_REFRESH_TOKEN \
-          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
+          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
@@ -91,7 +96,7 @@ docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
 grep "0 failures" theLog.txt
 RTN_CODE=$?
 
-# Archive test reuslts file
+# Archive test results file
 docker exec fabric8-test chmod 600 password_file
 docker exec fabric8-test chown root password_file
 docker exec fabric8-test ls -l password_file

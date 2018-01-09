@@ -13,7 +13,7 @@ export class Wizard extends ui.BaseElement {
   }
 
   async ready() {
-    await super.ready()
+    await super.ready();
     await this.footer.ready();
     await this.primaryButton.ready();
   }
@@ -21,9 +21,10 @@ export class Wizard extends ui.BaseElement {
 }
 
 export interface ProjectDetail {
-  project: string
-  name?: string
-};
+  project: string;
+  name?: string;
+  strategy?: string;
+}
 
 
 const PROJECT_CARD = 'div.card-pf';
@@ -91,6 +92,32 @@ export class QuickStartWizard extends Wizard {
     this.primaryButton.name = 'Ok';
     await this.primaryButton.clickWhenReady();
   }
+
+  async newProjectRelease({ project, name = '' }: ProjectDetail) {
+    let card = await this.findCard(project);
+    await card.clickWhenReady()
+
+    await this.primaryButton.clickWhenReady();
+    await this.waitForProjectInfoStep()
+
+    await this.projectNameInput.enterText(name);
+    await this.primaryButton.clickWhenReady();
+    await this.primaryButton.clickWhenReady();
+
+    await this.primaryButton.untilTextIsPresent('Finish');
+
+    // call it 'Finish' to match what is seen on UI
+    this.primaryButton.name = 'Finish';
+    await this.primaryButton.clickWhenReady();
+
+    await this.primaryButton.untilTextIsPresent('Ok');
+
+    // call it 'Ok' to match what is seen on UI
+    this.primaryButton.name = 'Ok';
+    await this.primaryButton.clickWhenReady();
+  }
+
+
 }
 
 

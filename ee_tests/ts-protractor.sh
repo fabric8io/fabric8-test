@@ -64,8 +64,8 @@ main() {
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \
     --params.github.username="$GITHUB_USERNAME" \
-    --params.target.url="$OSIO_URL"
-
+    --params.target.url="$OSIO_URL" \
+    --params.quickstart.name="$QUICKSTART_NAME"
   return $?
 }
 

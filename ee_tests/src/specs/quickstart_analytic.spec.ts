@@ -37,13 +37,13 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-//  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline, verify analytic report created', async () => {
-//    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
-//  });
+  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline, verify analytic report created', async () => {
+    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+  });
 
- it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline, verify analytic report created', async () => {
-  await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
- });
+// it('Create a new space, new Spring Boot - HTTP CRUD quickstart, run its pipeline, verify analytic report created', async () => {
+//  await runTest(dashboardPage, 'Spring Boot - CRUD', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+// });
 
 // it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline, verify analytic report created', async () => {
 //    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));

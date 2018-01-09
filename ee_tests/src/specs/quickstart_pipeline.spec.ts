@@ -37,30 +37,50 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-  it('Create a new space, new Vert.x HTTP Booster quickstart, run its pipeline', async () => {
-    await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+  it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
+
+//    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
+//      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+//    }
+
+    switch (browser.params.quickstart.name) {
+      case 'vertxHttp': {
+        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      case 'vertxConfig': {
+        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      case 'vertxHealth': {
+        await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      case 'SpringBootHttp': {
+        await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      case 'SpringBootCrud': {
+        await runTest(dashboardPage, 'Spring Boot - CRUD', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      case 'SpringBootHealth': {
+        await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+      default: {
+        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        break;
+      }
+    }
   });
-
-// it('Create a new space, new Spring Boot - HTTP quickstart, run its pipeline', async () => {
-//  await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
-// });
-
-// it('Create a new space, new Vert.x - HTTP & Config Map quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
-//  });
-
-//  it('Create a new space, new Vert.x Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
-//  });
-
-//  it('Create a new space, new Spring Boot Health Check Example quickstart, run its pipeline', async () => {
-//    await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
-//   });
 
 // tslint:enable:max-line-length
 
 /* Create the quickstart, verify deployment to stage and run */
   async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
+
+    await support.info ('quickstart name = ' + browser.params.quickstart.name);
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
