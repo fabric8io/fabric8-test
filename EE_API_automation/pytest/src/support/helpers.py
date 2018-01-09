@@ -6,11 +6,11 @@ import constants
 count = 1
 
 def create_space_name():
-        var = datetime.datetime.now()
-        var = var.isoformat().rsplit('.')[0]
-        space = constants.launch_detail.userid_primary + "-space-" + var
-        print "\nSpace Name = ", space
-        return space
+    var = datetime.datetime.now()
+    var = var.isoformat().rsplit('.')[0]
+    space = constants.launch_detail.userid_primary + "-space-" + var
+    print "\nSpace Name = ", space
+    return space
 
 def find_in_obj(obj, condition, path=None):
 
@@ -43,9 +43,6 @@ def getFromDict(dataDict, mapList):
 
 def setInDict(dataDict, mapList, value):
     getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
-
-def create_url(api, base_url=constants.launch_detail.base_url):
-    return os.path.join(base_url, api)
 
 def read_post_data_file(file_name=None, replace=None):
     if file_name is None:
@@ -142,7 +139,7 @@ def create_workitem(title=None, spaceid=None, witype=None, iterationid=None):
     ## Create workitems in Iterations context
     elif iterationid is not None:
         api = "api/spaces/" + spaceid + "/workitems"
-        url = create_url(api)
+        url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_iter.json', replace={'$wi_nos_generated':title, '$witype': witype, '$iteration_id': iterationid})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
@@ -151,7 +148,7 @@ def create_workitem(title=None, spaceid=None, witype=None, iterationid=None):
     ## Create workitems in backlog view
     else:
         api = "api/spaces/" + spaceid + "/workitems"
-        url = create_url(api)
+        url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_backlog.json', replace={'$wi_nos_generated':title, '$witype': witype})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
@@ -175,7 +172,7 @@ def create_new_label(label_text=None):
     else:
         ## Add a Label to the space
         create_label_api = "api/spaces/" + constants.dynamic_vars.spaceid + "/labels"
-        url = create_url(create_label_api)
+        url = constants.launch_detail.create_url(create_label_api)
         f = read_post_data_file('create_label.json', replace={'$label_name':label_text})
         return req.post(url, headers=constants.request_detail.headers_default, json=f)
     
@@ -209,7 +206,7 @@ def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
     else:
         #Design the URL
         api = "api/workitemlinks"
-        url = create_url(api)
+        url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_hierarchy.json', replace={'$wilinktype_parent': constants.workitem_constants.wilinktype_parent, '$wi_parent_id': constants.dynamic_vars.wi_names_to_ids[wi_parent_title], '$wi_child_id': constants.dynamic_vars.wi_names_to_ids[wi_child_title]})
         ##Make the request
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
