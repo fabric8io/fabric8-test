@@ -44,18 +44,17 @@ def getFromDict(dataDict, mapList):
 def setInDict(dataDict, mapList, value):
     getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
 
-def read_post_data_file(file_name=None, replace=None):
+def read_post_data_file(file_name=None, replace=None, json_dir='planner_jsons'):
+    ###Default json_dir is set to planner_jsons directory
     if file_name is None:
         print "No file name provided. No json to read!!"
         return None
     else:
         try:
             curr_dir = os.path.dirname(__file__)
-            filepath = os.path.join(curr_dir, 'post_jsons', file_name)
-#             print "json file to be read:", filepath
+            filepath = os.path.join(curr_dir, json_dir, file_name)
             with open(filepath, 'rb') as f:
                 json_data = json.load(f)
-#                 print "json file contents:", str(json_data)
             if replace is not None:
                 json_data = replace_values(json_data, replace)
             return json_data
@@ -76,7 +75,7 @@ def extract_value(extract_path=None, json_response=None):
         
 def extract_header(extract_key=None, json_response=None):
     if None in [json_response, extract_key]:
-        print "Either Jason response or the extractor path are None"
+        print "Either Json response or the extractor path are None"
         return None
     else:
         try:

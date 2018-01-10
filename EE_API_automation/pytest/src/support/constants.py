@@ -14,6 +14,7 @@ class launch_details:
     
     ###BASE URLs
     base_wit = "base_wit"
+    base_forge = "base_forge"
     base_url = {}
 
     def get_keycloak_token(self):
@@ -29,8 +30,8 @@ class launch_details:
         r = requests.post(url, headers={'Content-Type': r'application/json'}, data = json.dumps(payload))
         return self.extract_value("token.access_token", r)
     
-    def create_url(self, api):
-        return os.path.join(self.base_url[self.base_wit], api)
+    def create_url(self, api, base_target=base_wit):
+        return os.path.join(self.base_url[base_target], api)
 
     def extract_value(self, extract_path=None, json_response=None):
         if None in [json_response, extract_path]:
