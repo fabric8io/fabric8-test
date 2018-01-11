@@ -76,7 +76,9 @@ echo -n Updating Webdriver and Selenium...
 webdriver-manager update
 webdriver-manager update --versions.chrome 2.33
 
-./ts-protractor.sh $TEST_SUITE 
+./ts-protractor.sh $TEST_SUITE | tee theLog.txt
+grep "0 failures" theLog.txt
+
 ## ******************************************************************
 
 ## protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}"
