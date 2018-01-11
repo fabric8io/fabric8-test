@@ -45,40 +45,41 @@ describe('Creating new quickstart in OSIO', () => {
 
     switch (browser.params.quickstart.name) {
       case 'vertxHttp': {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
         break;
       }
       case 'vertxConfig': {
-        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
         break;
       }
       case 'vertxHealth': {
-        await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
         break;
       }
       case 'SpringBootHttp': {
-        await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
         break;
       }
       case 'SpringBootCrud': {
-        await runTest(dashboardPage, 'Spring Boot - CRUD', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot - CRUD').catch(error => console.log(error));
         break;
       }
       case 'SpringBootHealth': {
-        await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
         break;
       }
       default: {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
         break;
       }
     }
+
   });
 
 // tslint:enable:max-line-length
 
 /* Create the quickstart, verify deployment to stage and run */
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
+  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
 
     await support.info ('quickstart name = ' + browser.params.quickstart.name);
 

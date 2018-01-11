@@ -34,9 +34,8 @@ export class SpaceCheWorkspacePage extends AppPage {
   bottomPanelOutputPreview = element.all(by.xpath('.//*[contains(text(),\'preview:\')]/following-sibling::a[contains(text(),\'http://\')]'));
 
   /* Bottom Panel command console lines of text */
-  bottomPanelCommandConsoleLines = element.all(by.xpath('.//*[@id=\'gwt-debug-commandConsoleScrollPanel\']')).last();
-//  bottomPanelCommandConsoleLines = element(by.xpath('.//*[contains(text(), \'Succeeded in deploying verticle\')]'));
-  //    .//*[@id='gwt-debug-infoPanel']
+//  bottomPanelCommandConsoleLines = element.all(by.xpath('.//*[@id=\'gwt-debug-commandConsoleScrollPanel\']/pre')).last();
+  bottomPanelCommandConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolesPanel\']'));
 
   recentProjectRootByName (projectName: string): ElementFinder {
     let xpathString = './/*[@id=\'gwt-debug-projectTree\']/div[contains(@name,\'' + projectName + '\')]';
