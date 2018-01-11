@@ -69,14 +69,14 @@ export DEBUG="true"
 export TEST_SUITE="runTest"
 export TEST_CASENAME="vertxHttp"
 
-docker exec fabric8-test npm install
-docker exec fabric8-test npm install -g typescript
+npm install
+npm install -g typescript
 
 echo -n Updating Webdriver and Selenium...
-docker exec fabric8-test webdriver-manager update
-docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.33
 
-docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE 
+./ts-protractor.sh $TEST_SUITE 
 ## ******************************************************************
 
 ## protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}"
