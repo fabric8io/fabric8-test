@@ -50,25 +50,42 @@ describe('Creating new quickstart in OSIO', () => {
 
   // tslint:disable:max-line-length
 
-  it('Create a new workspace, new Vert.x HTTP Booster quickstart, run the app and test it in Che', async () => {
-    await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-  });
+it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-// it('Create a new workspace, new Spring Boot - HTTP quickstart, run the app and test it in Che', async () => {
-//  await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
-// });
+  switch (browser.params.quickstart.name) {
+    case 'vertxHttp': {
+      await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
+      break;
+    }
+    case 'vertxConfig': {
+      await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
+      break;
+    }
+    case 'vertxHealth': {
+      await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
+      break;
+    }
+    case 'SpringBootHttp': {
+      await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
+      break;
+    }
+    case 'SpringBootCrud': {
+      await runTest(dashboardPage, 'Spring Boot - CRUD').catch(error => console.log(error));
+      break;
+    }
+    case 'SpringBootHealth': {
+      await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
+      break;
+    }
+    default: {
+      await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
+      break;
+    }
+  }
 
-// it('Create a new workspace, new Vert.x - HTTP & Config Map quickstart, run the app and test it in Che', async () => {
-//    await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
-//  });
+});
 
-//  it('Create a new workspace, new Vert.x Health Check Example quickstart, run the app and test it in Che', async () => {
-//    await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
-//  });
 
-//  it('Create a new workspace, new Spring Boot Health Check Example quickstart, run the app and test it in Che', async () => {
-//    await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
-//   });
 
 // tslint:enable:max-line-length
 
@@ -129,17 +146,17 @@ describe('Creating new quickstart in OSIO', () => {
     expect (await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
-//    await browser.sleep(30000);
 
     await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
-//    await browser.sleep(30000);
-
     await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
-    await browser.sleep(60000);
 
-    support.debug(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText());
+    await browser.sleep(30000);
+    let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
+    support.info('Output from run = ' + textStr);
+    expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
 //    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), support.LONG_WAIT);
 //    expect(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+    await browser.sleep(30000);
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
