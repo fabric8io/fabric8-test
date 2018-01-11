@@ -58,13 +58,13 @@ export PATH=$PATH:node_modules/protractor/bin
 TEST_SUITE="runTest"
 
 # Assign values to variable names expected by typescript testsmore 
-export OSIO_USERNAME=$EE_TEST_USERNAME
-export OSIO_PASSWORD=$EE_TEST_PASSWORD
+export OSIO_USERNAME=$USERNAME
+export OSIO_PASSWORD=$PASSWORD
 ## export OSO_TOKEN=$EE_TEST_OSO_TOKEN
-export OSIO_URL=$1
+export OSIO_URL=$TARGET_URL
 ## export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
-export OSO_USERNAME=$EE_TEST_USERNAME
-export GITHUB_USERNAME="osiotestmachine"
+export OSO_USERNAME=$OSO_USERNAME
+export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
 export TEST_SUITE="runTest"
 export TEST_CASENAME="vertxHttp"
