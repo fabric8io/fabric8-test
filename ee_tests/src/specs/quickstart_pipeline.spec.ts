@@ -25,7 +25,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
-    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
+//    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
