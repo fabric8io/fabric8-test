@@ -67,7 +67,7 @@ export OSO_USERNAME=$OSO_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
 export TEST_SUITE="runTest"
-export TEST_CASENAME="vertxHttp"
+export QUICKSTART_NAME="vertxHttp"
 
 npm install
 npm install -g typescript
