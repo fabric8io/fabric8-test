@@ -51,23 +51,51 @@ export PATH=$PATH:node_modules/protractor/bin
 
 ## we should not list tokens or passwords on the command line to avoid them appearing in output logs!
 
-protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}"
+## ******************************************************************
+## Added January 11, 2018
+## To switch the tests to use the new Typescript tests
+
+TEST_SUITE="runTest"
+
+# Assign values to variable names expected by typescript testsmore 
+export OSIO_USERNAME=$EE_TEST_USERNAME
+export OSIO_PASSWORD=$EE_TEST_PASSWORD
+## export OSO_TOKEN=$EE_TEST_OSO_TOKEN
+export OSIO_URL=$1
+## export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
+export OSO_USERNAME=$EE_TEST_USERNAME
+export GITHUB_USERNAME="osiotestmachine"
+export DEBUG="true"
+export TEST_SUITE="runTest"
+export TEST_CASENAME="vertxHttp"
+
+npm install
+npm install -g typescript
+
+echo -n Updating Webdriver and Selenium...
+webdriver-manager update
+webdriver-manager update --versions.chrome 2.33
+
+./ts-protractor.sh $TEST_SUITE 
+## ******************************************************************
+
+## protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}"
 
 TEST_RESULT=$?
 
-# cat log file to stdout
-if [ "$CAT_LOGFILE" == "true" ]; then
-  echo
-  echo "------------------------------------------"
-  echo "Log file:"
-  cat $LOGFILE
-  echo "------------------------------------------"
-  echo
-fi
-
-# Cleanup webdriver-manager and web app processes
-fuser -k -n tcp 4444
-fuser -k -n tcp 8088
+## # cat log file to stdout
+## if [ "$CAT_LOGFILE" == "true" ]; then
+##   echo
+##   echo "------------------------------------------"
+##   echo "Log file:"
+##   cat $LOGFILE
+##   echo "------------------------------------------"
+##   echo
+## fi
+##
+## # Cleanup webdriver-manager and web app processes
+## fuser -k -n tcp 4444
+## fuser -k -n tcp 8088
 
 # Return test result
 if [ $TEST_RESULT -eq 0 ]; then
