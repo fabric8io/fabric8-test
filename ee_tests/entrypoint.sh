@@ -71,10 +71,10 @@ fuser -k -n tcp 8088
 
 # Return test result
 if [ $TEST_RESULT -eq 0 ]; then
-  echo 'Functional tests OK'
+  echo 'Notice - Functional tests OK'
   exit 0
 else
-  echo 'Functional tests FAIL'
+  echo 'Notice - Functional tests FAIL'
   exit 1
 fi
 
