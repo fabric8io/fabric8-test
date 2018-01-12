@@ -159,7 +159,7 @@ describe('Creating new quickstart in OSIO', () => {
     await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
     await dashboardPage.recentSpaceByName(spaceName).click();
-    await spaceDashboardPage.stackReportsButton.clickWhenReady();
+    await spaceDashboardPage.stackReportsButton.clickWhenReady(support.LONGER_WAIT);
 
     await browser.sleep(support.DEFAULT_WAIT);
     try {
