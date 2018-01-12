@@ -66,7 +66,7 @@ export OSIO_URL=$TARGET_URL
 export OSO_USERNAME=$OSO_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
-export TEST_SUITE="runTest"
+export TEST_SUITE="quickstartTest"
 export QUICKSTART_NAME="vertxHttp"
 
 npm install
@@ -94,8 +94,7 @@ if [ $ret1 -eq 1 -a $ret2 -eq 0 ]; then TEST_RESULT=0; else TEST_RESULT=1; fi
 ## ******************************************************************
 
 ## protractor ${PROTRACTOR_JS} --suite "${TEST_SUITE}"
-
-TEST_RESULT=$?
+## TEST_RESULT=$?
 
 ## # cat log file to stdout
 ## if [ "$CAT_LOGFILE" == "true" ]; then
