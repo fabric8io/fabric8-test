@@ -77,7 +77,19 @@ webdriver-manager update
 webdriver-manager update --versions.chrome 2.33
 
 ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
+# Writing to and the grepping results required as webdriver fails
+# intermittently - which results is failure reported even if tests pass
+
+# We do not want to see any TimeoutError in the log 
+# as protractor does not trap these as errors
+grep "TimeoutError" theLog.txt
+ret1=$?
+
+# We do want to see that zero specs have failed
 grep "0 failures" theLog.txt
+ret2=$?
+
+if [ $ret1 -eq 1 -a $ret2 -eq 0 ]; then TEST_RESULT=0; else TEST_RESULT=1; fi
 
 ## ******************************************************************
 
