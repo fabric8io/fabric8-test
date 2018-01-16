@@ -279,3 +279,5 @@ gofabric8 e2e --booster="My Booster" --booster-git-ref=mybranch --booster-git-re
 
 iThe full set of outstanding tasks for the EE tests are tracked here: https://openshift.io/openshiftio/openshiftio/plan?label=EE_test
 
+ 
+
