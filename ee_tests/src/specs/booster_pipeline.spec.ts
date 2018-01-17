@@ -31,35 +31,12 @@ describe('Creating new quickstart in OSIO', () => {
     // await dashboardPage.logout();
   });
 
- /* The majority of these tests are commented out not due to any bugs,
-     but to ensure that the test does not collide with other tests. TODO - to
-     resolve these collisions */
-
   // tslint:disable:max-line-length
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-//    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
-//      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
-//    }
-
-    switch (browser.params.quickstart.name) {
-      case 'wfswarm-circuit-breaker': {
-        await runTest(dashboardPage, 'wfswarm-circuit-breaker').catch(error => console.log(error));
-        break;
-      }
-      default: {
-        await runTest(dashboardPage, '').catch(error => console.log(error));
-        break;
-      }
-    }
-
-  });
-
-// tslint:enable:max-line-length
-
-/* Create the quickstart, verify deployment to stage and run */
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
+    /* Example of quickstart name:
+       browser.params.quickstart.name = 'wfswarm-circuit-breaker'   */
 
     await support.info ('quickstart name = ' + browser.params.quickstart.name);
 
@@ -72,7 +49,7 @@ describe('Creating new quickstart in OSIO', () => {
     //  - do an import of the old space
     await wizard.importExistingCode({
       org: 'WildFly Swarm Boosters for openshift.io',
-      repositories: [quickstartName]
+      repositories: [browser.params.quickstart.name]
     });
     await spaceDashboardPage.open();
 
@@ -141,7 +118,8 @@ describe('Creating new quickstart in OSIO', () => {
       // 2) Jenkins pod log - find errors if the test fails
       // 3) Presence of build errors in UI
       // 4) Follow the stage and run links */
+  });
 
-  }
+// tslint:enable:max-line-length
 
 });
