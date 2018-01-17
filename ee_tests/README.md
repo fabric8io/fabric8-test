@@ -133,7 +133,7 @@ yarn
 ```
 ### run the tests ###
 
-Run using the `npm start` helper which runs `ts-protractor.sh` script
+After setting the environment variables defined above, run using the `npm start` helper which runs `ts-protractor.sh` script
 
 ```
 npm start
