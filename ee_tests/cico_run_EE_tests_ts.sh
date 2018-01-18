@@ -5,6 +5,7 @@
 # $3 = test suite
 # $4 = github username
 # $5 = quickstart name
+# $6 = release strategy
 
 # Define default variables
 
@@ -20,6 +21,9 @@ GITHUB_USERNAME=${4:-$DEFAULT_GITHUB_USERNAME}
 DEFAULT_QUICKSTART_NAME="vertxHttp"
 QUICKSTART_NAME=${5:-$DEFAULT_QUICKSTART_NAME}
 
+DEFAULT_RELEASE_STRATEGY="releaseStageApproveAndPromote"
+RELEASE_STRATEGY=${6:-$DEFAULT_RELEASE_STRATEGY}
+
 # Do not reveal secrets
 set +x
 
@@ -34,7 +38,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -74,10 +78,11 @@ export OSO_USERNAME=$EE_TEST_USERNAME
 export GITHUB_USERNAME="osiotestmachine"
 export DEBUG="true"
 export QUICKSTART_NAME=$QUICKSTART_NAME
+export RELEASE_STRATEGY=$RELEASE_STRATEGY
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_TOKEN -e OSIO_REFRESH_TOKEN \
-          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
+          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
