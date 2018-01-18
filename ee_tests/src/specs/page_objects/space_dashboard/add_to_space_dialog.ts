@@ -1,5 +1,6 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import * as ui from '../../ui'
+import { Button } from '../../ui';
 import * as support from '../../support'
 
 
@@ -40,6 +41,12 @@ export class QuickStartWizard extends Wizard {
   // we worry about proj
   projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
 
+  // tslint:disable:max-line-length
+  release = new Button (element(by.xpath('.//*[@value=\'Release\']')));
+  releaseAndStage = new Button (element(by.xpath('.//*[@value=\'Release and Stage\']')));
+  releaseStageApproveAndPromote = new Button (element(by.xpath('.//*[@value=\'Release, Stage, Approve and Promote\']')));
+  // tslint:enable:max-line-length
+
   async ready() {
     await super.ready();
     this.debug(' .... wizard ', 'ok')
@@ -69,7 +76,7 @@ export class QuickStartWizard extends Wizard {
     await this.primaryButton.ready()
   }
 
-  async newProject({ project, name = '' }: ProjectDetail) {
+  async newProject({ project, name = '', strategy }: ProjectDetail) {
     let card = await this.findCard(project);
     await card.clickWhenReady()
 
@@ -78,8 +85,29 @@ export class QuickStartWizard extends Wizard {
 
     await this.projectNameInput.enterText(name);
     await this.primaryButton.clickWhenReady();
-    await this.primaryButton.clickWhenReady();
 
+    /* Set the release strategy */
+
+    switch (strategy) {
+      case 'releaseStageApproveAndPromote': {
+        await this.releaseStageApproveAndPromote.clickWhenReady();
+        break;
+      }
+      case 'releaseAndStage': {
+        await this.releaseAndStage.clickWhenReady();
+        break;
+      }
+      case 'release': {
+        await this.release.clickWhenReady();
+        break;
+      }
+      default: {
+        await this.releaseStageApproveAndPromote.clickWhenReady();
+        break;
+      }
+    }
+
+    await this.primaryButton.clickWhenReady();
     await this.primaryButton.untilTextIsPresent('Finish');
 
     // call it 'Finish' to match what is seen on UI
@@ -92,35 +120,7 @@ export class QuickStartWizard extends Wizard {
     this.primaryButton.name = 'Ok';
     await this.primaryButton.clickWhenReady();
   }
-
-  async newProjectRelease({ project, name = '' }: ProjectDetail) {
-    let card = await this.findCard(project);
-    await card.clickWhenReady()
-
-    await this.primaryButton.clickWhenReady();
-    await this.waitForProjectInfoStep()
-
-    await this.projectNameInput.enterText(name);
-    await this.primaryButton.clickWhenReady();
-    await this.primaryButton.clickWhenReady();
-
-    await this.primaryButton.untilTextIsPresent('Finish');
-
-    // call it 'Finish' to match what is seen on UI
-    this.primaryButton.name = 'Finish';
-    await this.primaryButton.clickWhenReady();
-
-    await this.primaryButton.untilTextIsPresent('Ok');
-
-    // call it 'Ok' to match what is seen on UI
-    this.primaryButton.name = 'Ok';
-    await this.primaryButton.clickWhenReady();
-  }
-
-
 }
-
-
 
 export interface RepoDetail {
   org: string
@@ -196,6 +196,12 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await this.newQuickstartButton.clickWhenReady();
     await this.quickStartWizard.ready();
     await this.quickStartWizard.newProject(details);
+  }
+
+  async newQuickstartReleaseProject(details: ProjectDetail) {
+    await this.newQuickstartButton.clickWhenReady();
+    await this.quickStartWizard.ready();
+    await this.quickStartWizard.newReleaseProject(details);
   }
 
   async importExistingCode(details: RepoDetail) {

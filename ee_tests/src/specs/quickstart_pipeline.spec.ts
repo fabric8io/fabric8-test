@@ -89,8 +89,11 @@ describe('Creating new quickstart in OSIO', () => {
 
     let wizard = await spaceDashboardPage.addToSpace();
 
+//    let strategy: string  = 'releaseStageApproveAndPromote';
+    let strategy: string  = browser.params.release.strategy;   //'release';
+
     support.info('Creating quickstart: ' + quickstartName);
-    await wizard.newQuickstartProject({ project: quickstartName });
+    await wizard.newQuickstartProject({ project: quickstartName, strategy });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -135,18 +138,31 @@ describe('Creating new quickstart in OSIO', () => {
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
     expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
-    /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
-    support.debug('Verifying that the promote dialog is opened');
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+    /* Execute the pipeline build - in the context of the selected release strategy */
+    switch (strategy) {
+      case 'releaseAndStage': {
+        await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+        break;
+      }
+      case 'release': {
+        await spacePipelinePage.successBar.untilDisplayed(support.LONGEST_WAIT);
+        break;
+      }
+      default: {    /* Including releaseStageApproveAndPromote */
+        /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
+        support.debug('Verifying that the promote dialog is opened');
+        let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
 
-    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
-    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
+        await inputRequired.clickWhenReady(support.LONGEST_WAIT);
+        await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
+        support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
-    /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
-
+        /* Verify stage and run icons are present - these will timeout and cause failures if missing */
+        await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+        await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+        break;
+      }
+    }
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
       // TODO - Error conditions to trap

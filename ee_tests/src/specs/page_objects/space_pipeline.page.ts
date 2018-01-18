@@ -27,6 +27,8 @@ export class SpacePipelinePage extends AppPage {
 
   /* Stage icon */
   // tslint:disable:max-line-length
+  successBar = new Button (element(by.xpath('.//div[contains(@class,\'pipeline-status-bar SUCCESS\')]')), 'Success bar');
+
   stageIcon = new Button (element(by.xpath('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
 
   /* Run icon */
