@@ -66,7 +66,7 @@ export OSIO_URL=$TARGET_URL
 export OSO_USERNAME=$OSO_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
-export TEST_SUITE="quickstartTest"
+export TEST_SUITE="runTest"
 export QUICKSTART_NAME="vertxHttp"
 export RELEASE_STRATEGY="releaseStageApproveAndPromote"
 
