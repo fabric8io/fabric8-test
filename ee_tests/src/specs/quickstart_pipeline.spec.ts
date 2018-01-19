@@ -48,20 +48,12 @@ describe('Creating new quickstart in OSIO', () => {
         await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
         break;
       }
-      case 'vertxConfig': {
-        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
-        break;
-      }
       case 'vertxHealth': {
         await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
         break;
       }
       case 'SpringBootHttp': {
         await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
-        break;
-      }
-      case 'SpringBootCrud': {
-        await runTest(dashboardPage, 'Spring Boot - CRUD').catch(error => console.log(error));
         break;
       }
       case 'SpringBootHealth': {
