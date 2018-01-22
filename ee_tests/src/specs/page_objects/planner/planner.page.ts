@@ -11,6 +11,7 @@ export class PlannerPage extends AppPage {
   header = new SpaceDashboardHeader(this.appTag.$('alm-app-header'), this.spaceName, 'Planner page header');
   workItemList = new planner.WorkItemList($('alm-work-item-list'));
   quickAdd =  new planner.WorkItemQuickAdd($('alm-work-item-quick-add'));
+  sidePanel = new planner.SidePanel($('aside.f8-sidepanel'));
 
   constructor(public spaceName: string) {
     super(`${browser.params.login.user}/${spaceName}/plan`);
@@ -22,6 +23,7 @@ export class PlannerPage extends AppPage {
     await super.ready();
     await this.workItemList.ready();
     await this.quickAdd.ready();
+    await this.sidePanel.ready();
     support.debug(' ... check if Planner page is Ready - OK');
   }
 
