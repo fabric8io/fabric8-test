@@ -12,6 +12,7 @@ export class PlannerPage extends AppPage {
   workItemList = new planner.WorkItemList($('alm-work-item-list'));
   quickAdd =  new planner.WorkItemQuickAdd($('alm-work-item-quick-add'));
   sidePanel = new planner.SidePanel($('aside.f8-sidepanel'));
+  quickPreview = new planner.WorkItemQuickPreview($('work-item-preview'));
 
   constructor(public spaceName: string) {
     super(`${browser.params.login.user}/${spaceName}/plan`);

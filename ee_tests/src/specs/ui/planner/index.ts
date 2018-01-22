@@ -1,6 +1,7 @@
 export * from './workitem-list';
 export * from './workitem-quickadd';
 export * from './sidepanel';
+export * from './workitem-quickpreview';
 
 type WorkItemType = 'task' | 'feature' | 'bug';
 
