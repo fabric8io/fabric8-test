@@ -31,15 +31,18 @@ describe('Creating new quickstart in OSIO', () => {
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
     let alertBox = cleanupEnvPage.alertBox;
-//    await expect(alertBox.getText()).toContain('environment has been erased!');
 
+    /* OSIO is not reliable in restartin Jenkins pods in a timely manner - commenting
+       out check for alert box */
+    //    await expect(alertBox.getText()).toContain('environment has been erased!');
   });
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached, logging out ============ \n');
-    await dashboardPage.logout();
+    /* Logout is causing random failures on prod-preview - possibky due to navigating browser windows? */
+    // await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
@@ -135,7 +138,6 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
     await browser.switchTo().window(handles[1]);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-//    await browser.sleep(60000);
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
@@ -150,12 +152,10 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
     await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
     await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
 
-    await browser.sleep(30000);
+    await browser.sleep(60000);
     let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
     support.info('Output from run = ' + textStr);
     expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
-//    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), support.LONG_WAIT);
-//    expect(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
     await browser.sleep(30000);
 
     /* Switch back to the OSIO browser window */
