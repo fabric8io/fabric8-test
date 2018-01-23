@@ -8,6 +8,7 @@ import { LandingPage } from './page_objects/landing.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { StageRunPage } from './page_objects/space_stage_run.page';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -162,6 +163,14 @@ describe('Creating new quickstart in OSIO', () => {
       // 2) Jenkins pod log - find errors if the test fails
       // 3) Presence of build errors in UI
       // 4) Follow the stage and run links */
+
+
+      let stageRunPage = new StageRunPage();
+/*
+Open the stage link
+If the page is not fully displayed - pause, then break and try again -
+If the page is fully displayed, verify the page contents, run the app, verify the results
+*/
 
   }
 
