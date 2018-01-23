@@ -152,11 +152,10 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
     await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
     await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
 
-    await browser.sleep(60000);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), support.LONGER_WAIT);
     let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
     support.info('Output from run = ' + textStr);
     expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
-    await browser.sleep(30000);
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
