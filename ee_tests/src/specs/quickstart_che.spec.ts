@@ -40,7 +40,8 @@ describe('Creating new quickstart in OSIO', () => {
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
-    support.info('\n ============ End of test reached, logging out ============ \n');
+    support.info('\n ============ End of test reached ============ \n');
+    // support.info('\n ============ End of test reached, logging out ============ \n');
     /* Logout is causing random failures on prod-preview - possibky due to navigating browser windows? */
     // await dashboardPage.logout();
   });
