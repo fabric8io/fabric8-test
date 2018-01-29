@@ -4,8 +4,24 @@
 ## Added January 11, 2018
 ## To switch the tests to use the new Typescript tests
 
+/usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+
 cd /test/ee_tests
 export PATH=/test/ee_tests/node_modules/protractor/bin:$PATH:/test/ee_tests:.
+
+/usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+
+DIR="$(pwd)"
+if [ -z "$DIR" ]; then
+  DIR="."
+fi
+
+LOGFILE=${DIR}/functional_tests.log
+echo Using logfile $LOGFILE
+
+# Start selenium server just for this test run
+echo -n Starting Webdriver and Selenium...
+(webdriver-manager start --versions.chrome 2.33 >>$LOGFILE 2>&1 &)
 
 TEST_SUITE="runTest"
 
