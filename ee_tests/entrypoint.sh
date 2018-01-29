@@ -4,6 +4,9 @@
 ## Added January 11, 2018
 ## To switch the tests to use the new Typescript tests
 
+cd /test/ee_tests
+export PATH=/test/ee_tests/node_modules/protractor/bin:$PATH:/test/ee_tests:.
+
 TEST_SUITE="runTest"
 
 # Assign values to variable names expected by typescript testsmore 
