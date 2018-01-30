@@ -189,7 +189,10 @@ export class SpaceDashboardPage extends SpaceTabPage {
   stackReportsSectionTitle = $('#spacehome-analytical-report-title');
   stackReportsButton = new Button(element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
   analyticsCloseButton = new Button(element (by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
-  detailedReportHeading = element (by.xpath('.//*[contains(text(),\'Show complete stack report\')]/..'));
+  stackReportDependencyCard = $('analytics-report-summary .analytics-summary-report').$$('analytics-summary-card').get(3).$('analytics-summary-content').$$('ana-summary-info');
+  stackReportDependencyCardTotalCount = this.stackReportDependencyCard.get(0).$('.info-value');
+  stackReportDependencyCardAnalyzedCount = this.stackReportDependencyCard.get(1).$('.info-value');
+  stackReportDependencyCardUnknownCount = this.stackReportDependencyCard.get(2).$('.info-value');
    // tslint:enable:max-line-length
 
   /* UI Page Section: My Workitems */
