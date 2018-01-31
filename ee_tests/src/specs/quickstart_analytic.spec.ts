@@ -42,34 +42,41 @@ describe('Creating new quickstart in OSIO', () => {
     //    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
     //      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
     //    }
+    const getDependencyCountObj = (total: string, analyzed: string, unknown: string) => {
+      return {
+        'total': total,
+        'analyzed': analyzed,
+        'unknown': unknown
+      };
+    };
 
     switch (browser.params.quickstart.name) {
       case 'vertxHttp': {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x HTTP Booster', getDependencyCountObj('2', '2', '0')).catch(error => console.log(error));
         break;
       }
       case 'vertxConfig': {
-        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', 'Components: Total: 9 | Analyzed: 9 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', getDependencyCountObj('9', '9', '0')).catch(error => console.log(error));
         break;
       }
       case 'vertxHealth': {
-        await runTest(dashboardPage, 'Vert.x Health Check Example', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x Health Check Example', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
         break;
       }
       case 'SpringBootHttp': {
-        await runTest(dashboardPage, 'Spring Boot - HTTP', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot - HTTP', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
         break;
       }
       case 'SpringBootCrud': {
-        await runTest(dashboardPage, 'Spring Boot - CRUD', 'Components: Total: 4 | Analyzed: 4 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot - CRUD', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
         break;
       }
       case 'SpringBootHealth': {
-        await runTest(dashboardPage, 'Spring Boot Health Check Example', 'Components: Total: 3 | Analyzed: 3 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Spring Boot Health Check Example', getDependencyCountObj('3', '3', '0')).catch(error => console.log(error));
         break;
       }
       default: {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
+        await runTest(dashboardPage, 'Vert.x HTTP Booster', getDependencyCountObj('2', '2', '0')).catch(error => console.log(error));
         break;
       }
     }
@@ -78,7 +85,7 @@ describe('Creating new quickstart in OSIO', () => {
 
 // tslint:enable:max-line-length
 
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, expectedReportSummary: string) {
+  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, dependencyCountObj: any) {
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
@@ -163,7 +170,9 @@ describe('Creating new quickstart in OSIO', () => {
 
     await browser.sleep(support.DEFAULT_WAIT);
     try {
-      await expect(spaceDashboardPage.detailedReportHeading.getText()).toContain(expectedReportSummary);
+      await expect(spaceDashboardPage.stackReportDependencyCardTotalCount.getText()).toContain(dependencyCountObj['total']);
+      await expect(spaceDashboardPage.stackReportDependencyCardAnalyzedCount.getText()).toContain(dependencyCountObj['analyzed']);
+      await expect(spaceDashboardPage.stackReportDependencyCardUnknownCount.getText()).toContain(dependencyCountObj['unknown']);
       support.writeScreenshot('target/screenshots/analytic_report_success_' + spaceName + '.png');
     } catch (e) {
         support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
