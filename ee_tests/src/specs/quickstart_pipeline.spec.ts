@@ -9,6 +9,7 @@ import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { StageRunPage } from './page_objects/space_stage_run.page';
+import { error } from 'util';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -27,8 +28,8 @@ describe('Creating new quickstart in OSIO', () => {
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
 //    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
-    support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
-    support.info('\n ============ End of test reached, logging out ============ \n');
+    await support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
+    await support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
 
@@ -40,33 +41,37 @@ describe('Creating new quickstart in OSIO', () => {
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-//    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
-//      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
-//    }
+    let quickstart: string;
 
     switch (browser.params.quickstart.name) {
       case 'vertxHttp': {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
+        quickstart = 'Vert.x HTTP Booster';
         break;
       }
       case 'vertxHealth': {
-        await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
+        quickstart = 'Vert.x Health Check Example';
         break;
       }
       case 'SpringBootHttp': {
-        await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
+        quickstart = 'Spring Boot - HTTP';
         break;
       }
       case 'SpringBootHealth': {
-        await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
+        quickstart = 'Spring Boot Health Check Example';
         break;
       }
       default: {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
+        quickstart = 'Vert.x HTTP Booster';
         break;
       }
     }
 
+    try {
+      await runTest(dashboardPage, quickstart);
+    } catch (exception) {
+      console.log(error);
+      throw exception;
+    }
   });
 
 // tslint:enable:max-line-length
@@ -85,7 +90,7 @@ describe('Creating new quickstart in OSIO', () => {
 //    let strategy: string  = 'releaseStageApproveAndPromote';
     let strategy: string  = browser.params.release.strategy;   //'release';
 
-    support.info('Creating quickstart: ' + quickstartName);
+    await support.info('Creating quickstart: ' + quickstartName);
     await wizard.newQuickstartProject({ project: quickstartName, strategy });
     await spaceDashboardPage.ready();
 
@@ -105,29 +110,29 @@ describe('Creating new quickstart in OSIO', () => {
 
     /* Open the pipeline page, select the pipeline by name */
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
-    support.debug('Accessed pipeline page');
+    await support.debug('Accessed pipeline page');
 
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
 
     let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
 
-    support.debug('Looking for the pipeline name');
+    await support.debug('Looking for the pipeline name');
     await pipelineByName.untilPresent(support.LONGER_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
-    support.debug('Verifying that only 1 pipeline is found with a matching name');
+    await support.debug('Verifying that only 1 pipeline is found with a matching name');
     expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
 
     /* Save the pipeline page output to stdout for logging purposes */
     let pipelineText = await spacePipelinePage.pipelinesPage.getText();
-    support.debug('Pipelines page contents = ' + pipelineText);
+    await support.debug('Pipelines page contents = ' + pipelineText);
 
     /* Find the pipeline name */
     await pipelineByName.untilClickable(support.LONGER_WAIT);
 
     /* If the build log link is not viewable - the build failed to start */
-    support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
+    await support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
     expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
@@ -143,12 +148,12 @@ describe('Creating new quickstart in OSIO', () => {
       }
       default: {    /* Including releaseStageApproveAndPromote */
         /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
-        support.debug('Verifying that the promote dialog is opened');
+        await support.debug('Verifying that the promote dialog is opened');
         let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
 
         await inputRequired.clickWhenReady(support.LONGEST_WAIT);
         await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
-        support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
+        await support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
         /* Verify stage and run icons are present - these will timeout and cause failures if missing */
         await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
@@ -156,7 +161,7 @@ describe('Creating new quickstart in OSIO', () => {
         break;
       }
     }
-    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
+    await support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
       // TODO - Error conditions to trap
       // 1) Jenkins build log - find errors if the test fails
