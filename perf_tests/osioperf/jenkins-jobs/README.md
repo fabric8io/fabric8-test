@@ -1,2 +1,0 @@
-# Jenkins job descriptors to be used by [Jenkins Job Builder](https://docs.openstack.org/infra/jenkins-job-builder/).
- * [`auth-api-user`](https://osioperf-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/auth-api-user/) - Used to execute performance scenarios for [Auth Services](https://github.com/fabric8-services/fabric8-auth) described [here](https://github.com/fabric8-services/fabric8-auth/issues/209).
