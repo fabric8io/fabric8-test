@@ -50,8 +50,8 @@ export class Header extends ui.BaseElement {
   recentItemsDropdown = new RecentItemsDropdown(this.$$('.dropdown').get(0));
   // statusDropdown = new Dropdown(this.$$('.dropdown').get(0));
 
-  constructor(el: ElementFinder) {
-    super(el);
+  constructor(el: ElementFinder, name: string = '') {
+    super(el, name);
   }
 
   async ready() {

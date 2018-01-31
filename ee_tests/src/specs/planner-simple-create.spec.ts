@@ -22,7 +22,7 @@ describe('Planner Tab', () => {
 
 
   it('can create a work item', async () => {
-    let planner = await spaceDashboard.gotoPlanTab();
+    let planner = await spaceDashboard.header.gotoPlanTab();
     await planner.createWorkItem({
       title: 'Workitem Title',
       description: 'Describes the work item'
