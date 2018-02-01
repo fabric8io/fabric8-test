@@ -165,6 +165,11 @@ describe('Creating new quickstart in OSIO', () => {
       // 4) Follow the stage and run links */
 
 
+
+
+
+
+
       let stageRunPage = new StageRunPage();
 /*
 Open the stage link
