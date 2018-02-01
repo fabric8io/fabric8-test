@@ -10,8 +10,11 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 // tslint:ensable:max-line-length
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
+import { SpaceHeader } from './app/spaceHeader';
 
 export class SpacePipelinePage extends AppPage {
+
+  spaceHeader = new SpaceHeader(this.appTag.$('header > alm-app-header > nav'));
 
   /* Page UI element - contains all pipelines */
   pipelinesPage = element(by.xpath('.//*[contains (@class,\'pipelines-page\')]'));
