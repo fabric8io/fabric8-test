@@ -38,7 +38,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|EE_TEST_OSO_TOKEN|EE_TEST_KC_TOKEN|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -71,9 +71,7 @@ echo "Run test container"
 # Assign values to variable names expected by typescript testsmore 
 export OSIO_USERNAME=$EE_TEST_USERNAME
 export OSIO_PASSWORD=$EE_TEST_PASSWORD
-export OSO_TOKEN=$EE_TEST_OSO_TOKEN
 export OSIO_URL=$TEST_URL
-export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$EE_TEST_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
@@ -81,7 +79,7 @@ export QUICKSTART_NAME=$QUICKSTART_NAME
 export RELEASE_STRATEGY=$RELEASE_STRATEGY
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
-          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_TOKEN -e OSIO_REFRESH_TOKEN \
+          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL  \
           -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
@@ -94,7 +92,6 @@ docker exec fabric8-test webdriver-manager update
 docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 
 # Exec EE tests
-### docker exec fabric8-test sh ./local_cleanup.sh $OSO_USERNAME $OSO_TOKEN
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
 
 # Writing to and the grepping results required as webdriver fails

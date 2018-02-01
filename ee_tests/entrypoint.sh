@@ -28,9 +28,7 @@ TEST_SUITE="runTest"
 # Assign values to variable names expected by typescript testsmore 
 export OSIO_USERNAME=$USERNAME
 export OSIO_PASSWORD=$PASSWORD
-## export OSO_TOKEN=$EE_TEST_OSO_TOKEN
 export OSIO_URL=$TARGET_URL
-## export OSIO_REFRESH_TOKEN=$EE_TEST_KC_TOKEN
 export OSO_USERNAME=$OSO_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
