@@ -46,6 +46,7 @@ let conf: Config = {
       importTest: ['src/specs/**/workshop-import-to-space.spec.js'],
       quickstartTest: ['src/specs/**/quickstart_analytic.spec.js'],
       runTest: ['src/specs/**/quickstart_pipeline.spec.js'],
+      deployTest: ['src/specs/**/quickstart_deployments.spec.js'],
       chequickstartTest: ['src/specs/**/quickstart_che.spec.js'],
       allTest: ['src/specs/**/quickstart_analytic.spec.js', 'src/specs/**/quickstart_pipeline.spec.js', 'src/specs/**/quickstart_che.spec.js'],
       specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
