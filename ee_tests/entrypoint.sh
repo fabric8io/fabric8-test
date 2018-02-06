@@ -34,7 +34,7 @@ export GITHUB_USERNAME=$GITHUB_USERNAME
 export DEBUG="true"
 export TEST_SUITE="runTest"
 export QUICKSTART_NAME="vertxHttp"
-export RELEASE_STRATEGY="releaseAndStage"
+export RELEASE_STRATEGY="releaseStageApproveAndPromote"
 
 npm install
 npm install -g typescript
