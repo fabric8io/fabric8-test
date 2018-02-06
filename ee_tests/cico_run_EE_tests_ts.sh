@@ -21,10 +21,7 @@ GITHUB_USERNAME=${4:-$DEFAULT_GITHUB_USERNAME}
 DEFAULT_QUICKSTART_NAME="vertxHttp"
 QUICKSTART_NAME=${5:-$DEFAULT_QUICKSTART_NAME}
 
-## DEFAULT_RELEASE_STRATEGY="releaseStageApproveAndPromote"
-## https://github.com/openshiftio/openshift.io/issues/2034
-## Bug has been unresolved for 1+ week - change default strategy temporarily
-DEFAULT_RELEASE_STRATEGY="releaseAndStage"
+DEFAULT_RELEASE_STRATEGY="releaseStageApproveAndPromote"
 RELEASE_STRATEGY=${6:-$DEFAULT_RELEASE_STRATEGY}
 
 # Do not reveal secrets
