@@ -52,12 +52,19 @@ describe('Creating new quickstart in OSIO', () => {
         quickstartName = 'Spring Boot Health Check Example';
         break;
       }
+      case 'SwarmHttp': {
+        quickstartName = 'WildFly Swarm - HTTP';
+        break;
+      }
+      case 'SwarmHealth': {
+        quickstartName = 'WildFly Swarm - Health Checks';
+        break;
+      }
       default: {
         quickstartName = 'Vert.x HTTP Booster';
         break;
       }
     }
-
     await runTest(dashboardPage, quickstartName);
   });
 
