@@ -50,14 +50,11 @@ fi
 # Get all the deps in
 yum -y install \
   docker \
-  make \
-  git \
   rsync
 service docker start
 
 # Build builder image
 cp /tmp/jenkins-env .
-# User root is required to run webdriver-manager update. This shouldn't be a problem for CI containers
 
 IMAGE="fabric8-test"
 REPOSITORY="fabric8io"
@@ -83,13 +80,6 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
           ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
-
-docker exec fabric8-test npm install
-docker exec fabric8-test npm install -g typescript
-
-echo -n Updating Webdriver and Selenium...
-docker exec fabric8-test webdriver-manager update
-docker exec fabric8-test webdriver-manager update --versions.chrome 2.33
 
 # Exec EE tests
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
