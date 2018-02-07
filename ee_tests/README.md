@@ -2,62 +2,49 @@
 
 ## Goal of this Repository
 
-The goal of this repository is to provide automated tests that can be easily
+The goal of this repository is to provide automated End-to-End (EE) tests that can be easily
 installed and run. All the tests in this repository are configured to be run
 locally in a shell, locally in a docker container, and in a docker container in
-Centos CI. The tests can be run against a local or remove server by specifying
+Centos CI. The tests can be run against a local or remote server by specifying
 the server's URL as a parameter to the tests.
 
-### TypeScript End-to-End (EE) tests
+### Running the EE Tests Locally ###
+#### Setup the Environmental Variables ####
 
-The EE tests simulate a user's actions by creating spaces and projects in the
-UI. The tests are implemented to run either in a docker container (either
-locally or in a CI/CO system), or locally from a shell.
-
-### 5-Minute Guide to Running the EE Tests Locally ###
-
-Before running the tests, you must define these env variables :
-
+Before running the tests, you must define env variables. These are stored in file config/local_osio.conf.sh. You need to create the file by yourself by copying its template and filling in the values.
 ```
-OSIO_USERNAME
-OSIO_PASSWORD
-OSIO_URL
-OSO_USERNAME
-GITHUB_USERNAME
-TEST_SUITE
-QUICTSTART_NAME (optional)
+cp config/local_osio.conf.sh.template config/local_osio.conf.sh
 ```
-
-For example:
-
+#### Install all dependencies ####
 ```
-export OSIO_USERNAME="your OSIO user"
-export OSIO_PASSWORD="your OSIO password"
-export OSIO_URL="https://openshift.io"
-export OSO_USERNAME="your oso username"
-export GITHUB_USERNAME="your github username"
-export TEST_SUITE="runTest"
-export QUICKSTART_NAME='test100"
+npm install
 ```
-
-After you define these env variables, execute these commands:
-
-### Setup ###
-
-```
-npm install -g yarn
-yarn
-
-```
-### Run the tests ###
-
-After setting the environment variables defined above, run using the `npm start` helper which runs `ts-protractor.sh` script
-
+#### Run the tests ####
 ```
 npm start
 ```
+### Running the EE Tests Locally from Docker Image ###
+#### Setup the Environmental Variables ####
+Setup environmental vairables in the same way as when running tests locally (without Docker)
+#### Install all dependencies ####
+```
+npm install
+```
+#### Build the Docker Image ####
+```
+npm run image:build
+```
+#### Run Tests Inside Docker Image ####
+```
+npm run image:start
+```
 
-#### tips and tricks ####
+
+
+
+## The rest of the documentation should be reviewed
+
+
 
 ##### debugging #####
 

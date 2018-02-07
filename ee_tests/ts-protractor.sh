@@ -16,11 +16,9 @@ validate_config() {
   return $ret
 }
 
-
 main() {
   local suite=${1:-specs}
 
-  source "$SCRIPT_DIR/config/local_osio.conf.sh"
   validate_config || {
     log.info "Please set test configs and re-run $0"
     exit 1

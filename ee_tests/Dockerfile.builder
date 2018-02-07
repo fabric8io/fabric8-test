@@ -1,13 +1,14 @@
 FROM centos:7
 ENV LANG=en_US.utf8
-#ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.11.4
 ENV DISPLAY=:99
 
-ENTRYPOINT ["/opt/fabric8-test/docker-entrypoint.sh"]
+WORKDIR /opt/fabric8-test/
+ENTRYPOINT ["./docker-entrypoint.sh"]
+VOLUME /dist
 
 # load the gpg keys
-COPY gpg ../gpg
+COPY gpg /gpg
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -24,6 +25,7 @@ RUN set -ex \
     gpg --import "/gpg/${key}.gpg" ; \
   done
 
+# install chrome
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN yum  --setopt tsflags='nodocs' -y update && \
     yum install --setopt tsflags='nodocs' -y bzip2 fontconfig tar java-1.8.0 nmap-ncat psmisc gtk3 git \
@@ -31,9 +33,9 @@ RUN yum  --setopt tsflags='nodocs' -y update && \
       xorg-x11-server-Xvfb xfonts-100dpi libXfont GConf2 \
       xorg-x11-fonts-75dpi xfonts-scalable xfonts-cyrillic \
       ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc \
-      xorg-x11-server-Xvfb google-chrome-stable && \
-      yum -y clean all
+      xorg-x11-server-Xvfb google-chrome-stable
 
+# install node
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
   && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
@@ -50,18 +52,18 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 #  && mv geckodriver /usr/bin \
 #  && yum install -y firefox \
 #  && npm install -g karma-firefox-launcher
-
-RUN npm install -g  yarn jasmine-node protractor
-
-WORKDIR /opt/fabric8-test/
-
-COPY . .
-
-VOLUME /dist
+# FIXME: Firefox complains about a missing machine-id file. So I set a random one
+# echo 8636d9aff3933f48b95ad94891cd1839 > /var/lib/dbus/machine-id
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
 RUN wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
     tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
     mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
 
-RUN yarn
+# install all dependencies
+COPY package.json package-lock.json ./
+# note that --unsafe-perm is there so that the postinstall script is called
+RUN npm --unsafe-perm install
+
+# copy all files 
+COPY . .
