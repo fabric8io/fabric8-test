@@ -15,34 +15,24 @@ let globalSpacePipelinePage: SpacePipelinePage;
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
   });
 
-  afterEach( async () => {
+  afterEach(async () => {
     await browser.sleep(support.DEFAULT_WAIT);
-
-//    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
+    // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_analytic_' + globalSpaceName + '.png');
-    support.info('\n ============ End of test reached, logging out ============ \n');
+    // support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
 
-  /* The majority of these tests are commented out not due to any bugs,
-     but to ensure that the test does not collide with other tests. TODO - to
-     resolve these collisions */
-
-  // tslint:disable:max-line-length
-
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-    //    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
-    //      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
-    //    }
     const getDependencyCountObj = (total: string, analyzed: string, unknown: string) => {
       return {
         'total': total,
@@ -51,42 +41,52 @@ describe('Creating new quickstart in OSIO', () => {
       };
     };
 
+    let quickstartName, dependencyCountObj;
+
     switch (browser.params.quickstart.name) {
       case 'vertxHttp': {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', getDependencyCountObj('2', '2', '0')).catch(error => console.log(error));
+        quickstartName = 'Vert.x HTTP Booster';
+        dependencyCountObj = getDependencyCountObj('2', '2', '0');
         break;
       }
       case 'vertxConfig': {
-        await runTest(dashboardPage, 'Vert.x - HTTP & Config Map', getDependencyCountObj('9', '9', '0')).catch(error => console.log(error));
+        quickstartName = 'Vert.x - HTTP & Config Map';
+        dependencyCountObj = getDependencyCountObj('9', '9', '0');
         break;
       }
       case 'vertxHealth': {
-        await runTest(dashboardPage, 'Vert.x Health Check Example', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
+        quickstartName = 'Vert.x Health Check Example';
+        dependencyCountObj = getDependencyCountObj('4', '4', '0');
         break;
       }
       case 'SpringBootHttp': {
-        await runTest(dashboardPage, 'Spring Boot - HTTP', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
+        quickstartName = 'Spring Boot - HTTP';
+        dependencyCountObj = getDependencyCountObj('4', '4', '0');
         break;
       }
       case 'SpringBootCrud': {
-        await runTest(dashboardPage, 'Spring Boot - CRUD', getDependencyCountObj('4', '4', '0')).catch(error => console.log(error));
+        quickstartName = 'Spring Boot - CRUD';
+        dependencyCountObj = getDependencyCountObj('4', '4', '0');
         break;
       }
       case 'SpringBootHealth': {
-        await runTest(dashboardPage, 'Spring Boot Health Check Example', getDependencyCountObj('3', '3', '0')).catch(error => console.log(error));
+        quickstartName = 'Spring Boot Health Check Example';
+        dependencyCountObj = getDependencyCountObj('3', '3', '0');
         break;
       }
       default: {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster', getDependencyCountObj('2', '2', '0')).catch(error => console.log(error));
+        quickstartName = 'Vert.x HTTP Booster';
+        dependencyCountObj = getDependencyCountObj('2', '2', '0');
         break;
       }
     }
 
+    await runTest(dashboardPage, quickstartName, dependencyCountObj);
   });
 
-// tslint:enable:max-line-length
+  async function runTest(theLandingPage: MainDashboardPage, quickstartName: string, dependencyCountObj: any) {
 
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string, dependencyCountObj: any) {
+    await support.info('Quickstart name: ' + quickstartName);
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
@@ -136,7 +136,7 @@ describe('Creating new quickstart in OSIO', () => {
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-    expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
+    expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
@@ -153,7 +153,7 @@ describe('Creating new quickstart in OSIO', () => {
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
     /* Write the Jenkins build log to stdout */
-//    await support.dumpLog(spacePipelinePage);
+    // await support.dumpLog(spacePipelinePage);
 
     // TODO - Error conditions to trap
     // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
@@ -176,7 +176,8 @@ describe('Creating new quickstart in OSIO', () => {
       await expect(spaceDashboardPage.stackReportDependencyCardUnknownCount.getText()).toContain(dependencyCountObj['unknown']);
       support.writeScreenshot('target/screenshots/analytic_report_success_' + spaceName + '.png');
     } catch (e) {
-        support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
+      support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
+      throw e;
     }
 
     await spaceDashboardPage.analyticsCloseButton.clickWhenReady();

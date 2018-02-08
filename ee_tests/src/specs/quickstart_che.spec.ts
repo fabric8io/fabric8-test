@@ -15,7 +15,7 @@ let globalSpaceName: string;
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
@@ -38,8 +38,7 @@ describe('Creating new quickstart in OSIO', () => {
 
     /* OSIO is not reliable in restarting Jenkins pods in a timely manner - commenting
        out check for alert box */
-    //    await expect(alertBox.getText()).toContain('environment has been erased!');
-
+    // await expect(alertBox.getText()).toContain('environment has been erased!');
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached ============ \n');
     // support.info('\n ============ End of test reached, logging out ============ \n');
@@ -49,52 +48,46 @@ describe('Creating new quickstart in OSIO', () => {
 
   /* Simple test - accept all defaults for new quickstarts */
 
-  /* The majority of these tests are commented out not due to any bugs,
-     but to ensure that the test does not collide with other tests. TODO - to
-     resolve these collisions */
+  it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-  // tslint:disable:max-line-length
+    let quickstartName: string;
 
-it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-
-  switch (browser.params.quickstart.name) {
-    case 'vertxHttp': {
-      await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-      break;
+    switch (browser.params.quickstart.name) {
+      case 'vertxHttp': {
+        quickstartName = 'Vert.x HTTP Booster';
+        break;
+      }
+      case 'vertxConfig': {
+        quickstartName = 'Vert.x - HTTP & Config Map';
+        break;
+      }
+      case 'vertxHealth': {
+        quickstartName = 'Vert.x Health Check Example';
+        break;
+      }
+      case 'SpringBootHttp': {
+        quickstartName = 'Spring Boot - HTTP';
+        break;
+      }
+      case 'SpringBootCrud': {
+        quickstartName = 'Spring Boot - CRUD';
+        break;
+      }
+      case 'SpringBootHealth': {
+        quickstartName = 'Spring Boot Health Check Example';
+        break;
+      }
+      default: {
+        quickstartName = 'Vert.x HTTP Booster';
+        break;
+      }
     }
-    case 'vertxConfig': {
-      await runTest(dashboardPage, 'Vert.x - HTTP & Config Map').catch(error => console.log(error));
-      break;
-    }
-    case 'vertxHealth': {
-      await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
-      break;
-    }
-    case 'SpringBootHttp': {
-      await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
-      break;
-    }
-    case 'SpringBootCrud': {
-      await runTest(dashboardPage, 'Spring Boot - CRUD').catch(error => console.log(error));
-      break;
-    }
-    case 'SpringBootHealth': {
-      await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
-      break;
-    }
-    default: {
-      await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-      break;
-    }
-  }
+    await runTest(dashboardPage, quickstartName);
+  });
 
-});
+  async function runTest(theLandingPage: MainDashboardPage, quickstartName: string) {
 
-
-
-// tslint:enable:max-line-length
-
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
+    await support.info('Quickstart name: ' + quickstartName);
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
@@ -122,7 +115,7 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
     // tslint:disable:max-line-length
     await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
 
-//    await browser.sleep(60000);
+    // await browser.sleep(60000);
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
@@ -147,7 +140,7 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
     // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
 
-    expect (await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
+    expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
 
@@ -161,7 +154,6 @@ it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, r
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
-
   }
 
 });
