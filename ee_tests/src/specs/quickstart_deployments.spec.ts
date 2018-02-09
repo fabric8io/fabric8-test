@@ -1,7 +1,8 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import {WebDriver, error as SE} from 'selenium-webdriver';
+import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from './support';
+import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -19,75 +20,33 @@ let globalSpacePipelinePage: SpacePipelinePage;
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
   });
 
-  afterEach( async () => {
+  afterEach(async () => {
     await browser.sleep(support.DEFAULT_WAIT);
-//    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
+    // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
-    support.info('\n ============ End of test reached, logging out ============ \n');
+    // support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
 
- /* The majority of these tests are commented out not due to any bugs,
-     but to ensure that the test does not collide with other tests. TODO - to
-     resolve these collisions */
-
-  // tslint:disable:max-line-length
-
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-
-//    if (browser.params.quickstart.name === 'Vert.x HTTP Booster') {
-//      await runTest(dashboardPage, 'Vert.x HTTP Booster', 'Components: Total: 2 | Analyzed: 2 | Unknown: 0').catch(error => console.log(error));
-//    }
-
-    switch (browser.params.quickstart.name) {
-      case 'vertxHttp': {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-        break;
-      }
-      case 'vertxHealth': {
-        await runTest(dashboardPage, 'Vert.x Health Check Example').catch(error => console.log(error));
-        break;
-      }
-      case 'SpringBootHttp': {
-        await runTest(dashboardPage, 'Spring Boot - HTTP').catch(error => console.log(error));
-        break;
-      }
-      case 'SpringBootHealth': {
-        await runTest(dashboardPage, 'Spring Boot Health Check Example').catch(error => console.log(error));
-        break;
-      }
-      default: {
-        await runTest(dashboardPage, 'Vert.x HTTP Booster').catch(error => console.log(error));
-        break;
-      }
-    }
-
-  });
-
-// tslint:enable:max-line-length
-
-/* Create the quickstart, verify deployment to stage and run */
-  async function runTest (theLandingPage: MainDashboardPage, quickstartName: string) {
-
-    await support.info ('quickstart name = ' + browser.params.quickstart.name);
-
+    let quickstart = new Quickstart(browser.params.quickstart.name);
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let wizard = await spaceDashboardPage.addToSpace();
 
-//    let strategy: string  = 'releaseStageApproveAndPromote';
-    let strategy: string  = browser.params.release.strategy;   //'release';
+    //    let strategy: string  = 'releaseStageApproveAndPromote';
+    let strategy: string = browser.params.release.strategy;   //'release';
 
-    support.info('Creating quickstart: ' + quickstartName);
-    await wizard.newQuickstartProject({ project: quickstartName, strategy });
+    support.info('Creating quickstart: ' + quickstart.name);
+    await wizard.newQuickstartProject({ project: quickstart.name, strategy });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -130,7 +89,7 @@ describe('Creating new quickstart in OSIO', () => {
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-    expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
+    expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
     /* Execute the pipeline build - in the context of the selected release strategy */
     switch (strategy) {
@@ -159,15 +118,11 @@ describe('Creating new quickstart in OSIO', () => {
     }
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
-      // TODO - Error conditions to trap
-      // 1) Jenkins build log - find errors if the test fails
-      // 2) Jenkins pod log - find errors if the test fails
-      // 3) Presence of build errors in UI
-      // 4) Follow the stage and run links */
-
-
-
-
+    // TODO - Error conditions to trap
+    // 1) Jenkins build log - find errors if the test fails
+    // 2) Jenkins pod log - find errors if the test fails
+    // 3) Presence of build errors in UI
+    // 4) Follow the stage and run links */
 
     const STAGE = 1;
     const RUN = 2;
@@ -194,16 +149,15 @@ describe('Creating new quickstart in OSIO', () => {
     textStr = await spaceDeploymentsPage.resourceUsageCardByIndex(1).getText();
     support.info('4 Output from run = ' + textStr);
 
-
     support.writeScreenshot('target/screenshots/pipeline_deployments_' + spaceName + '.png');
     await browser.sleep(60000);
 
-/*
-Open the stage link
-If the page is not fully displayed - pause, then break and try again -
-If the page is fully displayed, verify the page contents, run the app, verify the results
-*/
+    /*
+    Open the stage link
+    If the page is not fully displayed - pause, then break and try again -
+    If the page is fully displayed, verify the page contents, run the app, verify the results
+    */
 
-  }
+  });
 
 });

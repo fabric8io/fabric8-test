@@ -1,7 +1,8 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import {WebDriver, error as SE} from 'selenium-webdriver';
+import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from './support';
+import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -17,13 +18,13 @@ let globalSpacePipelinePage: SpacePipelinePage;
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
   });
 
-  afterEach( async () => {
+  afterEach(async () => {
     await browser.sleep(support.DEFAULT_WAIT);
     await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
@@ -35,10 +36,8 @@ describe('Creating new quickstart in OSIO', () => {
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-    /* Example of quickstart name:
-       browser.params.quickstart.name = 'wfswarm-circuit-breaker'   */
-
-    await support.info ('quickstart name = ' + browser.params.quickstart.name);
+    let quickstart = new Quickstart(browser.params.quickstart.name);
+    await support.info('Quickstart name: ' + quickstart.name);
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
@@ -49,7 +48,7 @@ describe('Creating new quickstart in OSIO', () => {
     //  - do an import of the old space
     await wizard.importExistingCode({
       org: 'WildFly Swarm Boosters for openshift.io',
-      repositories: [browser.params.quickstart.name]
+      repositories: [quickstart.id]
     });
     await spaceDashboardPage.open();
 
@@ -97,7 +96,7 @@ describe('Creating new quickstart in OSIO', () => {
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
     await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-    expect (spacePipelinePage.viewLog.isDisplayed()).toBe(true);
+    expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
@@ -113,13 +112,13 @@ describe('Creating new quickstart in OSIO', () => {
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
-      // TODO - Error conditions to trap
-      // 1) Jenkins build log - find errors if the test fails
-      // 2) Jenkins pod log - find errors if the test fails
-      // 3) Presence of build errors in UI
-      // 4) Follow the stage and run links */
+    // TODO - Error conditions to trap
+    // 1) Jenkins build log - find errors if the test fails
+    // 2) Jenkins pod log - find errors if the test fails
+    // 3) Presence of build errors in UI
+    // 4) Follow the stage and run links */
   });
 
-// tslint:enable:max-line-length
+  // tslint:enable:max-line-length
 
 });
