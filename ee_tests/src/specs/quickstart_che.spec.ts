@@ -1,5 +1,6 @@
 import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
+import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -49,54 +50,15 @@ describe('Creating new quickstart in OSIO', () => {
   /* Simple test - accept all defaults for new quickstarts */
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-
-    let quickstartName: string;
-
-    switch (browser.params.quickstart.name) {
-      case 'vertxHttp': {
-        quickstartName = 'Vert.x HTTP Booster';
-        break;
-      }
-      case 'vertxConfig': {
-        quickstartName = 'Vert.x - HTTP & Config Map';
-        break;
-      }
-      case 'vertxHealth': {
-        quickstartName = 'Vert.x Health Check Example';
-        break;
-      }
-      case 'SpringBootHttp': {
-        quickstartName = 'Spring Boot - HTTP';
-        break;
-      }
-      case 'SpringBootCrud': {
-        quickstartName = 'Spring Boot - CRUD';
-        break;
-      }
-      case 'SpringBootHealth': {
-        quickstartName = 'Spring Boot Health Check Example';
-        break;
-      }
-      default: {
-        quickstartName = 'Vert.x HTTP Booster';
-        break;
-      }
-    }
-    await runTest(dashboardPage, quickstartName);
-  });
-
-  async function runTest(theLandingPage: MainDashboardPage, quickstartName: string) {
-
-    await support.info('Quickstart name: ' + quickstartName);
-
+    let quickstart = new Quickstart(browser.params.quickstart.name);
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let wizard = await spaceDashboardPage.addToSpace();
 
-    support.info('Creating quickstart: ' + quickstartName);
-    await wizard.newQuickstartProject({ project: quickstartName });
+    support.info('Creating quickstart: ' + quickstart.name);
+    await wizard.newQuickstartProject({ project: quickstart.name });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -154,6 +116,6 @@ describe('Creating new quickstart in OSIO', () => {
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
-  }
+  });
 
 });
