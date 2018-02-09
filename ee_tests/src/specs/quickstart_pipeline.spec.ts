@@ -2,6 +2,7 @@ import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protra
 import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from './support';
+import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -34,45 +35,7 @@ describe('Creating new quickstart in OSIO', () => {
   });
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-    let quickstartName: string;
-
-    switch (browser.params.quickstart.name) {
-      case 'vertxHttp': {
-        quickstartName = 'Vert.x HTTP Booster';
-        break;
-      }
-      case 'vertxHealth': {
-        quickstartName = 'Vert.x Health Check Example';
-        break;
-      }
-      case 'SpringBootHttp': {
-        quickstartName = 'Spring Boot - HTTP';
-        break;
-      }
-      case 'SpringBootHealth': {
-        quickstartName = 'Spring Boot Health Check Example';
-        break;
-      }
-      case 'SwarmHttp': {
-        quickstartName = 'WildFly Swarm - HTTP';
-        break;
-      }
-      case 'SwarmHealth': {
-        quickstartName = 'WildFly Swarm - Health Checks';
-        break;
-      }
-      default: {
-        quickstartName = 'Vert.x HTTP Booster';
-        break;
-      }
-    }
-    await runTest(dashboardPage, quickstartName);
-  });
-
-  /* Create the quickstart, verify deployment to stage and run */
-  async function runTest(theLandingPage: MainDashboardPage, quickstartName: string) {
-    await support.info('Quickstart name: ' + quickstartName);
-
+    let quickstart = new Quickstart(browser.params.quickstart.name);
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
@@ -82,8 +45,8 @@ describe('Creating new quickstart in OSIO', () => {
     //    let strategy: string  = 'releaseStageApproveAndPromote';
     let strategy: string = browser.params.release.strategy;   //'release';
 
-    support.info('Creating quickstart: ' + quickstartName);
-    await wizard.newQuickstartProject({ project: quickstartName, strategy });
+    support.info('Creating quickstart: ' + quickstart.name);
+    await wizard.newQuickstartProject({ project: quickstart.name, strategy });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -168,6 +131,6 @@ describe('Creating new quickstart in OSIO', () => {
     If the page is fully displayed, verify the page contents, run the app, verify the results
     */
 
-  }
+  });
 
 });

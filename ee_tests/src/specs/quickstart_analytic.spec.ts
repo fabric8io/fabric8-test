@@ -1,5 +1,6 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from './support';
+import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
@@ -32,70 +33,15 @@ describe('Creating new quickstart in OSIO', () => {
   /* Simple test - accept all defaults for new quickstarts */
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-
-    const getDependencyCountObj = (total: string, analyzed: string, unknown: string) => {
-      return {
-        'total': total,
-        'analyzed': analyzed,
-        'unknown': unknown
-      };
-    };
-
-    let quickstartName, dependencyCountObj;
-
-    switch (browser.params.quickstart.name) {
-      case 'vertxHttp': {
-        quickstartName = 'Vert.x HTTP Booster';
-        dependencyCountObj = getDependencyCountObj('2', '2', '0');
-        break;
-      }
-      case 'vertxConfig': {
-        quickstartName = 'Vert.x - HTTP & Config Map';
-        dependencyCountObj = getDependencyCountObj('9', '9', '0');
-        break;
-      }
-      case 'vertxHealth': {
-        quickstartName = 'Vert.x Health Check Example';
-        dependencyCountObj = getDependencyCountObj('4', '4', '0');
-        break;
-      }
-      case 'SpringBootHttp': {
-        quickstartName = 'Spring Boot - HTTP';
-        dependencyCountObj = getDependencyCountObj('4', '4', '0');
-        break;
-      }
-      case 'SpringBootCrud': {
-        quickstartName = 'Spring Boot - CRUD';
-        dependencyCountObj = getDependencyCountObj('4', '4', '0');
-        break;
-      }
-      case 'SpringBootHealth': {
-        quickstartName = 'Spring Boot Health Check Example';
-        dependencyCountObj = getDependencyCountObj('3', '3', '0');
-        break;
-      }
-      default: {
-        quickstartName = 'Vert.x HTTP Booster';
-        dependencyCountObj = getDependencyCountObj('2', '2', '0');
-        break;
-      }
-    }
-
-    await runTest(dashboardPage, quickstartName, dependencyCountObj);
-  });
-
-  async function runTest(theLandingPage: MainDashboardPage, quickstartName: string, dependencyCountObj: any) {
-
-    await support.info('Quickstart name: ' + quickstartName);
-
+    let quickstart = new Quickstart(browser.params.quickstart.name);
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
 
     let wizard = await spaceDashboardPage.addToSpace();
 
-    support.info('Creating quickstart: ' + quickstartName);
-    await wizard.newQuickstartProject({ project: quickstartName });
+    support.info('Creating quickstart: ' + quickstart.name);
+    await wizard.newQuickstartProject({ project: quickstart.name });
     await spaceDashboardPage.ready();
 
     /* This statement does not reliably wait for the modal dialog to disappear:
@@ -171,9 +117,12 @@ describe('Creating new quickstart in OSIO', () => {
 
     await browser.sleep(support.DEFAULT_WAIT);
     try {
-      await expect(spaceDashboardPage.stackReportDependencyCardTotalCount.getText()).toContain(dependencyCountObj['total']);
-      await expect(spaceDashboardPage.stackReportDependencyCardAnalyzedCount.getText()).toContain(dependencyCountObj['analyzed']);
-      await expect(spaceDashboardPage.stackReportDependencyCardUnknownCount.getText()).toContain(dependencyCountObj['unknown']);
+      await expect(spaceDashboardPage.stackReportDependencyCardTotalCount.getText())
+        .toContain(quickstart.dependencyCount.total);
+      await expect(spaceDashboardPage.stackReportDependencyCardAnalyzedCount.getText())
+        .toContain(quickstart.dependencyCount.analyzed);
+      await expect(spaceDashboardPage.stackReportDependencyCardUnknownCount.getText())
+        .toContain(quickstart.dependencyCount.unknown);
       support.writeScreenshot('target/screenshots/analytic_report_success_' + spaceName + '.png');
     } catch (e) {
       support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
@@ -181,6 +130,6 @@ describe('Creating new quickstart in OSIO', () => {
     }
 
     await spaceDashboardPage.analyticsCloseButton.clickWhenReady();
-  }
+  });
 
 });
