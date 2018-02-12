@@ -23,6 +23,16 @@ describe('Creating new quickstart in OSIO', () => {
 
   afterEach( async () => {
     await browser.sleep(support.DEFAULT_WAIT);
+
+    let userProfilePage = await dashboardPage.gotoUserProfile();
+    support.debug(">>> Go to user's Profile Page - OK");
+    support.debug('>>> Go to Edit Profile Page');
+    let editProfilePage = await userProfilePage.gotoEditProfile();
+    support.debug('>>> Go to Edit Profile Page - OK');
+    support.debug('>>> Go to Reset Env Page');
+    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
+    support.debug('>>> Go to Reset Env Page - OK');
+
 //    await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_analytic_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached, logging out ============ \n');
