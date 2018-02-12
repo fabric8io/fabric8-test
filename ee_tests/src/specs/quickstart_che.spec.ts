@@ -19,6 +19,10 @@ describe('Creating new quickstart in OSIO', () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
+  });
+
+  afterEach( async () => {
+    await browser.sleep(support.DEFAULT_WAIT);
 
     let userProfilePage = await dashboardPage.gotoUserProfile();
     support.debug(">>> Go to user's Profile Page - OK");
@@ -32,13 +36,10 @@ describe('Creating new quickstart in OSIO', () => {
     await cleanupEnvPage.cleanup(browser.params.login.user);
     let alertBox = cleanupEnvPage.alertBox;
 
-    /* OSIO is not reliable in restartin Jenkins pods in a timely manner - commenting
+    /* OSIO is not reliable in restarting Jenkins pods in a timely manner - commenting
        out check for alert box */
     //    await expect(alertBox.getText()).toContain('environment has been erased!');
-  });
 
-  afterEach( async () => {
-    await browser.sleep(support.DEFAULT_WAIT);
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached ============ \n');
     // support.info('\n ============ End of test reached, logging out ============ \n');
