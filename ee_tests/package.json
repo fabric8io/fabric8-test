@@ -21,6 +21,7 @@
       "email": "sudsen@redhat.com"
     }
   ],
+  "main": "index.ts",
   "homepage": "https://github.com/fabric8io/fabric8-test",
   "license": "Apache-2.0",
   "scripts": {
