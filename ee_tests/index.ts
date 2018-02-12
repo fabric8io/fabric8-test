@@ -1,0 +1,1 @@
+export * from './src/specs/page_objects'
