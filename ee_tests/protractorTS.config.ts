@@ -43,9 +43,9 @@ let conf: Config = {
 
     suites: {
 
-      smokeTest: ['src/specs/**/quickstart_pipeline.spec.js'],
-      cheTest: ['src/specs/**/quickstart_che.spec.js'],
-      analyticTest: ['src/specs/**/quickstart_analytic.spec.js'],
+      smoketest: ['src/specs/**/quickstart_pipeline.spec.js'],
+      chetest: ['src/specs/**/quickstart_che.spec.js'],
+      analyticstest: ['src/specs/**/quickstart_analytic.spec.js'],
 
       boosterTest: ['src/specs/**/booster_pipeline.spec.js'],
       importTest: ['src/specs/**/workshop-import-to-space.spec.js'],
