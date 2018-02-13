@@ -27,23 +27,6 @@ describe('Creating new quickstart in OSIO', () => {
   afterEach(async () => {
     await browser.sleep(support.DEFAULT_WAIT);
 
-    let userProfilePage = await dashboardPage.gotoUserProfile();
-    support.debug(">>> Go to user's Profile Page - OK");
-    support.debug('>>> Go to Edit Profile Page');
-    let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug('>>> Go to Edit Profile Page - OK');
-    support.debug('>>> Go to Reset Env Page');
-    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug('>>> Go to Reset Env Page - OK');
-
-    await cleanupEnvPage.cleanup(browser.params.login.user);
-    let alertBox = cleanupEnvPage.alertBox;
-
-    /* OSIO is not reliable in restarting Jenkins pods in a timely manner - commenting
-       out check for alert box */
-    //    await expect(alertBox.getText()).toContain('environment has been erased!');
-
-
     // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
     // support.info('\n ============ End of test reached, logging out ============ \n');
