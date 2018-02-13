@@ -112,7 +112,7 @@ Page layout
     /* Recent space by name */
     // Example:  .//*[contains (@class, ('recent-items-text-dropdown'))]/span[contains (text(),'testspace')]
     recentSpaceByName (spaceName: string): ElementFinder {
-      let xpathString = './/*[contains (@class, (\'recent-items-text-dropdown\'))]/span[contains (text(),\'' + spaceName + '\')]';
+      let xpathString = './/*[contains (@class, (\'recent-items-toggle-text-dropdown\'))]/span[contains (text(),\'' + spaceName + '\')]';
       return element(by.xpath(xpathString));
     }
     // tslint:enable:max-line-length

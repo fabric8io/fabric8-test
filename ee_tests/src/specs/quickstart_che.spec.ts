@@ -35,11 +35,7 @@ describe('Creating new quickstart in OSIO', () => {
     support.debug('>>> Go to Reset Env Page - OK');
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
-    let alertBox = cleanupEnvPage.alertBox;
 
-    /* OSIO is not reliable in restarting Jenkins pods in a timely manner - commenting
-       out check for alert box */
-    // await expect(alertBox.getText()).toContain('environment has been erased!');
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached ============ \n');
     // support.info('\n ============ End of test reached, logging out ============ \n');
