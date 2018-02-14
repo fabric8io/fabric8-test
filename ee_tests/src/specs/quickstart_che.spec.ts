@@ -20,10 +20,6 @@ describe('Creating new quickstart in OSIO', () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
-  });
-
-  afterEach( async () => {
-    await browser.sleep(support.DEFAULT_WAIT);
 
     let userProfilePage = await dashboardPage.gotoUserProfile();
     support.debug(">>> Go to user's Profile Page - OK");
@@ -35,6 +31,11 @@ describe('Creating new quickstart in OSIO', () => {
     support.debug('>>> Go to Reset Env Page - OK');
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
+
+  });
+
+  afterEach( async () => {
+    await browser.sleep(support.DEFAULT_WAIT);
 
     support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
     support.info('\n ============ End of test reached ============ \n');
