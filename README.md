@@ -71,4 +71,3 @@ cd EE_API_automation/pyresttest/
 
 > NOTE: [GITHUB_ACCOUNT] and [GITHUB_TOKEN_WITH_DELETE_SCOPE] are optionals. If not provided your guthub account will keep the nely cretaed repository. This repository is prefixed with a UUID.
 
-
