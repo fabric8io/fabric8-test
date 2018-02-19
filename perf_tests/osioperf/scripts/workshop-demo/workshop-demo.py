@@ -305,6 +305,7 @@ class UserScenario(TaskSet):
         try:
             target_element.click()
             self._wait_for_clickable_element(driver, By.ID, "dropdownKebabRight9")
+            self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, input_required_selector)
             self._report_success(request_type, "aborted", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "aborted", self._tick_timer(), "Timeout")
