@@ -1,4 +1,4 @@
-# Openshift.io User Scenario Performance Evaluation
+# Openshift.io - Workshop Demo User Scenario Performance Evaluation
 These tests are intended to measure performance of OSIO UI for users performing a given scenario such as login, click through the OSIO UI etc.
 
 ## Environment
@@ -11,6 +11,11 @@ The test in the environment is executed with 10 tested OSIO user accounts that h
 The user accounts are evenly spread between 10 individual client nodes of the OsioPerf Lab
 from whose the requests are sent via 100s simultaneous clients (=simulated users). Each simulated user waits 1 second
 before starting another iteration.
+
+## Scenarios
+```
+TODO: describe the sceario in steps.
+```
 
 ## How to run the tests locally
 By default the load test executed by Locust tool runs in a distributed mode, i.e. uses remote access
