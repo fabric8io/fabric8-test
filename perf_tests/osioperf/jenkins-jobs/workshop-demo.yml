@@ -62,7 +62,7 @@
            description: A hatch rate (number of users to spawn per second).
        - string:
            name: DURATION
-           default: '600'
+           default: '1800'
            description: A number of seconds for how long the load test should run.
        - bool:
            name: ZABBIX_REPORT_ENABLED
