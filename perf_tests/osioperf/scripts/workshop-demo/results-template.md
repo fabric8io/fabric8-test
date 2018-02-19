@@ -7,8 +7,8 @@ The summary results of each run are uploaded to the
 monitoring system to track the results' history.
 
 ### Load Test
-| Scenario | Minimal | Median | Maximal |
-| :--- | ---: | ---: | ---: |
+| Scenario | Minimal | Median | Maximal | Failed |
+| :--- | ---: | ---: | ---: | ---: |
 @@GENERATE_LOAD_TEST_TABLE@@
 
 ## Test charts
