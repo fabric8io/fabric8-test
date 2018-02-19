@@ -15,7 +15,7 @@ export class ProfileDropdown extends ui.Dropdown {
     support.debug(' ... check if ProfileDropdown is Ready');
     await super.ready();
     await this.profileItem.ready();
-    await this.aboutItem.ready();
+//    await this.aboutItem.ready();
     await this.logoutItem.ready();
     support.debug(' ... check if ProfileDropdown is Ready - OK');
   }
