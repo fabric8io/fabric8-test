@@ -33,9 +33,9 @@ for i in `cat $METRIC_META_FILE`; do
 		
 		#@@GENERATE_LOAD_TEST_TABLE@@
 		if [[ -z $ltt ]]; then
-			ltt="| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms |"
+			ltt="| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_FAILED@@ |"
 		else
-			ltt="$ltt\n| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms |"
+			ltt="$ltt\n| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_FAILED@@ |"
 		fi
 
 		#@@GENARATE_LOAD_TEST_CHARTS@@
