@@ -7,3 +7,5 @@ osioperf.py
 *results.md
 *report.html
 common.git
+_zabbix-process-results.sh
+_execute.sh
