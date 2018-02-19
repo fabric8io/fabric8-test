@@ -137,7 +137,7 @@ describe('Creating new quickstart in OSIO', () => {
 
     let textStr = await spaceDeploymentsPage.resourceCardByNameAndIndex(spaceName, STAGE).getText();
     support.info('1 Output from run = ' + textStr);
-    expect(await spaceDeploymentsPage.allResourceCards.count()).toBe(4);
+    expect(await spaceDeploymentsPage.allResourceCards.count()).toBe(8);
     expect(await spaceDeploymentsPage.successfulDeployStatusByNameAndIndex(spaceName, STAGE).isPresent()).toBeTruthy();
 
     spaceDeploymentsPage.podRunningTextByNameAndIndex(spaceName, STAGE).getText();
