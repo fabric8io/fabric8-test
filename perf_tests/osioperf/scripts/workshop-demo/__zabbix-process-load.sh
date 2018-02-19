@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source _setenv.sh
-set -x
 
 INPUT="$JOB_BASE_NAME-$BUILD_NUMBER"
 ENDPOINT=$1
