@@ -1,0 +1,2 @@
+# Jenkins job descriptors to be used by [Jenkins Job Builder](https://docs.openstack.org/infra/jenkins-job-builder/).
+ * [`planner-wit-benchmark`](https://osioperf-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/planner-wit-benchmark/) - Used to execute [test-integration-benchmark](https://github.com/fabric8-services/fabric8-wit/blob/master/.make/test.mk) for [WIT Server](https://github.com/fabric8-services/fabric8-wit).
