@@ -51,11 +51,11 @@ for i in `cat $METRIC_META_FILE`; do
 	fi
 done
 
-sed -e 's,@@GENERATE_LOCUST_LOG_TO_CSV@@,'"$lltc"',g' run-template.sh \
+sed -e 's,@@GENERATE_LOCUST_LOG_TO_CSV@@,'"$lltc"',g' _execute-template.sh \
 | sed -e 's,@@GENERATE_CSV_TO_PNG@@,'"$ctp"',g'\
 | sed -e 's,@@GENERATE_DISTRIBUTION_2_CSV@,'"$dtc"',g'\
-| sed -e 's,@@GENERATE_FILTER_ZABBIX_VALUE@@,'"$fzv"',g' > run.sh
-chmod +x run.sh
+| sed -e 's,@@GENERATE_FILTER_ZABBIX_VALUE@@,'"$fzv"',g' > _execute.sh
+chmod +x _execute.sh
 
 sed -e 's,@@GENERATE_ZABBIX_PROCESS_LOAD@@,'"$zpl"',g' _zabbix-process-results-template.sh > _zabbix-process-results.sh
 chmod +x _zabbix-process-results.sh
