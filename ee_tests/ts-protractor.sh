@@ -17,7 +17,7 @@ validate_config() {
 }
 
 main() {
-  local suite=${1:-specs}
+  local suite=${1:-$TEST_SUITE}
 
   validate_config || {
     log.info "Please set test configs and re-run $0"
