@@ -9,7 +9,7 @@ rm -vf *report.md
 rm -vf *results.md
 rm -vf *html
 rm -vf _zabbix-process-results.sh
-rm -vf run.sh
+rm -vf _execute.sh
 rm -vf osioperf.py*
 rm -vf $JOB_BASE_NAME-$BUILD_NUMBER-*
 rm -rvf common.git
