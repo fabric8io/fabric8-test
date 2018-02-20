@@ -25,11 +25,7 @@ npm start
 ```
 ### Running the EE Tests Locally from Docker Image ###
 #### Setup the Environmental Variables ####
-Setup environmental vairables in the same way as when running tests locally (without Docker)
-#### Install all dependencies ####
-```
-npm install
-```
+Setup environmental variables in the same way as when running tests locally (without Docker)
 #### Build the Docker Image ####
 ```
 npm run image:build
