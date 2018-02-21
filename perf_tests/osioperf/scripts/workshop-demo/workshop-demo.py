@@ -186,10 +186,10 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            target_element = self._wait_for_clickable_element(driver, By.ID, "Spring Boot - HTTP Example")
-            self._report_success(request_type, "forge-1A-springboot-http-button", self._tick_timer())
+            target_element = self._wait_for_clickable_element(driver, By.ID, "Vert.x HTTP Booster")
+            self._report_success(request_type, "forge-1A-app-button", self._tick_timer())
         except TimeoutException:
-            self._report_failure(driver, request_type, "forge-1A-springboot-http-button", self._tick_timer(), "Timeout")
+            self._report_failure(driver, request_type, "forge-1A-app-button", self._tick_timer(), "Timeout")
             return False
 
         self._reset_timer()
@@ -255,7 +255,7 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            target_element = self._wait_for_clickable_element(driver, By.PARTIAL_LINK_TEXT, new_space_name.decode("utf-8").lower())
+            target_element = self._wait_for_clickable_element(driver, By.ID, "spacehome-pipelines-title")
             self._report_success(request_type, "pipeline-title", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "pipeline-title", self._tick_timer(), "Timeout")
