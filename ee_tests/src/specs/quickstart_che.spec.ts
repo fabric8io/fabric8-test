@@ -31,7 +31,6 @@ describe('Creating new quickstart in OSIO', () => {
     support.debug('>>> Go to Reset Env Page - OK');
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
-
   });
 
   afterEach( async () => {
@@ -74,7 +73,6 @@ describe('Creating new quickstart in OSIO', () => {
     // tslint:disable:max-line-length
     await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
 
-    // await browser.sleep(60000);
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
@@ -101,7 +99,7 @@ describe('Creating new quickstart in OSIO', () => {
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
-// Defer this test to speed up test execution as hourly ee test    
+// Defer this test to speed up test execution as hourly ee test
 //    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
 //
 //    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
