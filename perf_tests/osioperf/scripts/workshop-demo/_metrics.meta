@@ -21,3 +21,6 @@ pipeline;rollout-to-stage-started
 pipeline;input-required-button
 pipeline;abort-button
 pipeline;aborted
+remove_space;my-spaces-page
+remove_space;filter-by-name
+remove_space;removed

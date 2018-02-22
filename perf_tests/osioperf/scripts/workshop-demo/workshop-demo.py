@@ -5,7 +5,9 @@ import time
 from locust import HttpLocust, TaskSet, task, events
 from locust.exception import LocustError
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.wait import TimeoutException
@@ -169,6 +171,8 @@ class UserScenario(TaskSet):
         try:
             target_element.click()
             target_element = self._wait_for_clickable_element(driver, By.ID, "spacehome-my-codebases-create-button")
+            space_url = driver.current_url
+            user_url = space_url.replace("/" + new_space_name, "")
             self._report_success(request_type, "add-codebase-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "add-codebase-button", self._tick_timer(), "Timeout")
@@ -260,9 +264,9 @@ class UserScenario(TaskSet):
         except TimeoutException:
             self._report_failure(driver, request_type, "pipeline-title", self._tick_timer(), "Timeout")
             return False
+
         time.sleep(5)
         request_type = "pipeline"
-
         self._reset_timer()
         try:
             target_element.click()
@@ -304,11 +308,51 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            self._wait_for_clickable_element(driver, By.ID, "dropdownKebabRight9")
+            self._wait_for_clickable_element(driver, By.ID, "header_dropdownToggle")
             self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, input_required_selector)
             self._report_success(request_type, "aborted", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "aborted", self._tick_timer(), "Timeout")
+            return False
+
+        request_type = "remove_space"
+        try:
+            self._reset_timer()
+            driver.get(user_url + "/_myspaces")
+            self._wait_for_url(driver, "_myspaces")
+            filter_by_name_selector = "body > f8-app > main > div > div:nth-child(3) > alm-profile > alm-my-spaces > div > my-spaces-toolbar > div > pfng-toolbar > div > div > form > div.form-group.toolbar-apf-filter > pfng-filter-fields > div > div > div:nth-child(2) > input"
+            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, filter_by_name_selector)
+            self._report_success(request_type, "my-spaces-page", self._tick_timer())
+        except TimeoutException:
+            self._report_failure(driver, request_type, "my-spaces-page", self._tick_timer(), "Timeout")
+            return False
+
+        self._reset_timer()
+        try:
+            target_element.send_keys(new_space_name)
+            target_element.send_keys(Keys.RETURN)
+            active_filter_selector = "body > f8-app > main > div > div:nth-child(3) > alm-profile > alm-my-spaces > div > my-spaces-toolbar > div > pfng-toolbar > div > div > pfng-filter-results > div > div > div > ul > li > span"
+            self._wait_for_clickable_element(driver, By.CSS_SELECTOR, active_filter_selector)
+            space_toggle_button_selector = "body > f8-app > main > div > div:nth-child(3) > alm-profile > alm-my-spaces > div > div > div > div > pfng-list > div > div:nth-child(2) > div > div.list-pf-content.list-pf-content-flex > div.list-pf-actions > my-spaces-item-actions > pfng-action > div > button"
+            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, space_toggle_button_selector)
+            self._report_success(request_type, "filter-by-name", self._tick_timer())
+        except TimeoutException:
+            self._report_failure(driver, request_type, "filter-by-name", self._tick_timer(), "Timeout")
+            return False
+
+        self._reset_timer()
+        try:
+            target_element.click()
+            target_element = self._wait_for_clickable_element(driver, By.PARTIAL_LINK_TEXT, "Remove space")
+            target_element.click()
+            remove_button_selector = "body > modal-container > div > div > div.modal-body > button.btn.btn-danger"
+            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, remove_button_selector)
+            target_element.click()
+            create_space_button_selector = "body > f8-app > main > div > div:nth-child(3) > alm-profile > alm-my-spaces > div > div > div > div > pfng-list > pfng-empty-state > div > div.blank-slate-pf-main-action > button"
+            self._wait_for_clickable_element(driver, By.CSS_SELECTOR, create_space_button_selector)
+            self._report_success(request_type, "removed", self._tick_timer())
+        except TimeoutException:
+            self._report_failure(driver, request_type, "removed", self._tick_timer(), "Timeout")
             return False
         return True
 
@@ -320,16 +364,19 @@ class UserScenario(TaskSet):
 
         driver = webdriver.Chrome(chrome_options=opts)
 
-        if not self.login(driver):
+        try:
+            if not self.login(driver):
+                driver.quit()
+                return
+
+            # if not self.workshop(driver):
+            #    driver.quit()
+            #    return
+            self.workshop(driver)
+
             driver.quit()
-            return
-
-        # if not self.workshop(driver):
-        #    driver.quit()
-        #    return
-        self.workshop(driver)
-
-        driver.quit()
+        except NoSuchWindowException:
+            pass
 
 
 class UserLocust(HttpLocust):
