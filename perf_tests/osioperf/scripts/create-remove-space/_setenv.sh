@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # 'true" if locust test is to be run locally (i.e. no master, no slaves, no remote execution).
-export RUN_LOCALLY=true
+#export RUN_LOCALLY=true
 
 # Should be provided by Jenkins.
-export JOB_BASE_NAME=workshop-demo
+#export JOB_BASE_NAME=create-remove-space
 
 # Should be provided by Jenkins.
-export BUILD_NUMBER=0
+#export BUILD_NUMBER=0
 
 # Auth server HTTP scheme http/https
 #export SERVER_SCHEME=https
@@ -25,16 +25,16 @@ export BUILD_NUMBER=0
 #export MASTER_HOST=osioperf-server-2
 
 # A number of Locust slaves to use. (Only for RUN_LOCALLY != true)
-export SLAVES=10
+#export SLAVES=10
 
 # A prefix for a Locust slave node address. (Only for RUN_LOCALLY != true)
 #export SLAVE_PREFIX=osioperf-client-
 
 # A number of users to spawn.
-export USERS=3
+#export USERS=1
 
 # A hatch rate (number of users to spawn per second).
-#export USER_HATCH_RATE=3
+#export USER_HATCH_RATE=1
 
 # A name of the property file with username=password list of users to be logged in
 #export USERS_PROPERTIES_FILE=devtools-automated-tests-osiotestX.users.properties
@@ -54,7 +54,7 @@ export ENV_FILE=/tmp/osioperftest.users.env
 #export ZABBIX_PORT=10051
 
 # A hostname in Zabbix the report is for
-#export ZABBIX_HOST=qa_auth.prod-preview.openshift.io
+#export ZABBIX_HOST=qa_auth.openshift.io
 
 # A number of seconds for how long the test should run
-#export DURATION=1800
+#export DURATION=300
