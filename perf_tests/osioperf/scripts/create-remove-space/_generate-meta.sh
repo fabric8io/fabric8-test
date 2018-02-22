@@ -53,7 +53,7 @@ done
 
 sed -e 's,@@GENERATE_LOCUST_LOG_TO_CSV@@,'"$lltc"',g' _execute-template.sh \
 | sed -e 's,@@GENERATE_CSV_TO_PNG@@,'"$ctp"',g'\
-| sed -e 's,@@GENERATE_DISTRIBUTION_2_CSV@,'"$dtc"',g'\
+| sed -e 's,@@GENERATE_DISTRIBUTION_2_CSV@@,'"$dtc"',g'\
 | sed -e 's,@@GENERATE_FILTER_ZABBIX_VALUE@@,'"$fzv"',g' > _execute.sh
 chmod +x _execute.sh
 
