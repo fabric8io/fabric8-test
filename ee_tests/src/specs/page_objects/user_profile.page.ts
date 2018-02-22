@@ -63,8 +63,6 @@ export class CleanupUserEnvPage extends AppPage {
 
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.enterText(username);
-    support.info('reset env for username: ' + username);
-    browser.sleep(support.DEFAULT_WAIT);
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
     /* Accessing the alert box is failing randomly. Commenting out this code for the
