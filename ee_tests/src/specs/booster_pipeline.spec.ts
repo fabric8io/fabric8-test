@@ -13,31 +13,6 @@ import { MainDashboardPage } from './page_objects/main_dashboard.page';
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
 
-/* Actions to verify in deployment page tests
-
-As a user...
-1. I can see all the environments that have deployments (stage and run but not test)
-2. I can see all the applications that have deployments for each environment
-3. I can see the memory and CPU quotas for each environment, and how much I have
-taken up with my deployments in the environment.
-11. I can filter the deployments on the page
-12. I can sort the deployments on the page
-
-  ... for each deployment...
-4. I can see the number of pods that are currently deployed
-5. I can see the states of the pods currently deployed
-6. I can scale the number of pods up and down, but not below 0.
-6.1 I can see the updated quota when I scale the pods up or down.
-6.2 I can still see the deployment card when I scale the pods to 0.
-7. I can see the CPU/Memory/Network usage of the deployment
-7.1 with appropriate units for each metric
-7.2 but not if the deployment has 0 pods
-8. I can visit the Openshift logs page for the deployment.
-9. I can visit the Openshift console page for the deployment
-10. I can visit the application URL if exposed, for the deployment. 
-If not exposed, the action item to visit the application is not visible.
-*/
-
 /* Tests to verify the build pipeline */
 
 describe('Creating new quickstart in OSIO', () => {
@@ -61,8 +36,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
 
-    let quickstart = new Quickstart(browser.params.quickstart.name);
-    await support.info('Quickstart name: ' + quickstart.name);
+    await support.info('Quickstart name: ' + browser.params.quickstart.name);
 
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
@@ -72,8 +46,9 @@ describe('Creating new quickstart in OSIO', () => {
 
     //  - do an import of the old space
     await wizard.importExistingCode({
-      org: 'WildFly Swarm Boosters for openshift.io',
-      repositories: [quickstart.id]
+//      org: 'WildFly Swarm Boosters for openshift.io',
+      org: 'fill in your org name here',
+      repositories: [browser.params.quickstart.name]
     });
     await spaceDashboardPage.open();
 
