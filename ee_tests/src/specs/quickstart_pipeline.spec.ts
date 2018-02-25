@@ -20,10 +20,6 @@ describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
   beforeEach(async () => {
-
-    let username: string = browser.params.login.user;
-    support.info ('username length = ' + username.length);
-
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
