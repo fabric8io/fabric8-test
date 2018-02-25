@@ -44,11 +44,6 @@ export class LoginPage extends BasePage {
     this.debug('... Login: input details and click Login');
     await this.usernameInput.enterText(username);
     await this.passwordInput.enterText(password);
-
-    let displayDate = support.newSpaceName();
-    await support.info ('Login at date/time: ' + displayDate);
-    await support.writeScreenshot('target/screenshots/login_' + displayDate + '.png');
-
     await this.loginButton.clickWhenReady();
 
     this.debug('... Login: input details and click Login - OK');
