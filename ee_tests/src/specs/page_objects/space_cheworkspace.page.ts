@@ -15,8 +15,9 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   // tslint:disable:max-line-length
 
-  /* Main Menu Panel run button */
+  /* Main Menu Panel run/debug button */
   mainMenuRunButton = new Button ($('#gwt-debug-command_toolbar-button_Run'), 'Che Main Menu Run Button');
+  mainMenuDebugButton = new Button ($('#gwt-debug-command_toolbar-button_Debug'), 'Che Main Menu Run Button');
 
   /* Main Menu Panel run button run selection */
   mainMenuRunButtonRunSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
