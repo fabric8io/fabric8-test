@@ -1,0 +1,4 @@
+#@@METRIC_REQUEST_TYPE@@;@@METRIC_NAME@@
+login;open-start-page
+login;open-login-page
+login;login
