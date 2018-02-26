@@ -1,0 +1,48 @@
+- job:
+    name: 'planner-wit-benchmark'
+    project-type: freestyle
+    node: osioperf-server-1-centos7-x86_64
+    properties:
+       - ownership:
+           owner: pmacik
+       - build-discarder:
+           days-to-keep: 28
+    parameters:
+       - bool:
+           name: ZABBIX_REPORT_ENABLED
+           default: true
+           description: Checked if a report is to be sent to the Zabbix instance.
+       - string:
+           name: ZABBIX_SERVER
+           default: zabbix.devshift.net
+           description: An address of Zabbix server.
+       - string:
+           name: ZABBIX_PORT
+           default: '10051'
+           description: A port of Zabbix server used by zabbix_sender utility.
+       - string:
+           name: ZABBIX_HOST
+           default: osioperf-server-1
+           description: A hostname in Zabbix the report is for.
+    scm:
+        - git:
+            url: https://github.com/fabric8io/fabric8-test
+            branches:
+                - '*/master'
+#    triggers:
+#        - timed: H/15 * * * *
+    wrappers:
+        - workspace-cleanup:
+            dirmatch: false
+    builders:
+        - shell: |-
+            cd perf_tests/osioperf/scripts/planner-wit-benchmark
+            ./run.sh
+    concurrent: false
+    description: null
+    disabled: false
+    publishers:
+       - archive:
+           artifacts: '**/*.log,**/*.csv'
+           allow-empty: 'true'
+           fingerprint: true
