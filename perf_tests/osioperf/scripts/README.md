@@ -1,0 +1,5 @@
+# Scripts implementing the OSIO Performance scenarios
+ * [`/planner-wit-benchmark`](./planner-wit-benchmark) - Used to execute [test-integration-benchmark](https://github.com/fabric8-services/fabric8-wit/blob/master/.make/test.mk) for [WIT Server](https://github.com/fabric8-services/fabric8-wit).
+ * [`/user-login`](./user-login) - Measure performance of OSIO UI for users performing E2E scenario: Log in the OSIO UI.
+ * [`/create-remove-space`](./planner-wit-benchmark) - Measure performance of OSIO UI for users performing E2E scenario: Log in the OSIO UI, create a space and remove the space.
+ * [`/workshop-demo`](./workshop-demo/) - Measure performance of OSIO UI for users performing E2E scenario: Log in the OSIO UI, create a space, create a quickstart project, wait for pipeline build to complete, abort the pipeline and remove the space.
