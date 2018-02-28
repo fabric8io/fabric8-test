@@ -47,6 +47,8 @@ let conf: Config = {
       chetest: ['src/specs/**/quickstart_che.spec.js'],
       analyticstest: ['src/specs/**/quickstart_analytic.spec.js'],
 
+      boosterterminaltest: ['src/specs/**/quickstart_cheterminal.spec.js'],
+
       logintest: ['src/specs/**/quickstart_login.spec.js'],
       boosterTest: ['src/specs/**/booster_pipeline.spec.js'],
       importTest: ['src/specs/**/workshop-import-to-space.spec.js'],

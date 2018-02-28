@@ -1,7 +1,7 @@
-import { browser } from 'protractor';
+import { browser, Key } from 'protractor';
 import * as fs from 'fs';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
-
+import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
 export enum BrowserMode {
   Phone,
@@ -33,6 +33,18 @@ export async function setBrowserMode(mode: BrowserMode) {
     throw Error('Unknown mode');
   }
 }
+
+
+/* Print text to the Che Terminal window - a 2nd RETURN char is used to make the text easier to read */
+// tslint:disable:max-line-length
+export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePage, textToPrint: string) {
+  await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(' ').perform();
+  await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(textToPrint).perform();
+  await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(Key.ENTER).perform();
+  await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(Key.ENTER).perform();
+}
+// tslint:enable:max-line-length
+
 
 /*
  * Display the contents of the Jenkins build log.

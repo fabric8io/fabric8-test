@@ -15,14 +15,23 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   // tslint:disable:max-line-length
 
-  /* Main Menu Panel run button */
+  /* Main Menu Panel run/debug buttons */
   mainMenuRunButton = new Button ($('#gwt-debug-command_toolbar-button_Run'), 'Che Main Menu Run Button');
+  mainMenuDebugButton = new Button ($('#gwt-debug-command_toolbar-button_Debug'), 'Che Main Menu Debug Button');
 
   /* Main Menu Panel run button run selection */
   mainMenuRunButtonRunSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
 
+  /* Main Menu Panel debug button debug selection */
+  mainMenuDebugButtonDebugSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
+
   /* Bottom Panel run tab */
   bottomPanelRunTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
+
+  /* Bottom Panel terminal tab */
+  bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
+
+  bottomPanelTerminal = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-Terminal\']')));
 
   /* Bottom Panel title */
   bottomPanelOutputTitles = element.all(by.xpath('.//*[contains(@class,\'GJ5I-CRBHRB GJ5I-CRBCRB\')]'));
@@ -34,8 +43,11 @@ export class SpaceCheWorkspacePage extends AppPage {
   bottomPanelOutputPreview = element.all(by.xpath('.//*[contains(text(),\'preview:\')]/following-sibling::a[contains(text(),\'http://\')]'));
 
   /* Bottom Panel command console lines of text */
-//  bottomPanelCommandConsoleLines = element.all(by.xpath('.//*[@id=\'gwt-debug-commandConsoleScrollPanel\']/pre')).last();
   bottomPanelCommandConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolesPanel\']'));
+
+  /* Bottom Panel terminal tab console lines of text */
+  bottomPanelTerminalConsoleLines = element.all(by.xpath(".//*[contains(@class,'xterm-rows')]"));
+  bottomPanelTerminalConsoleLastLine = element.all(by.xpath(".//*[contains(@class,'xterm-rows')]/div")).last();
 
   recentProjectRootByName (projectName: string): ElementFinder {
     let xpathString = './/*[@id=\'gwt-debug-projectTree\']/div[contains(@name,\'' + projectName + '\')]';
