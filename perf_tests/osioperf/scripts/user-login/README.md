@@ -2,7 +2,7 @@
 These tests are intended to measure performance of OSIO UI for users performing a given scenario such as login, click through the OSIO UI etc.
 
 ## Environment
-The tested server is the OSIO [Auth Services deployed in prod-preview](https://auth.prod-preview.openshift.io/api/status).
+The tested system is the Openshift.io.
 The clients to the tested server are deployed on the client nodes 
 of the OsioPerf Lab.
 
