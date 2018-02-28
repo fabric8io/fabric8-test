@@ -12,10 +12,31 @@ The user accounts are evenly spread between 10 individual client nodes of the Os
 from whose the requests are sent via 100s simultaneous clients (=simulated users). Each simulated user waits 1 second
 before starting another iteration.
 
-## Scenarios
-```
-TODO: describe the sceario in steps.
-```
+## Scenario
+
+The scenario is logically divided into the following phases:
+ * Login user
+ * Create new space
+ * Remove the space
+
+### Login user (`login`)
+The following steps are performed in sequence and a time to finish is measured for each step:
+ * (`open-start-page`) Open the start page (`https://openshift.io`) and wait for the `LOG IN` button to be clickable.
+ * (`open-login-page`) Click on the `LOG IN` button and wait for the login page to load.
+ * (`login`) Fill in username and password, click on the `LOG IN` button and wait until the page is redirected to `_home` page.
+
+### Create new space (`create_space`)
+The following steps are performed in sequence and a time to finish is measured for each step:
+ * (`new-button`) Wait for the `Create a Space` button to be clickable.
+ * (`fill-name`) Wait for the new space name text field to be ready.
+ * (`create-button`) Wait for the name of the new space to be verified and the `Create` button to be clickable.
+ * (`nothanks-button`) Wait for the new space to be created and a dialog for the Quick start to appear.
+
+### Remove the space (`remove_space`)
+The following steps are performed in sequence and a time to finish is measured for each step:
+ * (`my-spaces-page`) Navigate to the `/_myspaces` page and wait for the `Filter by Name` input box to be clickable.
+ * (`filter-by-name`) Fill the name of the space into the `Filter by Name` input box, press `Enter` and wait for the `Active Filter:`
+ * (`removed`) Click on the tree-dots-space-menu, click on the `Remove Space` button, click on the `Remove` button and wait for the `Create Space` button to be clickable.
 
 ## How to run the tests locally
 By default the load test executed by Locust tool runs in a distributed mode, i.e. uses remote access
