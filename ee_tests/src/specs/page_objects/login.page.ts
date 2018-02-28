@@ -48,6 +48,9 @@ export class LoginPage extends BasePage {
 
     this.debug('... Login: input details and click Login - OK');
 
+    let theText = await this.everythingOnPage.getText();
+    support.info ('Text on login page = ' + theText);
+
     let mainDashboard = new MainDashboardPage()
     await mainDashboard.open()
     return mainDashboard;
