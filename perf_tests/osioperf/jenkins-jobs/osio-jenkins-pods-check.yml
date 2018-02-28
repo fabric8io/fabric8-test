@@ -1,0 +1,72 @@
+- job:
+    name: 'osio-jenkins-pods-check'
+    project-type: freestyle
+    node: osioperf-server-1-centos7-x86_64
+    properties:
+       - ownership:
+           owner: pmacik
+       - authorization:
+           anonymous:
+               - job-read
+               - job-discover
+       - build-discarder:
+           days-to-keep: 28
+       - inject:
+           properties-content: |
+               EXPECTED_PODS=devtools-automated-tests-osiotest1-jenkins \
+               devtools-automated-tests-osiotest2-jenkins \
+               devtools-automated-tests-osiotest3-jenkins \
+               devtools-automated-tests-osiotest4-jenkins \
+               devtools-automated-tests-osiotest5-jenkins \
+               devtools-automated-tests-osiotest6-jenkins \
+               devtools-automated-tests-osiotest7-jenkins \
+               devtools-automated-tests-osiotest8-jenkins \
+               devtools-automated-tests-osiotest9-jenkins \
+               devtools-automated-tests-osiotest10-jenkins
+    parameters:
+       - string:
+           name: OSO_ADDRESS
+           default: https://api.starter-us-east-2.openshift.com:443
+           description: Openshift Online address.
+       - bool:
+           name: ZABBIX_REPORT_ENABLED
+           default: true
+           description: Checked if a report is to be sent to the Zabbix instance.
+       - string:
+           name: ZABBIX_SERVER
+           default: zabbix.devshift.net
+           description: An address of Zabbix server
+       - string:
+           name: ZABBIX_PORT
+           default: '10051'
+           description: A port of Zabbix server used by zabbix_sender utility
+       - string:
+           name: ZABBIX_HOST
+           default: qa_jenkins.openshift.io
+           description: A hostname in Zabbix the report is for
+    scm:
+        - git:
+            url: https://github.com/pmacik/fabric8-test.git
+            branches:
+                - 'perf_tests/osio-jenkins-pods-check'
+    triggers:
+        - timed: H/10 * * * *
+    wrappers:
+        - workspace-cleanup:
+            dirmatch: false
+        - credentials-binding:
+            - file:
+                credential-id: devtools-automated-tests-osiotestX
+                variable: USERS_PROPERTIES_FILE
+    builders:
+        - shell: |-
+            cd perf_tests/osioperf/scripts/osio-jenkins-pods-check
+            ./run.sh
+    concurrent: false
+    description: null
+    disabled: false
+    publishers:
+       - archive:
+           artifacts: 'perf_tests/osioperf/scripts/osio-jenkins-pods-check/*.log, perf_tests/osioperf/scripts/osio-jenkins-pods-check/*.json'
+           allow-empty: 'true'
+           fingerprint: true
