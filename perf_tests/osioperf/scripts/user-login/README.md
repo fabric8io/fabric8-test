@@ -12,10 +12,16 @@ The user accounts are evenly spread between 10 individual client nodes of the Os
 from whose the requests are sent via 100s simultaneous clients (=simulated users). Each simulated user waits 1 second
 before starting another iteration.
 
-## Scenarios
-```
-TODO: describe the sceario in steps.
-```
+## Scenario
+
+The scenario is logically divided into the following phases:
+ * Login user
+
+### Login user (`login`)
+The following steps are performed in sequence and a time to finish is measured for each step:
+ * (`open-start-page`) Open the start page (`https://openshift.io`) and wait for the `LOG IN` button to be clickable.
+ * (`open-login-page`) Click on the `LOG IN` button and wait for the login page to load.
+ * (`login`) Fill in username and password, click on the `LOG IN` button and wait until the page is redirected to `_home` page.
 
 ## How to run the tests locally
 By default the load test executed by Locust tool runs in a distributed mode, i.e. uses remote access
