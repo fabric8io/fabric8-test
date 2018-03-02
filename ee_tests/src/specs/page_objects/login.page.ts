@@ -19,7 +19,7 @@ export class LoginPage extends BasePage {
   usernameInput = new ui.TextInput($('#username'), 'username');
   passwordInput = new ui.TextInput($('#password'), 'password');
   loginButton = new ui.Button($('#kc-login'), 'Login');
-  everythingOnPage = element(by.xpath('.//*'));
+  everythingOnPage = element(by.xpath('(.//*)[1]'));
 
   /* Social media login options */
   githubLoginButton = $('#social-github');
