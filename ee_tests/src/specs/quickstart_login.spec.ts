@@ -23,6 +23,9 @@ describe('Creating new quickstart in OSIO', () => {
   });
 
   afterEach(async () => {
+    let spaceName = support.newSpaceName();
+    support.writeScreenshot('target/screenshots/login_test_success_' + spaceName + '.png');
+    await dashboardPage.logout();
   });
 
   it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
@@ -30,7 +33,6 @@ describe('Creating new quickstart in OSIO', () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     dashboardPage = await login.run();
-    await dashboardPage.logout();
 
   });
 
