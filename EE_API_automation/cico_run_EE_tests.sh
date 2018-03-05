@@ -14,7 +14,8 @@ if [ -e "../jenkins-env" ]; then
 fi
 
 echo installing dependency
-sudo yum -y install python2 python2-pytest python2-requests python2-jmespath
+sudo yum -y install epel-release python2 python-pip
+pip install requests pytest jmespath
 
 cd pytest
 chmod +x run_me.sh
