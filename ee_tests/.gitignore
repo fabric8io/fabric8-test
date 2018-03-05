@@ -1,7 +1,5 @@
 src/specs/**/*.js
 src/specs/**/*.js.map
-src/functional/**/*.js
-src/functional/**/*.js.map
 protractorTS.config.js
 protractorTS.config.js.map
 index.js

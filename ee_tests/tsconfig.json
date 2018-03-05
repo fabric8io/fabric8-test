@@ -9,7 +9,6 @@
     "strictNullChecks": true
   },
   "exclude": [
-    "src/tests/",
     "./*.js"
   ]
 }

@@ -57,8 +57,7 @@ let conf: Config = {
       deployTest: ['src/specs/**/quickstart_deployments.spec.js'],
       chequickstartTest: ['src/specs/**/quickstart_che.spec.js'],
       allTest: ['src/specs/**/quickstart_analytic.spec.js', 'src/specs/**/quickstart_pipeline.spec.js', 'src/specs/**/quickstart_che.spec.js'],
-      specs: ['src/specs/**/*.spec.js'],   // new typescript based specs
-      functional: ['src/functional/**/*.spec.js']   // new typescript based specs
+      specs: ['src/specs/**/*.spec.js']   // new typescript based specs
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
