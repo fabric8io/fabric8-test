@@ -10,6 +10,7 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 // tslint:ensable:max-line-length
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
+import * as support from '../support';
 
 export class SpaceCheWorkspacePage extends AppPage {
 
@@ -54,6 +55,33 @@ export class SpaceCheWorkspacePage extends AppPage {
     return element(by.xpath(xpathString));
   }
 
+/* Locate elements in the project tree in Che */
+chePathElement (elementString: string): ElementFinder {
+  let xpathString = './/*[contains (@path,\'' + elementString + '\')]';
+  return element(by.xpath(xpathString));
+}
+
+/* Given a set of parameters where each parameter is a folder or class, "walk" 
+   (traverse) the project tree */
+async walkTree (...theArgs: string[]) {
+  let xpathString: string = '';
+  for (let i = 0; i < theArgs.length; i++) {
+    xpathString += theArgs[i];
+
+    let theText = await this.chePathElement(xpathString).getText();
+    support.info ('2path = ' + theText);
+    support.info ('2path = ' + theText);
+    support.info ('2path = ' + theText);
+    support.info ('2path = ' + theText);
+    support.info ('2path = ' + theText);
+
+    // await until.elementToBeClickable(this.chePathElement(xpathString));
+    // await browser.actions().doubleClick(this.chePathElement(xpathString)).perform();
+    // await browser.sleep(30000);
+  }
+}
+
 // tslint:enable:max-line-length
 
 }
+

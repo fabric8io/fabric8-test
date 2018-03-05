@@ -48,6 +48,9 @@ let conf: Config = {
       analyticstest: ['src/specs/**/quickstart_analytic.spec.js'],
 
       boosterterminaltest: ['src/specs/**/quickstart_cheterminal.spec.js'],
+      boosterjunittest: ['src/specs/**/quickstart_chejunit.spec.js'],
+
+
 
       logintest: ['src/specs/**/quickstart_login.spec.js'],
       boosterTest: ['src/specs/**/booster_pipeline.spec.js'],
