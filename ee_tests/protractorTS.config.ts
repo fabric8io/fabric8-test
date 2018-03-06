@@ -37,27 +37,26 @@ let conf: Config = {
     SELENIUM_PROMISE_MANAGER: false,
 
     specs: [
-      'src/specs/*.js',
-      'src/specs/**/*.js',
+      'src/**/*.js'
     ],
 
     suites: {
 
-      smoketest: ['src/specs/**/quickstart_pipeline.spec.js'],
-      chetest: ['src/specs/**/quickstart_che.spec.js'],
-      analyticstest: ['src/specs/**/quickstart_analytic.spec.js'],
+      smoketest: ['src/quickstart_pipeline.spec.js'],
+      chetest: ['src/quickstart_che.spec.js'],
+      analyticstest: ['src/quickstart_analytic.spec.js'],
 
-      boosterterminaltest: ['src/specs/**/quickstart_cheterminal.spec.js'],
+      boosterterminaltest: ['src/quickstart_cheterminal.spec.js'],
 
-      logintest: ['src/specs/**/quickstart_login.spec.js'],
-      boosterTest: ['src/specs/**/booster_pipeline.spec.js'],
-      importTest: ['src/specs/**/workshop-import-to-space.spec.js'],
-      quickstartTest: ['src/specs/**/quickstart_analytic.spec.js'],
-      runTest: ['src/specs/**/quickstart_pipeline.spec.js'],
-      deployTest: ['src/specs/**/quickstart_deployments.spec.js'],
-      chequickstartTest: ['src/specs/**/quickstart_che.spec.js'],
-      allTest: ['src/specs/**/quickstart_analytic.spec.js', 'src/specs/**/quickstart_pipeline.spec.js', 'src/specs/**/quickstart_che.spec.js'],
-      specs: ['src/specs/**/*.spec.js']   // new typescript based specs
+      logintest: ['src/quickstart_login.spec.js'],
+      boosterTest: ['src/booster_pipeline.spec.js'],
+      importTest: ['src/workshop-import-to-space.spec.js'],
+      quickstartTest: ['src/quickstart_analytic.spec.js'],
+      runTest: ['src/quickstart_pipeline.spec.js'],
+      deployTest: ['src/quickstart_deployments.spec.js'],
+      chequickstartTest: ['src/quickstart_che.spec.js'],
+      allTest: ['src/quickstart_analytic.spec.js', 'src/quickstart_pipeline.spec.js', 'src/quickstart_che.spec.js'],
+      specs: ['src/*.spec.js']
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md

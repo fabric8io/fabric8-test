@@ -1,1 +1,1 @@
-export * from './src/specs/page_objects';
+export * from './src/page_objects';
