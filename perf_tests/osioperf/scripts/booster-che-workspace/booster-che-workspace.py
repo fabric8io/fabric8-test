@@ -361,8 +361,7 @@ class UserScenario(TaskSet):
             remove_button_selector = "body > modal-container > div > div > div.modal-body > button.btn.btn-danger"
             target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, remove_button_selector)
             target_element.click()
-            create_space_button_selector = "body > f8-app > main > div > div:nth-child(3) > alm-profile > alm-my-spaces > div > div > div > div > pfng-list > pfng-empty-state > div > div.blank-slate-pf-main-action > button"
-            self._wait_for_clickable_element(driver, By.CSS_SELECTOR, create_space_button_selector)
+            self._wait_for_clickable_element(driver, By.XPATH, "//button[contains(text(),'Create Space')]")
             self._report_success(request_type, "removed", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "removed", self._tick_timer(), "Timeout")
@@ -477,8 +476,7 @@ class UserScenario(TaskSet):
                 return
 
             driver.quit()
-            self._report_success(driver, "global", "overall-time", time.time() - overall_start)
-            sys.exit(0)
+            self._report_success("global", "overall-time", (time.time() - overall_start) * 1000)
         except NoSuchWindowException:
             sys.exit(1)
 
