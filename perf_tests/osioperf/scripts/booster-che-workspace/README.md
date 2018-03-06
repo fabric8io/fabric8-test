@@ -13,12 +13,11 @@ from whose the requests are sent via 100s simultaneous clients (=simulated users
 before starting another iteration.
 
 ## Scenario
-
 The scenario is logically divided into the following phases:
  * Login user
- * Create new space
+ * Create a new space
  * Create a quick-start project
- * Build pipeline until asked for approval
+ * Create a Che workspace and work with the booster
  * Remove the space
 
 ### Login user (`login`)
@@ -47,13 +46,14 @@ The following steps are performed in sequence and a time to finish is measured f
  * (`forge-3A-ok-button`) Click on the `Finish` button and wait for the `Ok` button from the next step to be clickable.
  * (`pipeline-title`) Click on the `Ok` button and wait for the `Pipelines` title on the space page to be clickable.
 
-### Build pipeline until asked for approval (`pipeline`)
+### Work with booster in Che (`che_workspace`)
 The following steps are performed in sequence and a time to finish is measured for each step:
- * (`build-release-started`) Click on the `Pipelines` title and wait for the `Build Release` stage to start.
- * (`rollout-to-stage-started`) After the `Build Release` appeared wait for the `Rollout to Stage` stage to start.
- * (`input-required-button`) After the `Rollout to Stage` appeared wait for the `Input Required` button to appear.
- * (`abort-button`) Click on the `Input Required` button and wait for the `Abort` button to be clickable.
- * (`aborted`) Click on the `Abort` button and wait until the `Input Required` button disappeared.
+ * (`codebases-page`) Navigate to space page, click on the `Codebases` title and wait for the `Create a workspace` button to be clickable.
+ * (`open-window`) Wait for the second window with Che to open. 
+ * (`workspace-created`) Wait for the project tree to appear in Project Explorer.
+ * (`terminal-maximized`) Double-click on the `Terminal` tab on the bottom of the Che and wait for the terminal to maximize.
+ * (`maven-build`) Click into `Terminal` window, pass and run `mvn clean install -Popenshift,openshift-it` command and wait until the Maven build completes. 
+ * (`back-to-space`) Switch back to the first window (with space page).
 
 ### Remove the space (`remove_space`)
 The following steps are performed in sequence and a time to finish is measured for each step:
