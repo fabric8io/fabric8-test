@@ -12,7 +12,7 @@ The user accounts are evenly spread between 10 individual client nodes of the Os
 from whose the requests are sent via 100s simultaneous clients (=simulated users). Each simulated user waits 1 second
 before starting another iteration.
 
-## Scenario
+## Scenario (`booster-che-workspace`)
 The scenario is logically divided into the following phases:
  * Login user
  * Create a new space
