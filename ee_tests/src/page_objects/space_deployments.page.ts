@@ -7,6 +7,7 @@
 */
 // tslint:disable:max-line-length
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
+import * as support from '../support';
 // tslint:ensable:max-line-length
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
@@ -14,60 +15,193 @@ import { SpaceHeader } from './app/spaceHeader';
 
 export class SpaceDeploymentsPage extends AppPage {
 
-  spaceHeader = new SpaceHeader(this.appTag.$('header > alm-app-header > nav'));
+  async getDeployedApplications(): Promise<DeployedApplication[]> {
+    let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
 
-  /* All resource cards in the Deployments page */
-  allResourceCards = element.all (by.xpath('.//*[contains (@class,\'card-pf\')]'));
-  firstResourceCards = element.all (by.xpath('.//*[contains (@class,\'card-pf\')]')).first;
-  lastResourceCards = element.all (by.xpath('.//*[contains (@class,\'card-pf\')]')).last;
-
-  resourceUsageToggle = new Button (element (by.xpath('.//*[contains(@class,\'resource-title\')]')), 'Resource Uage Toggle');
-
-  /* Resource card by index */
-  resourceCardByIndex (indexValue: number): ElementFinder {
-    let xpathString = '(.//*[contains (@class,\'card-pf\')])[' + indexValue + ']';
-    return element(by.xpath(xpathString));
+    let applications = new Array<DeployedApplication>();
+    for (let finder of elementFinders) {
+      applications.push(new DeployedApplication(finder));
+    }
+    return Promise.resolve(applications);
   }
 
-  /* Deployment resource cards */
+  async getResourceUsageData(): Promise<ResourceUsageData[]> {
+    let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
 
-  /* Resource card by deployment name and index (stage=1, run=2) */
-  resourceCardByNameAndIndex (nameString: string, indexValue: number): ElementFinder {
-    let xpathString = '(.//*[@id=\'deploymentCardApplicationTitle\'][contains(text(),\'' + nameString + '\')]/../../deployment-card)[' + indexValue + ']';
-    return element(by.xpath(xpathString));
+    let data = new Array<ResourceUsageData>();
+    for (let finder of elementFinders) {
+      data.push(new ResourceUsageData(finder));
+    }
+    return Promise.resolve(data);
   }
-
-  /*  Deployment status icon by deployment name and index (stage=1, run=2) */
-  // ex:  (.//*[@id='deploymentCardApplicationTitle'][contains(text(),'feb2')]/../../deployment-card)[1]/.//deployment-status-icon
-  deploymentStatusIconByNameAndIndex (nameString: string, indexValue: number): ElementFinder {
-    let xpathString = '(.//*[@id=\'deploymentCardApplicationTitle\'][contains(text(),\'' + nameString + '\')]/../../deployment-card)[' + indexValue + ']/.//deployment-status-icon';
-    return element(by.xpath(xpathString));
-  }
-
-  /*  Successful deploy status icon by deployment name and index (stage=1, run=2) */
-  // ex: (.//*[@id='deploymentCardApplicationTitle'][contains(text(),'feb2')]/../../deployment-card)[1]/.//deployment-status-icon/span[contains(@title,'Everything is ok.')]
-  successfulDeployStatusByNameAndIndex (nameString: string, indexValue: number): ElementFinder {
-    let xpathString = '(.//*[@id=\'deploymentCardApplicationTitle\'][contains(text(),\'' + nameString + '\')]/../../deployment-card)[' + indexValue + ']/.//deployment-status-icon/span[contains(@title,\'Everything is ok.\')]';
-    return element(by.xpath(xpathString));
-  }
-
-  /* Pod running text */
-  // ex: (.//*[@id='deploymentCardApplicationTitle'][contains(text(),'feb2')]/../../deployment-card)[1]/.//*[contains(text(),'1 Running')]
-  podRunningTextByNameAndIndex(nameString: string, indexValue: number): ElementFinder {
-        let xpathString = '(.//*[@id=\'deploymentCardApplicationTitle\'][contains(text(),\'' + nameString + '\')]/../../deployment-card)[' + indexValue + ']/.//*[contains(text(),\'1 Running\')]';
-        return element(by.xpath(xpathString));
-  }
-
-  /* Resource usage cards */
-
-  /* Resource usage card by index (stage=1,2, run=3,4) */
-  resourceUsageCardByIndex (indexValue: number): ElementFinder {
-    let xpathString = '(.//*[contains(@class,\'resource-title\')]/../../../..//*[contains (@class,\'card-pf\')])[' + indexValue + ']';
-    return element(by.xpath(xpathString));
-  }
-
-// TODO: Running icon =    (.//*[contains(@class, 'c3-shape c3-arc c3-arc-Running')])[1]
-
-
-
 }
+
+export enum Environment {
+  STAGE = 0,
+  RUN = 1
+}
+
+export class DeployedApplication {
+
+  private finder: ElementFinder;
+
+  constructor(finder: ElementFinder | undefined) {
+    if (finder === undefined) {
+      throw 'Finder is undefined';
+    }
+    this.finder = finder;
+  }
+
+  async getName(): Promise<string> {
+    return this.finder.element(by.id('deploymentCardApplicationTitle')).getText();
+  }
+
+  async getEnvironments(): Promise<DeployedApplicationEnvironment[]> {
+    let elementsFinders: ElementFinder[] = await element.all(by.tagName('deployment-card'));
+
+    let environments = new Array<DeployedApplicationEnvironment>();
+    for (let finder of elementsFinders) {
+      environments.push(new DeployedApplicationEnvironment(finder));
+    }
+    return Promise.resolve(environments);
+  }
+}
+
+export class DeployedApplicationEnvironment {
+
+  private finder: ElementFinder;
+
+  constructor(finder: ElementFinder | undefined) {
+    if (finder === undefined) {
+      throw 'Finder is undefined';
+    }
+    this.finder = finder;
+  }
+
+  async isReady(): Promise<boolean> {
+    try {
+      await browser.wait(until.stalenessOf(this.finder.element(by.className('c3-arc-Empty'))), support.LONGER_WAIT);
+      await browser.wait(until.stalenessOf(this.finder.element(by.className('c3-arcs-Not-Ready'))), support.LONGER_WAIT);
+    } catch {
+      return Promise.resolve(false);
+    }
+    return Promise.resolve(true);
+  }
+
+  async getVersion(): Promise<string> {
+    return this.finder.element(by.id('versionLabel')).getText();
+  }
+
+  async getStatus(): Promise<string> {
+    let status = await this.finder.element(by.css('deployment-status-icon > span')).getAttribute('title');
+
+    if (status.trim() === DeploymentStatus.OK) {
+      return Promise.resolve(DeploymentStatus.OK);
+    } else {
+      throw 'Unexpected deployment status: ' + status;
+    }
+  }
+
+  async getPodsCount(): Promise<number> {
+    let text = await this.finder.element(by.css('.deployments-donut-chart-mini-text')).getText();
+    let countString = text.match(/\d+/g);
+    let count: number;
+
+    if (countString === null || countString.length !== 1) {
+      throw 'Unexpected pod count text: ' + text;
+    } else {
+      count = countString.map(Number)[0];
+    }
+    return Promise.resolve(count);
+  }
+
+  async getRunningPodsCount(): Promise<number> {
+    let isDisplayed = await this.finder.element(by.id('pod_status_Running')).$('span').isDisplayed();
+
+    if (!isDisplayed) {
+      this.displayAdditionalInfo();
+      await browser.sleep(5000);
+    }
+
+    isDisplayed = await this.finder.element(by.id('pod_status_Running')).$('span').isDisplayed();
+    if (!isDisplayed) {
+      throw 'Pod status is not displayed';
+    }
+
+
+    let text = await this.finder.element(by.id('pod_status_Running')).$('span').getText();
+    let countString = text.match(/\d+/g);
+    let count: number;
+
+    if (countString === null || countString.length !== 1) {
+      throw 'Unexpected running pod count text: ' + text;
+    } else {
+      count = countString.map(Number)[0];
+    }
+    return Promise.resolve(count);
+  }
+
+  private async displayAdditionalInfo() {
+    await this.finder.element(by.css('deployment-status-icon')).click();
+  }
+}
+
+export enum DeploymentStatus {
+  OK = 'Everything is ok'
+}
+
+export class ResourceUsageData {
+
+  private finder: ElementFinder;
+
+  constructor(finder: ElementFinder | undefined) {
+    if (finder === undefined) {
+      throw 'Finder is undefined';
+    }
+    this.finder = finder;
+  }
+
+  async getItems(): Promise<ResourceUsageDataItem[]> {
+    let elementsFinders: ElementFinder[] = await this.finder.all(by.tagName('utilization-bar'));
+
+    let items = new Array<ResourceUsageDataItem>();
+    for (let finder of elementsFinders) {
+      items.push(new ResourceUsageDataItem(finder));
+    }
+    return Promise.resolve(items);
+  }
+}
+
+export class ResourceUsageDataItem {
+
+  private finder: ElementFinder;
+
+  constructor(finder: ElementFinder | undefined) {
+    if (finder === undefined) {
+      throw 'Finder is undefined';
+    }
+    this.finder = finder;
+  }
+
+  async getActualValue(): Promise<number> {
+    return this.getValue(0);
+  }
+
+  async getMaximumValue(): Promise<number> {
+    return this.getValue(1);
+  }
+
+  private async getValue(index: number): Promise<number> {
+    let text = await this.finder.element(by.id('resourceCardLabel')).getText();
+    let valueString = text.split('of')[index].trim().match(/\d+/g);
+    let value: number;
+
+    if (valueString === null || valueString.length !== 1) {
+      throw 'Unexpected resource usage value text: ' + text;
+    } else {
+      value = valueString.map(Number)[0];
+    }
+    return Promise.resolve(value);
+  }
+}
+

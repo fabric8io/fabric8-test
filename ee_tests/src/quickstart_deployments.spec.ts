@@ -10,7 +10,8 @@ import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { StageRunPage } from './page_objects/space_stage_run.page';
-import { SpaceDeploymentsPage } from './page_objects/space_deployments.page';
+// tslint:disable-next-line:max-line-length
+import { SpaceDeploymentsPage, DeploymentStatus, DeployedApplication, DeployedApplicationEnvironment, Environment} from './page_objects/space_deployments.page';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -30,6 +31,7 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.sleep(support.DEFAULT_WAIT);
     // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
+    support.writePageSource('target/screenshots/pipeline_final_' + globalSpaceName + '.html');
     // support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
@@ -43,12 +45,13 @@ describe('Creating new quickstart in OSIO', () => {
     let wizard = await spaceDashboardPage.addToSpace();
 
     //    let strategy: string  = 'releaseStageApproveAndPromote';
-    let strategy: string = browser.params.release.strategy;   //'release';
+    let strategy: string = browser.params.release.strategy;   // 'release';
 
     support.info('Creating quickstart: ' + quickstart.name);
     await wizard.newQuickstartProject({ project: quickstart.name, strategy });
     await spaceDashboardPage.ready();
 
+    
     /* This statement does not reliably wait for the modal dialog to disappear:
        await browser.wait(until.not(until.visibilityOf(spaceDashboardPage.modalFade)), support.LONGEST_WAIT);
 
@@ -124,40 +127,94 @@ describe('Creating new quickstart in OSIO', () => {
     // 3) Presence of build errors in UI
     // 4) Follow the stage and run links */
 
-    const STAGE = 1;
-    const RUN = 2;
-
     await browser.sleep(5000);
     await spacePipelinePage.spaceHeader.deploymentsOption.clickWhenReady();
 
+    support.info('Verifying deployments page');
+
     await browser.sleep(5000);
+
     let spaceDeploymentsPage = new SpaceDeploymentsPage();
 
-    /* Verify that app deployed to stage presents: Success icon, blue circle graphic, text = "Output from run = 1 pods" */
+    let applications = await spaceDeploymentsPage.getDeployedApplications();
+    expect(applications.length).toBe(1, 'number of deployed applications');
 
-    let textStr = await spaceDeploymentsPage.resourceCardByNameAndIndex(spaceName, STAGE).getText();
-    support.info('1 Output from run = ' + textStr);
-    expect(await spaceDeploymentsPage.allResourceCards.count()).toBe(8);
-    expect(await spaceDeploymentsPage.successfulDeployStatusByNameAndIndex(spaceName, STAGE).isPresent()).toBeTruthy();
+    let application = applications[0];
+    expect(application.getName()).toBe(spaceName, 'application name');
 
-    spaceDeploymentsPage.podRunningTextByNameAndIndex(spaceName, STAGE).getText();
-    support.info('2 Output from run = ' + textStr);
+    let environments = await application.getEnvironments();
+    expect(environments.length).toBe(2, 'number of environments');
 
-    textStr = await spaceDeploymentsPage.successfulDeployStatusByNameAndIndex(spaceName, STAGE).getText();
-    support.info('3 Output from run = ' + textStr);
+    if (testStage(strategy)) {
+      support.info('Verifying application\'s stage environment');
+      let environment = environments[Environment.STAGE];
 
-    textStr = await spaceDeploymentsPage.resourceUsageCardByIndex(1).getText();
-    support.info('4 Output from run = ' + textStr);
+      expect(environment.isReady()).toBeTruthy('stage environment pod is ready');
+      expect(environment.getStatus()).toBe(DeploymentStatus.OK, 'stage environment status');
+      expect(environment.getVersion()).toBe('1.0.1', 'stage environment version');
+      expect(environment.getPodsCount()).toBe(1, 'number of pods on stage environment');
+      // TODO this does not work correctly at the moment
+      // expect(await environment.getRunningPodsCount()).toBe(1, 'number of running pods on stage environment');
+    }
+
+    if (testRun(strategy)) {
+      support.info('Verifying application\'s run environment');
+      let environment = environments[Environment.RUN];
+
+      expect(environment.isReady()).toBeTruthy('run environment pod is ready');
+      expect(environment.getStatus()).toBe(DeploymentStatus.OK, 'run environment status');
+      expect(environment.getVersion()).toBe('1.0.1', 'run environment version');
+      expect(environment.getPodsCount()).toBe(1, 'number of pods on run environment');
+      // TODO this does not work correctly at the moment
+      // expect(await environment.getRunningPodsCount()).toBe(1, 'number of running pods on run environment');
+    }
+
+    support.info('Verifying resources usage');
+
+    let data = await spaceDeploymentsPage.getResourceUsageData();
+    expect(data.length).toBe(2, 'there should be stage and prod environment');
+
+    if (testStage(strategy)) {
+      support.info('Verifying stage environment resource usage');
+
+      let stageData = data[Environment.STAGE];
+      let stageDataItems = await stageData.getItems();
+      expect(stageDataItems.length).toBe(2, 'there should be 2 resource usage data items');
+
+      let cpu = stageDataItems[0];
+      expect(cpu.getActualValue()).toBeGreaterThan(0, 'the actual cpu usage data has to be greater than 0');
+      expect(cpu.getActualValue()).toBeLessThanOrEqual(cpu.getMaximumValue(), 'the actual cpu usage data has to be lower or equal to maximum');
+
+      let memory = stageDataItems[1];
+      expect(memory.getActualValue()).toBeGreaterThan(0, 'the actual memory usage data has to be greater than 0');
+      expect(memory.getActualValue()).toBeLessThanOrEqual(memory.getMaximumValue(), 'the actual memory usage data has to be lower or equal to maximum');
+    }
+
+    if (testRun(strategy)) {
+      support.info('Verifying run environment resource usage');
+
+      let stageData = data[Environment.RUN];
+      let stageDataItems = await stageData.getItems();
+      expect(stageDataItems.length).toBe(2, 'there should be 2 resource usage data items');
+
+      let cpu = stageDataItems[0];
+      expect(cpu.getActualValue()).toBeGreaterThan(0, 'the actual cpu usage data has to be greater than 0');
+      expect(cpu.getActualValue()).toBeLessThanOrEqual(cpu.getMaximumValue(), 'the actual cpu usage data has to be lower or equal to maximum');
+
+      let memory = stageDataItems[1];
+      expect(memory.getActualValue()).toBeGreaterThan(0, 'the actual memory usage data has to be greater than 0');
+      expect(memory.getActualValue()).toBeLessThanOrEqual(memory.getMaximumValue(), 'the actual memory usage data has to be lower or equal to maximum');
+    }
 
     support.writeScreenshot('target/screenshots/pipeline_deployments_' + spaceName + '.png');
-    await browser.sleep(60000);
-
-    /*
-    Open the stage link
-    If the page is not fully displayed - pause, then break and try again -
-    If the page is fully displayed, verify the page contents, run the app, verify the results
-    */
-
+    support.writePageSource('target/screenshots/pipeline_deployments_' + spaceName + '.html');
   });
 
+  function testStage(strategy: string): boolean {
+    return testRun(strategy) || (strategy === 'releaseAndStage');
+  }
+
+  function testRun(strategy: string): boolean {
+    return strategy === 'releaseStageApproveAndPromote';
+  }
 });

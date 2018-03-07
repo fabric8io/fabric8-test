@@ -177,6 +177,17 @@ export async function writeScreenshot(filename: string) {
   info(`Saved screenshot to: ${filename}`);
 }
 
+/**
+ * Store the page source
+ */
+export async function writePageSource(filename: string) {
+  let txt = await browser.getPageSource();
+  let stream = fs.createWriteStream(filename);
+  stream.write(new Buffer(txt));
+  stream.end();
+  info(`Saved page source to: ${filename}`);
+}
+
 function timestamp(): string {
   let date = new Date();
   let time = date.toLocaleTimeString('en-US', {hour12: false});
