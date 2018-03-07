@@ -96,7 +96,7 @@ class UserScenario(TaskSet):
     def _report_failure(self, driver, request_type, name, response_time, msg):
         # print "[FAIL] request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0"
         self._save_snapshot(driver, request_type + "_" + name + "-failure-screenshot-" + str(time.time()))
-        driver.quit()
+        # driver.quit()
         events.request_failure.fire(request_type=request_type, name=name, response_time=response_time, exception=LocustError(msg))
 
     def _save_snapshot(self, driver, name):
