@@ -34,8 +34,8 @@
     "tscw": "tsc -w",
     "tslint": "tslint",
     "typedoc": "typedoc",
-    "webdriver:start": "webdriver-manager start --versions.chrome 2.33",
-    "webdriver:update": "webdriver-manager update --versions.chrome 2.33"
+    "webdriver:start": "webdriver-manager start",
+    "webdriver:update": "webdriver-manager update"
   },
   "dependencies": {},
   "devDependencies": {
