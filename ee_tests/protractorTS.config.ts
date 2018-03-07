@@ -56,7 +56,8 @@ let conf: Config = {
       deployTest: ['src/quickstart_deployments.spec.js'],
       chequickstartTest: ['src/quickstart_che.spec.js'],
       allTest: ['src/quickstart_analytic.spec.js', 'src/quickstart_pipeline.spec.js', 'src/quickstart_che.spec.js'],
-      specs: ['src/*.spec.js']
+      specs: ['src/*.spec.js'],
+      local: ['src/local/*.js']
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md

@@ -35,8 +35,17 @@ npm run image:build
 npm run image:start
 ```
 
+### Running the EE Tests Locally against static html page stored on filesystem ###
+During the test development, it is sometimes convenient to run some subset of test against locally stored static html page. This is especially useful during debugging of css selectors. 
 
+#### Implement tests ####
+Copy template `src/local/local.template.ts` to the same directory `src/local` and 
+implement the test.
 
+#### Run the tests ####
+```
+npm start local
+```
 
 ## The rest of the documentation should be reviewed
 
