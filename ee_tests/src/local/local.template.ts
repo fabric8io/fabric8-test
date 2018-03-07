@@ -13,7 +13,7 @@ import { SpaceDeploymentsPage } from '../page_objects/space_deployments.page';
 /**
  * Test that can run locally agains static page stored on filesystem
  */
-describe('Creating new quickstart in OSIO', () => {
+describe('Local test template', () => {
 
   // URL of local file that sould be loaded in browser
   let URL: string = '';
