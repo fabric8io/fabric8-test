@@ -95,9 +95,12 @@ class UserScenario(TaskSet):
 
     def _report_failure(self, driver, request_type, name, response_time, msg):
         # print "[FAIL] request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0"
-        # driver.get_screenshot_as_file(request_type + "_" + name + "-failure-screenshot-" + str(time.time()) + ".png")
+        self._save_snapshot(driver, request_type + "_" + name + "-failure-screenshot-" + str(time.time()))
         driver.quit()
         events.request_failure.fire(request_type=request_type, name=name, response_time=response_time, exception=LocustError(msg))
+
+    def _save_snapshot(self, driver, name):
+        driver.save_screenshot(name + ".png")
 
     def login(self, driver):
         request_type = "login"
@@ -370,76 +373,99 @@ class UserScenario(TaskSet):
 
     def che_workspace(self, driver):
         request_type = "che_workspace"
+        failed = False
+
+        metric = "codebases-page"
         try:
             driver.get(self.spaceUrl)
             target_element = self._wait_for_clickable_element(driver, By.ID, "spacehome-codebases-title")
             self._reset_timer()
             target_element.click()
             target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//codebases-item-workspaces")
-            self._report_success(request_type, "codebases-page", self._tick_timer())
+            self._report_success(request_type, metric, self._tick_timer())
         except TimeoutException:
-            self._report_failure(driver, request_type, "codebases-page", self._tick_timer(), "Timeout")
-            return False
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+            failed = True
 
-        self._reset_timer()
-        try:
-            target_element.click()
-            WebDriverWait(driver, self.timeout).until(
-                EC.number_of_windows_to_be(2)
-            )
-            driver.switch_to.window(driver.window_handles[1])
-            self._report_success(request_type, "open-window", self._tick_timer())
-        except TimeoutException:
-            self._report_failure(driver, request_type, "open-window", self._tick_timer(), "Timeout")
-            return False
+        if not failed:
+            metric = "open-window"
+            self._reset_timer()
+            try:
+                target_element.click()
+                WebDriverWait(driver, self.timeout).until(
+                    EC.number_of_windows_to_be(2)
+                )
+                driver.switch_to.window(driver.window_handles[1])
+                self._report_success(request_type, metric, self._tick_timer())
+            except TimeoutException:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+                failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
-        self._reset_timer()
-        try:
-            self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[@name='" + self.newSpaceName.lower() + "']", timeout=self.longTimeout)
-            self._report_success(request_type, "workspace-created", self._tick_timer())
-        except TimeoutException:
-            self._report_failure(driver, request_type, "workspace-created", self._tick_timer(), "Timeout")
-            return False
+        if not failed:
+            metric = "workspace-created"
+            self._reset_timer()
+            try:
+                self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[@name='" + self.newSpaceName.lower() + "']", timeout=self.longTimeout)
+                self._report_success(request_type, metric, self._tick_timer())
+            except TimeoutException:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+                failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
-        self._reset_timer()
-        try:
-            target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'Terminal')]")
-            AC(driver) \
-                .double_click(target_element) \
-                .perform()
-            target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-Terminal']//div[@class='terminal xterm xterm-theme-default']")
-            self._report_success(request_type, "terminal-maximized", self._tick_timer())
-        except TimeoutException:
-            self._report_failure(driver, request_type, "terminal-maximized", self._tick_timer(), "Timeout")
-            return False
+        if not failed:
+            metric = "terminal-maximized"
+            self._reset_timer()
+            try:
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'Terminal')]")
+                AC(driver) \
+                    .double_click(target_element) \
+                    .perform()
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-Terminal']//div[@class='terminal xterm xterm-theme-default']")
+                self._report_success(request_type, metric, self._tick_timer())
+            except TimeoutException:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+                failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
-        self._reset_timer()
-        try:
-            AC(driver) \
-                .click(target_element) \
-                .send_keys("cd " + self.newSpaceName.lower()) \
-                .send_keys(Keys.RETURN) \
-                .send_keys("mvn clean install -Popenshift,openshift-it") \
-                .send_keys(Keys.RETURN) \
-                .perform()
+        if not failed:
+            metric = "maven-build"
+            self._reset_timer()
+            try:
+                AC(driver) \
+                    .click(target_element) \
+                    .send_keys("cd " + self.newSpaceName.lower()) \
+                    .send_keys(Keys.RETURN) \
+                    .send_keys("mvn clean install -Popenshift,openshift-it") \
+                    .send_keys(Keys.RETURN) \
+                    .perform()
 
-            WebDriverWait(driver, self.longTimeout).until(
-                EC.text_to_be_present_in_element((By.XPATH, "//*[@id='gwt-debug-Terminal']"), "Total time:")
-            )
-            self._report_success(request_type, "maven-build", self._tick_timer())
-        except TimeoutException:
-            self._report_failure(driver, request_type, "maven-build", self._tick_timer(), "Timeout")
-            return False
+                WebDriverWait(driver, self.longTimeout).until(
+                    EC.text_to_be_present_in_element((By.XPATH, "//*[@id='gwt-debug-Terminal']"), "Total time:")
+                )
+                self._save_snapshot(request_type + "_" + metric + "-screenshot-" + time.time())
+                self._report_success(request_type, metric, self._tick_timer())
+            except TimeoutException:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+                failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
-        self._reset_timer()
-        try:
-            driver.switch_to.window(driver.window_handles[0])
-            self._wait_for_url(driver, self.spaceUrl)
-            self._report_success(request_type, "back-to-space", self._tick_timer())
-        except TimeoutException:
-            self._report_failure(driver, request_type, "back-to-space", self._tick_timer(), "Timeout")
-            return False
-        return True
+        if not failed:
+            metric = "back-to-space"
+            self._reset_timer()
+            try:
+                driver.switch_to.window(driver.window_handles[0])
+                self._wait_for_url(driver, self.spaceUrl)
+                self._report_success(request_type, metric, self._tick_timer())
+            except TimeoutException:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
+                # failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
     @task
     def runScenario(self):
@@ -451,26 +477,29 @@ class UserScenario(TaskSet):
         driver = webdriver.Chrome(chrome_options=opts)
         overall_start = time.time()
         try:
+            # Must not fail
             if not self.login(driver):
                 driver.quit()
                 return
 
+            # Must not fail
             if not self.create_space(driver):
                 driver.quit()
                 return
 
+            # Must not fail
             if not self.create_quickstart(driver):
                 driver.quit()
                 return
 
-            if not self.che_workspace(driver):
-                driver.quit()
-                return
+            # Can fail
+            self.che_workspace(driver)
 
             # if not self.pipeline(driver):
             #    driver.quit()
             #    return
 
+            # Must not fail
             if not self.remove_space(driver):
                 driver.quit()
                 return
