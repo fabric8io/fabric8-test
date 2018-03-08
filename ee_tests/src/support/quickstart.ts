@@ -45,7 +45,7 @@ export class Quickstart {
       default: {
         this.id = 'vertxHttp';
         this.name = 'Vert.x HTTP Booster';
-        this.dependencyCount = this.getDependencyCountObj('2', '0', '2');
+        this.dependencyCount = this.getDependencyCountObj('2', '2', '0');
         break;
       }
     }
