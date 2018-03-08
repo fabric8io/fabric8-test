@@ -420,12 +420,10 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'Terminal')]")
-                self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
                 AC(driver) \
                     .double_click(target_element) \
                     .perform()
                 target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-Terminal']//div[@class='terminal xterm xterm-theme-default']")
-                self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
                 self._report_success(request_type, metric, self._tick_timer())
             except TimeoutException:
                 self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
