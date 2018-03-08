@@ -419,6 +419,7 @@ class UserScenario(TaskSet):
             metric = "terminal-maximized"
             self._reset_timer()
             try:
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'Terminal')]")
                 self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
                 AC(driver) \
                     .double_click(target_element) \
