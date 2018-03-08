@@ -447,7 +447,7 @@ class UserScenario(TaskSet):
                 WebDriverWait(driver, self.longTimeout).until(
                     EC.text_to_be_present_in_element((By.XPATH, "//*[@id='gwt-debug-Terminal']"), "Total time:")
                 )
-                self._save_snapshot(driver, request_type + "_" + metric + "-" + screenshot - " + str(time.time()))
+                self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
                 self._report_success(request_type, metric, self._tick_timer())
             except TimeoutException:
                 self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
