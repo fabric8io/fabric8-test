@@ -48,6 +48,8 @@ let conf: Config = {
 
       boosterterminaltest: ['src/quickstart_cheterminal.spec.js'],
 
+      launchertest: ['src/launcher.spec.js'],
+
       logintest: ['src/quickstart_login.spec.js'],
       boosterTest: ['src/booster_pipeline.spec.js'],
       importTest: ['src/workshop-import-to-space.spec.js'],
