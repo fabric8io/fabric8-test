@@ -15,7 +15,7 @@ export class Quickstart {
       case 'vertxHealth': {
         this.name = 'Vert.x Health Check Example';
         this.runtime = LauncherRuntime.runtime('vertx');
-        this.mission = LauncherMission.mission('healthCheck');
+        this.mission = LauncherMission.mission('basic');
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
@@ -36,7 +36,7 @@ export class Quickstart {
       case 'SpringBootHealth': {
         this.name = 'Spring Boot Health Check Example';
         this.runtime = LauncherRuntime.runtime('springBoot');
-        this.mission = LauncherMission.mission('healthCheck');
+        this.mission = LauncherMission.mission('basic');
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
         break;
       }
@@ -57,7 +57,7 @@ export class Quickstart {
       case 'SwarmHealth': {
         this.name = 'WildFly Swarm - Health Checks';
         this.runtime = LauncherRuntime.runtime('swarm');
-        this.mission = LauncherMission.mission('healthCheck');
+        this.mission = LauncherMission.mission('basic');
         this.dependencyCount = this.getDependencyCountObj('N/A', 'N/A', 'N/A');
         break;
       }

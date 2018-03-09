@@ -26,12 +26,6 @@ export class LauncherMission {
         this.dependencyCount = this.getDependencyCountObj('9', '9', '0');
         break;
       }
-      case 'healthCheck': {
-        // TODO: Update name when present in UI
-        this.name = 'N/A';
-        this.dependencyCount = this.getDependencyCountObj('9', '9', '0');
-        break;
-      }
       case 'restApi': {
         this.name = 'REST API Level 0';
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
