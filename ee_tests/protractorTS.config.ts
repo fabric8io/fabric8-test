@@ -48,6 +48,8 @@ let conf: Config = {
 
       boosterterminaltest: ['src/quickstart_cheterminal.spec.js'],
 
+      boosterjunittest: ['src/quickstart_chejunit.spec.js'],
+      
       launchertest: ['src/launcher.spec.js'],
 
       logintest: ['src/quickstart_login.spec.js'],

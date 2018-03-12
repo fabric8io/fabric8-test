@@ -34,7 +34,6 @@ export async function setBrowserMode(mode: BrowserMode) {
   }
 }
 
-
 /* Print text to the Che Terminal window - a 2nd RETURN char is used to make the text easier to read */
 // tslint:disable:max-line-length
 export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePage, textToPrint: string) {
@@ -44,7 +43,6 @@ export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePag
   await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(Key.ENTER).perform();
 }
 // tslint:enable:max-line-length
-
 
 /*
  * Display the contents of the Jenkins build log.
