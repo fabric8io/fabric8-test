@@ -15,7 +15,7 @@ export class Quickstart {
       case 'vertxHealth': {
         this.name = 'Vert.x Health Check Example';
         this.runtime = LauncherRuntime.runtime('vertx');
-        this.mission = LauncherMission.mission('basic');
+        this.mission = LauncherMission.mission('healthCheck');
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
@@ -36,7 +36,7 @@ export class Quickstart {
       case 'SpringBootHealth': {
         this.name = 'Spring Boot Health Check Example';
         this.runtime = LauncherRuntime.runtime('springBoot');
-        this.mission = LauncherMission.mission('basic');
+        this.mission = LauncherMission.mission('healthCheck');
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
         break;
       }
@@ -57,20 +57,16 @@ export class Quickstart {
       case 'SwarmHealth': {
         this.name = 'WildFly Swarm - Health Checks';
         this.runtime = LauncherRuntime.runtime('swarm');
-        this.mission = LauncherMission.mission('basic');
+        this.mission = LauncherMission.mission('healthCheck');
         this.dependencyCount = this.getDependencyCountObj('N/A', 'N/A', 'N/A');
         break;
       }
       default: {
         this.id = 'vertxHttp';
         this.name = 'Vert.x HTTP Booster';
-<<<<<<< HEAD
         this.runtime = LauncherRuntime.runtime('vertx');
         this.mission = LauncherMission.mission('restApi');
         this.dependencyCount = this.getDependencyCountObj('2', '0', '2');
-=======
-        this.dependencyCount = this.getDependencyCountObj('2', '2', '0');
->>>>>>> master
         break;
       }
     }

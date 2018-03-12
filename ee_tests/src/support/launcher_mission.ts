@@ -12,7 +12,7 @@ export class LauncherMission {
 
     switch (mission) {
       case 'crud': {
-        this.name = 'Crud';
+        this.name = 'CRUD';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
@@ -31,9 +31,9 @@ export class LauncherMission {
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
         break;
       }
-      case 'basic':
+      case 'healthCheck':
       default: {
-        this.name = 'Basic Application';
+        this.name = 'Health Check';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
