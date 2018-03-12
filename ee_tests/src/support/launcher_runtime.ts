@@ -1,4 +1,10 @@
 export class LauncherRuntime {
+
+  static VERTX = 'vertx';
+  static SPRING_BOOT = 'springboot';
+  static NODE_JS = 'nodejs';
+  static WILDFLY_SWARM = 'swarm';
+
   id: string;
   name: string;
   dependencyCount: { total: string, analyzed: string, unknown: string };
@@ -11,22 +17,22 @@ export class LauncherRuntime {
     this.id = runtime;
 
     switch (runtime) {
-      case 'springboot': {
+      case LauncherRuntime.SPRING_BOOT: {
         this.name = 'Spring Boot';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
-      case 'nodejs': {
+      case LauncherRuntime.NODE_JS: {
         this.name = 'Node.js';
         this.dependencyCount = this.getDependencyCountObj('9', '9', '0');
         break;
       }
-      case 'swarm': {
+      case LauncherRuntime.WILDFLY_SWARM: {
         this.name = 'Wildfly Swarm';
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
         break;
       }
-      case 'vertx':
+      case LauncherRuntime.VERTX:
       default: {
         this.name = 'Eclipse Vert.x';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');

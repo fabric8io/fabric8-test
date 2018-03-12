@@ -1,4 +1,11 @@
 export class LauncherMission {
+
+  static HEALTH_CHECK = 'healthCheck';
+  static CRUD = 'crud';
+  static CIRCUIT_BREAKER = 'circuitBreaker';
+  static EXTERNALIZED_CONFIG = 'externalConfig';
+  static REST_HTTP = 'restHttp';
+
   id: string;
   name: string;
   dependencyCount: { total: string, analyzed: string, unknown: string };
@@ -11,27 +18,27 @@ export class LauncherMission {
     this.id = mission;
 
     switch (mission) {
-      case 'crud': {
+      case LauncherMission.CRUD: {
         this.name = 'CRUD';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
         break;
       }
-      case 'circuitBreaker': {
+      case LauncherMission.CIRCUIT_BREAKER: {
         this.name = 'Circuit Breaker';
         this.dependencyCount = this.getDependencyCountObj('9', '9', '0');
         break;
       }
-      case 'externalConfig': {
+      case LauncherMission.EXTERNALIZED_CONFIG: {
         this.name = 'Externalized Configuration';
         this.dependencyCount = this.getDependencyCountObj('9', '9', '0');
         break;
       }
-      case 'restApi': {
+      case LauncherMission.REST_HTTP: {
         this.name = 'REST API Level 0';
         this.dependencyCount = this.getDependencyCountObj('3', '3', '0');
         break;
       }
-      case 'healthCheck':
+      case LauncherMission.HEALTH_CHECK:
       default: {
         this.name = 'Health Check';
         this.dependencyCount = this.getDependencyCountObj('4', '4', '0');
