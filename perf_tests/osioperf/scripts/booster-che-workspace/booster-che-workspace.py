@@ -387,8 +387,8 @@ class UserScenario(TaskSet):
             self._report_failure(driver, request_type, metric, self._tick_timer(), "Timeout")
             failed = True
 
+        metric = "open-window"
         if not failed:
-            metric = "open-window"
             self._reset_timer()
             try:
                 target_element.click()
@@ -403,8 +403,8 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
+        metric = "workspace-created"
         if not failed:
-            metric = "workspace-created"
             self._reset_timer()
             try:
                 self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[@name='" + self.newSpaceName.lower() + "']", timeout=self.longTimeout)
@@ -415,8 +415,8 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
+        metric = "terminal-maximized"
         if not failed:
-            metric = "terminal-maximized"
             self._reset_timer()
             try:
                 target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'Terminal')]")
@@ -431,8 +431,8 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
+        metric = "maven-build"
         if not failed:
-            metric = "maven-build"
             self._reset_timer()
             try:
                 AC(driver) \
@@ -454,8 +454,8 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), "Skipped")
 
+        metric = "back-to-space"
         if not failed:
-            metric = "back-to-space"
             self._reset_timer()
             try:
                 driver.switch_to.window(driver.window_handles[0])
@@ -470,7 +470,7 @@ class UserScenario(TaskSet):
     @task
     def runScenario(self):
         opts = webdriver.ChromeOptions()
-        opts.add_argument("--headless")
+        #opts.add_argument("--headless")
         opts.add_argument("--window-size=1280,960")
         opts.add_argument("--window-position=100,50")
 
