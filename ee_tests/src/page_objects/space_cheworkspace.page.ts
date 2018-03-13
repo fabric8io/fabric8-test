@@ -53,6 +53,11 @@ export class SpaceCheWorkspacePage extends AppPage {
   navigateFileName = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-navigateToFile-fileName\']')));
   navigateFilePopupPanel = element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel\')]'));
 
+
+  fileNameTab = new Button (element(by.xpath('.//*[contains(@class=\'GDPEHSMCDDC GDPEHSMCGK\')]')), 'File tab');
+//  <div class="GDPEHSMCDDC GDPEHSMCGK" style="color: rgb(255, 255, 255);">HttpApplicationTest</div>
+
+
   /* Che menu - Run, Test, Junit commands */
   cheMenuRun = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/runGroup-true\']')), 'Run menu');
   cheMenuRunTest = new Button (element(by.xpath('.//*[@id=\'topmenu\/Run\/Test\']')), 'Run -> Test');
@@ -60,6 +65,34 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Junit output is displayed here */
   debugInfoPanel = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-infoPanel\']')));
+
+  /* File context menu */
+  cheContextMenuEditFile = new Button (element(by.xpath('.//*[@id=\'contextMenu\/Edit file\']')), 'Edit file');
+
+  /* Che menu edit */
+  cheMenuEdit = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/editGroup-true\']')), 'Edit in file');
+  cheEditFind = new Button (element(by.xpath('.//*[@id=\'topmenu/Edit/Find\']')), 'Find in edit');
+
+  /* Che find and replace */
+  cheFindTextToReplace = new TextInput (element(by.xpath('.//input[@class=\'textViewFindInput\']')), 'Che text to find');
+  cheReplaceText = new TextInput (element(by.xpath('.//input[@class=\'textViewReplaceInput\']')), 'Che test to insert');
+  cheTextViewFindButton = new Button (element(by.xpath('.//*[@class=\'textViewFindButton\'][contains(text(), \'Replace All\')]')), 'Che textViewFindButton');
+  cheText = new TextInput (element(by.xpath('(.//*[contains (@class,\'textviewContent\')])[2]')), 'Che text');
+
+  /* Che go to line number */
+  cheLineNumber = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-askValueDialog-textBox\']')));
+  cheLineNumberOk = new Button (element(by.xpath('.//*[@id=\'askValue-dialog-ok\']')), 'Line number OK');
+
+  /* Profile Preferences */
+  cheProfileGroup = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/profileGroup-true\']')), 'Profile group button');
+  chePreferences = new Button (element(by.xpath('.//*[@id=\'topmenu\/Profile\/Preferences\']')), 'Preferences button');
+  chePreferencesEditor = new Button (element(by.xpath('.//*[@id=\'gwt-debug-projectWizard-Editor\']')), 'Preferences Editor button');
+  chePreferencesAutopairParen = new Button (element(by.xpath('.//*[@id=\'gwt-uid-157\']')), 'Preferences Auto Paren');
+  chePreferencesAutoBraces = new Button (element(by.xpath('.//*[@id=\'gwt-uid-156\']')), 'Preferences Auto Braces');
+  chePreferencesAutopairParenParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-167\']\/..')), 'Preferences Auto Paren');
+  chePreferencesAutoBracesParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-166\']\/..')), 'Preferences Auto Braces');
+  chePreferencesStoreChanges = new Button (element(by.xpath('.//*[@id=\'window-preferences-storeChanges\']')), 'Preferences store changes button');
+  chePreferencesClose = new Button (element(by.xpath('.//*[@id=\'window-preferences-close\']')), 'Preferences close button');
 
   /* Project name as displayed in project explorer */
   recentProjectRootByName (projectName: string): ElementFinder {
@@ -95,6 +128,7 @@ async walkTree (...theArgs: string[]) {
     await this.chePathElementIcon(xpathString).clickWhenReady();
     let theText = await this.chePathElement(xpathString).getText();
     support.info ('Opened path = ' + theText);
+    await browser.sleep(5000);
   }
 }
 
