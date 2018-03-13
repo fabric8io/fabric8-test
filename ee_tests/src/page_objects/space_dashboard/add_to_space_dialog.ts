@@ -1,6 +1,6 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import * as ui from '../../ui'
-import { Button } from '../../ui';
+import { Button, TextInput, LauncherSection, BaseElement } from '../../ui';
 import * as support from '../../support'
 
 
@@ -42,9 +42,9 @@ export class QuickStartWizard extends Wizard {
   projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
 
   // tslint:disable:max-line-length
-  release = new Button (element(by.xpath('.//*[@value=\'Release\']')));
-  releaseAndStage = new Button (element(by.xpath('.//*[@value=\'Release and Stage\']')));
-  releaseStageApproveAndPromote = new Button (element(by.xpath('.//*[@value=\'Release, Stage, Approve and Promote\']')));
+  release = new Button(element(by.xpath('.//*[@value=\'Release\']')));
+  releaseAndStage = new Button(element(by.xpath('.//*[@value=\'Release and Stage\']')));
+  releaseStageApproveAndPromote = new Button(element(by.xpath('.//*[@value=\'Release, Stage, Approve and Promote\']')));
   // tslint:enable:max-line-length
 
   async ready() {
@@ -64,7 +64,7 @@ export class QuickStartWizard extends Wizard {
     support.debug(' .... finding card', name)
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
     let element = this.projectSelector.element(cardFinder)
-    let card =  new ui.Clickable(element, name);
+    let card = new ui.Clickable(element, name);
     await card.ready();
     support.debug(' .... found card', name)
     return card;
@@ -180,6 +180,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'))
   importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
 
+  newImportExperienceButton = new ui.Button(
+    this.element(by.xpath('//*[contains(text(),\'New Import Experience\')]')),
+    'New Import Experience'
+  );
+
   constructor(element: ElementFinder) {
     super(element, 'Add to Space Wizard');
   }
@@ -211,5 +216,41 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await this.importCodeWizard.importCode(details);
   }
 
+  async openNewImportExperience(): Promise<NewImportExperienceDialog> {
+    await this.newImportExperienceButton.clickWhenReady();
+    return new NewImportExperienceDialog(this.element(by.xpath('//f8-add-app-overlay')));
+  }
+
+}
+
+export class NewImportExperienceDialog extends ui.BaseElement {
+
+  projectName = new TextInput($('#projectName'), 'Application Name');
+
+  createNewApplicationCard = new BaseElement(
+    element(by.xpath('//*[contains(text(),\'Create a New Application\')]' +
+      '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
+    'Create a New Application'
+  );
+
+  importExistingApplicationCard = new BaseElement(
+    element(by.xpath('//*[contains(text(),\'Import Existing Application\')]' +
+      '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
+    'Import Existing Application'
+  );
+
+  constructor(elementFinder: ElementFinder) {
+    super(elementFinder, 'New Import Experience Dialog');
+  }
+
+  async ready() {
+    super.ready();
+    this.projectName.ready();
+  }
+
+  async selectCreateNewApplication(): Promise<LauncherSection> {
+    await this.createNewApplicationCard.clickWhenReady();
+    return new LauncherSection(element(by.xpath('//f8-app-launcher')), 'Create a New Application Launcher');
+  }
 }
 

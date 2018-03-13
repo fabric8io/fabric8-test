@@ -51,6 +51,8 @@ let conf: Config = {
       chetest: ['src/quickstart_che.spec.js'],
       analyticstest: ['src/quickstart_analytic.spec.js'],
 
+      launchertest: ['src/launcher.spec.js'],
+
       boosterterminaltest: ['src/booster_ee_int_tests/quickstart_cheterminal.spec.js'],
       boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
       boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
