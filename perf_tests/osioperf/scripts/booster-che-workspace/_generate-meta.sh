@@ -30,12 +30,13 @@ for i in `cat $METRIC_META_FILE`; do
 		fzv="$fzv\nfilterZabbixValue \$ZABBIX_LOG \"$zabbix_metric_prefix-rt_max\" \"@@"$metric_name_caps"_MAX@@\" \$RESULTS_FILE;"
 		fzv="$fzv\nfilterZabbixValue \$ZABBIX_LOG \"$zabbix_metric_prefix-rt_average\" \"@@"$metric_name_caps"_AVERAGE@@\" \$RESULTS_FILE;"
 		fzv="$fzv\nfilterZabbixValue \$ZABBIX_LOG \"$zabbix_metric_prefix-failed\" \"@@"$metric_name_caps"_FAILED@@\" \$RESULTS_FILE;"
+		fzv="$fzv\nfilterZabbixValue \$ZABBIX_LOG \"$zabbix_metric_prefix-passed\" \"@@"$metric_name_caps"_PASSED@@\" \$RESULTS_FILE;"
 		
 		#@@GENERATE_LOAD_TEST_TABLE@@
 		if [[ -z $ltt ]]; then
-			ltt="| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_FAILED@@ |"
+			ltt="| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_PASSED@@ | @@$metric_name_caps""_FAILED@@ |"
 		else
-			ltt="$ltt\n| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_FAILED@@ |"
+			ltt="$ltt\n| \`$metric_name\` | @@$metric_name_caps""_MIN@@ ms | @@$metric_name_caps""_MEDIAN@@ ms | @@$metric_name_caps""_MAX@@ ms | @@$metric_name_caps""_PASSED@@ | @@$metric_name_caps""_FAILED@@ |"
 		fi
 
 		#@@GENARATE_LOAD_TEST_CHARTS@@
