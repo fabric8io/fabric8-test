@@ -106,7 +106,7 @@ docker exec fabric8-test ls -l password_file
 docker exec fabric8-test ls -l ./target/screenshots
 
 docker exec fabric8-test mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
-docker exec fabric8-test cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}
+docker exec fabric8-test cp ./target/screenshots ./e2e/${JOB_NAME}/${BUILD_NUMBER}
 docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 exit $RTN_CODE
