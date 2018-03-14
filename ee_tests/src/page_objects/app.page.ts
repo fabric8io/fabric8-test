@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as until, $, by } from 'protractor';
+import { browser, ExpectedConditions as until, $, by, element } from 'protractor';
 import * as support from '../support';
 import { BaseElement } from '../ui';
 
@@ -9,6 +9,7 @@ import { Header } from './app/header';
 export abstract class AppPage extends BasePage {
   appTag = $('f8-app');
   header = new Header(this.appTag.$('header > alm-app-header > nav'));
+  successAlert = element(by.xpath('//*[contains(@class,\'alert-success\')]'));
 
   /**
    * Extend this class, to describe Application Page(after logging in)
@@ -53,6 +54,7 @@ export abstract class AppPage extends BasePage {
 
   async logout() {
     await this.ready();
+    await browser.wait(until.invisibilityOf(this.successAlert));
     support.debug('... Selecting logout')
     await this.header.profileDropdown.logoutItem.select();
     support.debug('... Selecting logout', 'OK')
