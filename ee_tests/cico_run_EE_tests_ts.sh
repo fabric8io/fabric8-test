@@ -38,7 +38,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -105,13 +105,9 @@ docker exec fabric8-test chown root password_file
 docker exec fabric8-test ls -l password_file
 docker exec fabric8-test ls -l ./target/screenshots
 
-docker exec fabric8-test rsync --password-file=./password_file -PHva ./target/screenshots/my-report.html  devtools@artifacts.ci.centos.org::devtools/e2e/$2/
-
-files=`docker exec fabric8-test ls -1 ./target/screenshots`
-
-for file in $files;
-do docker exec fabric8-test rsync --password-file=./password_file -PHva ./target/screenshots/$file  devtools@artifacts.ci.centos.org::devtools/e2e/$2/$file;
-done
+docker exec fabric8-test mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
+docker exec fabric8-test cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}
+docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 exit $RTN_CODE
 
