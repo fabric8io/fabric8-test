@@ -44,10 +44,16 @@ Page layout
     newSpaceName = new TextInput($('#name'), 'Name of Space');
     createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
 
+    newCreateSpaceExperience = new Button(element(
+      by.xpath("//*[contains(text(),'New Create Space Experience')]")),
+      'New Create Space Experience'
+    );
+
     // TODO: create a UI component that abstracts this element
     devProcessPulldown = new TextInput($('#developmentProcess'));
 
     noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
+    cancelImportsButton = new Button($('#cancelImportsButton'), 'Cancel');
 
     /* Are any warning displayed? */
     alertToastElements = element(by.xpath('.//*[contains(@class, \'toast-pf\')]'));
@@ -127,6 +133,32 @@ Page layout
 
     await this.createSpaceButton.clickWhenReady();
     await this.noThanksButton.clickWhenReady();
+
+    let url = await browser.getCurrentUrl();
+    support.debug('... current url:', url);
+
+    support.debug('... waiting for the url to contain spacename: ', spaceName);
+
+    // TODO: make the timeout a config
+    await browser.wait(until.urlContains(spaceName), 10000);
+
+    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    await spaceDashboard.open();
+    return spaceDashboard;
+  }
+
+  /* Helper function to create a new OSIO space */
+  async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
+    await this.header.recentItemsDropdown.createSpaceItem.select();
+
+    await this.newCreateSpaceExperience.clickWhenReady();
+
+    // TODO: create a new BaseFragment for the model Dialog
+    await this.newSpaceName.enterText(spaceName);
+    await this.devProcessPulldown.enterText('Scenario Driven Planning');
+
+    await this.createSpaceButton.clickWhenReady();
+    await this.cancelImportsButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
     support.debug('... current url:', url);
