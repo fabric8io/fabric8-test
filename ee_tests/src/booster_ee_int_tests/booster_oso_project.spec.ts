@@ -25,7 +25,7 @@ describe('Access project in OSO:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_oso_project_success.png');
     await dashboardPage.logout();
   });
 

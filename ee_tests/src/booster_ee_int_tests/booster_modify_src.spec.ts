@@ -25,7 +25,7 @@ describe('Modify the project source code in Che:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_modify_src_success.png');
     await dashboardPage.logout();
   });
 

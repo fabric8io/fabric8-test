@@ -27,7 +27,7 @@ describe('Verify that the preview URL provided in the Che terminal is correct an
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_verify_url_success.png');
     await dashboardPage.logout();
   });
 

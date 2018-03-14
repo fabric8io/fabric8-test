@@ -26,7 +26,7 @@ describe('Clean up user environment:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_cleanup_success.png');
     await dashboardPage.logout();
   });
 

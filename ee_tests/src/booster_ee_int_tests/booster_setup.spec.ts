@@ -26,7 +26,7 @@ describe('Creating new quickstart in OSIO', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_setup_success.png');
     await dashboardPage.logout();
   });
 
