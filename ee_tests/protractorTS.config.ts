@@ -53,6 +53,8 @@ let conf: Config = {
 
       launchertest: ['src/launcher.spec.js'],
 
+      boostersuite: ['src/booster_ee_int_tests/booster_login.spec.js'],
+
       boosterterminaltest: ['src/booster_ee_int_tests/quickstart_cheterminal.spec.js'],
       boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
       boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
