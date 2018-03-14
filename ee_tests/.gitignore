@@ -7,3 +7,4 @@ protractorTS.config.js.map
 index.js
 index.js.map
 .vscode/
+.protractor-fail-fast

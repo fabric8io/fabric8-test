@@ -1,5 +1,6 @@
 import { Config, browser } from 'protractor';
 import { SpecReporter } from 'jasmine-spec-reporter';
+import * as failFast from 'protractor-fail-fast';
 
 // NOTE: weird import as documented in
 // https://github.com/Xotabu4/jasmine-protractor-matchers
@@ -17,7 +18,7 @@ let reporter = new HtmlScreenshotReporter({
 // Full protractor configuration file reference could be found here:
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 let conf: Config = {
-
+  
     framework: 'jasmine2',
 
     jasmineNodeOpts: {
@@ -26,6 +27,10 @@ let conf: Config = {
       isVerbose: true,
       defaultTimeoutInterval: 60 * 60 * 1000 // 60 mins for spec to run
     },
+
+    plugins: [
+      failFast.init()
+    ],
 
     directConnect: process.env.DIRECT_CONNECTION === 'true',
     restartBrowserBetweenTests: true,
