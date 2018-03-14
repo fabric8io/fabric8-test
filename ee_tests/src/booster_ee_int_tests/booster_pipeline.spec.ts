@@ -25,7 +25,7 @@ describe('Verify the completion of the build pipeline:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_pipeline_success.png');
     await dashboardPage.logout();
   });
 

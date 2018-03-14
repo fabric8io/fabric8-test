@@ -25,7 +25,7 @@ describe('Check for Stack/Analytic reports:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_analytics_report_success.png');
     await dashboardPage.logout();
   });
 

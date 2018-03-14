@@ -25,7 +25,7 @@ describe('Build the project using Maven in the Che terminal window', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_build_maven_success.png');
     await dashboardPage.logout();
   });
 

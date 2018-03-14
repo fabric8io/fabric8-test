@@ -25,7 +25,7 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/login_test_success_booster.png');
+    support.writeScreenshot('target/screenshots/booster_junit_tests_success.png');
     await dashboardPage.logout();
   });
 
