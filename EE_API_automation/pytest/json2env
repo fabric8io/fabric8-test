@@ -1,7 +1,13 @@
-# Bash script to convert json file to environment variables
-# How to use: eval $(cat file.json | json2env)
+#!/usr/bin/env python
 
-#!/bin/sh
-tr -d '\n' |
-  grep -o '"[A-Za-z_][A-Za-z_0-9]\+"\s*:\s*\("[^"]\+"\|[0-9\.]\+\|true\|false\|null\)' |
-  sed 's/"\(.*\)"\s*:\s*"\?\([^"]\+\)"\?/export \U\1\E="\2"/'
+# jsonenv reads a json object as input and produces
+# escaped shell commands for setting environment vars
+
+import json
+import pipes
+import sys
+
+for k, v in json.load(sys.stdin).items():
+    k = pipes.quote(k)
+    v = pipes.quote(v)
+    print "export %s=%s" % (k.upper(), v)
