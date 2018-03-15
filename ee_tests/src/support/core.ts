@@ -134,18 +134,32 @@ export async function desktopTestSetup() {
   }
 
 
+export class SpaceName {
+  static spaceName: string;
+
+  static newSpaceName(): string {
+    let d = new Date();
+    let month = d.toLocaleString('en-US', { month: 'short' }).toLowerCase();
+    let day = d.getDate();
+    let time = d.getTime();
+    let spaceName = `test${month}${day}${time}`;
+
+    info('New space name: ', spaceName);
+
+    SpaceName.spaceName = spaceName;
+    return SpaceName.spaceName;
+  }
+}
+
 /**
  * Get system time in seconds since 1970 - to generate unique space names.
  */
 export function newSpaceName(): string {
-  let d = new Date();
-  let month = d.toLocaleString('en-US', {month: 'short'}).toLowerCase();
-  let day = d.getDate();
-  let time = d.getTime();
-  let spaceName = `test${month}${day}${time}`;
+  return SpaceName.newSpaceName();
+}
 
-  info('New space name: ', spaceName);
-  return spaceName;
+export function currentSpaceName(): string {
+  return SpaceName.spaceName;
 }
 
 /**
