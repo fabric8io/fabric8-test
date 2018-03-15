@@ -60,12 +60,12 @@ IMAGE="fabric8-test"
 REPOSITORY="fabric8io"
 REGISTRY="registry.devshift.net"
 
-mkdir -p dist 
+mkdir -p dist
 echo "Pull fabric8-test image"
 docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest > /dev/null
 echo "Run test container"
 
-# Assign values to variable names expected by typescript testsmore 
+# Assign values to variable names expected by typescript testsmore
 export OSIO_USERNAME=$EE_TEST_USERNAME
 export OSIO_PASSWORD=$EE_TEST_PASSWORD
 export OSIO_URL=$TEST_URL
@@ -87,7 +87,7 @@ docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
 # Writing to and the grepping results required as webdriver fails
 # intermittently - which results is failure reported even if tests pass
 
-# We do not want to see any TimeoutError in the log 
+# We do not want to see any TimeoutError in the log
 # as protractor does not trap these as errors
 grep "TimeoutError" theLog.txt
 ret1=$?
@@ -106,7 +106,7 @@ docker exec fabric8-test ls -l password_file
 docker exec fabric8-test ls -l ./target/screenshots
 
 docker exec fabric8-test mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
-docker exec fabric8-test cp ./target/screenshots ./e2e/${JOB_NAME}/${BUILD_NUMBER}
+docker exec fabric8-test bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 exit $RTN_CODE
