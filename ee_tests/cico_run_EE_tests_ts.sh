@@ -76,10 +76,11 @@ export QUICKSTART_NAME=$QUICKSTART_NAME
 export RELEASE_STRATEGY=$RELEASE_STRATEGY
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
-          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL  \
-          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" -e ARTIFACT_PASSWORD=$ARTIFACT_PASS \
-          -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env \
-          ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
+          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
+          -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/"
+          -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME \
+          -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
+          -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 # Exec EE tests
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
@@ -110,5 +111,3 @@ docker exec fabric8-test bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${
 docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 exit $RTN_CODE
-
-
