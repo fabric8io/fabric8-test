@@ -66,7 +66,7 @@ export class Quickstart {
         this.name = 'Vert.x HTTP Booster';
         this.runtime = LauncherRuntime.runtime(LauncherRuntime.VERTX);
         this.mission = LauncherMission.mission(LauncherMission.REST_HTTP);
-        this.dependencyCount = this.getDependencyCountObj('2', '0', '2');
+        this.dependencyCount = this.getDependencyCountObj('2', '2', '0');
         break;
       }
     }
