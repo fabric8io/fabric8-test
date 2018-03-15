@@ -77,7 +77,7 @@ export RELEASE_STRATEGY=$RELEASE_STRATEGY
 
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
-          -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/"
+          -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
           -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
