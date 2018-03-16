@@ -8,6 +8,7 @@ import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, Elem
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
 import * as support from '../support';
+import { isUndefined } from 'util';
 
 export class SpaceCheWorkspacePage extends AppPage {
 
@@ -132,6 +133,21 @@ async walkTree (...theArgs: string[]) {
   }
 }
 
+cheWorkspaceName(): string {
+  if (!isUndefined(this.url)) {
+    return this.url.substr(this.url.lastIndexOf('/'));
+  } else {
+    return '';
+  }
+}
+
+cheWorkspaceUrl(): string {
+  if (!isUndefined(this.url)) {
+    return this.url;
+  } else {
+    return '';
+  }
+}
 // tslint:enable:max-line-length
 
 }

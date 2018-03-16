@@ -12,6 +12,7 @@ import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
+import { CheWorkspace } from '../support';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -78,6 +79,11 @@ describe('Creating new quickstart in OSIO', () => {
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+
+    let cheWorkspaceUrl = await browser.getCurrentUrl();
+    support.info('Che Workspace URL: ' + cheWorkspaceUrl);
+    support.updateCheWorkspaceUrl(cheWorkspaceUrl);
+
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);

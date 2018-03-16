@@ -162,6 +162,24 @@ export function currentSpaceName(): string {
   return SpaceName.spaceName;
 }
 
+export class CheWorkspace {
+  static wsName: string;
+  static url: string;
+}
+
+export function currentCheWorkspaceUrl(): string {
+  return CheWorkspace.url;
+}
+
+export function updateCheWorkspaceUrl(url: string) {
+  CheWorkspace.url = url;
+}
+
+export async function sleep(ms: number) {
+  info('Sleeping for ' + ms + ' ms...');
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /**
  * Write screenshot to file
  * Example usage:
