@@ -211,9 +211,9 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            next_button_selector = "body > modal-container > div > div > quickstart-wizard > pfng-wizard > div.modal-footer.wizard-pf-footer.pfng-wizard-position-override > button.btn.btn-primary.wizard-pf-next"
-            self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
-            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
+            next_button_selector = "//quickstart-wizard//button[contains(text(),'Next')]"
+            self._wait_for_non_clickable_element(driver, By.XPATH, next_button_selector)
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, next_button_selector)
             self._report_success(request_type, "forge-1A-next-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-1A-next-button", self._tick_timer(), "Timeout")
@@ -232,8 +232,8 @@ class UserScenario(TaskSet):
 
         self._reset_timer()
         try:
-            self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
-            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
+            self._wait_for_non_clickable_element(driver, By.XPATH, next_button_selector)
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, next_button_selector)
             self._report_success(request_type, "forge-1B-next-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-1B-next-button", self._tick_timer(), "Timeout")
@@ -242,8 +242,8 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
-            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
+            self._wait_for_non_clickable_element(driver, By.XPATH, next_button_selector)
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, next_button_selector)
             self._report_success(request_type, "forge-2A-next-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-2A-next-button", self._tick_timer(), "Timeout")
@@ -252,8 +252,9 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            self._wait_for_non_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
-            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
+            finish_button_selector = "//quickstart-wizard//button[contains(text(),'Finish')]";
+            self._wait_for_non_clickable_element(driver, By.XPATH, finish_button_selector)
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, finish_button_selector)
             self._report_success(request_type, "forge-2B-finish-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-2B-finish-button", self._tick_timer(), "Timeout")
@@ -262,7 +263,8 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            target_element = self._wait_for_clickable_element(driver, By.CSS_SELECTOR, next_button_selector)
+            ok_button_selector = "//quickstart-wizard//button[contains(text(),'Ok')]";
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, ok_button_selector)
             self._report_success(request_type, "forge-3A-ok-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-3A-ok-button", self._tick_timer(), "Timeout")
