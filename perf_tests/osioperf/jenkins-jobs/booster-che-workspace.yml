@@ -96,12 +96,16 @@
             dirmatch: false
         - credentials-binding:
             - file:
-                credential-id: devtools-automated-tests-osiotestX
+                credential-id: osio-ci-eeX.users.properties
                 variable: USERS_PROPERTIES_FILE
             - username-password-separated:
                 credential-id: grip-creds
                 username: GRIP_USER
                 password: GRIP_PASS
+            - username-password-separated:
+                credential-id: osioperftest.github.token
+                username: GH_USER
+                password: GH_TOKEN
     builders:
         - shell: |-
             cd perf_tests/osioperf/scripts/booster-che-workspace
