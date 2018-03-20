@@ -22,6 +22,9 @@ _userPasswords = []
 _currentUser = 0
 _userLock = threading.RLock()
 
+jobBaseName=os.getenv("JOB_BASE_NAME")
+buildNumber=os.getenv("BUILD_NUMBER")
+
 usenv = os.getenv("USERS_PROPERTIES")
 lines = usenv.split('\n')
 
@@ -141,7 +144,7 @@ class UserScenario(TaskSet):
 
     def create_space(self, driver):
         request_type = "create_space"
-        self.newSpaceName = "Spejs-" + str(self.taskUser) + "-" + str(long(time.time() * 1000))
+        self.newSpaceName = jobBaseName + "-" + buildNumber + "-" + str(self.taskUser) + "-" + str(long(time.time() * 1000))
         self._reset_timer()
         try:
             self._wait_for_clickable_element(driver, By.CSS_SELECTOR, ".f8-card-heading-btn-link").click()
