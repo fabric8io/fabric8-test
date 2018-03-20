@@ -96,19 +96,30 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     await this.untilDisplayed();
   }
 
-  private async waitFor(msg: string, condition: Function, timeout?: number) {
-    let wait: number = timeout || DEFAULT_WAIT
-    this.debug(`waiting for "${msg}"`, `  | timeout: '${wait}'`);
-    await browser.wait(condition, wait);
-    this.debug(`waiting for "${msg}"`, '  - OK');
-  }
-
   async run(msg: string, fn: () => Promise<any>) {
     this.debug(msg);
     await fn()
     this.debug(msg, '- DONE');
   }
 
+  protected string2Number(stringNumber: string, errorMessage: string): number {
+    let countString = stringNumber.match(/\d+/g);
+    let count: number;
+
+    if (countString === null || countString.length !== 1) {
+      throw errorMessage + ' ' + stringNumber;
+    } else {
+      count = parseInt(countString[0], 10);
+    }
+    return count;
+  }
+
+  private async waitFor(msg: string, condition: Function, timeout?: number) {
+    let wait: number = timeout || DEFAULT_WAIT;
+    this.debug(`waiting for "${msg}"`, `  | timeout: '${wait}'`);
+    await browser.wait(condition, wait);
+    this.debug(`waiting for "${msg}"`, '  - OK');
+  }
 }
 
 export class BaseElementArray extends ElementArrayFinder {

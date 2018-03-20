@@ -10,7 +10,9 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 import { AppPage } from './app.page';
 import * as ui from '../ui';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
-import { TextInput, Button } from '../ui';
+import { TextInput, Button, BaseElement } from '../ui';
+import { stat } from 'fs';
+import { DeployedApplication } from './space_deployments.page';
 
 /*
 Page layout
@@ -232,8 +234,6 @@ export class SpaceDashboardPage extends SpaceTabPage {
   modalFade = element(by.xpath('.//*[contains(@class,\'modal fade\')]'));
   wizardSidebar = element(by.xpath('.//*[contains(@class,\'wizard-pf-sidebar\')]'));
 
-  spaceName: string;
-
   constructor(spaceName: string) {
     super(spaceName);
 
@@ -255,4 +255,192 @@ export class SpaceDashboardPage extends SpaceTabPage {
     return wizard;
   }
 
+  async getCodebaseCard(): Promise<CodebaseCard> {
+    let finder = element(by.tagName('fabric8-add-codebase-widget'));
+    return new CodebaseCard(finder);
+  }
+
+  async getAnalyticsCard(): Promise<AnalyticsCard> {
+    let finder = element(by.tagName('fabric8-analytical-report-widget'));
+    let card = new AnalyticsCard(finder);
+    await card.ready();
+    return card;
+  }
+
+  async getWorkItemsCard(): Promise<WorkItemsCard> {
+    let finder = element(by.tagName('fabric8-create-work-item-widget'));
+    return new WorkItemsCard(finder);
+  }
+
+  async getPipelinesCard(): Promise<PipelinesCard> {
+    let finder = element(by.tagName('fabric8-pipelines-widget'));
+    return new PipelinesCard(finder);
+  }
+
+  async getDeploymentsCard(): Promise<DeploymentsCard> {
+    let finder = element(by.tagName('fabric8-environment-widget'));
+    return new DeploymentsCard(finder);
+  }
+}
+
+export abstract class SpaceDashboardPageCard extends BaseElement {
+
+  constructor(finder: ElementFinder, name: string) {
+    super(finder, name);
+  }
+
+  public async abstract getCount(): Promise<number>;
+
+  protected async getCountByID(elementID: string, elementDescription: string): Promise<number> {
+    let text = await this.element(by.id(elementID)).getText();
+    let count = this.string2Number(text, 'Unexpected ' + elementDescription + ' count text');
+    return Promise.resolve(count);
+  }
+}
+
+export class CodebaseCard extends SpaceDashboardPageCard {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Codebases');
+  }
+
+  public async getCount(): Promise<number>{
+    return this.getCountByID('spacehome-codebases-badge', 'codebases');
+  }
+
+  public async getCodebases(): Promise<string[]> {
+    let elementsFinders: ElementFinder[] = await this.all(by.className('f8-card-codebase-url'));
+    let codeBases = await elementsFinders.map(async(finder) => await finder.getText());
+    return Promise.all(codeBases);
+  }
+}
+
+export class AnalyticsCard extends BaseElement {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Analyses');
+  }
+
+  async ready() {
+    await super.ready();
+    await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))));
+  }
+
+  public async getTotalDependenciesCount(): Promise<number> {
+    await this.ready();
+    let text = await this.element(by.cssContainingText('b', 'Total:')).getText();
+    let count = this.string2Number(text, 'total dependencies');
+    return Promise.resolve(count);
+  }
+
+  public async getAnalyzedDependenciesCount(): Promise<number> {
+    let text = await this.element(by.cssContainingText('b', 'Analyzed:')).getText();
+    let count = this.string2Number(text, 'analyzed dependencies');
+    return Promise.resolve(count);
+  }
+
+  public async getUnknownDependenciesCount(): Promise<number> {
+    let text = await this.element(by.cssContainingText('b', 'Unknown:')).getText();
+    let count = this.string2Number(text, 'unknown dependencies');
+    return Promise.resolve(count);
+  }
+}
+
+export class WorkItemsCard extends SpaceDashboardPageCard {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'WorkItems');
+  }
+
+  public async getCount(): Promise<number> {
+    return this.getCountByID('spacehome-my-workitems-badge', 'workitems');
+  }
+}
+
+export class PipelinesCard extends SpaceDashboardPageCard {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Pipelines');
+  }
+
+  public async getCount(): Promise<number> {
+    return this.getCountByID('spacehome-pipelines-badge', 'pipelines');
+  }
+
+  public async getPipelines(): Promise<Pipeline[]> {
+    // tslint:disable-next-line:max-line-length
+    let elementsFinders: ElementFinder[] = await this.element(by.id('spacehome-pipelines-list')).all(by.className('list-group-item'));
+    let pipelines = await elementsFinders.map(finder => new Pipeline(finder));
+    return Promise.resolve(pipelines);
+  }
+}
+
+export class Pipeline extends BaseElement {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Pipeline');
+  }
+
+  public async getApplication(): Promise<string> {
+    return this.element(by.className('f8-card__pipeline-column-name')).getText();
+  }
+
+  public async getStatus(): Promise<string> {
+    let text = await this.element(by.className('f8-card__pipeline-column-status')).getText();
+    let status: string = text.replace('Status:', '').trim();
+    return Promise.resolve(status);
+  }
+
+  public async getBuildNumber(): Promise<number> {
+    let text = await this.element(by.className('f8-card__pipeline-column-build')).getText();
+    let count = this.string2Number(text, 'build number');
+    return Promise.resolve(count);
+  }
+}
+
+export enum BuildStatus {
+  RUNNING = 'Running',
+  COMPLETE = 'Complete',
+  FAILED = 'Failed'
+}
+
+export class DeploymentsCard extends SpaceDashboardPageCard {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Deployments');
+  }
+
+  public async getCount(): Promise<number>{
+    return this.getCountByID('spacehome-environments-badge', 'deployments');
+  }
+
+  public async getApplications(): Promise<DeployedApplicationInfo[]> {
+    // tslint:disable-next-line:max-line-length
+    let elementsFinders: ElementFinder[] = await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
+    let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));
+    return Promise.all(applications);
+  }
+}
+
+export class DeployedApplicationInfo extends BaseElement {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Deployed application');
+  }
+
+  public async getName(): Promise<string> {
+    return this.element(by.tagName('h5')).getText();
+  }
+
+  public async getStageVersion(): Promise<string> {
+    let text = await this.element(by.cssContainingText('a', 'stage')).getText();
+    text = text.split('-')[1].trim();
+    return Promise.resolve(text);
+  }
+
+  public async getRunVersion(): Promise<string> {
+    let text = await this.element(by.cssContainingText('a', 'run')).getText();
+    text = text.split('-')[1].trim();
+    return Promise.resolve(text);
+  }
 }
