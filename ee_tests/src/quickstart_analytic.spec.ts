@@ -4,7 +4,7 @@ import { Quickstart } from './support/quickstart';
 import { TextInput, Button } from './ui';
 
 import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
+import { SpaceDashboardPage, BuildStatus } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
@@ -26,6 +26,7 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.sleep(support.DEFAULT_WAIT);
     // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_analytic_' + globalSpaceName + '.png');
+    support.writePageSource('target/screenshots/pipeline_analytic_' + globalSpaceName + '.html');
     // support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
@@ -98,38 +99,49 @@ describe('Creating new quickstart in OSIO', () => {
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
-    /* Write the Jenkins build log to stdout */
-    // await support.dumpLog(spacePipelinePage);
-
-    // TODO - Error conditions to trap
-    // 1) "View Build" link not displayed - this is issue https://github.com/openshiftio/openshift.io/issues/1194
-    // 2) Build reports error - grep for "ERROR" in Jenkins pod log
-    // 3) Timeout on build - write build duration to stdout and grep for "ERROR" in Jenkins pod log
-
-    /* Verify that the analytics report was created - TODO - expand to test of report contents */
-
-    /* TODO remove sleep statements */
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
     await dashboardPage.header.recentItemsDropdown.clickWhenReady();
     await dashboardPage.recentSpaceByName(spaceName).click();
-    await spaceDashboardPage.stackReportsButton.clickWhenReady(support.LONGER_WAIT);
+    await dashboardPage.ready();
 
-    await browser.sleep(support.DEFAULT_WAIT);
-    try {
-      await expect(spaceDashboardPage.stackReportDependencyCardTotalCount.getText())
-        .toContain(quickstart.dependencyCount.total);
-      await expect(spaceDashboardPage.stackReportDependencyCardAnalyzedCount.getText())
-        .toContain(quickstart.dependencyCount.analyzed);
-      await expect(spaceDashboardPage.stackReportDependencyCardUnknownCount.getText())
-        .toContain(quickstart.dependencyCount.unknown);
-      support.writeScreenshot('target/screenshots/analytic_report_success_' + spaceName + '.png');
-    } catch (e) {
-      support.writeScreenshot('target/screenshots/analytic_report_fail_' + spaceName + '.png');
-      throw e;
-    }
+    let codebasesCard = await spaceDashboardPage.getCodebaseCard();
+    expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
-    await spaceDashboardPage.analyticsCloseButton.clickWhenReady();
+    let githubName = browser.params.github.username;
+    let codebases = await codebasesCard.getCodebases();
+    expect(codebases.length).toBe(1, 'number of codebases');
+    expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + spaceName);
+
+    let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
+    expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
+
+    let pipelinesCard = await spaceDashboardPage.getPipelinesCard();
+    expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
+
+    let pipelines = await pipelinesCard.getPipelines();
+    expect(pipelines.length).toBe(1, 'number of pipelines');
+    expect(pipelines[0].getApplication()).toBe(spaceName, 'application name on pipeline');
+    expect(pipelines[0].getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
+    expect(pipelines[0].getBuildNumber()).toBe(1, 'build number');
+
+    let deploymentsCard = await spaceDashboardPage.getDeploymentsCard();
+    expect(await deploymentsCard.getCount()).toBe(1, 'number of deployments on page');
+
+    let applications = await deploymentsCard.getApplications();
+    expect(applications.length).toBe(1, 'number of applications');
+    expect(await applications[0].getName()).toBe(spaceName, 'deployed application name');
+    expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
+    expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
+
+    let analyticsCard = await spaceDashboardPage.getAnalyticsCard();
+    let totalCount = await analyticsCard.getTotalDependenciesCount();
+    let analyzedCount = await analyticsCard.getAnalyzedDependenciesCount();
+    let unknownCount = await analyticsCard.getUnknownDependenciesCount();
+
+    expect(totalCount).toBeGreaterThanOrEqual(0, 'total dependencies count');
+    expect(analyzedCount).toBeGreaterThanOrEqual(0, 'total analyzed count');
+    expect(unknownCount).toBeGreaterThanOrEqual(0, 'total unknown count');
+    expect(totalCount).toBe(analyzedCount + unknownCount, 'total = analyzed + unknown');
   });
-
 });
