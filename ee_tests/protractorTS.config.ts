@@ -47,7 +47,7 @@ let conf: Config = {
 
     suites: {
 
-      smoketest: ['src/quickstart_pipeline.spec.js'],
+      smoketest: ['src/quickstart_deployments.spec.js'],
       chetest: ['src/quickstart_che.spec.js'],
       analyticstest: ['src/quickstart_analytic.spec.js'],
 
@@ -76,7 +76,7 @@ let conf: Config = {
       boosterTest: ['src/booster_pipeline.spec.js'],
       importTest: ['src/workshop-import-to-space.spec.js'],
       quickstartTest: ['src/quickstart_analytic.spec.js'],
-      runTest: ['src/quickstart_pipeline.spec.js'],
+      runTest: ['src/quickstart_deployments.spec.js'],
       deployTest: ['src/quickstart_deployments.spec.js'],
       chequickstartTest: ['src/quickstart_che.spec.js'],
       allTest: ['src/quickstart_analytic.spec.js', 'src/quickstart_pipeline.spec.js', 'src/quickstart_che.spec.js'],
