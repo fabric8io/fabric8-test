@@ -92,7 +92,7 @@
             dirmatch: false
         - credentials-binding:
             - file:
-                credential-id: devtools-automated-tests-osiotestX
+                credential-id: osio-ci-eeX.users.properties
                 variable: USERS_PROPERTIES_FILE
             - username-password-separated:
                 credential-id: grip-creds
