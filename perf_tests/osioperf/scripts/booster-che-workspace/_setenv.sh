@@ -51,10 +51,16 @@ export ENV_FILE=/tmp/osioperftest.users.env
 #export ZABBIX_SERVER=zabbix.devshift.net
 
 # A port of Zabbix server used by zabbix_sender utility
-#xport ZABBIX_PORT=10051
+#export ZABBIX_PORT=10051
 
 # A hostname in Zabbix the report is for
-#xport ZABBIX_HOST=qa_openshift.io
+#export ZABBIX_HOST=qa_openshift.io
 
 # A number of seconds for how long the test should run
-#xport DURATION=1800
+#export DURATION=900
+
+# GitHub user name
+#export GH_USER=osioperftest
+
+# GitHub token for removing repos after test is done
+#export GH_TOKEN=
