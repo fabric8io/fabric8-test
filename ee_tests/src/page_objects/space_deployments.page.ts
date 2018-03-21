@@ -15,8 +15,16 @@ import { SpaceHeader } from './app/spaceHeader';
 
 export class SpaceDeploymentsPage extends AppPage {
 
+  deploymentCardContainerFirstElement = element.all(by.xpath('.//deployment-card-container')).first();
+  resourceUsageDataFirstElement = element.all(by.xpath('.//resource-card')).first();
+
   async getDeployedApplications(): Promise<DeployedApplication[]> {
+
+    /* Allow for delays in applications appearing in UI - assume that we always have at least 1 app */
+    await browser.wait(until.visibilityOf(this.deploymentCardContainerFirstElement), support.LONGER_WAIT);
+
     let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
+    support.info ('Total number of apps found = ' + elementFinders.length);
 
     let applications = new Array<DeployedApplication>();
     for (let finder of elementFinders) {
@@ -26,7 +34,12 @@ export class SpaceDeploymentsPage extends AppPage {
   }
 
   async getResourceUsageData(): Promise<ResourceUsageData[]> {
+
+    /* Allow for delays in applications appearing in UI - assume that we always have at least 1 app */
+    await browser.wait(until.visibilityOf(this.resourceUsageDataFirstElement), support.LONGER_WAIT);
+
     let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
+    support.info ('Total number of resources found = ' + elementFinders.length);
 
     let data = new Array<ResourceUsageData>();
     for (let finder of elementFinders) {
