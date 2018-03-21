@@ -288,3 +288,10 @@ export function targetPlatform(): string {
   return 'fabric8-openshift';
 }
 
+export function windowCount(count: number) {
+  return function () {
+    return browser.getAllWindowHandles().then(function (handles) {
+      return handles.length === count;
+    });
+  };
+}
