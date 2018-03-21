@@ -86,6 +86,7 @@ export class EditUserProfilePage extends AppPage {
   async gotoResetEnvironment() {
     await this.ready();
     support.debug('... going to click', 'Reset Environment');
+    await browser.executeScript('arguments[0].scrollIntoView()', this.resetEnvButton.getWebElement());
     await this.resetEnvButton.clickWhenReady();
     support.debug('... going to click', 'Reset Environment', 'OK');
 
