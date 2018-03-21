@@ -8,9 +8,11 @@
 // tslint:disable:max-line-length
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
 // tslint:ensable:max-line-length
+import * as support from '../support';
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
 import { SpaceHeader } from './app/spaceHeader';
+import { OsoDashboardPage } from '.';
 
 export class SpacePipelinePage extends AppPage {
 
@@ -67,6 +69,24 @@ export class SpacePipelinePage extends AppPage {
 
   /* Build log output */
   buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
+
+  /* Openshift Links */
+  osoLinksDropdown = new Button(
+    element(by.xpath('//*[contains(@class,\'openshift-links\')]//*[contains(@class,\'dropdown-kebab-pf\')]')),
+    'OSO Links Dropdown'
+  );
+  osoLinksOpenInConsole = new Button(
+    element(by.xpath('//*[contains(@class,\'openshift-links\')]//a[contains(text(),\'Open in OpenShift Console\')]')),
+    'Open In OpenShift Console'
+  );
+
+  async openOpenshiftConsole(): Promise<OsoDashboardPage> {
+    support.info('Opening OpenShift Console...');
+    await this.osoLinksDropdown.clickWhenReady();
+    let osoLink = await this.osoLinksOpenInConsole.getAttribute('href');
+    await this.osoLinksOpenInConsole.clickWhenReady();
+    return new OsoDashboardPage(osoLink);
+  }
 
   /* Locate a codebase by name */
   importCodebaseByName (nameString: string): ElementFinder {

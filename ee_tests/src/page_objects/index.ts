@@ -4,6 +4,7 @@ export * from './main_dashboard.page';
 export * from './space_dashboard.page';
 export * from './space_dashboard/add_to_space_dialog';
 export * from './space_pipeline.page';
+export * from './oso_dashboard.page';
 
 
 // TODO: move page to a different file
