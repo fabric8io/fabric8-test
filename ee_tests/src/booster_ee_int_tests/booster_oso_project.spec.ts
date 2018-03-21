@@ -82,6 +82,23 @@ describe('Access project in OSO:', () => {
       support.LONGER_WAIT
     );
 
+    let terminalText = await spaceCheWorkSpacePage.bottomPanelTerminal.getText();
+
+    let osoProjectArray = terminalText.match(/"(.*)-che"/);
+    let osoProject = osoProjectArray == null ? '' : osoProjectArray[1];
+
+    support.info('Switching to OSO project: "' + osoProject + '"');
+
+    await support.printTerminal(spaceCheWorkSpacePage, 'oc project ' + osoProject);
+
+    await browser.wait(
+      until.textToBePresentInElement(
+        spaceCheWorkSpacePage.bottomPanelTerminal,
+        'Now using project "' + osoProject + '" on server'
+      ),
+      support.LONGER_WAIT
+    );
+
     /* Switch to the back to original browser window */
     await browser.switchTo().window(handles[0]);
     await spacePipelinePage.ready();
