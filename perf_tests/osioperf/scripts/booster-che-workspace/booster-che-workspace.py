@@ -205,7 +205,7 @@ class UserScenario(TaskSet):
         self._reset_timer()
         try:
             target_element.click()
-            target_element = self._wait_for_clickable_element(driver, By.ID, "Vert.x HTTP Booster")
+            target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[contains(text(),'Vert.x HTTP Booster')]")
             self._report_success(request_type, "forge-1A-app-button", self._tick_timer())
         except TimeoutException:
             self._report_failure(driver, request_type, "forge-1A-app-button", self._tick_timer(), "Timeout")
