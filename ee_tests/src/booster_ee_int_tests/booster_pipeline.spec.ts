@@ -1,9 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 import { TextInput, Button } from '../ui';
+import * as ui from '../ui';
 
 import { LandingPage } from '../page_objects/landing.page';
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
@@ -29,9 +30,86 @@ describe('Verify the completion of the build pipeline:', () => {
     await dashboardPage.logout();
   });
 
-  xit('Login, test, logout', async () => {
-    // TODO: implement
-    info('Not yet implemented');
+  it('Login, test deployment to stage and run, logout', async () => {
+    let spaceName = support.currentSpaceName();
+    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
+    await spaceDashboardPage.openInBrowser();
+    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    support.debug('Accessed pipeline page');
+
+    let spacePipelinePage = new SpacePipelinePage();
+    globalSpacePipelinePage = spacePipelinePage;
+
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
+
+    support.debug('Looking for the pipeline name');
+    await pipelineByName.untilPresent(support.LONGER_WAIT);
+
+    /* Verify that only (1) new matching pipeline is found */
+    support.debug('Verifying that only 1 pipeline is found with a matching name');
+    expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
+
+    /* Find the pipeline name */
+    await pipelineByName.untilClickable(support.LONGER_WAIT);
+
+    /* Verify stage and run icons are present - these will timeout and cause failures if missing */
+    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+
+    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
+
+    /* Go to the application stage page */
+    await spacePipelinePage.stageIcon.clickWhenReady(support.LONGEST_WAIT);
+
+    /* A new browser window is opened when the stage page opens - switch to that new window */
+    let handles = await browser.getAllWindowHandles();
+    support.debug('Number of browser tabs before = ' + handles.length);
+    await browser.wait(windowCount(2), support.DEFAULT_WAIT);
+    handles = await browser.getAllWindowHandles();
+    support.debug('Number of browser tabs after = ' + handles.length);
+
+    /* Switch to the stage deployment page */
+    await browser.switchTo().window(handles[1]);
+
+    let invokeButton = new ui.Button($('#invoke'), 'Invoke Button');
+    await browser.sleep(3000);
+    await invokeButton.clickWhenReady(support.LONGEST_WAIT);
+    await browser.sleep(500);
+    support.writeScreenshot('target/screenshots/boosterstageSuccessful.png');
+
+    /* Save the the output of the application into a variable */
+    let stageOutput = await element(by.id('greeting-result')).getText();
+    let expectedOutput = '{"content":"Hello, World!"}';
+
+    /* Check if the application output matches the expected output */
+    expect(stageOutput).toBe(expectedOutput);
+
+    /* Switch back to the OSIO browser window */
+    await browser.switchTo().window(handles[0]);
+
+    /* Switch to the run deployment page */
+    await spacePipelinePage.runIcon.clickWhenReady(support.LONGEST_WAIT);
+    await browser.switchTo().window(handles[1]);
+
+    await browser.sleep(3000);
+    await invokeButton.clickWhenReady(support.LONGEST_WAIT);
+    await browser.sleep(500);
+    support.writeScreenshot('target/screenshots/boosterrunSuccessful.png');
+
+    let runOutput  = await element(by.id('greeting-result')).getText();
+    expect(runOutput).toBe(expectedOutput);
+
+    /* Switch back to the OSIO browser window */
+    await browser.switchTo().window(handles[0]);
+
   });
+
+  function windowCount (count: number) {
+    return function () {
+        return browser.getAllWindowHandles().then(function (handles) {
+            return handles.length === count;
+        });
+    };
+  }
 
 });
