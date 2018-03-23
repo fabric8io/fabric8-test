@@ -7,7 +7,7 @@
 #export BUILD_NUMBER=0
 
 # Openshift Online address.
-#export OSO_ADDRESS=https://api.starter-us-east-2.openshift.com:443
+#export OSO_ADDRESS=https://api.starter-us-east-2a.openshift.com
 
 # A name of the property file with username=password list of users to be logged in
 #export USERS_PROPERTIES_FILE=users.properties

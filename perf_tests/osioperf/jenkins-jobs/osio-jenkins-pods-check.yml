@@ -13,20 +13,20 @@
            days-to-keep: 28
        - inject:
            properties-content: |
-               EXPECTED_PODS=devtools-automated-tests-osiotest1-jenkins \
-               devtools-automated-tests-osiotest2-jenkins \
-               devtools-automated-tests-osiotest3-jenkins \
-               devtools-automated-tests-osiotest4-jenkins \
-               devtools-automated-tests-osiotest5-jenkins \
-               devtools-automated-tests-osiotest6-jenkins \
-               devtools-automated-tests-osiotest7-jenkins \
-               devtools-automated-tests-osiotest8-jenkins \
-               devtools-automated-tests-osiotest9-jenkins \
-               devtools-automated-tests-osiotest10-jenkins
+               EXPECTED_PODS=osio-ci-ee1-jenkins \
+               osio-ci-ee2-jenkins \
+               osio-ci-ee3-jenkins \
+               osio-ci-ee4-jenkins \
+               osio-ci-ee5-jenkins \
+               osio-ci-ee6-jenkins \
+               osio-ci-ee7-jenkins \
+               osio-ci-ee8-jenkins \
+               osio-ci-ee9-jenkins \
+               osio-ci-ee10-jenkins
     parameters:
        - string:
            name: OSO_ADDRESS
-           default: https://api.starter-us-east-2.openshift.com:443
+           default: https://api.starter-us-east-2a.openshift.com
            description: Openshift Online address.
        - bool:
            name: ZABBIX_REPORT_ENABLED
@@ -48,7 +48,7 @@
         - git:
             url: https://github.com/pmacik/fabric8-test.git
             branches:
-                - 'perf_tests/osio-jenkins-pods-check'
+                - '*/master'
     triggers:
         - timed: H/10 * * * *
     wrappers:
