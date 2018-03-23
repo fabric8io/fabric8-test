@@ -25,10 +25,10 @@ export class SpaceCheWorkspacePage extends AppPage {
   mainMenuDebugButtonDebugSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
 
   /* Bottom Panel run tab */
-  bottomPanelRunTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
+  bottomPanelRunTab = new Button (element(by.xpath('.//*[contains(@class,\'GEU2T3BBIOC\')][contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
 
   /* Bottom Panel terminal tab */
-  bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
+  bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GEU2T3BBIOC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
 
   bottomPanelTerminal = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-Terminal\']')));
 
@@ -88,16 +88,14 @@ export class SpaceCheWorkspacePage extends AppPage {
   cheProfileGroup = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/profileGroup-true\']')), 'Profile group button');
   chePreferences = new Button (element(by.xpath('.//*[@id=\'topmenu\/Profile\/Preferences\']')), 'Preferences button');
   chePreferencesEditor = new Button (element(by.xpath('.//*[@id=\'gwt-debug-projectWizard-Editor\']')), 'Preferences Editor button');
-  chePreferencesAutopairParen = new Button (element(by.xpath('.//*[@id=\'gwt-uid-157\']')), 'Preferences Auto Paren');
-  chePreferencesAutoBraces = new Button (element(by.xpath('.//*[@id=\'gwt-uid-156\']')), 'Preferences Auto Braces');
-  chePreferencesAutopairParenParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-167\']\/..')), 'Preferences Auto Paren');
-  chePreferencesAutoBracesParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-166\']\/..')), 'Preferences Auto Braces');
+  chePreferencesAutopairParen = new Button (element(by.xpath('(.//*[contains (@class,\'gwt-CheckBox\')])[6]')), 'Preferences Auto Paren');
+  chePreferencesAutoBraces = new Button (element(by.xpath('(.//*[contains (@class,\'gwt-CheckBox\')])[7]')), 'Preferences Auto Paren');
   chePreferencesStoreChanges = new Button (element(by.xpath('.//*[@id=\'window-preferences-storeChanges\']')), 'Preferences store changes button');
   chePreferencesClose = new Button (element(by.xpath('.//*[@id=\'window-preferences-close\']')), 'Preferences close button');
 
   /* Project name as displayed in project explorer */
   recentProjectRootByName (projectName: string): ElementFinder {
-    let xpathString = './/*[@id=\'gwt-debug-projectTree\']/div[contains(@name,\'' + projectName + '\')]';
+    let xpathString = './/*[@id=\'gwt-debug-projectTree\']//div[contains(@name,\'' + projectName + '\')]';
     return element(by.xpath(xpathString));
   }
 
@@ -115,7 +113,7 @@ chePathElementIcon (elementString: string): Button {
 
 /* Locate folder/file element in the project tree in Che */
 cheFileName (elementString: string): Button {
-  let xpathString = './/*[contains (@class,\'GDPEHSMCNBB\')]//*[contains(text(),\'' + elementString + '\')]';
+  let xpathString = './/*[contains (@class,\'GEU2T3BBEEB\')]//*[contains(text(),\'' + elementString + '\')]';
   return new Button (element(by.xpath(xpathString)), 'The filename in Che');
 }
 
