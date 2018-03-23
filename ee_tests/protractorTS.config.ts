@@ -55,17 +55,17 @@ let conf: Config = {
 
       boostersuite: [
         'src/booster_ee_int_tests/booster_setup.spec.js',
-        /*'src/booster_ee_int_tests/booster_oso_project.spec.js',
+        'src/booster_ee_int_tests/booster_oso_project.spec.js',
         'src/booster_ee_int_tests/booster_pipeline.spec.js',
         'src/booster_ee_int_tests/booster_trigger_cd.spec.js',
         'src/booster_ee_int_tests/booster_analytics_report.spec.js',
         'src/booster_ee_int_tests/booster_build_maven.spec.js',
-        'src/booster_ee_int_tests/booster_verify_url.spec.js',*/
-        'src/booster_ee_int_tests/booster_run_project.spec.js'/*,
+        'src/booster_ee_int_tests/booster_verify_url.spec.js',
+        'src/booster_ee_int_tests/booster_run_project.spec.js',
         'src/booster_ee_int_tests/booster_debug_project.spec.js',
         'src/booster_ee_int_tests/booster_junit_tests.spec.js',
         'src/booster_ee_int_tests/booster_modify_src.spec.js',
-        'src/booster_ee_int_tests/booster_cleanup.spec.js'*/
+        'src/booster_ee_int_tests/booster_cleanup.spec.js'
       ],
 
       boosterterminaltest: ['src/booster_ee_int_tests/quickstart_cheterminal.spec.js'],
