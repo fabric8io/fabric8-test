@@ -13,7 +13,7 @@ list=(`echo $EXPECTED_PODS`)
 
 while read user; do
 	USER=(`echo $user | tr "=" " "`)
-	oc login https://api.starter-us-east-2.openshift.com -u "${USER[0]}" -p "${USER[1]}"
+	oc login "$OSO_ADDRESS" -u "${USER[0]}" -p "${USER[1]}"
 	if [ $? -gt 0 ]; then
 		echo "ERROR: Unable to login user ${USER[0]}"
 		continue
