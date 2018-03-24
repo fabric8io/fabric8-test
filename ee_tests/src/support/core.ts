@@ -1,5 +1,8 @@
-import { browser, Key } from 'protractor';
+// tslint:disable:max-line-length
+import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
+// tslint:ensable:max-line-length
 import * as fs from 'fs';
+import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
@@ -16,6 +19,61 @@ export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
 export const LONGEST_WAIT = minutes(30);
+
+/* Modified test source code */
+export const FILETEXT: string = `package io.openshift.booster;
+
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.StaticHandler;
+
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+
+public class HttpApplication extends AbstractVerticle {
+
+  static final String template = "Howdee, %s!";
+
+  @Override
+  public void start(Future<Void> future) {
+    // Create a router object.
+    Router router = Router.router(vertx);
+
+    router.get("/api/greeting").handler(this::greeting);
+    router.get("/*").handler(StaticHandler.create());
+
+    // Create the HTTP server and pass the "accept" method to the request handler.
+    vertx
+        .createHttpServer()
+        .requestHandler(router::accept)
+        .listen(
+            // Retrieve the port from the configuration, default to 8080.
+            config().getInteger("http.port", 8080), ar -> {
+              if (ar.succeeded()) {
+                System.out.println("Server started on port " + ar.result().actualPort());
+              }
+              future.handle(ar.mapEmpty());
+            });
+
+  }
+
+  private void greeting(RoutingContext rc) {
+    String name = rc.request().getParam("name");
+    if (name == null) {
+      name = "World";
+    }
+
+    JsonObject response = new JsonObject()
+        .put("content", String.format(template, name));
+
+    rc.response()
+        .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
+        .end(response.encodePrettily());
+  }
+}
+`;
 
 export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
@@ -97,9 +155,6 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
 
   let handles = await browser.getAllWindowHandles();
   await browser.switchTo().window(handles[0]);
-
-
-
   // tslint:enable:max-line-length
 }
 
@@ -295,3 +350,59 @@ export function windowCount(count: number) {
     });
   };
 }
+
+  /* Enable or disable automatic parans and braces in Che editor */
+export async function changePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage, theChange: string) {
+
+    try {
+
+   /* Disable the auro parens/braces before importing the modified test source code */
+   await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferencesEditor.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferencesAutopairParen.untilPresent(support.LONGEST_WAIT);
+   await spaceCheWorkSpacePage.chePreferencesAutoBraces.untilPresent(support.LONGEST_WAIT);
+
+   if (theChange === 'disable') {
+     let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
+     if (autoParanEnabled) {
+       support.info('Disabling enabled auto pair paren');
+       await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
+       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+     }
+     let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
+     if (autoBracesEnabled) {
+       support.info('Disabling enabled auto braces');
+       await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
+       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+     }
+   }
+
+   if (theChange === 'enable') {
+       let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
+       if (!autoParanEnabled) {
+         support.info('Enabling disabled auto pair paren');
+         await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
+         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+       }
+       let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
+       if (!autoBracesEnabled) {
+         support.info('Enabling disabled auto braces');
+         await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
+         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+       }
+     }
+
+   await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
+
+   // TO DO - verify preferences dialog is closed
+   await browser.wait (until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
+
+   } catch (e) {
+     support.info('Exception in Che Preferences saving values Panel = ' + e);
+   }
+
+ }
+
+
+
