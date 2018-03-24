@@ -33,13 +33,13 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
 
   // tslint:disable:max-line-length
   it('Login, Run JUnit tests in Che, logout', async () => {
-    // TODO: implement
+
     support.info('Test starting now...');
 
-    openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    await openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
     let spaceChePage = new SpaceChePage();
 
-    spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
+    await spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
 
     /* A new browser window is opened when Che opens - switch to that new window now */
     let handles = await browser.getAllWindowHandles();
