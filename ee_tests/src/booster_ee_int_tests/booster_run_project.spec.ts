@@ -45,9 +45,9 @@ describe('Run the project from the Che menu:', () => {
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
+    await spaceCheWorkSpacePage.bottomPanelTerminal.ready();
 
-    await browser.actions().mouseMove(spaceCheWorkSpacePage.mainMenuRunButton).perform();
-    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady();
+    await spaceCheWorkSpacePage.mainMenuRunDropDown.clickWhenReady();
     await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady();
 
     let quickstart = new Quickstart(browser.params.quickstart.name);
@@ -95,10 +95,9 @@ describe('Run the project from the Che menu:', () => {
     await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/booster_run_project_app_page_' + spaceName + '.png');
-
+    support.writeScreenshot('target/screenshots/booster_run_project_che_page_' + spaceName + '.png');
     await browser.switchTo().window(handles[1]);
-
+    support.writeScreenshot('target/screenshots/booster_run_project_app_page_' + spaceName + '.png');
     await expect(
       await browser.element(by.xpath('//*[contains(text(),\'Application is not available\')]')).isPresent()
     ).toBeFalsy();
