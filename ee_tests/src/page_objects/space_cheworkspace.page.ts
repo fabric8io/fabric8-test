@@ -16,6 +16,7 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Main Menu Panel run/debug buttons */
   mainMenuRunButton = new Button ($('#gwt-debug-command_toolbar-button_Run'), 'Che Main Menu Run Button');
+  mainMenuRunDropDown = new Button(this.mainMenuRunButton.element(by.xpath('.//*[contains(@class,\'GDPEHSMCCAB\')]')));
   mainMenuDebugButton = new Button ($('#gwt-debug-command_toolbar-button_Debug'), 'Che Main Menu Debug Button');
 
   /* Main Menu Panel run button run selection */
