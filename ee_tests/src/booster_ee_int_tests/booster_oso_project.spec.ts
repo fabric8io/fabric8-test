@@ -50,7 +50,7 @@ describe('Access project in OSO:', () => {
     await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/openshift_console_' + spaceName + '.png');
+    support.writeScreenshot('target/screenshots/booster_oso_project_openshift_console_' + spaceName + '.png');
 
     /* Switch to the OpenShift Console browser window */
     await browser.switchTo().window(handles[1]);
@@ -66,14 +66,33 @@ describe('Access project in OSO:', () => {
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    support.writeScreenshot('target/screenshots/che_workspace_a_' + spaceName + '.png');
+    support.writeScreenshot('target/screenshots/booster_oso_project_che_workspace_a_' + spaceName + '.png');
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
-    support.writeScreenshot('target/screenshots/che_workspace_b_' + spaceName + '.png');
-    await support.sleep(1000);
+    support.writeScreenshot('target/screenshots/booster_oso_project_che_workspace_b_' + spaceName + '.png');
 
+    support.info('Open file');
+    await spaceCheWorkSpacePage.walkTree(
+      support.currentSpaceName()
+    );
+    let pomXml = spaceCheWorkSpacePage.cheFileName('pom.xml');
+    await browser.wait(
+      until.visibilityOf(pomXml),
+      support.DEFAULT_WAIT
+    );
+    await pomXml.clickWhenReady();
+    await browser.actions().doubleClick(pomXml).perform();
+    await spaceCheWorkSpacePage.cheText.ready();
+
+    await browser.wait(
+      until.textToBePresentInElement(spaceCheWorkSpacePage.cheText, 'http://maven.apache.org/POM/4.0.0'),
+      support.LONGER_WAIT
+    );
+
+    support.info('Run login command in terminal');
     /* Open the terminal window and execute command */
     await spaceCheWorkSpacePage.bottomPanelTerminalTab.clickWhenReady();
+    await spaceCheWorkSpacePage.bottomPanelTerminal.clickWhenReady();
     await support.sleep(1000);
     await support.printTerminal(spaceCheWorkSpacePage, loginCommand);
 
