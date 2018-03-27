@@ -1,7 +1,8 @@
 import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
 import * as ui from '../../ui'
-import { Button, TextInput, LauncherSection, BaseElement } from '../../ui';
+import { Button, TextInput, BaseElement } from '../../ui';
 import * as support from '../../support'
+import { LauncherSection } from '..';
 
 
 export class Wizard extends ui.BaseElement {
@@ -250,7 +251,7 @@ export class NewImportExperienceDialog extends ui.BaseElement {
 
   async selectCreateNewApplication(): Promise<LauncherSection> {
     await this.createNewApplicationCard.clickWhenReady();
-    return new LauncherSection(element(by.xpath('//f8-app-launcher')), 'Create a New Application Launcher');
+    return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
 }
 
