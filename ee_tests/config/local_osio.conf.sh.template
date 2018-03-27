@@ -6,6 +6,7 @@ export OSIO_URL="${OSIO_URL:-https://openshift.io}"
 
 # github
 export GITHUB_USERNAME="${GITHUB_USERNAME:-}"
+export GITHUB_USERNAME="${GITHUB_PASSWORD:-}"
 
 # test params
 export TEST_SUITE="${TEST_SUITE:-runTest}"
