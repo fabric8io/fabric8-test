@@ -17,6 +17,7 @@ validate_config() {
   # git provider requesting 'Log In & Authorize' for the logged in user. That will
   # be gone in the future.
   export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
+  export NGX_LAUNCHER_ENABLED=${NGX_LAUNCHER_ENABLED:-false}
   return $ret
 }
 
