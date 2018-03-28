@@ -398,12 +398,6 @@ export class Pipeline extends BaseElement {
   }
 }
 
-export enum BuildStatus {
-  RUNNING = 'Running',
-  COMPLETE = 'Complete',
-  FAILED = 'Failed'
-}
-
 export class DeploymentsCard extends SpaceDashboardPageCard {
 
   constructor(finder: ElementFinder) {
