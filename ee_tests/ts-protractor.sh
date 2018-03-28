@@ -65,7 +65,8 @@ main() {
     --params.github.password="$GITHUB_PASSWORD" \
     --params.target.url="$OSIO_URL" \
     --params.quickstart.name="$QUICKSTART_NAME" \
-    --params.release.strategy="$RELEASE_STRATEGY"
+    --params.release.strategy="$RELEASE_STRATEGY" \
+    --params.ngx_launcher.enabled="$NGX_LAUNCHER_ENABLED"
   return $?
 }
 
