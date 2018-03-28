@@ -13,6 +13,10 @@ validate_config() {
 
   # NOTE: github login is used by the import codebase test
   validate_test_config GITHUB_USERNAME "$GITHUB_USERNAME" || ret=1
+  # github password is used in the ngx launcher e2e test as a workaround for the
+  # git provider requesting 'Log In & Authorize' for the logged in user. That will
+  # be gone in the future.
+  export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
   return $ret
 }
 
