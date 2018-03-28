@@ -2,7 +2,9 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 import * as ui from '../../ui'
 import { Button, TextInput, BaseElement } from '../../ui';
 import * as support from '../../support'
-import { LauncherSection } from '..';
+import { LauncherSection, LauncherSetupAppPage } from '..';
+import { Quickstart } from '../../support/quickstart';
+import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
 
 export class Wizard extends ui.BaseElement {
@@ -220,6 +222,63 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   async openNewImportExperience(): Promise<NewImportExperienceDialog> {
     await this.newImportExperienceButton.clickWhenReady();
     return new NewImportExperienceDialog(this.element(by.xpath('//f8-add-app-overlay')));
+  }
+
+  async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: string) {
+    let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
+
+    await dialog.projectName.clear();
+    await dialog.projectName.sendKeys(name);
+
+    let launcher: LauncherSection = await dialog.selectCreateNewApplication();
+    await launcher.ready();
+
+    let quickstart = new Quickstart(quickstartId);
+    await launcher.selectRuntime(quickstart.runtime.name);
+    await launcher.selectMission(quickstart.mission.name);
+    await support.writeScreenshot('target/screenshots/launcher-runtime-and-mission-' + name + '.png');
+    await launcher.missionRuntimeContinueButton.clickWhenReady();
+
+    let pipeline = new LauncherReleaseStrategy(strategy);
+    await launcher.selectPipeline(pipeline.name);
+    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + name + '.png');
+    await launcher.releaseStrategyContinueButton.clickWhenReady();
+
+    await launcher.loginAndAuthorizeButton.clickWhenReady();
+    // BEGIN: Workaround for the Github login
+    support.info('Github Login workaround');
+    let ghLogin = new TextInput($('#login_field'), 'GH Login');
+    let ghPasswd = new TextInput($('#password'), 'GH Password');
+    await ghLogin.ready();
+    await ghPasswd.ready();
+    await ghLogin.sendKeys(browser.params.github.username);
+    await ghPasswd.sendKeys(browser.params.github.password);
+    await ghPasswd.submit();
+    // END: Workaround for the Github login
+    await launcher.selectGithubOrganization(browser.params.github.username);
+    await launcher.ghRepositoryText.sendKeys(name);
+    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + name + '.png');
+    await launcher.gitProviderContinueButton.clickWhenReady();
+
+    await launcher.summaryMission(quickstart.mission.name).isDisplayed();
+    await launcher.summaryRuntime(quickstart.runtime.name).isDisplayed();
+
+    await support.writeScreenshot('target/screenshots/launcher-summary-' + name + '.png');
+
+    let setupApplicationPage: LauncherSetupAppPage = await launcher.setUpApplication();
+    await setupApplicationPage.ready();
+
+    await setupApplicationPage.newProjectBoosterOkIcon('Creating your new GitHub repository').untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Pushing your customized Booster code into the repo')
+      .untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift Online').untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
+      .untilDisplayed();
+
+    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-created-' + name + '.png');
+
+    await setupApplicationPage.returnToMyDashboardButton.clickWhenReady();
   }
 
 }

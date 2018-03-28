@@ -53,7 +53,14 @@ describe('Creating new quickstart in OSIO', () => {
     let quickstart = new Quickstart(browser.params.quickstart.name);
     support.info('Creating quickstart: ' + quickstart.name);
     let wizard = await spaceDashboardPage.addToSpace();
-    await wizard.newQuickstartProject({ project: quickstart.name });
+    await wizard.ready();
+    if (browser.params.ngx_launcher.enabled === 'true') {
+      support.info('Use the new ngx launcher...');
+      await wizard.newQuickstartProjectByLauncher(quickstart.id, spaceName, browser.params.release.strategy);
+    } else {
+      support.info('Use the legacy launcher...');
+      await wizard.newQuickstartProject({ project: quickstart.name });
+    }
     await spaceDashboardPage.ready();
 
     // Create a Che workspace

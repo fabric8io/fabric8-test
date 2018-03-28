@@ -5,6 +5,11 @@ import { Button, Checkbox, TextInput } from '../ui';
 
 export class LauncherSetupAppPage extends BaseElement {
 
+  returnToMyDashboardButton = new Button(
+    this.element(by.xpath('//*[contains(@class,\'f8launcher-continue\')]//a')),
+    'Return to My Dashboard'
+  );
+
   async ready() {
     super.ready();
   }
@@ -23,4 +28,5 @@ export class LauncherSetupAppPage extends BaseElement {
       'OK Icon (' + name + ')'
     );
   }
+
 }
