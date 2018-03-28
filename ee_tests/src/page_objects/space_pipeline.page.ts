@@ -10,9 +10,10 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 // tslint:ensable:max-line-length
 import * as support from '../support';
 import { AppPage } from './app.page';
-import { TextInput, Button } from '../ui';
+import { TextInput, Button, BaseElement } from '../ui';
 import { SpaceHeader } from './app/spaceHeader';
 import { OsoDashboardPage } from '.';
+import { stat } from 'fs';
 
 export class SpacePipelinePage extends AppPage {
 
@@ -112,4 +113,72 @@ export class SpacePipelinePage extends AppPage {
     return element(by.xpath(xpathString));
   }
 
+  public async getPipelines(): Promise<PipelineDetails[]> {
+    let elementsFinders: ElementFinder[] = await element.all(by.className('pipeline-list'));
+    let pipelines = await elementsFinders.map(finder => new PipelineDetails(finder));
+    return Promise.resolve(pipelines);
+  }
+}
+
+export class PipelineDetails extends BaseElement {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Pipeline');
+  }
+
+  public async getApplicationName(): Promise<string> {
+    return this.element(by.css('a.card-title[target="openshift"]')).getText();
+  }
+
+  public async getRepository(): Promise<string> {
+    return this.element(by.css('a[href$=".git"]')).getText();
+  }
+
+  public async getStatus(): Promise<string> {
+    let title = await this.element(by.css('build-status-icon > span')).getAttribute('title');
+    let status = title.replace('build status ', '').trim();
+    return Promise.resolve(status);
+  }
+
+  public async getBuildNumber(): Promise<number> {
+    let text: string = await this.element(by.cssContainingText('a', 'Build #')).getText();
+    let buildNumber = text.replace('Build #', '').trim();
+    return Promise.resolve(this.string2Number(buildNumber, 'Unexpected build number'));
+  }
+
+  public async viewLog(): Promise<number> {
+    throw 'not implemented';
+  }
+
+  public async getStages(): Promise<PipelineStage[]> {
+    let elementsFinders: ElementFinder[] = await this.all(by.className('pipeline-stage-column'));
+    let pipelines = await elementsFinders.map(finder => new PipelineStage(finder));
+    return Promise.resolve(pipelines);
+  }
+
+  public async approvalRequired(): Promise<boolean> {
+    return this.isElementPresent(by.cssContainingText('a', 'Input Required'));
+  }
+
+  public async approve() {
+    await this.element(by.cssContainingText('a', 'Input Required')).click();
+    await new SpacePipelinePage().promoteButton.clickWhenReady(support.LONGER_WAIT);
+  }
+}
+
+export class PipelineStage extends BaseElement {
+
+  constructor(finder: ElementFinder) {
+    super(finder, 'Pipeline');
+  }
+
+  public async getName(): Promise<string> {
+    return this.element(by.css('div[class*="pipeline-stage-name"]')).getText().then((t) => t.trim());
+  }
+
+  public async getStatus(): Promise<string> {
+    let text = await this.element(by.css('div[class*="pipeline-stage-name"]')).getAttribute('class');
+    let status = text.replace('pipeline-stage-name', '').trim();
+    return Promise.resolve(status);
+  }
 }

@@ -1,11 +1,12 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from '../support';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { BuildStatus, BuildStatusUtils } from '../support/build_status';
+import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { SpaceDashboardPage } from '../page_objects';
+import { SpaceDashboardPage, PipelineStage } from '../page_objects';
 import { Button } from '../ui';
 
-// TODO - Error conditions to trap
+// TODO - Error conditions to trap (copied from original code)
 // 1) Jenkins build log - find errors if the test fails
 // 2) Jenkins pod log - find errors if the test fails
 // 3) Presence of build errors in UI
@@ -41,67 +42,116 @@ export abstract class PipelinesInteractions {
 
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
-        /* Open the pipeline page, select the pipeline by name */
+
         await this.spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
-        support.debug('Accessed pipeline page');
-
-        let spacePipelinePage = new SpacePipelinePage();
-        let pipelineByName = new Button(spacePipelinePage.pipelineByName(this.spaceName), 'Pipeline By Name');
-
-        support.debug('Looking for the pipeline name');
-        await pipelineByName.untilPresent(support.LONGER_WAIT);
-
-        /* Verify that only (1) new matching pipeline is found */
-        support.debug('Verifying that only 1 pipeline is found with a matching name');
-        expect(await spacePipelinePage.allPipelineByName(this.spaceName).count()).toBe(1);
-
-        /* Save the pipeline page output to stdout for logging purposes */
-        let pipelineText = await spacePipelinePage.pipelinesPage.getText();
-        support.debug('Pipelines page contents = ' + pipelineText);
-
-        /* Find the pipeline name */
-        await pipelineByName.untilClickable(support.LONGER_WAIT);
-
-        /* If the build log link is not viewable - the build failed to start */
-        // tslint:disable-next-line:max-line-length
-        support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
-        await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-        expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
+        await browser.sleep(5000);
     }
 
-    public async waitToFinish() {
+    public async verifyBuildInfo(): Promise<PipelineDetails> {
+        support.info('Verifying pipeline build info');
+
+        let pipelines = await this.spacePipelinePage.getPipelines();
+        expect(pipelines.length).toBe(1, 'number of pipelines');
+
+        let pipeline = pipelines[0];
+        expect(await pipeline.getApplicationName()).toBe(this.spaceName, 'application name');
+        expect(await pipeline.getBuildNumber()).toBe(1, 'build number');
+        expect(await pipeline.getStatus()).toBe(BuildStatus.NEW, 'build status');
+
+        let githubName = browser.params.github.username;
+        expect(await pipeline.getRepository()).
+            toBe('https://github.com/' + githubName + '/' + this.spaceName + '.git', 'repository');
+        return Promise.resolve(pipeline);
+    }
+
+    public async waitToFinish(pipeline: PipelineDetails) {
         support.info('Waiting for pipeline to finish');
-        await this.waitToFinishInternal();
+
+        await this.waitToFinishInternal(pipeline);
+        expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
     }
 
-    protected abstract async waitToFinishInternal(): Promise<void>;
+    public async verifyBuildStages(pipeline: PipelineDetails) {
+        support.info('Verifying pipeline build stages');
+
+        let stages = await pipeline.getStages();
+        this.verifyBuildStagesInternal(stages);
+    }
+
+    protected abstract async waitToFinishInternal(pipeline: PipelineDetails): Promise<void>;
+
+    protected abstract async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void>;
 }
 
 export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions {
-    protected async waitToFinishInternal(): Promise<void> {
-        await this.spacePipelinePage.successBar.untilDisplayed(support.LONGEST_WAIT);
+
+    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
+        await browser.wait(async function () {
+            let currentStatus = await pipeline.getStatus();
+            if (BuildStatusUtils.buildEnded(currentStatus)) {
+                return true;
+            } else {
+                await browser.sleep(5000);
+                return false;
+            }
+        }, support.LONGEST_WAIT);
+    }
+
+    protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
+        expect(stages.length).toBe(1, 'number of stages for release strategy');
+        await this.verifyBuildReleaseStage(stages);
+    }
+
+    protected async verifyBuildReleaseStage(stages: PipelineStage[]) {
+        expect(await stages[0].getName()).toBe('Build Release', 'stage name');
+        expect(await stages[0].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
     }
 }
 
-export class PipelinesInteractionsStageStrategy extends PipelinesInteractions {
-    protected async waitToFinishInternal(): Promise<void> {
-        await this.spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
+export class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStrategy {
+
+    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
+        await super.waitToFinishInternal(pipeline);
+    }
+
+    protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
+        expect(stages.length).toBe(2, 'number of stages for release&stage strategy');
+        await this.verifyBuildReleaseStage(stages);
+        await this.verifyRolloutStage(stages);
+    }
+
+    protected async verifyRolloutStage(stages: PipelineStage[]) {
+        expect(await stages[1].getName()).toBe('Rollout to Stage', 'stage name');
+        expect(await stages[1].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
     }
 }
 
-export class PipelinesInteractionsRunStrategy extends PipelinesInteractions {
-    protected async waitToFinishInternal(): Promise<void> {
-        /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
-        support.debug('Verifying that the promote dialog is opened');
-        // tslint:disable-next-line:max-line-length
-        let inputRequired = new Button(this.spacePipelinePage.inputRequiredByPipelineByName(this.spaceName), 'InputRequired button');
+export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrategy {
 
-        await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-        await this.spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
-        support.writeScreenshot('target/screenshots/pipeline_promote_' + this.spaceName + '.png');
+    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
+        await browser.wait(async function () {
+            let currentStatus = await pipeline.getStatus();
+            if (BuildStatusUtils.buildEnded(currentStatus)) {
+                return true;
+            } else {
+                if (await pipeline.approvalRequired()) {
+                    await pipeline.approve();
+                }
+                await browser.sleep(5000);
+                return false;
+            }
+        }, support.LONGEST_WAIT);
+    }
 
-        /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-        await this.spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-        await this.spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
+        expect(stages.length).toBe(4, 'number of stages for release&stage&promote strategy');
+        await this.verifyBuildReleaseStage(stages);
+        await this.verifyRolloutStage(stages);
+
+        expect(await stages[2].getName()).toBe('Approve', 'stage name');
+        expect(await stages[2].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
+
+        expect(await stages[3].getName()).toBe('Rollout to Run', 'stage name');
+        expect(await stages[3].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
     }
 }

@@ -60,7 +60,9 @@ describe('Main E2E test suite', () => {
 
     let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName, spaceDashboardPage);
     await pipelineInteractions.showPipelinesScreen();
-    await pipelineInteractions.waitToFinish();
+    let pipeline = await pipelineInteractions.verifyBuildInfo();
+    await pipelineInteractions.waitToFinish(pipeline);
+    await pipelineInteractions.verifyBuildStages(pipeline);
   });
 
   it('Verify deployment', async () => {
