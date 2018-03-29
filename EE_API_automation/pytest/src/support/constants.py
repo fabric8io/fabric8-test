@@ -91,6 +91,7 @@ class dynamic_data:
     spacename = None
     spacelink = None
     
+    ###Planner
     parent_area_id = None
     parent_area_name = None
     area_names_to_ids = {}
@@ -104,6 +105,9 @@ class dynamic_data:
     
     wi_names_to_ids = {}
     wi_names_to_links = {}
+    
+    ###Forge
+    quickstart_selected = None
 
 dynamic_vars = dynamic_data()
 

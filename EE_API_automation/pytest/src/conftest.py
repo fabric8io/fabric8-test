@@ -4,11 +4,14 @@ def pytest_addoption(parser):
     """Add options to pytest.
     This adds the options for
     - '--sut' as the target system under test URL
+    - '--forge_sut' as the target system under test URL
     - '--offline-token' as the offile token to generate an access token
     - '--userid' as the OSIO userid of the primary test user
     """
     parser.addoption("--sut", action="store", default=None,
         help="sut: the url of the WIT server to connect to")
+    parser.addoption("--forge_sut", action="store", default=None,
+        help="forge_sut: the url of the FORGE server to connect to")
     parser.addoption("--offline_token", action="store", default=None,
         help="offline_token: token to generate an access token")
     parser.addoption("--userid", action="store", default=None,
@@ -17,6 +20,10 @@ def pytest_addoption(parser):
 @pytest.fixture
 def sut(request):
     return request.config.getoption("--sut")
+
+@pytest.fixture
+def forge_sut(request):
+    return request.config.getoption("--forge_sut")
   
 @pytest.fixture
 def offline_token(request):
