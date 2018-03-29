@@ -1,0 +1,76 @@
+{
+    "metadata": {
+      "deprecated": false,
+      "category": "Fabric8",
+      "name": "Fabric8: Project Info",
+      "description": "Project Information"
+    },
+    "state": {
+      "valid": false,
+      "canExecute": false,
+      "wizard": true,
+      "canMoveToNextStep": false,
+      "canMoveToPreviousStep": true,
+      "steps": [
+        "Quickstart",
+        "Fabric8: Project Info"
+      ],
+      "isExecute": false
+    },
+    "inputs": [
+      {
+        "name": "quickstart",
+        "shortName": " ",
+        "valueType": "io.fabric8.forge.generator.quickstart.BoosterDTO",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Quickstart",
+        "description": "",
+        "class": "UISelectOne",
+        "value": "$selected_quickstart"
+      },
+      {
+        "name": "named",
+        "shortName": " ",
+        "valueType": "java.lang.String",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "OpenShift Project name",
+        "description": "The following characters are accepted: -a-z0-9 and the name cannot start or end with a dash",
+        "class": "UIInput",
+        "value": "$repo_name"
+      },
+      {
+        "name": "groupId",
+        "shortName": " ",
+        "valueType": "java.lang.String",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Group Id",
+        "description": "",
+        "class": "UIInput",
+        "value": "$selected_group_id"
+      },
+      {
+        "name": "version",
+        "shortName": " ",
+        "valueType": "java.lang.String",
+        "inputType": "org.jboss.forge.inputType.DEFAULT",
+        "enabled": true,
+        "required": true,
+        "deprecated": false,
+        "label": "Version",
+        "description": "",
+        "class": "UIInput",
+        "value": "$selected_version"
+      }
+    ],
+    "results": [],
+    "stepIndex": 1
+  }

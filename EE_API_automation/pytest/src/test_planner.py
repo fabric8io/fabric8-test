@@ -3,9 +3,11 @@ import requests as req
 from support.constants import request_detail, launch_detail, dynamic_vars, workitem_constants
 import support.helpers as helpers
 
-class TestClass_Setup(object):
-    def test_setup(self, sut, offline_token, userid):
-        print "\n\nTest Setup Start....\n"
+# pytestmark = pytest.mark.tryfirst
+
+class TestClass_SetupPlanner(object):
+    def test_setup_planner(self, sut, offline_token, userid):
+        print "\n\nPlanner Test Setup Start....\n"
         if sut is None:
             launch_detail.base_url[launch_detail.base_wit] = r"https://api.openshift.io"
             print "SUT (WIT Target) not provided!!! Using default production SUT = ", launch_detail.base_url[launch_detail.base_wit]
@@ -29,8 +31,8 @@ class TestClass_Setup(object):
 
         #### Define Request Header, that includes Access Token
         request_detail.headers_default = {request_detail.content_type_key_default:request_detail.content_type_default, request_detail.authorization_key_default:request_detail.authorization_carrier_default+launch_detail.token_userid_primary}
-        print "\nTest Setup Complete....\n"
-        print "+++++++++++++++++ Running API Tests ++++++++++++++++\n"
+        print "\nPlanner Test Setup Complete....\n"
+        print "+++++++++++++++++ Running Planner API Tests ++++++++++++++++\n"
 
 class TestClass_CreateSpace(object):
     def test_get_user_details(self):
@@ -302,6 +304,8 @@ class TestClass_Teardown(object):
     def test_teardown(self):
         import os, json
         launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
+        launch_detail.launch_details_dict["space_id"] = dynamic_vars.spaceid
+        launch_detail.launch_details_dict["space_link"] = dynamic_vars.spacelink
         launch_detail.launch_details_dict["user_fullname"] = dynamic_vars.userfullname
         launch_detail.launch_details_dict["user_name"] = dynamic_vars.username
         launch_detail.launch_details_dict["user_id"] = dynamic_vars.userid
@@ -316,6 +320,6 @@ class TestClass_Teardown(object):
         except:
             print "Exception creating launch_info_dump.json"
         
-        print "\n+++++++++++++++++ API Tests Complete ++++++++++++++++\n"
+        print "\n+++++++++++++++++ Planner API Tests Complete ++++++++++++++++\n"
         
-        
+         

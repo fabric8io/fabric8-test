@@ -23,6 +23,6 @@ else
         echo "==> Launching the tests...."
         echo ""
         cd src/
-        pytest -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee -a $CLILOG
+        pytest -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
     fi
 fi

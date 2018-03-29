@@ -1,5 +1,7 @@
 .cache/*
 .vscode/*
+.bash_history
+.pydevproject
 __pycache__/*
 *.pyc
 *.log

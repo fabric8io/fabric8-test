@@ -1,0 +1,57 @@
+{
+    "state": {
+        "valid": true,
+        "canExecute": true,
+        "wizard": true,
+        "canMoveToNextStep": true,
+        "canMoveToPreviousStep": true,
+        "steps": [
+            "Quickstart",
+            "Fabric8: Project Info",
+            "Obsidian: Configure Pipeline",
+            "io.fabric8.forge.generator.kubernetes.CreateBuildConfigStep"
+        ]
+    },
+    "messages": [],
+    "inputs": [
+        {
+            "name": "named",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "OpenShift Project name",
+            "description": "The following characters are accepted: -a-z0-9 and the name cannot start or end with a dash",
+            "class": "UIInput",
+            "value": "boooo"
+        },
+        {
+            "name": "groupId",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "Group Id",
+            "description": "",
+            "class": "UIInput",
+            "value": "io.openshift.booster"
+        },
+        {
+            "name": "version",
+            "shortName": " ",
+            "valueType": "java.lang.String",
+            "inputType": "org.jboss.forge.inputType.DEFAULT",
+            "enabled": true,
+            "required": true,
+            "deprecated": false,
+            "label": "Version",
+            "description": "",
+            "class": "UIInput",
+            "value": "1.0.0-SNAPSHOT"
+        }
+    ]
+}

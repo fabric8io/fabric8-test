@@ -19,6 +19,9 @@
 - `sudo dnf install python2-jmespath` OR
 - `sudo yum install python2-jmespath` OR
 
+4. **Obtain your target specific OSIO offline token**
+- https://docs.google.com/document/d/1DQXUoJCnjV7GyOwNnA2isQ0khuIVh88Ck7_6HQOP55s/edit
+
 ---
 **To Run**
 
@@ -58,3 +61,5 @@
 *pytest_junit_logs.xml* is generated in the /pytest directory. To be used for Jenkins integration
 
 *pytest_cli_logs.log* is generated in the /pytest directory. This captures CLI logs and could be used to evaluate the run status
+
+*Note:* All log files are overwritten on each run
