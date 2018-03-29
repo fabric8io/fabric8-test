@@ -19,7 +19,7 @@
 - `sudo dnf install python2-jmespath` OR
 - `sudo yum install python2-jmespath` OR
 
-4. **Obtain your target specific OSIO offline token**
+5. **Obtain your target specific OSIO offline token**
 - https://docs.google.com/document/d/1DQXUoJCnjV7GyOwNnA2isQ0khuIVh88Ck7_6HQOP55s/edit
 
 ---
