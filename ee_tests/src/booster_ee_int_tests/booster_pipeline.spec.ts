@@ -72,17 +72,16 @@ describe('Verify the completion of the build pipeline:', () => {
     await browser.switchTo().window(handles[1]);
 
     let invokeButton = new ui.Button($('#invoke'), 'Invoke Button');
-    await browser.sleep(3000);
-    await invokeButton.clickWhenReady(support.LONGEST_WAIT);
-    await browser.sleep(500);
+    let stageOutput = await element(by.id('greeting-result')).getText();
+    await invokeButton.clickWhenReady(support.DEFAULT_WAIT);
     support.writeScreenshot('target/screenshots/boosterstageSuccessful.png');
 
     /* Save the the output of the application into a variable */
-    let stageOutput = await element(by.id('greeting-result')).getText();
     let expectedOutput = '{"content":"Hello, World!"}';
 
     /* Check if the application output matches the expected output */
-    expect(stageOutput).toBe(expectedOutput);
+    browser.wait(until.textToBePresentInElementValue(
+      element(by.id('greeting-result')), expectedOutput), support.DEFAULT_WAIT);
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
@@ -91,13 +90,11 @@ describe('Verify the completion of the build pipeline:', () => {
     await spacePipelinePage.runIcon.clickWhenReady(support.LONGEST_WAIT);
     await browser.switchTo().window(handles[1]);
 
-    await browser.sleep(3000);
     await invokeButton.clickWhenReady(support.LONGEST_WAIT);
-    await browser.sleep(500);
     support.writeScreenshot('target/screenshots/boosterrunSuccessful.png');
 
-    let runOutput  = await element(by.id('greeting-result')).getText();
-    expect(runOutput).toBe(expectedOutput);
+    browser.wait(until.textToBePresentInElementValue(
+      element(by.id('greeting-result')), expectedOutput), support.DEFAULT_WAIT);
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
