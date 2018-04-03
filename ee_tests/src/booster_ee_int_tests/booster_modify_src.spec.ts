@@ -56,9 +56,9 @@ describe('Modify the project source code in Che:', () => {
     /* Part 1 - Run the app, verify the deployed app performs as expected */
 
     /* Open the codebase page and the workspace in Che */
-    await openCodebasesPage(browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    await openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
     let spaceChePage = new SpaceChePage();
-    await spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
+    await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
 
     /* A new browser window is opened when Che opens */
     let handles = await browser.getAllWindowHandles();
@@ -80,16 +80,21 @@ describe('Modify the project source code in Che:', () => {
     await runBooster(spaceCheWorkSpacePage);
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
-    await invokeApp('pre_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
+    await invokeApp ('pre_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Part 2 - Edit the app's source */
 
     /* Go back to the Che window and select the project in the project tree */
-    await browser.switchTo().window(handles[2]);
-    await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady(support.LONGEST_WAIT);
-    await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady(support.LONGEST_WAIT);
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    await projectInCheTree.clickWhenReady();
+    try {
+      await browser.switchTo().window(handles[2]);
+      await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady(support.LONGEST_WAIT);
+      await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady(support.LONGEST_WAIT);
+      await browser.sleep(10000);
+      await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+      await projectInCheTree.clickWhenReady();
+    } catch (e) {
+      support.info('Exception closing the run tab and finding the Che project directory tree = ' + e);
+    }
 
     /* Locate the file in the project tree */
     try {
@@ -97,11 +102,11 @@ describe('Modify the project source code in Che:', () => {
       await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(SRCFILENAME)), support.DEFAULT_WAIT);
     } catch (e) {
       support.info('Exception in Che project directory tree = ' + e);
-    }
+  }
 
     /* Modify the deployed app source code */
     let theText = await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).getText();
-    support.info('filename = ' + theText);
+    support.info ('filename = ' + theText);
     await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).clickWhenReady();
 
     /* Right click on file name */
@@ -138,7 +143,7 @@ describe('Modify the project source code in Che:', () => {
     await runBooster(spaceCheWorkSpacePage);
 
     /* Step - Invoke the deployed app at its endpoint, verify the app's output */
-    await invokeApp('post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
+    await invokeApp ('post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Step - Switch back to the OSIO browser window */
     handles = await browser.getAllWindowHandles();
@@ -147,22 +152,26 @@ describe('Modify the project source code in Che:', () => {
   });
 
   /* Run the booster by means of the Che run menu */
-  async function runBooster(spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
-    await spaceCheWorkSpacePage.mainMenuRunDropDown.clickWhenReady(support.LONGEST_WAIT);
-    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
-    await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, EXPECTED_SUCCESS_TEXT), support.LONGER_WAIT);
-    let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
-    support.info('Output from run = ' + textStr);
-    expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+  async function runBooster (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+    try {
+      await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
+      await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
+      await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
+      await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, EXPECTED_SUCCESS_TEXT), support.LONGER_WAIT);
+      let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
+      support.info('Output from run = ' + textStr);
+      expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+    } catch (e) {
+      support.info('Exception running booster = ' + e);
+    }
   }
 
   /* Access the deployed app's endpoint, send text, invoke the app, return the output */
-  async function invokeApp(screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+  async function invokeApp (screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
 
     /// TODO - The link to the deployed app is present before the endpoint is available
     await browser.sleep(10000);
-    await spaceCheWorkSpacePage.previewLink(browser.params.login.user).clickWhenReady();
+    await spaceCheWorkSpacePage.previewLink(browser.params.github.username).clickWhenReady();
 
     /* A new browser window is opened when Che opens the app endpoint */
     let handles = await browser.getAllWindowHandles();
@@ -184,17 +193,17 @@ describe('Modify the project source code in Che:', () => {
       let expectedOutput = '{"content":"' + expectedString + '"}';
       await browser.wait(until.textToBePresentInElement(boosterEndpointPage.stageOutput, expectedOutput), support.DEFAULT_WAIT);
       expect(await boosterEndpointPage.stageOutput.getText()).toBe(expectedOutput);
-    } catch (e) {
-      support.info('Exception invoking staged app = ' + e);
+      } catch (e) {
+        support.info('Exception invoking staged app = ' + e);
     }
   }
 
   /* Wait for the expected number of browser windows to be open */
-  function windowCount(count: number) {
+  function windowCount (count: number) {
     return function () {
-      return browser.getAllWindowHandles().then(function (handles) {
-        return handles.length === count;
-      });
+        return browser.getAllWindowHandles().then(function (handles) {
+            return handles.length === count;
+        });
     };
   }
 
@@ -211,7 +220,7 @@ describe('Modify the project source code in Che:', () => {
   }
 
   /* Open the selected codebases page */
-  async function openCodebasesPage(osioUrl: string, userName: string, spaceName: string) {
+  async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) 
     let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
     await browser.get(theUrl);
     return new SpaceChePage();
