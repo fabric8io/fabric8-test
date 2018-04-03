@@ -14,6 +14,7 @@ import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { info } from '../support';
 import * as ui from '../ui';
+import { LauncherRuntime } from '../support/launcher_runtime';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -24,7 +25,9 @@ const EXPECTED_TEXT = 'World';
 const EXPECTED_TEXT_RECEIVED = 'Hello, World!';
 const EXPECTED_TEXT_AFTER_SEND = 'Howdee, World';
 const EXPECTED_TEXT_AFTER_RECEIVED = 'Howdee, Howdee, World!';
-const EXPECTED_SUCCESS_TEXT = 'Succeeded in deploying verticle';  // TODO - Need unique string for each booster
+const EXPECTED_SUCCESS_TEXT = (
+  new Quickstart(browser.params.quickstart.name)
+).runtime.quickstartStartedTerminal;
 
 // tslint:disable:max-line-length
 
@@ -122,7 +125,7 @@ describe('Modify the project source code in Che:', () => {
       await spaceCheWorkSpacePage.cheMenuEdit.clickWhenReady(support.LONG_WAIT);
       await spaceCheWorkSpacePage.cheEditFormat.clickWhenReady(support.LONG_WAIT);
     } catch (e) {
-     support.info('Exception in writing to file in Che = ' + e);
+      support.info('Exception in writing to file in Che = ' + e);
     }
 
     /* Re-enable preferences */
@@ -160,7 +163,7 @@ describe('Modify the project source code in Che:', () => {
       expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
     } catch (e) {
       support.info('Exception running booster = ' + e);
-  }
+    }
   }
 
   /* Access the deployed app's endpoint, send text, invoke the app, return the output */
@@ -205,7 +208,7 @@ describe('Modify the project source code in Che:', () => {
   }
 
   /* A new browser window is opened - switch to that new window now */
-  async function switchToWindow (windowTotal: number, windowId: number) {
+  async function switchToWindow(windowTotal: number, windowId: number) {
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);
     await browser.wait(windowCount(windowTotal), support.DEFAULT_WAIT);
@@ -217,7 +220,7 @@ describe('Modify the project source code in Che:', () => {
   }
 
   /* Open the selected codebases page */
-  async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) {
+  async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) 
     let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
     await browser.get(theUrl);
     return new SpaceChePage();
