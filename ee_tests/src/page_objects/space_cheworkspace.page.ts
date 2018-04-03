@@ -94,8 +94,8 @@ export class SpaceCheWorkspacePage extends AppPage {
   chePreferencesClose = new Button (element(by.xpath('.//*[@id=\'window-preferences-close\']')), 'Preferences close button');
 
   /* Preview link for app as deployed in Che preview */
-  previewLink (usernameGithub: string): Button {
-    let xpathString = './/a[contains (@class,\'gwt-Anchor\')][contains(text(),\'' + usernameGithub + '-che\')]';
+  previewLink (username: string): Button {
+    let xpathString = './/a[contains (@class,\'gwt-Anchor\')][contains(text(),\'' + username + '-che\')]';
     return new Button (element(by.xpath(xpathString)), 'Che preview link');
   }
 
