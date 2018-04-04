@@ -95,7 +95,7 @@ describe('Creating new quickstart in OSIO', () => {
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    await projectInCheTree.untilPresent(support.DEFAULT_WAIT);
     // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
 
