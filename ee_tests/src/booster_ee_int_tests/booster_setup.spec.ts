@@ -95,6 +95,9 @@ describe('Creating new quickstart in OSIO', () => {
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
+    // Close Che Tab window
+    await browser.close();
+
     // Switch back to the OSIO browser window
     await browser.switchTo().window(handles[0]);
   });
