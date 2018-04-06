@@ -31,7 +31,8 @@ describe('Verify the completion of the build pipeline:', () => {
   });
 
   it('Login, test deployment to stage and run, logout', async () => {
-    let spaceName = support.currentSpaceName();
+    // let spaceName = support.currentSpaceName();
+    let spaceName = 'sunil';
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
@@ -51,6 +52,14 @@ describe('Verify the completion of the build pipeline:', () => {
 
     /* Find the pipeline name */
     await pipelineByName.untilClickable(support.LONGER_WAIT);
+
+    /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
+    support.debug('Verifying that the promote dialog is opened');
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+
+    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
+    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
+    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
     /* Verify stage and run icons are present - these will timeout and cause failures if missing */
     await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
@@ -74,6 +83,7 @@ describe('Verify the completion of the build pipeline:', () => {
     let invokeButton = new ui.Button($('#invoke'), 'Invoke Button');
     let stageOutput = await element(by.id('greeting-result')).getText();
     await invokeButton.clickWhenReady(support.DEFAULT_WAIT);
+    browser.sleep(3000);
     support.writeScreenshot('target/screenshots/boosterstageSuccessful.png');
 
     /* Save the the output of the application into a variable */
