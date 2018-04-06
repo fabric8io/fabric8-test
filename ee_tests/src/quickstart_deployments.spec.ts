@@ -2,6 +2,7 @@ import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBro
 import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from './support';
+import { BuildStatus } from './support/build_status';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
@@ -12,7 +13,6 @@ import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
-import { BuildStatus } from '..';
 
 describe('Main E2E test suite', () => {
   let dashboardPage: MainDashboardPage;
