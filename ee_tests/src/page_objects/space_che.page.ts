@@ -18,7 +18,8 @@ export class SpaceChePage extends AppPage {
 
   /* 'Open' button for existing codebase */
   codebaseOpenButton (githubUsername: string, spaceName: string): ElementFinder {
-    let xpathString = './/codebases-item//*[contains(@class,\'list-pf-title\')]//*[contains(text(),\'' + githubUsername + '\/' + spaceName + '\')]/../../..//button[contains(text(),\'Open\')]';
+  //  let xpathString = './/codebases-item//*[contains(@class,\'list-pf-title\')]//*[contains(text(),\'' + githubUsername + '\/' + spaceName + '\')]/../../..//button[contains(text(),\'Open\')]';
+    let xpathString = './/button[contains(text(),\'Open\')]';
     return new Button (element (by.xpath(xpathString)), 'Open codebase button');
   }
 

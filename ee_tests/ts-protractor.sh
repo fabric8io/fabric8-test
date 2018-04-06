@@ -68,6 +68,7 @@ main() {
     --params.login.password="$OSIO_PASSWORD" \
     --params.github.username="$GITHUB_USERNAME" \
     --params.github.password="$GITHUB_PASSWORD" \
+    --params.oso.username="$OSO_USERNAME" \
     --params.target.url="$OSIO_URL" \
     --params.quickstart.name="$QUICKSTART_NAME" \
     --params.release.strategy="$RELEASE_STRATEGY" \

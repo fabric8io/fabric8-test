@@ -104,7 +104,9 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.close();
 
     // Switch back to the OSIO browser window
+    await browser.close();
     await browser.switchTo().window(handles[0]);
+
   });
 
   function windowCount(count: number) {

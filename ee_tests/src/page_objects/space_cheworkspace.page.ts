@@ -27,6 +27,8 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Bottom Panel run tab */
   bottomPanelRunTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
+  bottomPanelRunTabCloseButton = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]/..//*[contains(@class,\'GDPEHSMCGHC\')]')), 'Che Bottom Panel Run Tab close button');
+  bottomPanelRunTabOKButton =  new Button (element(by.xpath('.//button[contains(@id, \'ask-dialog-ok\')]')), 'RUn tab OK button');
 
   /* Bottom Panel terminal tab */
   bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
@@ -54,11 +56,7 @@ export class SpaceCheWorkspacePage extends AppPage {
   navigateToFile = new Button (element(by.xpath('.//*[@id=\'topmenu\/Assistant\/Navigate to File\']')), 'Navigate to file');
   navigateFileName = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-navigateToFile-fileName\']')));
   navigateFilePopupPanel = element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel\')]'));
-
-
   fileNameTab = new Button (element(by.xpath('.//*[contains(@class=\'GDPEHSMCDDC GDPEHSMCGK\')]')), 'File tab');
-//  <div class="GDPEHSMCDDC GDPEHSMCGK" style="color: rgb(255, 255, 255);">HttpApplicationTest</div>
-
 
   /* Che menu - Run, Test, Junit commands */
   cheMenuRun = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/runGroup-true\']')), 'Run menu');
@@ -74,6 +72,7 @@ export class SpaceCheWorkspacePage extends AppPage {
   /* Che menu edit */
   cheMenuEdit = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/editGroup-true\']')), 'Edit in file');
   cheEditFind = new Button (element(by.xpath('.//*[@id=\'topmenu/Edit/Find\']')), 'Find in edit');
+  cheEditFormat = new Button (element(by.xpath('.//*[@id=\'topmenu/Edit/Format\']')), 'Format file');
 
   /* Che find and replace */
   cheFindTextToReplace = new TextInput (element(by.xpath('.//input[@class=\'textViewFindInput\']')), 'Che text to find');
@@ -89,12 +88,16 @@ export class SpaceCheWorkspacePage extends AppPage {
   cheProfileGroup = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/profileGroup-true\']')), 'Profile group button');
   chePreferences = new Button (element(by.xpath('.//*[@id=\'topmenu\/Profile\/Preferences\']')), 'Preferences button');
   chePreferencesEditor = new Button (element(by.xpath('.//*[@id=\'gwt-debug-projectWizard-Editor\']')), 'Preferences Editor button');
-  chePreferencesAutopairParen = new Button (element(by.xpath('.//*[@id=\'gwt-uid-157\']')), 'Preferences Auto Paren');
-  chePreferencesAutoBraces = new Button (element(by.xpath('.//*[@id=\'gwt-uid-156\']')), 'Preferences Auto Braces');
-  chePreferencesAutopairParenParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-167\']\/..')), 'Preferences Auto Paren');
-  chePreferencesAutoBracesParent = new Button (element(by.xpath('.//*[@id=\'gwt-uid-166\']\/..')), 'Preferences Auto Braces');
+  chePreferencesAutopairParen = new Button (element(by.xpath('(.//*[contains (@class,\'gwt-CheckBox\')])[6]')), 'Preferences Auto Paren');
+  chePreferencesAutoBraces = new Button (element(by.xpath('(.//*[contains (@class,\'gwt-CheckBox\')])[7]')), 'Preferences Auto Braces');
   chePreferencesStoreChanges = new Button (element(by.xpath('.//*[@id=\'window-preferences-storeChanges\']')), 'Preferences store changes button');
   chePreferencesClose = new Button (element(by.xpath('.//*[@id=\'window-preferences-close\']')), 'Preferences close button');
+
+  /* Preview link for app as deployed in Che preview */
+  previewLink (usernameGithub: string): Button {
+    let xpathString = './/a[contains (@class,\'gwt-Anchor\')][contains(text(),\'' + usernameGithub + '-che\')]';
+    return new Button (element(by.xpath(xpathString)), 'Che preview link');
+  }
 
   /* Project name as displayed in project explorer */
   recentProjectRootByName (projectName: string): ElementFinder {
@@ -102,53 +105,53 @@ export class SpaceCheWorkspacePage extends AppPage {
     return element(by.xpath(xpathString));
   }
 
-/* Locate folder/file elements in the project tree in Che */
-chePathElement (elementString: string): ElementFinder {
-  let xpathString = '(.//*[contains (@path,\'' + elementString + '\')])[1]';
-  return element(by.xpath(xpathString));
-}
+  /* Locate folder/file elements in the project tree in Che */
+  chePathElement (elementString: string): ElementFinder {
+    let xpathString = '(.//*[contains (@path,\'' + elementString + '\')])[1]';
+    return element(by.xpath(xpathString));
+  }
 
-/* And locate the folder expansion icon for folder elements in the project tree in Che */
-chePathElementIcon (elementString: string): Button {
-  let xpathString = './/*[contains (@path,\'' + elementString + '\')]//*[contains(@id,\'Layer_1\')]';
-  return new Button (element(by.xpath(xpathString)), 'Folder tree element');
-}
+  /* And locate the folder expansion icon for folder elements in the project tree in Che */
+  chePathElementIcon (elementString: string): Button {
+    let xpathString = './/*[contains (@path,\'' + elementString + '\')]//*[contains(@id,\'Layer_1\')]';
+    return new Button (element(by.xpath(xpathString)), 'Folder tree element');
+  }
 
-/* Locate folder/file element in the project tree in Che */
-cheFileName (elementString: string): Button {
-  let xpathString = './/*[contains (@class,\'GDPEHSMCNBB\')]//*[contains(text(),\'' + elementString + '\')]';
-  return new Button (element(by.xpath(xpathString)), 'The filename in Che');
-}
+  /* Locate folder/file element in the project tree in Che */
+  cheFileName (elementString: string): Button {
+    let xpathString = './/*[contains (@class,\'GDPEHSMCNBB\')]//*[contains(text(),\'' + elementString + '\')]';
+    return new Button (element(by.xpath(xpathString)), 'The filename in Che');
+  }
 
-/* Given a set of parameters where each parameter is a folder or class, "walk"
+  /* Given a set of parameters where each parameter is a folder or class, "walk"
    (traverse) project tree in Che, expanding each element */
-async walkTree (...theArgs: string[]) {
-  let xpathString: string = '';
-  for (let i = 0; i < theArgs.length; i++) {
-    xpathString += theArgs[i];
+  async walkTree (...theArgs: string[]) {
+    let xpathString: string = '';
+    for (let i = 0; i < theArgs.length; i++) {
+      xpathString += theArgs[i];
 
-    await this.chePathElementIcon(xpathString).clickWhenReady();
-    let theText = await this.chePathElement(xpathString).getText();
-    support.info ('Opened path = ' + theText);
-    await browser.sleep(5000);
+      await this.chePathElementIcon(xpathString).clickWhenReady();
+      let theText = await this.chePathElement(xpathString).getText();
+      support.info ('Opened path = ' + theText);
+      await browser.sleep(5000);
+    }
   }
-}
 
-cheWorkspaceName(): string {
-  if (!isUndefined(this.url)) {
-    return this.url.substr(this.url.lastIndexOf('/'));
-  } else {
-    return '';
+  cheWorkspaceName(): string {
+    if (!isUndefined(this.url)) {
+      return this.url.substr(this.url.lastIndexOf('/'));
+    } else {
+      return '';
+    }
   }
-}
 
-cheWorkspaceUrl(): string {
-  if (!isUndefined(this.url)) {
-    return this.url;
-  } else {
-    return '';
+  cheWorkspaceUrl(): string {
+    if (!isUndefined(this.url)) {
+      return this.url;
+    } else {
+      return '';
+    }
   }
-}
 // tslint:enable:max-line-length
 
 }
