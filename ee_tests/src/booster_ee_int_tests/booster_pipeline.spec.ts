@@ -31,8 +31,7 @@ describe('Verify the completion of the build pipeline:', () => {
   });
 
   it('Login, test deployment to stage and run, logout', async () => {
-    // let spaceName = support.currentSpaceName();
-    let spaceName = 'sunil';
+    let spaceName = support.currentSpaceName();
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
@@ -102,7 +101,6 @@ describe('Verify the completion of the build pipeline:', () => {
 
     await invokeButton.clickWhenReady(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/boosterrunSuccessful.png');
-
     browser.wait(until.textToBePresentInElementValue(
       element(by.id('greeting-result')), expectedOutput), support.DEFAULT_WAIT);
 
