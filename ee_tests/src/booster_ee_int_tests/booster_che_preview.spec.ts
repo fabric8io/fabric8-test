@@ -20,18 +20,18 @@ let globalSpacePipelinePage: SpacePipelinePage;
 const SRCFILENAME: string = 'HttpApplication.java';
 
 /* Text used to verify operation of deployed app, before and after the app is modified */
-const EXPECTED_TEXT_AFTER_SEND = 'Howdee, World';
-const EXPECTED_TEXT_AFTER_RECEIVED = 'Howdee, Howdee, World!';
-const EXPECTED_SUCCESS_TEXT = 'Succeeded in deploying verticle';  // TODO - Need unique string for each booster
+const EXPECTED_TEXT_SEND = 'World';
+const EXPECTED_TEXT_RECEIVED = 'Hello, World!';
+const EXPECTED_SUCCESS_TEXT = (
+  new Quickstart(browser.params.quickstart.name)
+).runtime.quickstartStartedTerminal;
 
 // tslint:disable:max-line-length
 
 /* This test performs these steps:
-   - Execute the quickstart/booster through the Che run menu, verify output from the deployed app
-   - Update the source of the quickstart/booster
-   - Execute the quickstart/booster through the Che run menu, verify output from the deployed app   */
+   - Execute the quickstart/booster through the Che run menu, verify output from the deployed app  */
 
-describe('Modify the project source code in Che:', () => {
+describe('Verify the Che preview URL for a deployed app:', () => {
   let dashboardPage: MainDashboardPage;
 
   beforeEach(async () => {
@@ -45,10 +45,10 @@ describe('Modify the project source code in Che:', () => {
     await dashboardPage.logout();
   });
 
-  it('Login, edit code in Che, logout', async () => {
-    support.info('Che edit test starting now...');
+  it('Login, run in Che, verify URL, logout', async () => {
+    support.info('Che preview URL test starting now...');
 
-    /* Part 1 - Run the app, verify the deployed app performs as expected */
+    /* Run the app, verify the deployed app performs as expected */
 
     /* Open the codebase page and the workspace in Che */
     await support.openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
@@ -71,56 +71,12 @@ describe('Modify the project source code in Che:', () => {
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
 
-    /* Locate the file in the project tree */
-    try {
-      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(), '\/src', '\/main', '\/java', '\/io', '\/openshift', '\/booster');
-      await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(SRCFILENAME)), support.DEFAULT_WAIT);
-    } catch (e) {
-      support.info('Exception in Che project directory tree = ' + e);
-  }
-
-    /* Modify the deployed app source code */
-    let theText = await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).getText();
-    support.info ('filename = ' + theText);
-    await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).clickWhenReady();
-
-    /* Right click on file name */
-    await browser.actions().click(spaceCheWorkSpacePage.cheFileName(SRCFILENAME), protractor.Button.RIGHT).perform();
-
-    /* Open the file edit menu */
-    await spaceCheWorkSpacePage.cheContextMenuEditFile.clickWhenReady();
-
-    /* Disable param and braces - to avoid introducing extra characters */
-    await support.changePreferences(spaceCheWorkSpacePage, 'disable');
-
-    /* Replace the file contents */
-    try {
-      await spaceCheWorkSpacePage.cheText.clickWhenReady(support.LONG_WAIT);
-      await spaceCheWorkSpacePage.cheText.sendKeys('text was', Key.CONTROL, 'a', Key.NULL, support.FILETEXT);
-      await spaceCheWorkSpacePage.cheMenuEdit.clickWhenReady(support.LONG_WAIT);
-      await spaceCheWorkSpacePage.cheEditFormat.clickWhenReady(support.LONG_WAIT);
-    } catch (e) {
-     support.info('Exception in writing to file in Che = ' + e);
-    }
-
-    /* Re-enable preferences */
-    await support.changePreferences(spaceCheWorkSpacePage, 'enable');
-    support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + support.currentSpaceName() + '.png');
-
-    /* Close the editor window and select the project in the project tree */
-    await browser.switchTo().window(handles[1]);
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    projectInCheTree.clickWhenReady();
-
-    /* Part 3 - Run the app, verify the deployed app performs as expected */
-
-    /* Run the project - verify the output from the deployed (in Che preview) service endpoint */
     /* Run the project - verify the output from the deployed (in Che preview) serviceendpoint */
     await support.runBooster(spaceCheWorkSpacePage, EXPECTED_SUCCESS_TEXT);
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support. invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username, 'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
+    await support.invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username, 'pre_edit', EXPECTED_TEXT_SEND, EXPECTED_TEXT_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
     await browser.close();

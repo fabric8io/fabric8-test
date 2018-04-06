@@ -64,6 +64,7 @@ let conf: Config = {
         'src/booster_ee_int_tests/booster_run_project.spec.js',
         'src/booster_ee_int_tests/booster_debug_project.spec.js',
         'src/booster_ee_int_tests/booster_junit_tests.spec.js',
+        'src/booster_ee_int_tests/booster_che_preview.spec.js',
         'src/booster_ee_int_tests/booster_modify_src.spec.js',
         'src/booster_ee_int_tests/booster_cleanup.spec.js'
       ],
