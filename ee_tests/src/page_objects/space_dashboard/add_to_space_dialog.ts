@@ -184,8 +184,8 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
 
   newImportExperienceButton = new ui.Button(
-    this.element(by.xpath('//*[contains(text(),\'New Import Experience\')]')),
-    'New Import Experience'
+    this.element(by.xpath('//*[contains(text(),\'Try out the new Launcher experience\')]')),
+    'Try out the new Launcher experience'
   );
 
   constructor(element: ElementFinder) {
@@ -244,17 +244,18 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await support.writeScreenshot('target/screenshots/launcher-pipeline-' + name + '.png');
     await launcher.releaseStrategyContinueButton.clickWhenReady();
 
-    await launcher.loginAndAuthorizeButton.clickWhenReady();
     // BEGIN: Workaround for the Github login
-    support.info('Github Login workaround');
-    let ghLogin = new TextInput($('#login_field'), 'GH Login');
-    let ghPasswd = new TextInput($('#password'), 'GH Password');
-    await ghLogin.ready();
-    await ghPasswd.ready();
-    await ghLogin.sendKeys(browser.params.github.username);
-    await ghPasswd.sendKeys(browser.params.github.password);
-    await ghPasswd.submit();
+    // await launcher.loginAndAuthorizeButton.clickWhenReady();
+    // support.info('Github Login workaround');
+    // let ghLogin = new TextInput($('#login_field'), 'GH Login');
+    // let ghPasswd = new TextInput($('#password'), 'GH Password');
+    // await ghLogin.ready();
+    // await ghPasswd.ready();
+    // await ghLogin.sendKeys(browser.params.github.username);
+    // await ghPasswd.sendKeys(browser.params.github.password);
+    // await ghPasswd.submit();
     // END: Workaround for the Github login
+
     await launcher.selectGithubOrganization(browser.params.github.username);
     await launcher.ghRepositoryText.sendKeys(name);
     await support.writeScreenshot('target/screenshots/launcher-git-provider-' + name + '.png');
@@ -278,7 +279,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
 
     await support.writeScreenshot('target/screenshots/launcher-new-project-booster-created-' + name + '.png');
 
-    await setupApplicationPage.returnToMyDashboardButton.clickWhenReady();
+    await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
 
 }
@@ -288,19 +289,24 @@ export class NewImportExperienceDialog extends ui.BaseElement {
   projectName = new TextInput($('#projectName'), 'Application Name');
 
   createNewApplicationCard = new BaseElement(
-    element(by.xpath('//*[contains(text(),\'Create a New Application\')]' +
+    element(by.xpath('//*[contains(text(),\'Create a new codebase\')]' +
       '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
-    'Create a New Application'
+    'Create a new codebase'
   );
 
   importExistingApplicationCard = new BaseElement(
-    element(by.xpath('//*[contains(text(),\'Import Existing Application\')]' +
+    element(by.xpath('//*[contains(text(),\'Import an existing codebase\')]' +
       '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
-    'Import Existing Application'
+    'Import an existing codebase'
+  );
+
+  continueButton = new Button(
+    element(by.xpath('//*[contains(text(),\'Continue\')]')),
+    'Continue'
   );
 
   constructor(elementFinder: ElementFinder) {
-    super(elementFinder, 'New Import Experience Dialog');
+    super(elementFinder, 'Try out the new Launcher experience');
   }
 
   async ready() {
@@ -310,6 +316,7 @@ export class NewImportExperienceDialog extends ui.BaseElement {
 
   async selectCreateNewApplication(): Promise<LauncherSection> {
     await this.createNewApplicationCard.clickWhenReady();
+    await this.continueButton.clickWhenReady();
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
 }

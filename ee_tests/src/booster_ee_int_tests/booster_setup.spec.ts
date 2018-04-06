@@ -47,7 +47,12 @@ describe('Creating new quickstart in OSIO', () => {
     // Create a space
     let spaceName = support.newSpaceName();
     globalSpaceName = spaceName;
-    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+    let spaceDashboardPage;
+    if (browser.params.ngx_launcher.enabled === 'true') {
+      spaceDashboardPage = await dashboardPage.createNewSpaceByLauncher(spaceName);
+    } else {
+      spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+    }
 
     // Create a QuickStart
     let quickstart = new Quickstart(browser.params.quickstart.name);

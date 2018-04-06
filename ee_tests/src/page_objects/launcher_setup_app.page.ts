@@ -5,9 +5,11 @@ import { Button, Checkbox, TextInput } from '../ui';
 
 export class LauncherSetupAppPage extends BaseElement {
 
-  returnToMyDashboardButton = new Button(
-    this.element(by.xpath('//*[contains(@class,\'f8launcher-continue\')]//a')),
-    'Return to My Dashboard'
+  viewNewApplicationButton = new Button(
+    this.element(by.xpath('//*[contains(@class,\'f8launcher-continue\')]' +
+      '//*[contains(text(),\'View New Application\')]'
+    )),
+    'View New Application'
   );
 
   async ready() {
