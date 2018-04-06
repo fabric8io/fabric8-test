@@ -210,13 +210,13 @@ describe('Creating new Che workspace and edit in OSIO', () => {
       let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
       if (autoParanEnabled) {
         support.info('Disabling enabled auto pair paren');
-        await spaceCheWorkSpacePage.chePreferencesAutopairParenParent.clickWhenReady();
+        await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
       }
       let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
       if (autoBracesEnabled) {
         support.info('Disabling enabled auto braces');
-        await spaceCheWorkSpacePage.chePreferencesAutoBracesParent.clickWhenReady();
+        await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
       }
     }
@@ -225,13 +225,13 @@ describe('Creating new Che workspace and edit in OSIO', () => {
         let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
         if (!autoParanEnabled) {
           support.info('Enabling disabled auto pair paren');
-          await spaceCheWorkSpacePage.chePreferencesAutopairParenParent.clickWhenReady();
+          await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
           await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
         }
         let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
         if (!autoBracesEnabled) {
           support.info('Enabling disabled auto braces');
-          await spaceCheWorkSpacePage.chePreferencesAutoBracesParent.clickWhenReady();
+          await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
           await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
         }
       }

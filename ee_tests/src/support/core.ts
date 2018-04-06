@@ -1,7 +1,11 @@
-import { browser, Key } from 'protractor';
+// tslint:disable:max-line-length
+import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
+// tslint:ensable:max-line-length
 import * as fs from 'fs';
+import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
+import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 
 export enum BrowserMode {
   Phone,
@@ -16,6 +20,62 @@ export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
 export const LONGEST_WAIT = minutes(30);
+
+
+/* Modified test source code */
+export const FILETEXT: string = `package io.openshift.booster;
+
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.StaticHandler;
+
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+
+public class HttpApplication extends AbstractVerticle {
+
+  static final String template = "Howdee, %s!";
+
+  @Override
+  public void start(Future<Void> future) {
+    // Create a router object.
+    Router router = Router.router(vertx);
+
+    router.get("/api/greeting").handler(this::greeting);
+    router.get("/*").handler(StaticHandler.create());
+
+    // Create the HTTP server and pass the "accept" method to the request handler.
+    vertx
+        .createHttpServer()
+        .requestHandler(router::accept)
+        .listen(
+            // Retrieve the port from the configuration, default to 8080.
+            config().getInteger("http.port", 8080), ar -> {
+              if (ar.succeeded()) {
+                System.out.println("Server started on port " + ar.result().actualPort());
+              }
+              future.handle(ar.mapEmpty());
+            });
+
+  }
+
+  private void greeting(RoutingContext rc) {
+    String name = rc.request().getParam("name");
+    if (name == null) {
+      name = "World";
+    }
+
+    JsonObject response = new JsonObject()
+        .put("content", String.format(template, name));
+
+    rc.response()
+        .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
+        .end(response.encodePrettily());
+  }
+}
+`;
 
 export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
@@ -295,3 +355,133 @@ export function windowCount(count: number) {
     });
   };
 }
+
+/* A new browser window is opened - switch to that new window now */
+export async function switchToWindow (windowTotal: number, windowId: number) {
+  let handles = await browser.getAllWindowHandles();
+  support.debug('Number of browser tabs before = ' + handles.length);
+  await browser.wait(support.windowCount(windowTotal), support.DEFAULT_WAIT);
+  handles = await browser.getAllWindowHandles();
+  support.debug('Number of browser tabs after = ' + handles.length);
+
+  /* Switch to the new browser window */
+  await browser.switchTo().window(handles[windowId]);
+}
+
+/* Open the selected codebases page */
+export async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) {
+  let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
+  await browser.get(theUrl);
+}
+
+/* Enable or disable automatic parans and braces in Che editor */
+export async function changePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage, theChange: string) {
+
+  try {
+
+   /* Disable the auro parens/braces before importing the modified test source code */
+   await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferencesEditor.clickWhenReady();
+   await spaceCheWorkSpacePage.chePreferencesAutopairParen.untilPresent(support.LONGEST_WAIT);
+   await spaceCheWorkSpacePage.chePreferencesAutoBraces.untilPresent(support.LONGEST_WAIT);
+
+   if (theChange === 'disable') {
+     let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
+     if (autoParanEnabled) {
+       support.info('Disabling enabled auto pair paren');
+       await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
+       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+     }
+     let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
+     if (autoBracesEnabled) {
+       support.info('Disabling enabled auto braces');
+       await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
+       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+     }
+   }
+
+   if (theChange === 'enable') {
+       let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
+       if (!autoParanEnabled) {
+         support.info('Enabling disabled auto pair paren');
+         await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
+         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+       }
+       let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
+       if (!autoBracesEnabled) {
+         support.info('Enabling disabled auto braces');
+         await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
+         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
+       }
+     }
+
+   await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
+
+   // TO DO - verify preferences dialog is closed
+   await browser.wait (until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
+
+   } catch (e) {
+     support.info('Exception in Che Preferences saving values Panel = ' + e);
+   }
+
+ }
+
+  // tslint:disable:max-line-length
+
+  /* Run the booster by means of the Che run menu */
+  export async function runBooster (spaceCheWorkSpacePage: SpaceCheWorkspacePage, expectedString: string) {
+    try {
+
+        /* Remote sites (Brno) are experiencing issues where the run button is active before
+           the project os fully downloaded - and run is attempted before the pom file is present */
+        try {
+            await spaceCheWorkSpacePage.walkTree(support.currentSpaceName());
+            await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('pom.xml')), support.DEFAULT_WAIT);
+          } catch (e) {
+            support.info('Exception in Che project directory tree = ' + e);
+        }
+
+      await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
+      await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
+      await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
+      await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, expectedString), support.LONGER_WAIT);
+      let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
+      support.info('Output from run = ' + textStr);
+      expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+    } catch (e) {
+      support.info('Exception running booster = ' + e);
+    }
+  }
+
+  /* Access the deployed app's Che preview endpoint, send text, invoke the app, return the output */
+  export async function invokeApp (boosterEndpointPage: BoosterEndpoint, mySpaceCheWorkSpacePage: SpaceCheWorkspacePage, username: string, screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+
+    /// TODO - The link to the deployed app is present before the endpoint is available
+    await browser.sleep(10000);
+    await mySpaceCheWorkSpacePage.previewLink(username).clickWhenReady();
+
+    /* A new browser window is opened when Che opens the app endpoint */
+    let handles = await browser.getAllWindowHandles();
+    await browser.wait(windowCount(handles.length), support.DEFAULT_WAIT);
+    handles = await browser.getAllWindowHandles();
+    support.debug('Number of browser tabs after opening Che app window = ' + handles.length);
+
+    /* Switch to the newly opened Che deployed endpoint browser window */
+    await browser.switchTo().window(handles[handles.length - 1]);
+
+    /* Invoke the deployed app */
+    try {
+      await boosterEndpointPage.nameText.clickWhenReady();
+      await boosterEndpointPage.nameText.sendKeys(inputString);
+      support.writeScreenshot('target/screenshots/che_edit_' + screenshotName + '_' + support.currentSpaceName() + '.png');
+      await boosterEndpointPage.invokeButton.clickWhenReady(support.LONGEST_WAIT);
+
+      let expectedOutput = '{"content":"' + expectedString + '"}';
+      await browser.wait(until.textToBePresentInElement(boosterEndpointPage.stageOutput, expectedOutput), support.DEFAULT_WAIT);
+      expect(await boosterEndpointPage.stageOutput.getText()).toBe(expectedOutput);
+      } catch (e) {
+        support.info('Exception invoking staged app = ' + e);
+    }
+  }
+
