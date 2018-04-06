@@ -53,7 +53,11 @@ Page layout
     devProcessPulldown = new TextInput($('#developmentProcess'));
 
     noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
-    cancelImportsButton = new Button($('#cancelImportsButton'), 'Cancel');
+    cancelCreateAppButton = new Button(
+      element(by.xpath('//*[contains(@class,\'f8launcher-container_close\')]' +
+      '//*[contains(@class,\'pficon-close\')]')),
+      'Cancel'
+    );
 
     /* Are any warning displayed? */
     alertToastElements = element(by.xpath('.//*[contains(@class, \'toast-pf\')]'));
@@ -158,7 +162,7 @@ Page layout
     await this.devProcessPulldown.enterText('Scenario Driven Planning');
 
     await this.createSpaceButton.clickWhenReady();
-    await this.cancelImportsButton.clickWhenReady();
+    await this.cancelCreateAppButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
     support.debug('... current url:', url);
