@@ -1,4 +1,4 @@
-import { browser, by, ExpectedConditions as until, $ } from 'protractor';
+import { browser, by, ExpectedConditions as until, $, element } from 'protractor';
 import * as support from '../support';
 
 import { AppPage } from './app.page';
@@ -64,6 +64,8 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
+    await browser.wait(until.presenceOf(
+        element(by.cssContainingText('fabric8-cleanup', 'Your OpenShift.io environment has been erased!'))));
 
     /* Accessing the alert box is failing randomly. Commenting out this code for the
        short term as the entire reset env feature may be removed in the near future */
