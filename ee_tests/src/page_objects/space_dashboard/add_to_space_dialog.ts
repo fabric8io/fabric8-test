@@ -184,8 +184,8 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
 
   newImportExperienceButton = new ui.Button(
-    this.element(by.xpath('//*[contains(text(),\'Try out the new Launcher experience\')]')),
-    'Try out the new Launcher experience'
+    this.element(by.xpath('//*[contains(text(),\'Try our new Getting Started experience\')]')),
+    'Try our new Getting Started experience'
   );
 
   constructor(element: ElementFinder) {
