@@ -18,7 +18,7 @@ let reporter = new HtmlScreenshotReporter({
 // Full protractor configuration file reference could be found here:
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 let conf: Config = {
-  
+
     framework: 'jasmine2',
 
     jasmineNodeOpts: {
@@ -48,10 +48,21 @@ let conf: Config = {
     suites: {
 
       smoketest: ['src/quickstart_deployments.spec.js'],
-      chetest: ['src/quickstart_che.spec.js'],
-      analyticstest: ['src/quickstart_analytic.spec.js'],
+      all: ['src/*.spec.js'],
+      local: ['src/local/*.js'],
 
       launchertest: ['src/launcher.spec.js'],
+      logintest: ['src/quickstart_login.spec.js'],
+
+      // these tests were already merged into smoke test
+      // TODO https://github.com/fabric8io/fabric8-test/issues/579
+      chetest: ['src/quickstart_che.spec.js'],
+      analyticstest: ['src/quickstart_analytic.spec.js'],
+      quickstartTest: ['src/quickstart_analytic.spec.js'],
+
+      // TODO https://github.com/fabric8io/fabric8-test/issues/578
+      boosterTest: ['src/booster_pipeline.spec.js'],
+      importTest: ['src/workshop-import-to-space.spec.js'],
 
       boostersuite: [
         'src/booster_ee_int_tests/booster_setup.spec.js',
@@ -73,16 +84,7 @@ let conf: Config = {
       boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
       boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
 
-      logintest: ['src/quickstart_login.spec.js'],
-      boosterTest: ['src/booster_pipeline.spec.js'],
-      importTest: ['src/workshop-import-to-space.spec.js'],
-      quickstartTest: ['src/quickstart_analytic.spec.js'],
-      runTest: ['src/quickstart_deployments.spec.js'],
-      deployTest: ['src/quickstart_deployments.spec.js'],
-      chequickstartTest: ['src/quickstart_che.spec.js'],
-      allTest: ['src/quickstart_analytic.spec.js', 'src/quickstart_pipeline.spec.js', 'src/quickstart_che.spec.js'],
-      specs: ['src/*.spec.js'],
-      local: ['src/local/*.js']
+
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
