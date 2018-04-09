@@ -24,6 +24,10 @@ const EXPECTED_TEXT_AFTER_SEND = 'Howdee, World';
 const EXPECTED_TEXT_AFTER_RECEIVED = 'Howdee, Howdee, World!';
 const EXPECTED_SUCCESS_TEXT = 'Succeeded in deploying verticle';  // TODO - Need unique string for each booster
 
+const REDEPLOY_TEXT_1 = 'Changes detected - recompiling the module';
+const REDEPLOY_TEXT_2 = 'INFO: Redeploying';
+const REDEPLOY_TEXT_3 = 'INFO: Redeployment done';
+
 // tslint:disable:max-line-length
 
 /* This test performs these steps:
@@ -67,9 +71,13 @@ describe('Modify the project source code in Che:', () => {
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
 
     /* Find the project in the project tree */
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
+
+    await support.runBooster(spaceCheWorkSpacePage, EXPECTED_SUCCESS_TEXT);
+    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    projectInCheTree.clickWhenReady();
 
     /* Locate the file in the project tree */
     try {
@@ -109,18 +117,24 @@ describe('Modify the project source code in Che:', () => {
 
     /* Close the editor window and select the project in the project tree */
     await browser.switchTo().window(handles[1]);
+
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines,
+      REDEPLOY_TEXT_1), support.LONGER_WAIT);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines,
+      REDEPLOY_TEXT_2), support.LONGER_WAIT);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines,
+      REDEPLOY_TEXT_3), support.LONGER_WAIT);
+
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     projectInCheTree.clickWhenReady();
 
-    /* Part 3 - Run the app, verify the deployed app performs as expected */
-
-    /* Run the project - verify the output from the deployed (in Che preview) service endpoint */
+    /* Run the app, verify the deployed app performs as expected */
     /* Run the project - verify the output from the deployed (in Che preview) serviceendpoint */
-    await support.runBooster(spaceCheWorkSpacePage, EXPECTED_SUCCESS_TEXT);
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support. invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username, 'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
+    await support. invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
+      'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
     await browser.close();
