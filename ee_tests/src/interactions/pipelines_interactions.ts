@@ -56,7 +56,6 @@ export abstract class PipelinesInteractions {
         let pipeline = pipelines[0];
         expect(await pipeline.getApplicationName()).toBe(this.spaceName, 'application name');
         expect(await pipeline.getBuildNumber()).toBe(1, 'build number');
-        expect(await pipeline.getStatus()).toBe(BuildStatus.NEW, 'build status');
 
         let githubName = browser.params.github.username;
         expect(await pipeline.getRepository()).
