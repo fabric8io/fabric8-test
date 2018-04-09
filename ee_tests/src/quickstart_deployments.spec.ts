@@ -37,6 +37,20 @@ describe('Main E2E test suite', () => {
     index++;
   });
 
+  afterAll(async () => {
+    support.info('--- After all ---');
+    if (browser.params.reset.environment === 'true') {
+      support.info('--- Reset environmet ---');
+      let userProfilePage = await dashboardPage.gotoUserProfile();
+      let editProfilePage = await userProfilePage.gotoEditProfile();
+      let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
+      await cleanupEnvPage.cleanup(browser.params.login.user);
+
+      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    }
+  });
+
   it('Login', async () => {
     support.info('--- Login ---');
     let login = new support.LoginInteraction();

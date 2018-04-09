@@ -4,6 +4,9 @@ export OSIO_USERNAME="${OSIO_USERNAME:-}"
 export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 export OSIO_URL="${OSIO_URL:-https://openshift.io}"
 
+# openshift credentials
+export OSO_USERNAME="${OSO_USERNAME:-$OSIO_USERNAME}"
+
 # github
 export GITHUB_USERNAME="${GITHUB_USERNAME:-}"
 export GITHUB_USERNAME="${GITHUB_PASSWORD:-}"
@@ -13,6 +16,7 @@ export TEST_SUITE="${TEST_SUITE:-runTest}"
 export RELEASE_STRATEGY="${RELEASE_STRATEGY:-releaseStageApproveAndPromote}"
 export QUICKSTART_NAME="${QUICKSTART_NAME:-'vertxHttp'}"
 export NGX_LAUNCHER_ENABLED="${NGX_LAUNCHER_ENABLED:-true}"
+export RESET_ENVIRONMENT="${RESET_ENVIRONMENT:-true}"
 
 
 
