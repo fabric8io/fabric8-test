@@ -2,8 +2,8 @@ src/**/*.js
 src/**/*.js.map
 src/local/*
 !src/local/local.template.ts
-protractorTS.config.js
-protractorTS.config.js.map
+protractor.config.js
+protractor.config.js.map
 index.js
 index.js.map
 .vscode/
