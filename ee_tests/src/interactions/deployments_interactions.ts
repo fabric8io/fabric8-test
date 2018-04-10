@@ -37,8 +37,8 @@ export abstract class DeploymentsInteractions {
     public async showDeploymentsScreen() {
         support.info('Verifying deployments page');
         await this.spacePipelinePage.spaceHeader.deploymentsOption.clickWhenReady();
-        await browser.sleep(5000);
         this.spaceDeploymentsPage = new SpaceDeploymentsPage();
+        await this.spaceDeploymentsPage.open();
     }
 
     public async verifyApplication(): Promise<DeployedApplication> {

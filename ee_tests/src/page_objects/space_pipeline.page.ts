@@ -81,6 +81,12 @@ export class SpacePipelinePage extends AppPage {
     'Open In OpenShift Console'
   );
 
+  async ready() {
+    await super.ready();
+    // https://github.com/fabric8io/fabric8-test/issues/592
+    await browser.sleep(5000);
+  }
+
   async openOpenshiftConsole(): Promise<OsoDashboardPage> {
     support.info('Opening OpenShift Console...');
     await this.osoLinksDropdown.clickWhenReady();
@@ -114,6 +120,8 @@ export class SpacePipelinePage extends AppPage {
   }
 
   public async getPipelines(): Promise<PipelineDetails[]> {
+    await browser.wait(until.presenceOf(element(by.className('pipeline-list'))));
+
     let elementsFinders: ElementFinder[] = await element.all(by.className('pipeline-list'));
     let pipelines = await elementsFinders.map(finder => new PipelineDetails(finder));
     return Promise.resolve(pipelines);

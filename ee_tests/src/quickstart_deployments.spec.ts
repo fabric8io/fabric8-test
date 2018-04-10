@@ -6,17 +6,16 @@ import { BuildStatus } from './support/build_status';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
-import { LandingPage } from './page_objects/landing.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
+import { PageOpenMode } from '..';
+import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
 describe('Main E2E test suite', () => {
-  let dashboardPage: MainDashboardPage;
-  let spaceDashboardPage: SpaceDashboardPage;
+
   let quickstart: Quickstart;
   let strategy: string;
   let spaceName: string;
@@ -41,6 +40,7 @@ describe('Main E2E test suite', () => {
     support.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
       support.info('--- Reset environmet ---');
+      let dashboardPage = new MainDashboardPage();
       let userProfilePage = await dashboardPage.gotoUserProfile();
       let editProfilePage = await userProfilePage.gotoEditProfile();
       let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
@@ -54,40 +54,34 @@ describe('Main E2E test suite', () => {
   it('Login', async () => {
     support.info('--- Login ---');
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
   });
 
   it('Create space ', async () => {
     support.info('--- Create space ' + spaceName + ' ---');
-    spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+    await new MainDashboardPage().createNewSpace(spaceName);
   });
 
   it('Create quickstart', async () => {
     support.info('--- Create quickstart ' + quickstart.name + ' ---');
+    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
+    await spaceDashboardPage.open();
+
     let wizard = await spaceDashboardPage.addToSpace();
     await wizard.newQuickstartProject({ project: quickstart.name, strategy });
-    await spaceDashboardPage.ready();
   });
 
   it('Run che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
+    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
+    await spaceDashboardPage.open();
+
     await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
-    /* A new browser window is opened when Che opens - switch to that new window now */
-    let handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs before = ' + handles.length);
-
-    /* TODO - Need to create a query to look for/wait for the 2nd browser window and remove the sleep statement */
-    await browser.sleep(60000);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/che_workspace_parta_' + spaceName + '.png');
-
-    /* Switch to the Che browser window */
-    await browser.switchTo().window(handles[1]);
+    await support.switchToWindow(2, 1);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
@@ -100,20 +94,12 @@ describe('Main E2E test suite', () => {
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */
-    await browser.switchTo().window(handles[0]);
+    await support.switchToWindow(2, 0);
   });
 
   it('Run pipeline', async () => {
     support.info('--- Run pipeline ---');
-    await browser.sleep(5000);
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.recentSpaceByName(spaceName).click();
-    await dashboardPage.ready();
-    await browser.sleep(5000);
-
-    let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName, spaceDashboardPage);
+    let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName);
     await pipelineInteractions.showPipelinesScreen();
     let pipeline = await pipelineInteractions.verifyBuildInfo();
     await pipelineInteractions.waitToFinish(pipeline);
@@ -122,9 +108,6 @@ describe('Main E2E test suite', () => {
 
   it('Verify deployment', async () => {
     support.info('--- Verify deployments ---');
-    await browser.sleep(5000);
-
-    // tslint:disable-next-line:max-line-length
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractions.create(strategy, spaceName);
     await deploymentsInteractions.showDeploymentsScreen();
     let application = await deploymentsInteractions.verifyApplication();
@@ -134,12 +117,9 @@ describe('Main E2E test suite', () => {
 
   it('Verify dashboard', async () => {
     support.info('--- Verify dashboard ---');
-
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.recentSpaceByName(spaceName).click();
-    await dashboardPage.ready();
+    let mainDashboard = new MainDashboardPage();
+    await mainDashboard.open(PageOpenMode.UseMenu);
+    let spaceDashboardPage = await mainDashboard.openSpace(spaceName);
 
     let codebasesCard = await spaceDashboardPage.getCodebaseCard();
     expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');

@@ -3,8 +3,8 @@ import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { SpaceDashboardPage, PipelineStage } from '../page_objects';
-import { Button } from '../ui';
+import { SpaceDashboardPage, PipelineStage, MainDashboardPage } from '../page_objects';
+import { PageOpenMode } from '../..';
 
 // TODO - Error conditions to trap (copied from original code)
 // 1) Jenkins build log - find errors if the test fails
@@ -17,34 +17,35 @@ export abstract class PipelinesInteractions {
 
     protected spacePipelinePage: SpacePipelinePage;
 
-    protected spaceDashboardPage: SpaceDashboardPage;
-
-    public static create(strategy: string, spaceName: string, spaceDashboardPage: SpaceDashboardPage) {
+    public static create(strategy: string, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
-            return new PipelinesInteractionsReleaseStrategy(spaceName, spaceDashboardPage);
+            return new PipelinesInteractionsReleaseStrategy(spaceName);
         }
 
         if (strategy === ReleaseStrategy.STAGE) {
-            return new PipelinesInteractionsStageStrategy(spaceName, spaceDashboardPage);
+            return new PipelinesInteractionsStageStrategy(spaceName);
         }
 
         if (strategy === ReleaseStrategy.RUN) {
-            return new PipelinesInteractionsRunStrategy(spaceName, spaceDashboardPage);
+            return new PipelinesInteractionsRunStrategy(spaceName);
         }
         throw 'Unknown release strategy: ' + strategy;
     }
 
-    protected constructor(spaceName: string, spaceDashboardPage: SpaceDashboardPage) {
+    protected constructor(spaceName: string) {
         this.spaceName = spaceName;
         this.spacePipelinePage = new SpacePipelinePage();
-        this.spaceDashboardPage = spaceDashboardPage;
     }
 
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
+        let mainDashboard = new MainDashboardPage();
+        await mainDashboard.open(PageOpenMode.UseMenu);
 
-        await this.spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
-        await browser.sleep(5000);
+        let spaceDashboardPage = await mainDashboard.openSpace(this.spaceName);
+        this.spacePipelinePage = await spaceDashboardPage.getPipelinesCard().then(async function(card) {
+            return await card.openPipelinesPage();
+        });
     }
 
     public async verifyBuildInfo(): Promise<PipelineDetails> {
@@ -67,6 +68,8 @@ export abstract class PipelinesInteractions {
         support.info('Waiting for pipeline to finish');
 
         await this.waitToFinishInternal(pipeline);
+        support.info('Pipeline is finished');
+
         expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
     }
 
