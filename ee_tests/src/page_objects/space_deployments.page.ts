@@ -133,7 +133,6 @@ export class DeployedApplicationEnvironment {
 
     if (!isDisplayed) {
       this.displayAdditionalInfo();
-      await browser.sleep(5000);
     }
 
     isDisplayed = await this.finder.element(by.id('pod_status_Running')).$('span').isDisplayed();

@@ -127,6 +127,20 @@ Page layout
     }
     // tslint:enable:max-line-length
 
+  async openUsingMenu() {
+    await this.header.recentItemsDropdown.clickWhenReady();
+    await this.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
+  }
+
+  async openSpace(spaceName: string): Promise<SpaceDashboardPage> {
+    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))));
+    await element(by.className('home-space-list-result')).element(by.cssContainingText('a', spaceName)).click();
+
+    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    await spaceDashboard.open();
+    return Promise.resolve(spaceDashboard);
+  }
+
   /* Helper function to create a new OSIO space */
   async createNewSpace(spaceName: string): Promise<SpaceDashboardPage> {
     await this.header.recentItemsDropdown.createSpaceItem.select();

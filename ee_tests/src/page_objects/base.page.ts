@@ -5,7 +5,8 @@ import * as support from '../support';
 
 export enum PageOpenMode {
   AlreadyOpened,
-  RefreshBrowser
+  RefreshBrowser,
+  UseMenu
 }
 
 export abstract class BasePage {
@@ -30,16 +31,23 @@ export abstract class BasePage {
   async ready() {
   }
 
-
   async open(mode: PageOpenMode =  PageOpenMode.AlreadyOpened): Promise<BasePage> {
 
     if (mode === PageOpenMode.RefreshBrowser) {
       await this.openInBrowser();
     }
 
+    if (mode === PageOpenMode.UseMenu) {
+      await this.openUsingMenu();
+    }
+
     await this.ready();
     this.log('Opened');
     return this;
+  }
+
+  async openUsingMenu() {
+    // leave it to dependent classes if they want to implement this
   }
 
   async openInBrowser() {

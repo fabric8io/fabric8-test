@@ -13,6 +13,7 @@ import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { TextInput, Button, BaseElement } from '../ui';
 import { stat } from 'fs';
 import { DeployedApplication } from './space_deployments.page';
+import { SpacePipelinePage, MainDashboardPage, PageOpenMode } from '.';
 
 /*
 Page layout
@@ -242,8 +243,8 @@ export class SpaceDashboardPage extends SpaceTabPage {
   }
 
   async ready() {
-    await super.ready()
-    await this.addToSpaceButton.ready()
+    await super.ready();
+    await this.addToSpaceButton.ready();
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {
@@ -363,6 +364,13 @@ export class PipelinesCard extends SpaceDashboardPageCard {
     super(finder, 'Pipelines');
   }
 
+  public async openPipelinesPage(): Promise<SpacePipelinePage> {
+    await this.element(by.cssContainingText('a', 'Pipelines')).click();
+    let page = new SpacePipelinePage();
+    await page.open();
+    return Promise.resolve(page);
+  }
+
   public async getCount(): Promise<number> {
     return this.getCountByID('spacehome-pipelines-badge', 'pipelines');
   }
@@ -409,8 +417,9 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
   }
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
-    // tslint:disable-next-line:max-line-length
-    let elementsFinders: ElementFinder[] = await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
+    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))));
+    let elementsFinders: ElementFinder[] = 
+      await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));
     return Promise.all(applications);
   }
