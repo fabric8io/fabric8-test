@@ -24,18 +24,15 @@ export const LONGEST_WAIT = minutes(30);
 
 /* Modified test source code */
 export const FILETEXT: string = `package io.openshift.booster;
-
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
-
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 
 public class HttpApplication extends AbstractVerticle {
-
   static final String template = "Howdee, %s!";
 
   @Override
@@ -58,7 +55,6 @@ public class HttpApplication extends AbstractVerticle {
               }
               future.handle(ar.mapEmpty());
             });
-
   }
 
   private void greeting(RoutingContext rc) {
@@ -66,10 +62,8 @@ public class HttpApplication extends AbstractVerticle {
     if (name == null) {
       name = "World";
     }
-
     JsonObject response = new JsonObject()
         .put("content", String.format(template, name));
-
     rc.response()
         .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
         .end(response.encodePrettily());
@@ -374,58 +368,24 @@ export async function openCodebasesPage (osioUrl: string, userName: string, spac
   await browser.get(theUrl);
 }
 
-/* Enable or disable automatic parans and braces in Che editor */
-export async function changePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage, theChange: string) {
+/* Toggle automatic parans and braces in Che editor */
+export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
 
-  try {
+  await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
+  await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
+  await spaceCheWorkSpacePage.chePreferencesEditor.clickWhenReady();
+  await spaceCheWorkSpacePage.chePreferencesAutopairParen.untilPresent(support.LONGEST_WAIT);
+  await spaceCheWorkSpacePage.chePreferencesAutoBraces.untilPresent(support.LONGEST_WAIT);
 
-   /* Disable the auro parens/braces before importing the modified test source code */
-   await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
-   await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
-   await spaceCheWorkSpacePage.chePreferencesEditor.clickWhenReady();
-   await spaceCheWorkSpacePage.chePreferencesAutopairParen.untilPresent(support.LONGEST_WAIT);
-   await spaceCheWorkSpacePage.chePreferencesAutoBraces.untilPresent(support.LONGEST_WAIT);
+  await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
+  await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
+  await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
 
-   if (theChange === 'disable') {
-     let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
-     if (autoParanEnabled) {
-       support.info('Disabling enabled auto pair paren');
-       await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
-       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
-     }
-     let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
-     if (autoBracesEnabled) {
-       support.info('Disabling enabled auto braces');
-       await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
-       await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
-     }
-   }
+  await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
 
-   if (theChange === 'enable') {
-       let autoParanEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutopairParen.isSelected();
-       if (!autoParanEnabled) {
-         support.info('Enabling disabled auto pair paren');
-         await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
-         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
-       }
-       let autoBracesEnabled: boolean = await spaceCheWorkSpacePage.chePreferencesAutoBraces.isSelected();
-       if (!autoBracesEnabled) {
-         support.info('Enabling disabled auto braces');
-         await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
-         await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
-       }
-     }
-
-   await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
-
-   // TO DO - verify preferences dialog is closed
-   await browser.wait (until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
-
-   } catch (e) {
-     support.info('Exception in Che Preferences saving values Panel = ' + e);
-   }
-
- }
+  // TO DO - verify preferences dialog is closed
+  await browser.wait (until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
+}
 
   // tslint:disable:max-line-length
 
