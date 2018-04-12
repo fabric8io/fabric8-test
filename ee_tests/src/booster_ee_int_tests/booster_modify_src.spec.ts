@@ -79,6 +79,9 @@ describe('Modify the project source code in Che:', () => {
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     projectInCheTree.clickWhenReady();
 
+    /* Disable param and braces - to avoid introducing extra characters */
+    await support.togglePreferences(spaceCheWorkSpacePage);
+
     /* Locate the file in the project tree */
     try {
       await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(), '\/src', '\/main', '\/java', '\/io', '\/openshift', '\/booster');
@@ -98,9 +101,6 @@ describe('Modify the project source code in Che:', () => {
     /* Open the file edit menu */
     await spaceCheWorkSpacePage.cheContextMenuEditFile.clickWhenReady();
 
-    /* Disable param and braces - to avoid introducing extra characters */
-    await support.changePreferences(spaceCheWorkSpacePage, 'disable');
-
     /* Replace the file contents */
     try {
       await spaceCheWorkSpacePage.cheText.clickWhenReady(support.LONG_WAIT);
@@ -110,9 +110,6 @@ describe('Modify the project source code in Che:', () => {
     } catch (e) {
      support.info('Exception in writing to file in Che = ' + e);
     }
-
-    /* Re-enable preferences */
-    await support.changePreferences(spaceCheWorkSpacePage, 'enable');
     support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + support.currentSpaceName() + '.png');
 
     /* Close the editor window and select the project in the project tree */
@@ -144,6 +141,9 @@ describe('Modify the project source code in Che:', () => {
     await browser.switchTo().window(handles[handles.length - 1]);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
+
+    /* Re-enable preferences */
+    await support.togglePreferences(spaceCheWorkSpacePage);
     await browser.close();
 
     /* Switch back to the OSIO window */

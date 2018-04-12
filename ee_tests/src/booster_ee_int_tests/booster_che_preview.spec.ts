@@ -68,7 +68,7 @@ describe('Verify the Che preview URL for a deployed app:', () => {
 
     /* Find the project in the project tree */
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    await projectInCheTree.untilPresent(support.DEFAULT_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
 
     /* Run the project - verify the output from the deployed (in Che preview) serviceendpoint */

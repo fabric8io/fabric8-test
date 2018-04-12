@@ -20,15 +20,15 @@ export class SpaceCheWorkspacePage extends AppPage {
   mainMenuDebugButton = new Button ($('#gwt-debug-command_toolbar-button_Debug'), 'Che Main Menu Debug Button');
 
   /* Main Menu Panel run button run selection */
-  mainMenuRunButtonRunSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
+  mainMenuRunButtonRunSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GEU2T3BBPCB\')]')), 'Che Main Menu Run Selection Button');
 
   /* Main Menu Panel debug button debug selection */
   mainMenuDebugButtonDebugSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
 
   /* Bottom Panel run tab */
-  bottomPanelRunTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
-  bottomPanelRunTabCloseButton = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'run\')]/..//*[contains(@class,\'GDPEHSMCGHC\')]')), 'Che Bottom Panel Run Tab close button');
-  bottomPanelRunTabOKButton =  new Button (element(by.xpath('.//button[contains(@id, \'ask-dialog-ok\')]')), 'RUn tab OK button');
+  bottomPanelRunTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
+  bottomPanelRunTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Run Tab close button');
+  bottomPanelRunTabOKButton =  new Button (element(by.xpath('.//button[contains(@id, \'ask-dialog-ok\')]')), 'Run tab OK button');
 
   /* Bottom Panel terminal tab */
   bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
@@ -101,7 +101,7 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Project name as displayed in project explorer */
   recentProjectRootByName (projectName: string): ElementFinder {
-    let xpathString = './/*[@id=\'gwt-debug-projectTree\']/div[contains(@name,\'' + projectName + '\')]';
+    let xpathString = './/*[@id=\'gwt-debug-projectTree\']//div[contains(@name,\'' + projectName + '\')]';
     return element(by.xpath(xpathString));
   }
 
@@ -119,7 +119,8 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Locate folder/file element in the project tree in Che */
   cheFileName (elementString: string): Button {
-    let xpathString = './/*[contains (@class,\'GDPEHSMCNBB\')]//*[contains(text(),\'' + elementString + '\')]';
+//    let xpathString = './/*[contains (@class,\'GDPEHSMCNBB\')]//*[contains(text(),\'' + elementString + '\')]';
+    let xpathString = './/*[contains (@class,\'GEU2T3BBEEB\')]//*[contains(text(),\'' + elementString + '\')]';
     return new Button (element(by.xpath(xpathString)), 'The filename in Che');
   }
 
