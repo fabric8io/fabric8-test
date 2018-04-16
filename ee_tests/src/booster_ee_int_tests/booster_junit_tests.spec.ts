@@ -62,6 +62,9 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
 
     /* Open the terminal window and execute maven install command */
     await spaceCheWorkSpacePage.bottomPanelTerminalTab.clickWhenReady();
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelTerminal, 'user@workspace'), support.DEFAULT_WAIT);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelTerminal, 'projects'), support.DEFAULT_WAIT);
+
     await support.printTerminal(spaceCheWorkSpacePage, 'cd ' + support.currentSpaceName());
     await support.printTerminal(spaceCheWorkSpacePage, 'mvn clean install'); // -Popenshift,openshift-it');
     await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelTerminal, 'BUILD SUCCESS'), support.LONGER_WAIT);
@@ -80,7 +83,6 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
     spaceCheWorkSpacePage.cheMenuRun.clickWhenReady();
     spaceCheWorkSpacePage.cheMenuRunTest.clickWhenReady();
     spaceCheWorkSpacePage.cheMenuRunTestJunit.clickWhenReady();
-
     await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.debugInfoPanel, 'Total tests run: 2, Failures: 0, Skips: 0'), support.LONGER_WAIT);
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Failures: 0');
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Skips: 0');
