@@ -31,8 +31,7 @@ export class SpaceCheWorkspacePage extends AppPage {
   bottomPanelRunTabOKButton =  new Button (element(by.xpath('.//button[contains(@id, \'ask-dialog-ok\')]')), 'Run tab OK button');
 
   /* Bottom Panel terminal tab */
-  bottomPanelTerminalTab = new Button (element(by.xpath('.//*[contains(@class,\'GDPEHSMCKHC\')][contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
-
+  bottomPanelTerminalTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Terminal\')]')), 'Che Bottom Panel Terminal Tab');
   bottomPanelTerminal = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-Terminal\']')));
 
   /* Bottom Panel title */
