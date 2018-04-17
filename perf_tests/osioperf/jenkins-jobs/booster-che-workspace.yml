@@ -66,8 +66,32 @@
            description: A hatch rate (number of users to spawn per second).
        - string:
            name: DURATION
-           default: '900'
+           default: '1800'
            description: A number of seconds for how long the load test should run.
+       - choice:
+           name: LAUNCHER_MISSION
+           choices:
+              - 'REST API Level 0'
+              - 'Externalized Configuration'
+              - 'Health Check'
+       - choice:
+           name: LAUNCHER_RUNTIME
+           choices:
+              - 'Eclipse Vert.x'
+              - 'Spring Boot'
+              - 'WildFly Swarm'
+       - choice:
+           name: LAUNCHER_STRATEGY
+           choices:
+              - 'Rollout to Run'
+              - 'Integration Test'
+              - 'Rollout to Stage'
+       - string:
+           name: SPACE_PREFIX
+           default: 'bchw'
+       - string:
+           name: QUICKSTART_STARTED_TERMINAL
+           default: 'Succeeded in deploying verticle'
        - bool:
            name: ZABBIX_REPORT_ENABLED
            default: false
@@ -115,6 +139,6 @@
     disabled: false
     publishers:
        - archive:
-           artifacts: '**/*.log,**/*.png,**/*.csv,**/*.html'
+           artifacts: '**/*.log,**/*.png,**/*.csv,**/*.html,**/slave-*'
            allow-empty: 'true'
            fingerprint: true

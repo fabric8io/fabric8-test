@@ -42,7 +42,7 @@
 # A file where USERS_PROPERTIES environmental variable is supposed to be set.
 # This file is copied to locust master/slaves to be sources by BASH before executing the locust itself.
 # So the locust process get's passed the USERS_PROPERTIES variable.
-export ENV_FILE=/tmp/osioperftest.users.env
+#export ENV_FILE=/tmp/osioperftest.users.env
 
 # 'true' if a report will be sent to a Zabbix instance
 #export ZABBIX_REPORT_ENABLED=false
@@ -57,7 +57,14 @@ export ENV_FILE=/tmp/osioperftest.users.env
 #export ZABBIX_HOST=qa_openshift.io
 
 # A number of seconds for how long the test should run
-#export DURATION=900
+#export DURATION=1800
+
+#export LAUNCHER_MISSION="REST API Level 0"
+#export LAUNCHER_RUNTIME="Eclipse Vert.x"
+#export LAUNCHER_STRATEGY="Rollout to Run"
+#export QUICKSTART_STARTED_TERMINAL="Succeeded in deploying verticle"
+
+export SPACE_PREFIX="bchw"
 
 # GitHub user name
 #export GH_USER=osioperftest
