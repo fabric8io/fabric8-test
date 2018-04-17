@@ -14,6 +14,8 @@ fi
 if [ "$RUN_LOCALLY" != "true" ]; then
 	echo "#!/bin/bash
 export USERS_PROPERTIES=\"0=0\"
+export GH_USER=\"\"
+export GH_TOKEN=\"\"
 " > $ENV_FILE-master;
 
 	USER_COUNT=`cat $USERS_PROPERTIES_FILE | wc -l`
@@ -44,11 +46,16 @@ export USERS_PROPERTIES=\"0=0\"
 	for s in $(seq 1 $SLAVES); do
 		echo "#!/bin/bash
 export USERS_PROPERTIES=\"$(cat $USERS_PROPERTIES_FILE-slave-$s)\"
+export GH_USER=\"$GH_USER\"
+export GH_TOKEN=\"$GH_TOKEN\"
 " > $ENV_FILE-slave-$s;
+		echo ""
 	done
 else
 	echo "#!/bin/bash
 export USERS_PROPERTIES=\"`cat $USERS_PROPERTIES_FILE`\"
+export GH_USER=\"$GH_USER\"
+export GH_TOKEN=\"$GH_TOKEN\"
 " > $ENV_FILE-master;
 fi
 
@@ -82,6 +89,9 @@ if [ "$RUN_LOCALLY" != "true" ]; then
 
 	echo " Download locust reports from Locust master"
 	$COMMON/_gather-locust-reports.sh
+
+	echo " Download files from slaves"
+	$COMMON/_gather-files-from-slaves.sh
 else
 	$COMMON/__stop-locust-master-standalone.sh TERM
 	./_clean-chromedriver.sh
