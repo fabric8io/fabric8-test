@@ -16,9 +16,16 @@ import { info } from '../support';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
+let quickstart: Quickstart;
+let quickstartTestFile: string;
 
 describe('Run the project\'s Junit tests from the Che menu:', () => {
   let dashboardPage: MainDashboardPage;
+
+  beforeAll(async () => {
+    support.info('--- Before all ---');
+    quickstart = new Quickstart(browser.params.quickstart.name);
+  });
 
   beforeEach(async () => {
     await support.desktopTestSetup();
@@ -73,20 +80,21 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
 
     /* Run the Junit tests */
     await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(), '\/src', '\/test', '\/java', '\/io', '\/openshift', '\/booster');
-    await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('HttpApplicationTest.java')), support.DEFAULT_WAIT);
+    await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(quickstart.testFileName)), support.DEFAULT_WAIT);
 
-    let theText = await spaceCheWorkSpacePage.cheFileName('HttpApplicationTest.java').getText();
+    let theText = await spaceCheWorkSpacePage.cheFileName(quickstart.testFileName).getText();
     support.info ('filename = ' + theText);
-    await spaceCheWorkSpacePage.cheFileName('HttpApplicationTest.java').clickWhenReady();
+    await spaceCheWorkSpacePage.cheFileName(quickstart.testFileName).clickWhenReady();
 
     // Run the junit test
     spaceCheWorkSpacePage.cheMenuRun.clickWhenReady();
     spaceCheWorkSpacePage.cheMenuRunTest.clickWhenReady();
     spaceCheWorkSpacePage.cheMenuRunTestJunit.clickWhenReady();
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.debugInfoPanel, 'Total tests run: 2, Failures: 0, Skips: 0'), support.LONGER_WAIT);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.debugInfoPanel, 'Total tests run: '), support.LONGER_WAIT);
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Failures: 0');
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Skips: 0');
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).not.toContain('Total tests run: 0');
+    await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Total tests run: ' + quickstart.junitTestCount);
     support.writeScreenshot('target/screenshots/che_workspace_partd_' + support.currentSpaceName() + '.png');
 
     /* Switch back to the OSIO browser window */
