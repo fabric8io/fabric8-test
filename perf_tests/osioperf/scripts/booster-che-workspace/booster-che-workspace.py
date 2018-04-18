@@ -441,11 +441,12 @@ class UserScenario(TaskSet):
                         "//*[contains(text(),'Authorize openshiftio')]"
                     )
                     target_element.click()
-                    target_element = self._wait_for_clickable_element(
-                        driver,
-                        By.ID,
-                        "ghOrg"
-                    )
+
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.ID,
+                    "ghOrg"
+                )
 
                 select = Select(target_element)
                 select.select_by_visible_text(githubUsername)
