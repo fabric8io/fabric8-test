@@ -16,10 +16,11 @@ if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
     docker rm -f fabric8-test
 fi
 
-# Run and setup Docker image 
+# Run and setup Docker image
 docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL  \
-          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
+          -e OSO_USERNAME -e GITHUB_USERNAME -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY \
+          -e RESET_ENVIRONMENT -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
           -t -v $(pwd)/dist:/dist:Z fabric8-test:latest
 
 # Exec EE tests
