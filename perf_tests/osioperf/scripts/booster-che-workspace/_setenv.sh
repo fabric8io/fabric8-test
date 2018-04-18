@@ -42,7 +42,7 @@
 # A file where USERS_PROPERTIES environmental variable is supposed to be set.
 # This file is copied to locust master/slaves to be sources by BASH before executing the locust itself.
 # So the locust process get's passed the USERS_PROPERTIES variable.
-#export ENV_FILE=/tmp/osioperftest.users.env
+export ENV_FILE=/tmp/osioperftest.users.env
 
 # 'true' if a report will be sent to a Zabbix instance
 #export ZABBIX_REPORT_ENABLED=false
