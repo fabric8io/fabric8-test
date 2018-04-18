@@ -25,6 +25,10 @@ RUN set -ex \
     gpg --import "/gpg/${key}.gpg" ; \
   done
 
+# activate EPEL repository, necessary for libappindicator-gtk3 (used by Chrome)
+RUN curl http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+      -o epel.rpm && rpm -ivh epel.rpm
+
 # install chrome
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN yum  --setopt tsflags='nodocs' -y update && \
@@ -65,5 +69,5 @@ COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called
 RUN npm --unsafe-perm install
 
-# copy all files 
+# copy all files
 COPY . .
