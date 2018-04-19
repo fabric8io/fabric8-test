@@ -17,7 +17,6 @@ import * as ui from '../ui';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
-const SRCFILENAME: string = 'HttpApplication.java';
 
 /* Text used to verify operation of deployed app, before and after the app is modified */
 const EXPECTED_TEXT_SEND = 'World';
