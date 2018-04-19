@@ -28,8 +28,8 @@ describe('Creating new quickstart in OSIO', () => {
     // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
     support.writeScreenshot('target/screenshots/pipeline_analytic_' + globalSpaceName + '.png');
     support.writePageSource('target/screenshots/pipeline_analytic_' + globalSpaceName + '.html');
-    // support.info('\n ============ End of test reached, logging out ============ \n');
-    // await dashboardPage.logout();
+    support.info('\n ============ End of test reached, logging out ============ \n');
+    await dashboardPage.logout();
   });
 
   /* Simple test - accept all defaults for new quickstarts */
