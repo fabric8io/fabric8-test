@@ -1,14 +1,17 @@
 FROM centos:7
 ENV LANG=en_US.utf8
-ENV NODE_VERSION 6.11.4
+ENV NODE_VERSION 9.8.0
 ENV DISPLAY=:99
 
 WORKDIR /opt/fabric8-test/
-ENTRYPOINT ["./docker-entrypoint.sh"]
+#ENTRYPOINT ["./docker-entrypoint.sh"]
 VOLUME /dist
 
 # load the gpg keys
 COPY gpg /gpg
+COPY passwd /root/.vnc/passwd
+
+EXPOSE 5999
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -37,7 +40,7 @@ RUN yum  --setopt tsflags='nodocs' -y update && \
       xorg-x11-server-Xvfb xfonts-100dpi libXfont GConf2 \
       xorg-x11-fonts-75dpi xfonts-scalable xfonts-cyrillic \
       ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc \
-      xorg-x11-server-Xvfb google-chrome-stable
+      xorg-x11-server-Xvfb google-chrome-stable tigervnc-server
 
 # install node
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
