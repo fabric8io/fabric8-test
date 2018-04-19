@@ -4,7 +4,6 @@ ENV NODE_VERSION 6.11.4
 ENV DISPLAY=:99
 
 WORKDIR /opt/fabric8-test/
-ENTRYPOINT ["./docker-entrypoint.sh"]
 VOLUME /dist
 
 # load the gpg keys
