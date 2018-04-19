@@ -23,6 +23,9 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e RESET_ENVIRONMENT -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
           -t -v $(pwd)/dist:/dist:Z fabric8-test:latest
 
+# Start Xvfb
+docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+
 # Exec EE tests
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee target/theLog.txt
 

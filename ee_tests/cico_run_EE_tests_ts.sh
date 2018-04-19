@@ -83,6 +83,9 @@ docker run --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
+# Start Xvfb
+docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+
 # Exec EE tests
 docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
 
