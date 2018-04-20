@@ -16,7 +16,7 @@ import { Button } from './ui';
 import { PageOpenMode } from '..';
 import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
-describe('Main E2E test suite', () => {
+describe('smoketest', () => {
 
   let quickstart: Quickstart;
   let strategy: string;
@@ -53,13 +53,13 @@ describe('Main E2E test suite', () => {
     }
   });
 
-  it('Login', async () => {
+  it('login', async () => {
     support.info('--- Login ---');
     let login = new support.LoginInteraction();
     await login.run();
   });
 
-  it('Check feature level', async () => {
+  it('feature_level', async () => {
     let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
 
@@ -79,20 +79,20 @@ describe('Main E2E test suite', () => {
     }
   });
 
-  it('Create space ', async () => {
+  it('create_space', async () => {
     support.info('--- Create space ' + spaceName + ' ---');
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
     await accountHomeInteractions.createSpace(spaceName);
   });
 
-  it('Create quickstart', async () => {
+  it('create_quickstart', async () => {
     support.info('--- Create quickstart ' + quickstart.name + ' ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.createQuickstart(quickstart.name, strategy);
   });
 
-  it('Run che', async () => {
+  it('run_che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
@@ -117,7 +117,7 @@ describe('Main E2E test suite', () => {
     await support.switchToWindow(2, 0);
   });
 
-  it('Run pipeline', async () => {
+  it('pipeline', async () => {
     support.info('--- Run pipeline ---');
     let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName);
     await pipelineInteractions.showPipelinesScreen();
@@ -126,7 +126,7 @@ describe('Main E2E test suite', () => {
     await pipelineInteractions.verifyBuildStages(pipeline);
   });
 
-  it('Verify deployment', async () => {
+  it('deployments', async () => {
     support.info('--- Verify deployments ---');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.showDeploymentsScreen();
@@ -134,7 +134,7 @@ describe('Main E2E test suite', () => {
     await deploymentsInteractions.verifyResourceUsage();
   });
 
-  it('Verify dashboard', async () => {
+  it('dashboard', async () => {
     support.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
