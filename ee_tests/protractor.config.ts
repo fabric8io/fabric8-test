@@ -1,18 +1,36 @@
 import { Config, browser } from 'protractor';
 import { SpecReporter } from 'jasmine-spec-reporter';
-import * as failFast from 'protractor-fail-fast';
+import * as failFast from 'protractor-fail-fast'; 
+import * as VideoReporter from 'protractor-video-reporter';
 
 // NOTE: weird import as documented in
 // https://github.com/Xotabu4/jasmine-protractor-matchers
 import ProtractorMatchers = require('jasmine-protractor-matchers');
 import HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
-let reporter = new HtmlScreenshotReporter({
+let screenshotReporter = new HtmlScreenshotReporter({
   dest: 'target/screenshots',
-  filename: 'my-report.html',
+  filename: 'f8-test-report.html',
   reportOnlyFailedSpecs: false,
   captureOnlyFailedSpecs: false,
   inlineImages: true
+});
+
+let consoleReporter = new SpecReporter({
+  spec: {
+    displayStacktrace: true,
+    displayDuration: true
+  },
+  summary: {
+    displayDuration: true
+  }
+});
+
+// To use video capturing reporter you need to have ffmpeg installed
+let useVideoReporter = false;
+
+let videoReporter = new VideoReporter({
+  baseDirectory: 'target/videos'
 });
 
 // Full protractor configuration file reference could be found here:
@@ -101,21 +119,16 @@ let conf: Config = {
 
   // Setup the report before any tests start
   beforeLaunch: function() {
-    return new Promise(resolve => reporter.beforeLaunch(resolve));
+    return new Promise(resolve => screenshotReporter.beforeLaunch(resolve));
   },
 
   // Assign the test reporter to each running instance
   onPrepare: function() {
-    jasmine.getEnv().addReporter(reporter);
-    jasmine.getEnv().addReporter(new SpecReporter({
-      spec: {
-        displayStacktrace: true,
-        displayDuration: true
-      },
-      summary: {
-        displayDuration: true
-      }
-    }));
+    jasmine.getEnv().addReporter(screenshotReporter);
+    jasmine.getEnv().addReporter(consoleReporter);
+    if (useVideoReporter) {
+      jasmine.getEnv().addReporter(videoReporter);
+    }
 
     beforeEach(() => {
       jasmine.addMatchers(ProtractorMatchers);
@@ -124,7 +137,7 @@ let conf: Config = {
 
   // Close the report after all tests finish
   afterLaunch: function(exitCode) {
-    return new Promise(resolve => reporter.afterLaunch(resolve(exitCode)));
+    return new Promise(resolve => screenshotReporter.afterLaunch(resolve(exitCode)));
   }
 };
 

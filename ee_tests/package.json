@@ -41,14 +41,15 @@
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "@types/jasminewd2": "^2.0.3",
-    "@types/node": "^8.9.4",
+    "@types/node": "^8.10.9",
     "jasmine-protractor-matchers": "^2.0.0",
     "jasmine-spec-reporter": "^4.2.1",
-    "protractor": "^5.3.0",
+    "protractor": "^5.3.1",
     "protractor-fail-fast": "^3.1.0",
     "protractor-jasmine2-screenshot-reporter": "^0.5.0",
+    "protractor-video-reporter": "^0.3.0",
     "tslint": "^5.9.1",
-    "tslint-loader": "^3.5.0",
+    "tslint-loader": "^3.6.0",
     "typescript": "2.5.3"
   },
   "repository": {
