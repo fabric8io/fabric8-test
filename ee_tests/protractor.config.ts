@@ -88,7 +88,6 @@ let conf: Config = {
         'src/booster_ee_int_tests/booster_pipeline.spec.js',
         'src/booster_ee_int_tests/booster_trigger_cd.spec.js',
         'src/booster_ee_int_tests/booster_analytics_report.spec.js',
-        'src/quickstart_analytic.spec.js',
         'src/booster_ee_int_tests/booster_build_maven.spec.js',
         'src/booster_ee_int_tests/booster_verify_url.spec.js',
         'src/booster_ee_int_tests/booster_run_project.spec.js',

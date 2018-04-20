@@ -43,15 +43,15 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
     // TODO: implement
     support.info('Test starting now...');
 
-    openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    await support.openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
     let spaceChePage = new SpaceChePage();
 
-    spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
+    await spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
 
     /* A new browser window is opened when Che opens - switch to that new window now */
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);
-    await browser.wait(windowCount(2), support.DEFAULT_WAIT);
+    await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
     support.writeScreenshot('target/screenshots/che_workspace_parta_' + support.currentSpaceName() + '.png');
@@ -100,19 +100,5 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);
   });
-
-  function windowCount (count: number) {
-    return function () {
-        return browser.getAllWindowHandles().then(function (handles) {
-            return handles.length === count;
-        });
-    };
-  }
-
-  async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) {
-    let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
-    await browser.get(theUrl);
-    return new SpaceChePage();
-  }
 
 });

@@ -369,6 +369,12 @@ export async function openCodebasesPage (osioUrl: string, userName: string, spac
   await browser.get(theUrl);
 }
 
+/* Open the selected codebases page */
+export async function openPipelinesPage (osioUrl: string, userName: string, spaceName: string) {
+  let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create\/pipelines';
+  await browser.get(theUrl);
+}
+
 /* Toggle automatic parans and braces in Che editor */
 export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
 
