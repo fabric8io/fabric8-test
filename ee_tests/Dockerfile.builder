@@ -58,6 +58,11 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # FIXME: Firefox complains about a missing machine-id file. So I set a random one
 # echo 8636d9aff3933f48b95ad94891cd1839 > /var/lib/dbus/machine-id
 
+# Install ffmpeg for video capturing
+# RUN yum -y --setopt tsflags='nodocs' localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+# https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm \
+# && yum -y --setopt tsflags='nodocs' install ffmpeg
+
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
 RUN wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
     tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
