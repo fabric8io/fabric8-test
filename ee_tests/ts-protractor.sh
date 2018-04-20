@@ -18,6 +18,9 @@ validate_config() {
   # be gone in the future.
   export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
   export NGX_LAUNCHER_ENABLED=${NGX_LAUNCHER_ENABLED:-false}
+  export ZABBIX_ENABLED=${ZABBIX_ENABLED:-false}
+  export ZABBIX_HOST=${ZABBIX_HOST:-}
+  export ZABBIX_METRIC_PREFIX=${ZABBIX_METRIC_PREFIX:-}
   return $ret
 }
 
@@ -74,7 +77,10 @@ main() {
     --params.release.strategy="$RELEASE_STRATEGY" \
     --params.ngx_launcher.enabled="$NGX_LAUNCHER_ENABLED" \
     --params.reset.environment="$RESET_ENVIRONMENT" \
-    --params.feature.level="$FEATURE_LEVEL"
+    --params.feature.level="$FEATURE_LEVEL" \
+    --params.zabbix.enabled="$ZABBIX_ENABLED" \
+    --params.zabbix.host="$ZABBIX_HOST" \
+    --params.zabbix.metric.prefix="$ZABBIX_METRIC_PREFIX"
   return $?
 }
 

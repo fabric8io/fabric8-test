@@ -1,7 +1,8 @@
 import { Config, browser } from 'protractor';
 import { SpecReporter } from 'jasmine-spec-reporter';
-import * as failFast from 'protractor-fail-fast'; 
+import * as failFast from 'protractor-fail-fast';
 import * as VideoReporter from 'protractor-video-reporter';
+import { ZabbixReporter } from './src/support/zabbix_reporter';
 
 // NOTE: weird import as documented in
 // https://github.com/Xotabu4/jasmine-protractor-matchers
@@ -53,7 +54,7 @@ let conf: Config = {
     directConnect: process.env.DIRECT_CONNECTION === 'true',
     restartBrowserBetweenTests: false,
     useAllAngular2AppRoots: true,
-    getPageTimeout: 1 * 60 *1000, // must load within 1 min
+    getPageTimeout: 1 * 60 * 1000, // must load within 1 min
     seleniumAddress: 'http://localhost:4444/wd/hub',
 
     // Ref: https://github.com/angular/protractor/tree/master/exampleTypescript/asyncAwait
@@ -127,6 +128,10 @@ let conf: Config = {
     jasmine.getEnv().addReporter(consoleReporter);
     if (useVideoReporter) {
       jasmine.getEnv().addReporter(videoReporter);
+    }
+
+    if (browser.params.zabbix.enabled === 'true') {
+      jasmine.getEnv().addReporter(new ZabbixReporter());
     }
 
     beforeEach(() => {

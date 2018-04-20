@@ -7,6 +7,8 @@
 # $5 = quickstart name
 # $6 = release strategy
 # $7 = feature level
+# $8 = enable zabbix reporting
+# $9 = zabbix host
 
 # Define default variables
 
@@ -27,6 +29,10 @@ RELEASE_STRATEGY=${6:-$DEFAULT_RELEASE_STRATEGY}
 
 DEFAULT_FEATURE_LEVEL="released"
 FEATURE_LEVEL=${7:-$DEFAULT_FEATURE_LEVEL}
+
+ZABBIX_ENABLED=${8:-"true"}
+
+ZABBIX_HOST=${9:-"unknown"}
 
 # Do not reveal secrets
 set +x
@@ -80,11 +86,15 @@ export QUICKSTART_NAME=$QUICKSTART_NAME
 export RELEASE_STRATEGY=$RELEASE_STRATEGY
 export RESET_ENVIRONMENT="true"
 export FEATURE_LEVEL=$FEATURE_LEVEL
+export ZABBIX_ENABLED=$ZABBIX_ENABLED
+export ZABBIX_HOST=$ZABBIX_HOST
+export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
 
 docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
           -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e FEATURE_LEVEL -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
-          -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME -e RESET_ENVIRONMENT \
+          -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME -e RESET_ENVIRONMENT \ 
+          -e ZABBIX_ENABLED=$ZABBIX_ENABLED -e ZABBIX_HOST=$ZABBIX_HOST -e ZABBIX_METRIC_PREFIX=$ZABBIX_METRIC_PREFIX \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
@@ -114,9 +124,11 @@ docker exec fabric8-test chmod 600 password_file
 docker exec fabric8-test chown root password_file
 docker exec fabric8-test ls -l password_file
 docker exec fabric8-test ls -l ./target/screenshots
+docker exec fabric8-test ls -l ./target/zabbix
 
 docker exec fabric8-test mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
 docker exec fabric8-test bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+docker exec fabric8-test bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 exit $RTN_CODE
