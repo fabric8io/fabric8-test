@@ -84,6 +84,21 @@ The following steps are performed in sequence and a time to finish is measured f
  * (`removed`) Click on the tree-dots-space-menu, click on the `Remove Space` button, click on the `Remove` button and wait for the `Create Space` button to be clickable.
 
 ## How to run the tests locally
+
+### Prerequisities
+Chrome or [Chromium browser](https://www.chromium.org/Home) with headless feature and [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) needs to be installed where it is run (for Fedora/RHEL/CentOS):
+```
+$ sudo yum install chromium chromium-headless chromedriver
+```
+
+[Locust tool](https://docs.locust.io/en/stable/installation.html) needs to be installed (`pip install locustio`), as well.
+```
+$ locust -V    
+[2018-04-23 16:19:13,971] localhost.localdomain/INFO/stdout: Locust 0.8.1
+[2018-04-23 16:19:13,971] localhost.localdomain/INFO/stdout:
+```
+
+### Run the test
 By default the load test executed by Locust tool runs in a distributed mode, i.e. uses remote access
 to the Master and Slave nodes via SSH to start Locust process on those nodes to load the tested system
 from a different places.
