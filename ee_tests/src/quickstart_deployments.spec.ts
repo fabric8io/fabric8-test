@@ -5,7 +5,7 @@ import * as support from './support';
 import { BuildStatus } from './support/build_status';
 import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
-import { DeploymentsInteractions } from './interactions/deployments_interactions';
+import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
@@ -114,10 +114,9 @@ describe('Main E2E test suite', () => {
 
   it('Verify deployment', async () => {
     support.info('--- Verify deployments ---');
-    let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractions.create(strategy, spaceName);
+    let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.showDeploymentsScreen();
-    let application = await deploymentsInteractions.verifyApplication();
-    await deploymentsInteractions.verifyEnvironments(application);
+    await deploymentsInteractions.verifyApplication();
     await deploymentsInteractions.verifyResourceUsage();
   });
 
