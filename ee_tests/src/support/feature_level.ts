@@ -27,6 +27,22 @@ export class FeatureLevelUtils {
       return this.getByString(checkedValue);
     }
 
+    public static isReleased(): boolean {
+        return this.getConfiguredFeatureLevel() === FeatureLevel.RELEASED;
+    }
+
+    public static isBeta(): boolean {
+        return this.getConfiguredFeatureLevel() === FeatureLevel.BETA;
+    }
+
+    public static isExperimental(): boolean {
+        return this.getConfiguredFeatureLevel() === FeatureLevel.EXPERIMENTAL;
+    }
+
+    public static isInternal(): boolean {
+        return this.getConfiguredFeatureLevel() === FeatureLevel.INTERNAL;
+    }
+
     private static getByString(level: string): FeatureLevel {
         if (level === 'no_pre_production' || level === FeatureLevel.RELEASED) {
             return FeatureLevel.RELEASED;

@@ -4,16 +4,19 @@ import { SpaceDeploymentsPage, DeploymentStatus, DeployedApplication} from '../p
 import { DeployedApplicationEnvironment, Environment, ResourceUsageData } from '../page_objects/space_deployments.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { ReleaseStrategy } from '../support/release_strategy';
+import { FeatureLevelUtils } from '../support/feature_level';
 
-export abstract class DeploymentsInteractions {
+export abstract class DeploymentsInteractionsFactory {
 
-    protected spaceName: string;
+    public static create(strategy: string, spaceName: string): DeploymentsInteractions {
+        if (FeatureLevelUtils.isReleased() || FeatureLevelUtils.isBeta()) {
+            return <DeploymentsInteractions>{
+                showDeploymentsScreen(): void {},
+                verifyApplication(): void {},
+                verifyResourceUsage(): void {}
+            };
+        }
 
-    protected spacePipelinePage: SpacePipelinePage;
-
-    protected spaceDeploymentsPage: SpaceDeploymentsPage;
-
-    public static create(strategy: string, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
             return new DeploymentsInteractionsReleaseStrategy(spaceName);
         }
@@ -27,8 +30,26 @@ export abstract class DeploymentsInteractions {
         }
         throw 'Unknown release strategy: ' + strategy;
     }
+}
 
-    protected constructor(spaceName: string) {
+export interface DeploymentsInteractions {
+
+    showDeploymentsScreen(): void;
+
+    verifyApplication(): void;
+
+    verifyResourceUsage(): void;
+}
+
+export abstract class AbstractDeploymentsInteractions implements DeploymentsInteractions {
+
+    protected spaceName: string;
+
+    protected spacePipelinePage: SpacePipelinePage;
+
+    protected spaceDeploymentsPage: SpaceDeploymentsPage;
+
+    public constructor(spaceName: string) {
         this.spaceName = spaceName;
         this.spacePipelinePage = new SpacePipelinePage();
         this.spaceDeploymentsPage = new SpaceDeploymentsPage();
@@ -41,17 +62,14 @@ export abstract class DeploymentsInteractions {
         await this.spaceDeploymentsPage.open();
     }
 
-    public async verifyApplication(): Promise<DeployedApplication> {
+    public async verifyApplication(): Promise<void> {
         support.info('Verifying deployed applications');
         let applications = await this.spaceDeploymentsPage.getDeployedApplications();
         expect(applications.length).toBe(1, 'number of deployed applications');
 
         let application = applications[0];
         expect(application.getName()).toBe(this.spaceName, 'application name');
-        return application;
-    }
 
-    public async verifyEnvironments(application: DeployedApplication) {
         support.info('Verifying application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(2, 'number of environments');
@@ -70,7 +88,7 @@ export abstract class DeploymentsInteractions {
     protected abstract async verifyResourceUsageInternal(data: ResourceUsageData[]): Promise<void>;
 }
 
-export class DeploymentsInteractionsReleaseStrategy extends DeploymentsInteractions {
+export class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
 
     protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
         // nothing to test here
