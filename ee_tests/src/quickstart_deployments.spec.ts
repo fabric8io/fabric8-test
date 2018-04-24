@@ -3,6 +3,7 @@ import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from './support';
 import { BuildStatus } from './support/build_status';
+import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
@@ -55,6 +56,11 @@ describe('Main E2E test suite', () => {
     support.info('--- Login ---');
     let login = new support.LoginInteraction();
     await login.run();
+  });
+
+  it('Check feature level', async () => {
+    let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
+    expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
   });
 
   it('Create space ', async () => {

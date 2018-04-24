@@ -35,6 +35,7 @@ export DEBUG="true"
 export TEST_SUITE="runTest"
 export QUICKSTART_NAME="vertxHttp"
 export RELEASE_STRATEGY="releaseStageApproveAndPromote"
+export FEATURE_LEVEL="production"
 
 npm install
 npm install -g typescript
