@@ -73,7 +73,8 @@ main() {
     --params.quickstart.name="$QUICKSTART_NAME" \
     --params.release.strategy="$RELEASE_STRATEGY" \
     --params.ngx_launcher.enabled="$NGX_LAUNCHER_ENABLED" \
-    --params.reset.environment="$RESET_ENVIRONMENT"
+    --params.reset.environment="$RESET_ENVIRONMENT" \
+    --params.feature.level="$FEATURE_LEVEL"
   return $?
 }
 

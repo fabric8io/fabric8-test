@@ -6,6 +6,7 @@
 # $4 = github username
 # $5 = quickstart name
 # $6 = release strategy
+# $7 = feature level
 
 # Define default variables
 
@@ -23,6 +24,9 @@ QUICKSTART_NAME=${5:-$DEFAULT_QUICKSTART_NAME}
 
 DEFAULT_RELEASE_STRATEGY="releaseStageApproveAndPromote"
 RELEASE_STRATEGY=${6:-$DEFAULT_RELEASE_STRATEGY}
+
+DEFAULT_FEATURE_LEVEL="production"
+FEATURE_LEVEL=${7:-$DEFAULT_FEATURE_LEVEL}
 
 # Do not reveal secrets
 set +x
@@ -75,10 +79,11 @@ export DEBUG="true"
 export QUICKSTART_NAME=$QUICKSTART_NAME
 export RELEASE_STRATEGY=$RELEASE_STRATEGY
 export RESET_ENVIRONMENT="true"
+export FEATURE_LEVEL=$FEATURE_LEVEL
 
 docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
-          -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
+          -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e FEATURE_LEVEL -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
           -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME -e RESET_ENVIRONMENT \
           -e "CI=true" -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
