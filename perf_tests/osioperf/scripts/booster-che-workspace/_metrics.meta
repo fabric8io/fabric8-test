@@ -22,7 +22,6 @@ create-quickstart-ngx;back-to-space
 che_workspace;codebases-page
 che_workspace;open-window
 che_workspace;workspace-created
-che_workspace;run-project
 pipeline;build-release-started
 pipeline;rollout-to-stage-started
 pipeline;input-required-button
