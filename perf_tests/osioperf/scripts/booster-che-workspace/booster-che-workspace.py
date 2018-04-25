@@ -771,7 +771,7 @@ class UserScenario(TaskSet):
     def runScenario(self):
 
         opts = webdriver.ChromeOptions()
-        #opts.add_argument("--headless")
+        opts.add_argument("--headless")
         opts.add_argument("--window-size=1920,1080")
         opts.add_argument("--window-position=0,0")
 
