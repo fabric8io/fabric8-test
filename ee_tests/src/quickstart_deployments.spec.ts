@@ -7,8 +7,9 @@ import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { SpaceDashboardInteractions } from './interactions/space_dashboard_interactions';
+import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
+import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
@@ -41,11 +42,8 @@ describe('Main E2E test suite', () => {
     support.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
       support.info('--- Reset environmet ---');
-      let dashboardPage = new MainDashboardPage();
-      let userProfilePage = await dashboardPage.gotoUserProfile();
-      let editProfilePage = await userProfilePage.gotoEditProfile();
-      let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-      await cleanupEnvPage.cleanup(browser.params.login.user);
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.resetEnvironment();
 
       support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
       support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
@@ -65,24 +63,22 @@ describe('Main E2E test suite', () => {
 
   it('Create space ', async () => {
     support.info('--- Create space ' + spaceName + ' ---');
-    await new MainDashboardPage().createNewSpace(spaceName);
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.createSpace(spaceName);
   });
 
   it('Create quickstart', async () => {
     support.info('--- Create quickstart ' + quickstart.name + ' ---');
-    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
-    await spaceDashboardPage.open();
-
-    let wizard = await spaceDashboardPage.addToSpace();
-    await wizard.newQuickstartProject({ project: quickstart.name, strategy });
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
   });
 
   it('Run che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
-    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
-    await spaceDashboardPage.open();
-
-    await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.openCodebasesPage();
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
@@ -122,47 +118,11 @@ describe('Main E2E test suite', () => {
 
   it('Verify dashboard', async () => {
     support.info('--- Verify dashboard ---');
-    let mainDashboard = new MainDashboardPage();
-    await mainDashboard.open(PageOpenMode.UseMenu);
-    let spaceDashboardPage = await mainDashboard.openSpace(spaceName);
-
-    let codebasesCard = await spaceDashboardPage.getCodebaseCard();
-    expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
-
-    let githubName = browser.params.github.username;
-    let codebases = await codebasesCard.getCodebases();
-    expect(codebases.length).toBe(1, 'number of codebases');
-    expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + spaceName);
-
-    let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
-    expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
-
-    let pipelinesCard = await spaceDashboardPage.getPipelinesCard();
-    expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
-
-    let pipelines = await pipelinesCard.getPipelines();
-    expect(pipelines.length).toBe(1, 'number of pipelines');
-    expect(pipelines[0].getApplication()).toBe(spaceName, 'application name on pipeline');
-    expect(pipelines[0].getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
-    expect(pipelines[0].getBuildNumber()).toBe(1, 'build number');
-
-    let deploymentsCard = await spaceDashboardPage.getDeploymentsCard();
-    // expect(await deploymentsCard.getCount()).toBe(1, 'number of deployments on page');
-
-    let applications = await deploymentsCard.getApplications();
-    expect(applications.length).toBe(1, 'number of applications');
-    expect(await applications[0].getName()).toBe(spaceName, 'deployed application name');
-    // expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-    // expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
-
-    let analyticsCard = await spaceDashboardPage.getAnalyticsCard();
-    let totalCount = await analyticsCard.getTotalDependenciesCount();
-    let analyzedCount = await analyticsCard.getAnalyzedDependenciesCount();
-    let unknownCount = await analyticsCard.getUnknownDependenciesCount();
-
-    expect(totalCount).toBeGreaterThanOrEqual(0, 'total dependencies count');
-    expect(analyzedCount).toBeGreaterThanOrEqual(0, 'total analyzed count');
-    expect(unknownCount).toBeGreaterThanOrEqual(0, 'total unknown count');
-    expect(totalCount).toBe(analyzedCount + unknownCount, 'total = analyzed + unknown');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
+    await dashboardInteractions.verifyCodebases();
+    await dashboardInteractions.verifyAnalytics();
+    await dashboardInteractions.verifyApplications();
+    await dashboardInteractions.verifyWorkItems();
   });
 });
