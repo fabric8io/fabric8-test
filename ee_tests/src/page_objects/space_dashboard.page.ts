@@ -14,6 +14,7 @@ import { TextInput, Button, BaseElement } from '../ui';
 import { stat } from 'fs';
 import { DeployedApplication } from './space_deployments.page';
 import { SpacePipelinePage, MainDashboardPage, PageOpenMode } from '.';
+import { DEFAULT_WAIT } from '../support';
 
 /*
 Page layout
@@ -417,7 +418,7 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
   }
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
-    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))));
+    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))), DEFAULT_WAIT);
     let elementsFinders: ElementFinder[] = 
       await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));

@@ -52,6 +52,17 @@ export abstract class AppPage extends BasePage {
     return page;
   }
 
+  async gotoUserSettins(): Promise<UserSettingsPage> {
+    await this.ready();
+    support.debug('... Select "Settings" menu item');
+    await this.header.profileDropdown.select('Settings');
+    support.debug('... Select "Settings" menu item - OK');
+
+    let page = new UserSettingsPage();
+    await page.open();
+    return page;
+  }
+
   async logout() {
     await this.ready();
     await browser.wait(until.invisibilityOf(this.successAlert));
@@ -85,3 +96,4 @@ export abstract class AppPage extends BasePage {
 // NOTE: imported here otherwise AppPage will not be defined when
 // UserProfilePage that inherts AppPage is created
 import { UserProfilePage } from './user_profile.page';
+import { UserSettingsPage } from './user_settings.page';

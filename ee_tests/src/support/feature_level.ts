@@ -17,14 +17,11 @@ export class FeatureLevelUtils {
     }
 
     public static async getRealFeatureLevel(): Promise<FeatureLevel> {
-      let dashboardPage = new MainDashboardPage();
-      let userProfilePage = await dashboardPage.gotoUserProfile();
-      let editProfilePage = await userProfilePage.gotoEditProfile();
-
-      let form = await element(by.cssContainingText('form', 'Features Opt-in'));
-      let checkedInput = await form.element(by.css('input:checked'));
-      let checkedValue = await checkedInput.getAttribute('value');
-      return this.getByString(checkedValue);
+        let dashboardPage = new MainDashboardPage();
+        let userSettingsPage = await dashboardPage.gotoUserSettins();
+        let featureTab = await userSettingsPage.gotoFeaturesTab();
+        let featureLevel = await featureTab.getFeatureLevel();
+        return this.getByString(featureLevel);
     }
 
     public static isReleased(): boolean {
