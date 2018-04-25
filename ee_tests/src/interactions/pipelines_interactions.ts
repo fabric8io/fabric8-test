@@ -5,6 +5,8 @@ import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeli
 import { ReleaseStrategy } from '../support/release_strategy';
 import { SpaceDashboardPage, PipelineStage, MainDashboardPage } from '../page_objects';
 import { PageOpenMode } from '../..';
+import { AccountHomeInteractionsFactory } from './account_home_interactions';
+import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 
 // TODO - Error conditions to trap (copied from original code)
 // 1) Jenkins build log - find errors if the test fails
@@ -39,13 +41,12 @@ export abstract class PipelinesInteractions {
 
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
-        let mainDashboard = new MainDashboardPage();
-        await mainDashboard.open(PageOpenMode.UseMenu);
+        let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.spaceName);
+        await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
+        await dashboardInteractions.openPipelinesPage();
 
-        let spaceDashboardPage = await mainDashboard.openSpace(this.spaceName);
-        this.spacePipelinePage = await spaceDashboardPage.getPipelinesCard().then(async function(card) {
-            return await card.openPipelinesPage();
-        });
+        this.spacePipelinePage = new SpacePipelinePage();
+        await this.spacePipelinePage.open();
     }
 
     public async verifyBuildInfo(): Promise<PipelineDetails> {
