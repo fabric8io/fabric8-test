@@ -31,6 +31,7 @@ The following steps are performed in sequence and a time to finish is measured f
 ### First time setup (`setup`)
 The following steps are performed in sequence and a time to finish is measured for each step:
  * (`reset-environment`) Open the user's profile page, click on the `Update Profile` button, click on the `Reset Environment` button, click on the `Erase My OpenShift.io Environment` button, fill in the username, click on the `I understand my actions - erase my environment` button, wait for the alert message to appear.
+ * (`jenkins-up`) Open the OpenShift Online console, get the OSO login command, extract token, use OSO REST API to probe `...-jenkins` project status and wait until it is `Available`.
 
 ### Create new space via ngx launcher (`create_space_ngx`)
 The following steps are performed in sequence and a time to finish is measured for each step:

@@ -2,6 +2,8 @@ import os
 import sys
 import threading
 import time
+import json
+import re
 
 from locust import HttpLocust, TaskSet, task, events
 from locust.exception import LocustError
@@ -58,6 +60,8 @@ class UserScenario(TaskSet):
     ghRepoName = "n/a"
     spaceUrl = ""
     userUrl = ""
+    osoToken = ""
+    jenkinsProject = ""
 
     resetEnvironment = True
 
@@ -175,6 +179,7 @@ class UserScenario(TaskSet):
 
     def reset_environment(self, driver, failed=False):
         request_type="setup"
+
         metric = "reset-environment"
         if not failed:
             self._reset_timer()
@@ -194,6 +199,98 @@ class UserScenario(TaskSet):
                 self._wait_for_non_clickable_element(driver, By.XPATH,"//*[contains(@class, 'alert')]")
                 self._wait_for_clickable_element(driver, By.XPATH,"//*[contains(@class, 'alert')]")
 
+                self._report_success(request_type, metric, self._tick_timer())
+            except Exception as ex:
+                self._report_failure(driver, request_type, metric, self._tick_timer(), str(ex))
+                failed = True
+        else:
+            self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
+
+        self.osoToken = None
+        self.jenkinsProject = None
+
+        metric = "jenkins-up"
+        if not failed:
+            self._reset_timer()
+            try:
+                response = self.client.request(name="get-oso-cluster", method="GET", url=_serverScheme + "://auth." + _serverHost + "/api/users?filter[username]=" + self.taskUserName, catch_response=True)
+                content = response.content
+                try:
+                    resp_json = response.json()
+                    if not response.ok:
+                        response.failure("Got wrong response: [" + content + "]")
+                        failed = True
+                    else:
+                        oso_url = resp_json["data"][0]["attributes"]["cluster"]
+                except ValueError:
+                    response.failure("Got wrong response: [" + content + "]")
+                    failed = True
+
+                driver.get(oso_url)
+                self._wait_for_url(driver, "/console")
+
+                target_element= self._wait_for_clickable_element(driver, By.XPATH, "//navbar-utility//span[contains(@class,'username')]")
+                target_element.click()
+
+                target_element= self._wait_for_clickable_element(driver, By.XPATH, "//navbar-utility//a[contains(text(),'Copy Login Command')]")
+                oso_login_command = target_element.get_attribute("data-clipboard-text")
+                p = re.compile(".*--token=(.*)")
+                self.osoToken = p.search(oso_login_command).group(1)
+                api_url = oso_url + "oapi/v1/projects"
+                response = self.client.request(name="get-jenkins-project", method="GET", url=api_url, headers={"Authorization": "Bearer " + self.osoToken}, catch_response=True)
+                content = response.content
+                try:
+                    resp_json = response.json()
+                    if not response.ok:
+                        response.failure("Got wrong response: [" + content + "]")
+                        failed = True
+                    else:
+                        jenkins_projects = resp_json["items"]
+                        for jproject in jenkins_projects:
+                            jproject_name = jproject["metadata"]["name"]
+                            if "jenkins" in jproject_name:
+                                self.jenkinsProject = jproject_name
+                except ValueError:
+                    response.failure("Got wrong response: [" + content + "]")
+                    failed = True
+
+                api_url = oso_url + "oapi/v1/namespaces/" + self.jenkinsProject + "/deploymentconfigs"
+
+                jenkins_available = False
+
+                jenkins_start = time.time()
+                while not (jenkins_available and ((time.time() - jenkins_start) < self.longTimeout)):
+                    sys.stdout.write("Checking jenkins...")
+                    response = self.client.request(name="get-jenkins-status", method="GET", url=api_url, headers={"Authorization": "Bearer " + self.osoToken}, catch_response=True)
+                    content = response.content
+                    try:
+                        resp_json = response.json()
+                        if not response.ok:
+                            response.failure("Got wrong response: [" + content + "]")
+                            failed = True
+                            break
+                        else:
+                            for i in resp_json["items"]:
+                                if not i["metadata"]["name"] == "jenkins":
+                                    continue
+                                else:
+                                    for c in i["status"]["conditions"]:
+                                        if not c["type"] == "Available":
+                                            continue
+                                        else:
+                                            jenkins_available = c["status"] == "True"
+                        sys.stdout.write("Jenkins Available: " + str(jenkins_available))
+                    except ValueError:
+                        response.failure("Got wrong response: [" + content + "]")
+                        failed = True
+                        break
+                    if not jenkins_available:
+                        time.sleep(3)
+
+                if not jenkins_available:
+                    self._report_failure(driver, request_type, metric, time.time() - jenkins_start, "Wait for jenkins timeout.")
+                    failed = True
+
                 driver.get(self.locust.host + "/_home")
                 self._wait_for_url(driver, "_home")
                 self._report_success(request_type, metric, self._tick_timer())
@@ -211,7 +308,7 @@ class UserScenario(TaskSet):
 
         self.newSpaceName = spacePrefix + "-" + buildNumber + "-" + str(self.taskUser) + "-" + str(long(time.time() * 1000))
         self.ghRepoName = (self.newSpaceName + "-" + self.taskUserName.replace("@", "_").replace(".", "_")).lower()
-        print self.ghRepoName
+
         metric = "new-button"
         if not failed:
             self._reset_timer()
