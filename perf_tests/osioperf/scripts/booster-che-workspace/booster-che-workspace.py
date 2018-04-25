@@ -293,7 +293,7 @@ class UserScenario(TaskSet):
             try:
                 target_element = self._wait_for_clickable_element(driver,
                                                                   By.ID,
-                                                                  "analyze-overview-add-to-space-button")
+                                                                  "analyze-overview-dashboard-add-to-space-button")
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type, metric, self._tick_timer(), str(ex))
@@ -453,6 +453,7 @@ class UserScenario(TaskSet):
                 target_element = self._wait_for_clickable_element(driver,
                                                                   By.ID,
                                                                   "ghRepo")
+                target_element.clear()
                 target_element.send_keys(self.ghRepoName)
                 target_element = self._wait_for_clickable_element(driver,
                                                                   By.XPATH,
@@ -528,7 +529,7 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 target_element.click()
-                self._wait_for_clickable_element(driver, By.ID, "spacehome-pipelines-title")
+                self._wait_for_clickable_element(driver, By.ID, "analyze-overview-dashboard-add-to-space-button")
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type, metric, self._tick_timer(), str(ex))
@@ -552,10 +553,8 @@ class UserScenario(TaskSet):
             self._reset_timer()
             build_release_started = -1
             try:
-                driver.get(self.spaceUrl)
-                self._wait_for_url(driver, self.spaceUrl)
-                target_element = self._wait_for_clickable_element(driver, By.ID, "spacehome-pipelines-title")
-                target_element.click()
+                driver.get(self.spaceUrl + "/create/pipelines")
+                self._wait_for_url(driver, self.spaceUrl + "/create/pipelines")
                 self._wait_for_clickable_element(driver, By.XPATH, "//*[contains(text(),'Build Release')][contains(@title,'status: IN_PROGRESS')]", timeout=self.longTimeout)
                 if qs_created_time > 0:
                     build_release_started = (time.time() - qs_created_time) * 1000
@@ -693,7 +692,7 @@ class UserScenario(TaskSet):
         if not failed:
             try:
                 driver.get(self.spaceUrl)
-                target_element = self._wait_for_clickable_element(driver, By.ID, "spacehome-codebases-title")
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(text(),'Create')]")
                 self._reset_timer()
                 target_element.click()
                 target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//codebases-item-workspaces")
@@ -733,14 +732,15 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
 
+        '''
         metric = "run-project"
         if not failed:
             self._reset_timer()
             try:
                 for path in [self.ghRepoName, "pom.xml"]:
-                    print path
-                    target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[contains(text()," + path + "'])")
-                    ActionChains(driver).double_click(target_element).perform()
+                    target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[contains(text(),'" + path + "')]/ancestor::*[contains(@class,'GEU2T3BBDEB')]")
+                    print 'doubleclicking on ' + path
+                    ActionChains(driver).click(target_element).double_click(target_element).perform();
 
                 self._wait_for_clickable_element(driver, By.XPATH, "//*[contains(text(),'http://maven.apache.org/POM/4.0.0')]")
                 target_element = self._wait_for_clickable_element(driver, By.ID, "gwt-debug-command_toolbar-button_Run")
@@ -760,7 +760,9 @@ class UserScenario(TaskSet):
                 failed = True
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
+        '''
 
+        driver.close()
         driver.switch_to_window(driver.window_handles[0])
 
         return failed
@@ -769,7 +771,7 @@ class UserScenario(TaskSet):
     def runScenario(self):
 
         opts = webdriver.ChromeOptions()
-        opts.add_argument("--headless")
+        #opts.add_argument("--headless")
         opts.add_argument("--window-size=1920,1080")
         opts.add_argument("--window-position=0,0")
 

@@ -64,8 +64,7 @@ The following steps are performed in sequence and a time to finish is measured f
  * (`codebases-page`) Click on the `Codebases` title and wait for the `Create a workspace` button to be clickable.
  * (`open-window`) Wait for the second window with Che to open. 
  * (`workspace-created`) Wait for the project tree to appear in Project Explorer.
- * (`run-project`) In the upper-menu click on the dropdown arrow right next to the run (`▶️`) button and then select the `run` item by clicking on it and wait for the configured success message to be printed in the `Run` tab at the bottom of the Che.
- * (`back-to-space`) Close the Che window and switch back to the first window (with Space dashboard page).
+ * Close the Che window and switch back to the first window (with Space dashboard page).
 
 ### Go through the pipeline build (`pipeline`)
 The following steps are performed in sequence and a time to finish is measured for each step:
