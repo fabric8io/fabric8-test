@@ -215,6 +215,7 @@ class UserScenario(TaskSet):
         self.osoToken = None
         self.jenkinsProject = None
 
+        '''
         metric = "jenkins-up"
         if not failed:
             self._reset_timer()
@@ -305,7 +306,7 @@ class UserScenario(TaskSet):
                 failed = True
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
-
+        '''
         return failed
 
     def create_space_by_launcher(self, driver, _failed=False):
