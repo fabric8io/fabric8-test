@@ -121,11 +121,17 @@ class UserScenario(TaskSet):
         # sys.stderr.write("[FAIL] request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0: " + msg)
         if not msg == self.SKIPPED_MSG:
             self._save_snapshot(driver, request_type + "_" + name + "-failure-screenshot-" + str(time.time()))
+            self._save_browser_log(driver, request_type + "_" + name + "-failure-browser-" + str(time.time()))
+
         # driver.quit()
         events.request_failure.fire(request_type=request_type, name=name, response_time=response_time, exception=LocustError(msg))
 
     def _save_snapshot(self, driver, name):
         driver.save_screenshot(jobBaseName + "-" + buildNumber + "-" + name + ".png")
+
+    def _save_browser_log(self, driver, name):
+        f = open(jobBaseName + "-" + buildNumber + "-" + name + ".log", "w")
+        f.write(str(driver.get_log('browser')))
 
     def login(self, driver, _failed=False):
         failed = _failed
@@ -592,6 +598,7 @@ class UserScenario(TaskSet):
 
         metric = "view-new-application-button"
         if not failed:
+            time.sleep(2)
             self._reset_timer()
             try:
                 target_element.click()
