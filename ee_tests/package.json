@@ -35,7 +35,7 @@
     "tslint": "tslint",
     "typedoc": "typedoc",
     "webdriver:start": "webdriver-manager start",
-    "webdriver:update": "webdriver-manager update"
+    "webdriver:update": "webdriver-manager update --gecko false"
   },
   "dependencies": {},
   "devDependencies": {
