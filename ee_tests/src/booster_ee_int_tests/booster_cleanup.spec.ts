@@ -42,6 +42,7 @@ describe('Clean up user environment:', () => {
     support.debug('>>> Go to Reset Env Page - OK');
 
     await cleanupEnvPage.cleanup(browser.params.login.user);
+    await cleanupEnvPage.dashboardButton.clickWhenReady();
   });
 
 });

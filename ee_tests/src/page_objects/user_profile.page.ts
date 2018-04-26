@@ -1,5 +1,6 @@
 import { browser, by, ExpectedConditions as until, $, element } from 'protractor';
 import * as support from '../support';
+import { TextInput, Button, BaseElement } from '../ui';
 
 import { AppPage } from './app.page';
 
@@ -41,7 +42,8 @@ export class CleanupUserEnvPage extends AppPage {
   );
 
   alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
-
+  dashboardButton = new Button(element (by.xpath('.//button[contains(text(),\'Take me to my Dashboard\')]')),
+  'Take me to my Dashboard button');
 
   constructor() {
     super();
