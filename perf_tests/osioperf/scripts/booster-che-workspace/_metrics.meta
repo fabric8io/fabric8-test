@@ -3,7 +3,6 @@ login;open-start-page
 login;open-login-page
 login;login
 setup;reset-environment
-setup;jenkins-up
 create_space_ngx;new-button
 create_space_ngx;new-create-space-experience
 create_space_ngx;create-space-button
