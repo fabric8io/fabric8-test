@@ -120,7 +120,7 @@ export class SpacePipelinePage extends AppPage {
   }
 
   public async getPipelines(): Promise<PipelineDetails[]> {
-    await browser.wait(until.presenceOf(element(by.className('pipeline-list'))));
+    await browser.wait(until.presenceOf(element(by.className('pipeline-list'))), support.LONGER_WAIT);
 
     let elementsFinders: ElementFinder[] = await element.all(by.className('pipeline-list'));
     let pipelines = await elementsFinders.map(finder => new PipelineDetails(finder));
