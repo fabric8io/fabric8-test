@@ -25,18 +25,18 @@ RUN set -ex \
   done
 
 # activate EPEL repository, necessary for libappindicator-gtk3 (used by Chrome)
-RUN curl http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-      -o epel.rpm && rpm -ivh epel.rpm
+RUN yum install --setopt tsflags='nodocs' -y \
+    http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # install chrome
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
-RUN yum  --setopt tsflags='nodocs' -y update && \
-    yum install --setopt tsflags='nodocs' -y bzip2 fontconfig tar java-1.8.0 nmap-ncat psmisc gtk3 git \
+RUN yum --setopt tsflags='nodocs' -y update && \
+    yum install --setopt tsflags='nodocs' -y bzip2 fontconfig java-1.8.0 nmap-ncat psmisc gtk3 git \
       python-setuptools xorg-x11-xauth wget unzip which \
-      xorg-x11-server-Xvfb xfonts-100dpi libXfont GConf2 \
-      xorg-x11-fonts-75dpi xfonts-scalable xfonts-cyrillic \
-      ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc \
-      xorg-x11-server-Xvfb google-chrome-stable
+      xorg-x11-server-Xvfb libXfont GConf2 \
+      xorg-x11-fonts-75dpi xorg-x11-fonts-100dpi xorg-x11-fonts-cyrillic \
+      ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc && \
+    yum install --setopt tsflags='nodocs' -y google-chrome-stable
 
 # install node
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
