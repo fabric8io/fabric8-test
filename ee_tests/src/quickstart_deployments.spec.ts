@@ -134,8 +134,9 @@ describe('Main E2E test suite', () => {
     expect(codebases.length).toBe(1, 'number of codebases');
     expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + spaceName);
 
-    let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
-    expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
+    // TODO - Uncomment when the Planner is moved from beta to production
+    // let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
+    // expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
 
     let pipelinesCard = await spaceDashboardPage.getPipelinesCard();
     expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
