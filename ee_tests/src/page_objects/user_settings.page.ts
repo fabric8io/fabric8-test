@@ -15,6 +15,6 @@ export class FeaturesTab {
     public async getFeatureLevel(): Promise<string> {
         await browser.wait(until.presenceOf(element(by.css('input:checked'))));
         let checkedInput = await element(by.css('input:checked'));
-        return await checkedInput.getAttribute('value');
+        return await checkedInput.getAttribute('id');
     }
 }
