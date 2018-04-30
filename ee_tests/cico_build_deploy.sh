@@ -38,11 +38,14 @@ if [ -z "${BUILD_NUMBER}" ]; then
   exit 0
 fi
 
-# returns something like "Google Chrome 66.0.3359.117"
+# returns something like "Google Chrome 66.0.3359.117" when using Chrome stable
+# returns something like "Google Chrome 67.0.3396.18 beta" when using Chrome beta
 TMP=`docker run --rm fabric8-test google-chrome --version`
 # convert to array of words
 TMP=($TMP)
-if [ ! ${#TMP[*]} -eq 3 ]; then
+
+# 3 for stable channel, 4 for beta channel
+if [ ! ${#TMP[*]} -eq 4 ]; then
   echo "CICO: The output of command 'google-chrome --version' probably changed, update this script";
   exit 2
 fi
