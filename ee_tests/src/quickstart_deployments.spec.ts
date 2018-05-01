@@ -27,6 +27,7 @@ describe('Main E2E test suite', () => {
     await support.desktopTestSetup();
     spaceName = support.newSpaceName();
     strategy = browser.params.release.strategy;
+
     quickstart = new Quickstart(browser.params.quickstart.name);
   });
 
@@ -56,6 +57,17 @@ describe('Main E2E test suite', () => {
     support.info('--- Login ---');
     let login = new support.LoginInteraction();
     await login.run();
+
+    if (browser.params.reset.environment === 'true') {
+      support.info('--- Reset environmet ---');
+      let dashboardPage = new MainDashboardPage();
+      let userProfilePage = await dashboardPage.gotoUserProfile();
+      let editProfilePage = await userProfilePage.gotoEditProfile();
+      let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
+      await cleanupEnvPage.cleanup(browser.params.login.user);
+      await cleanupEnvPage.dashboardButton.clickWhenReady();
+    }
+
   });
 
   it('Check feature level', async () => {
@@ -134,8 +146,9 @@ describe('Main E2E test suite', () => {
     expect(codebases.length).toBe(1, 'number of codebases');
     expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + spaceName);
 
-    let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
-    expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
+    // Comment out pending migraion of Planner from beta to released
+    //let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
+    //expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
 
     let pipelinesCard = await spaceDashboardPage.getPipelinesCard();
     expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
