@@ -36,7 +36,7 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       xorg-x11-server-Xvfb libXfont GConf2 \
       xorg-x11-fonts-75dpi xorg-x11-fonts-100dpi xorg-x11-fonts-cyrillic \
       ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc && \
-    yum install --setopt tsflags='nodocs' -y google-chrome-beta
+    yum install --setopt tsflags='nodocs' -y google-chrome-stable
 
 # install node
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
