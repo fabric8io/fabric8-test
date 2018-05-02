@@ -169,8 +169,6 @@ Page layout
   async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
     await this.header.recentItemsDropdown.createSpaceItem.select();
 
-    await this.newCreateSpaceExperience.clickWhenReady();
-
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
     await this.devProcessPulldown.enterText('Scenario Driven Planning');
