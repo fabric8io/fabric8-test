@@ -45,7 +45,7 @@ TMP=`docker run --rm fabric8-test google-chrome --version`
 TMP=($TMP)
 
 # 3 for stable channel, 4 for beta channel
-if [ ! ${#TMP[*]} -eq 4 ]; then
+if [ ! ${#TMP[*]} -eq 3 ]; then
   echo "CICO: The output of command 'google-chrome --version' probably changed, update this script";
   exit 2
 fi
