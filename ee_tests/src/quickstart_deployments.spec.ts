@@ -21,6 +21,7 @@ describe('Main E2E test suite', () => {
   let strategy: string;
   let spaceName: string;
   let index: number = 1;
+  let globalSpaceDashboardPage: SpaceDashboardPage;
 
   beforeAll(async () => {
     support.info('--- Before all ---');
@@ -65,16 +66,29 @@ describe('Main E2E test suite', () => {
 
   it('Create space ', async () => {
     support.info('--- Create space ' + spaceName + ' ---');
-    await new MainDashboardPage().createNewSpace(spaceName);
+    let dashboardPage = new MainDashboardPage();
+    if (browser.params.ngx_launcher.enabled === 'true') {
+      globalSpaceDashboardPage = await dashboardPage.createNewSpaceByLauncher(spaceName);
+    } else {
+      globalSpaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+    }
   });
 
   it('Create quickstart', async () => {
     support.info('--- Create quickstart ' + quickstart.name + ' ---');
-    let spaceDashboardPage = new SpaceDashboardPage(spaceName);
-    await spaceDashboardPage.open();
+    quickstart = new Quickstart(browser.params.quickstart.name);
+    support.info('Creating quickstart: ' + quickstart.name);
+    let wizard = await globalSpaceDashboardPage.addToSpace();
 
-    let wizard = await spaceDashboardPage.addToSpace();
-    await wizard.newQuickstartProject({ project: quickstart.name, strategy });
+    await wizard.ready();
+    if (browser.params.ngx_launcher.enabled === 'true') {
+      support.info('Use the new ngx launcher...');
+      await wizard.newQuickstartProjectByLauncher(quickstart.id, spaceName, strategy);
+    } else {
+      support.info('Use the legacy launcher...');
+      await wizard.newQuickstartProject({ project: quickstart.name });
+    }
+    await globalSpaceDashboardPage.ready();
   });
 
   it('Run che', async () => {

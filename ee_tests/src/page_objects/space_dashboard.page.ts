@@ -211,9 +211,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* Pipelines section title/link */
   pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
-
-  addToSpaceButton = this.innerElement(
-    ui.Button, '#analyze-overview-add-to-space-button', 'Add to space');
+  addToSpaceButton = new Button(element(by.xpath('.//button[contains(text(),\'Add to space\')]')));
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');

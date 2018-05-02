@@ -58,6 +58,7 @@ describe('Creating new quickstart in OSIO', () => {
     let quickstart = new Quickstart(browser.params.quickstart.name);
     support.info('Creating quickstart: ' + quickstart.name);
     let wizard = await spaceDashboardPage.addToSpace();
+
     await wizard.ready();
     if (browser.params.ngx_launcher.enabled === 'true') {
       support.info('Use the new ngx launcher...');

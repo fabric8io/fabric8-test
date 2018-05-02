@@ -172,33 +172,27 @@ export class ImportCodeWizard extends Wizard {
 
 export class AddToSpaceDialog extends ui.ModalDialog {
 
-  noThanksButton = new ui.Button($('#noThanksButton'), 'No Thanks ...');
   importExistingCodeButton = new ui.Button(
-    $('#importCodeButton'), 'Import Existing Code');
+    this.element(by.xpath('.//h2[contains(text(),\'Import an existing codebase\')]')), 'Import an existing codebase');
 
-  newQuickstartButton = new ui.Button(
-    $('#forgeQuickStartButton'), 'New Quickstart Project');
+    newQuickstartButton = new ui.Button(
+      this.element(by.xpath('.//h2[contains(text(),\'Create a new codebase\')]')), 'Create a new codebase');
 
   // NOTE: not visible initially
   quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'))
   importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
 
-  newImportExperienceButton = new ui.Button(
-    this.element(by.xpath('//*[contains(text(),\'Try our new Getting Started experience\')]')),
-    'Try our new Getting Started experience'
-  );
-
   constructor(element: ElementFinder) {
-    super(element, 'Add to Space Wizard');
+    super(element, 'Add to Space Wizard...');
   }
 
   async ready() {
-    await super.ready();
-    await this.noThanksButton.untilClickable();
-    await this.importExistingCodeButton.untilClickable();
-    await this.newQuickstartButton.untilClickable();
+// Commented out as UI changes removed these UI elements
+//    await super.ready();
+//    await this.noThanksButton.untilClickable();
+//    await this.newQuickstartButton.untilClickable();
+//    await this.importExistingCodeButton.untilClickable();
   }
-
 
   async newQuickstartProject(details: ProjectDetail) {
     await this.newQuickstartButton.clickWhenReady();
@@ -220,11 +214,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   }
 
   async openNewImportExperience(): Promise<NewImportExperienceDialog> {
-    await this.newImportExperienceButton.clickWhenReady();
     return new NewImportExperienceDialog(this.element(by.xpath('//f8-add-app-overlay')));
   }
 
   async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: string) {
+
     let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
 
     await dialog.projectName.clear();
@@ -234,8 +228,12 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.ready();
 
     let quickstart = new Quickstart(quickstartId);
-    await launcher.selectRuntime(quickstart.runtime.name);
+
+    /* Note required order of mission and runtime selection */
+    /* https://github.com/openshiftio/openshift.io/issues/3418 */
     await launcher.selectMission(quickstart.mission.name);
+    await launcher.selectRuntime(quickstart.runtime.name);
+
     await support.writeScreenshot('target/screenshots/launcher-runtime-and-mission-' + name + '.png');
     await launcher.missionRuntimeContinueButton.clickWhenReady();
 
@@ -267,12 +265,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await support.writeScreenshot('target/screenshots/launcher-summary-' + name + '.png');
 
     let setupApplicationPage: LauncherSetupAppPage = await launcher.setUpApplication();
-    await setupApplicationPage.ready();
 
     await setupApplicationPage.newProjectBoosterOkIcon('Creating your new GitHub repository').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Pushing your customized Booster code into the repo')
       .untilDisplayed();
-    await setupApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift Online').untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
