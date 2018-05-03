@@ -3,7 +3,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';
-import { SpaceDashboardPage } from '../..';
+import { SpaceDashboardPage, CleanupUserEnvPage } from '../..';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 
@@ -61,10 +61,8 @@ export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractio
     }
 
     public async resetEnvironment(): Promise<void> {
-        let dashboardPage = new MainDashboardPage();
-        let userProfilePage = await dashboardPage.gotoUserProfile();
-        let editProfilePage = await userProfilePage.gotoEditProfile();
-        let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
+        let cleanupEnvPage = new CleanupUserEnvPage();
+        cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(browser.params.login.user);
     }
 
