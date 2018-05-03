@@ -194,11 +194,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
 
   async ready() {
     await super.ready();
-    await this.noThanksButton.untilClickable();
-    await this.importExistingCodeButton.untilClickable();
-    await this.newQuickstartButton.untilClickable();
   }
-
 
   async newQuickstartProject(details: ProjectDetail) {
     await this.newQuickstartButton.clickWhenReady();
@@ -220,11 +216,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   }
 
   async openNewImportExperience(): Promise<NewImportExperienceDialog> {
-    await this.newImportExperienceButton.clickWhenReady();
     return new NewImportExperienceDialog(this.element(by.xpath('//f8-add-app-overlay')));
   }
 
   async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: string) {
+    support.info('Start create new quickstart');
     let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
 
     await dialog.projectName.clear();
@@ -234,8 +230,12 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.ready();
 
     let quickstart = new Quickstart(quickstartId);
-    await launcher.selectRuntime(quickstart.runtime.name);
+
+    /* Note required order of mission and runtime selection */
+    /* https://github.com/openshiftio/openshift.io/issues/3418 */
     await launcher.selectMission(quickstart.mission.name);
+    await launcher.selectRuntime(quickstart.runtime.name);
+
     await support.writeScreenshot('target/screenshots/launcher-runtime-and-mission-' + name + '.png');
     await launcher.missionRuntimeContinueButton.clickWhenReady();
 
@@ -255,8 +255,8 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     // await ghPasswd.sendKeys(browser.params.github.password);
     // await ghPasswd.submit();
     // END: Workaround for the Github login
-
     await launcher.selectGithubOrganization(browser.params.github.username);
+    await launcher.ghRepositoryText.clear();
     await launcher.ghRepositoryText.sendKeys(name);
     await support.writeScreenshot('target/screenshots/launcher-git-provider-' + name + '.png');
     await launcher.gitProviderContinueButton.clickWhenReady();
@@ -267,12 +267,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await support.writeScreenshot('target/screenshots/launcher-summary-' + name + '.png');
 
     let setupApplicationPage: LauncherSetupAppPage = await launcher.setUpApplication();
-    await setupApplicationPage.ready();
 
     await setupApplicationPage.newProjectBoosterOkIcon('Creating your new GitHub repository').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Pushing your customized Booster code into the repo')
       .untilDisplayed();
-    await setupApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift Online').untilDisplayed();
+    await setupApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
@@ -281,7 +280,6 @@ export class AddToSpaceDialog extends ui.ModalDialog {
 
     await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
-
 }
 
 export class NewImportExperienceDialog extends ui.BaseElement {

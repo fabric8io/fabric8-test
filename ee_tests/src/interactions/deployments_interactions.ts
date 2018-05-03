@@ -9,7 +9,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 export abstract class DeploymentsInteractionsFactory {
 
     public static create(strategy: string, spaceName: string): DeploymentsInteractions {
-        if (FeatureLevelUtils.isReleased() || FeatureLevelUtils.isBeta()) {
+        if (FeatureLevelUtils.isReleased()) {
             return <DeploymentsInteractions>{
                 showDeploymentsScreen(): void {},
                 verifyApplication(): void {},
