@@ -17,7 +17,11 @@ export abstract class AccountHomeInteractionsFactory {
             };
         }
 
-        return new OldAccountHomeInteractions();
+        if (FeatureLevelUtils.isBeta()) {
+            return new BetaAccountHomeInteractions();
+        }
+
+        return new ReleasedAccountHomeInteractions();
     }
 }
 
@@ -43,9 +47,9 @@ export abstract class AbstractSpaceDashboardInteractions implements AccountHomeI
     public async abstract openSpaceDashboard(name: string): Promise<void>;
 }
 
-export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
+export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
 
-    private dashboardPage: MainDashboardPage;
+    protected dashboardPage: MainDashboardPage;
 
     constructor() {
         super();
@@ -70,5 +74,12 @@ export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractio
 
     public async openSpaceDashboard(name: string): Promise<void> {
         await this.dashboardPage.openSpace(name);
+    }
+}
+
+export class BetaAccountHomeInteractions extends ReleasedAccountHomeInteractions {
+
+    public async createSpace(name: string): Promise<void> {
+        await this.dashboardPage.createNewSpaceByLauncher(name);
     }
 }

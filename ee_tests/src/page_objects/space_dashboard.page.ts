@@ -212,8 +212,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
   /* Pipelines section title/link */
   pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
 
-  addToSpaceButton = this.innerElement(
-    ui.Button, '#analyze-overview-add-to-space-button', 'Add to space');
+  addToSpaceButton = new Button(element(by.xpath('.//button[contains(text(),\'Add to space\')]')));
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');
@@ -245,15 +244,12 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   async ready() {
     await super.ready();
-    await this.addToSpaceButton.ready();
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {
     await this.addToSpaceButton.clickWhenReady()
     // NOTE: outside the dialog is outside of $(this)
     let wizard  = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'))
-
-    await wizard.open();
     return wizard;
   }
 

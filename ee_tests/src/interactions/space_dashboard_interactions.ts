@@ -21,10 +21,10 @@ export abstract class SpaceDashboardInteractionsFactory {
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            return new OldSpaceDashboardInteractionsWithWorkItems(spaceName);
+            return new BetaSpaceDashboardInteractions(spaceName);
         }
 
-        return new OldSpaceDashboardInteractionsWithoutWorkItems(spaceName);
+        return new ReleasedSpaceDashboardInteractions(spaceName);
     }
 }
 
@@ -72,7 +72,7 @@ export abstract class AbstractSpaceDashboardInteractions implements SpaceDashboa
     public abstract async verifyWorkItems(): Promise<void>;
 }
 
-export class OldSpaceDashboardInteractionsWithoutWorkItems extends AbstractSpaceDashboardInteractions {
+export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteractions {
 
     protected spaceDashboardPage: SpaceDashboardPage;
 
@@ -131,7 +131,6 @@ export class OldSpaceDashboardInteractionsWithoutWorkItems extends AbstractSpace
         expect(pipelines[0].getBuildNumber()).toBe(1, 'build number');
 
         let deploymentsCard = await this.spaceDashboardPage.getDeploymentsCard();
-        // expect(await deploymentsCard.getCount()).toBe(1, 'number of deployments on page');
 
         let applications = await deploymentsCard.getApplications();
         expect(applications.length).toBe(1, 'number of applications');
@@ -160,7 +159,13 @@ export class OldSpaceDashboardInteractionsWithoutWorkItems extends AbstractSpace
     }
 }
 
-export class OldSpaceDashboardInteractionsWithWorkItems extends OldSpaceDashboardInteractionsWithoutWorkItems {
+export class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions {
+
+    public async createQuickstart(name: string, strategy: string): Promise<void> {
+        let wizard = await this.spaceDashboardPage.addToSpace();
+        await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
+    }
+
     public async verifyWorkItems(): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
         expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
