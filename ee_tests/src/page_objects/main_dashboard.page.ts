@@ -44,11 +44,6 @@ Page layout
     newSpaceName = new TextInput($('#name'), 'Name of Space');
     createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
 
-    newCreateSpaceExperience = new Button(element(
-      by.xpath("//*[contains(text(),'New Create Space Experience')]")),
-      'New Create Space Experience'
-    );
-
     // TODO: create a UI component that abstracts this element
     devProcessPulldown = new TextInput($('#developmentProcess'));
 
@@ -168,8 +163,6 @@ Page layout
   /* Helper function to create a new OSIO space */
   async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
     await this.header.recentItemsDropdown.createSpaceItem.select();
-
-    await this.newCreateSpaceExperience.clickWhenReady();
 
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
