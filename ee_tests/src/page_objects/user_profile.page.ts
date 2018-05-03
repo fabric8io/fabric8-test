@@ -88,6 +88,7 @@ export class CleanupUserEnvPage extends AppPage {
     let confirmationElement =  this.innerElement(ui.BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
     await confirmationBox.ready();
+    await confirmationBox.confirmationInput.clear();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
   }
