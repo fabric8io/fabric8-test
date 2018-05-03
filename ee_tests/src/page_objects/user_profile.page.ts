@@ -36,6 +36,7 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 }
 
 export class CleanupUserEnvPage extends AppPage {
+
   eraseEnvButton = this.innerElement(
     ui.Button, '#overview button',
     'Erase My OpenShift.io Environment'
@@ -44,6 +45,8 @@ export class CleanupUserEnvPage extends AppPage {
   alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
   dashboardButton = new Button(element (by.xpath('.//button[contains(text(),\'Take me to my Dashboard\')]')),
   'Take me to my Dashboard button');
+
+  private readonly CLEANUP_SUCCESSFUL_MESSAGE: string = 'Your OpenShift.io environment has been erased!';
 
   constructor() {
     super();
@@ -58,26 +61,36 @@ export class CleanupUserEnvPage extends AppPage {
   }
 
   async cleanup(username: string) {
-    await this.eraseEnvButton.clickWhenReady();
+    await this.cleanupSupport(username);
 
+    await browser.wait(until.presenceOf(this.alertBox), support.LONG_WAIT);
+    let alertText = await this.alertBox.getText();
+
+    /* An intermittent error is resulting in some user enviroment resets failing
+       https://github.com/openshiftio/openshift.io/issues/1637
+       If this happens - try one more time - if that fails something serious
+       has happened and the test will/and should fail */
+    support.info('Alert text: ' + alertText);
+    if (alertText.includes(this.CLEANUP_SUCCESSFUL_MESSAGE)) {
+      support.info('Reset successfull');
+    } else {
+      support.info('Reset failed - retrying');
+      this.cleanupSupport(username);
+
+      /* Check for success - if this check also fails - the test will fail */
+      await browser.wait(until.presenceOf(
+        element(by.cssContainingText('fabric8-cleanup', this.CLEANUP_SUCCESSFUL_MESSAGE))));
+    }
+  }
+
+  async cleanupSupport (username: string) {
+    await this.eraseEnvButton.clickWhenReady();
     let confirmationElement =  this.innerElement(ui.BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
-
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
-    await browser.wait(until.presenceOf(
-        element(by.cssContainingText('fabric8-cleanup',
-        'Your OpenShift.io environment has been erased!'))), support.LONGER_WAIT);
-
-    /* Accessing the alert box is failing randomly. Commenting out this code for the
-       short term as the entire reset env feature may be removed in the near future */
-//    support.debug('... waiting for alert box');
-//    await this.alertBox.untilPresent(15 * 1000);
-//    support.debug('... waiting for alert box - OK');
-//    await this.alertBox.untilTextIsPresent('Your OpenShift.io environment has been erased!');
   }
-
 }
 
 export class EditUserProfilePage extends AppPage {
