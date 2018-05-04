@@ -1,119 +1,113 @@
-import { browser, ExpectedConditions as until, $, $$ } from 'protractor';
-import * as support from './support';
-import { Quickstart } from './support/quickstart';
-import { TextInput, Button } from './ui';
+import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBrowser } from 'protractor';
+import { WebDriver, error as SE } from 'selenium-webdriver';
 
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
+import * as support from './support';
+import { BuildStatus } from './support/build_status';
+import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
+import { Quickstart } from './support/quickstart';
+import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
+import { PipelinesInteractions } from './interactions/pipelines_interactions';
+import { SpaceDashboardInteractions } from './interactions/space_dashboard_interactions';
+import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
+import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
-import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { Button } from './ui';
+import { PageOpenMode } from '..';
+import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
-let globalSpaceName: string;
+describe('Che E2E test suite', () => {
 
-/* Tests to verify the build pipeline */
+  let quickstart: Quickstart;
+  let strategy: string;
+  let spaceName: string;
+  let index: number = 1;
 
-describe('Creating new quickstart in OSIO', () => {
-  let dashboardPage: MainDashboardPage;
-
-  beforeEach(async () => {
+  beforeAll(async () => {
+    support.info('--- Before all ---');
     await support.desktopTestSetup();
+    spaceName = support.newSpaceName();
+    strategy = browser.params.release.strategy;
+    quickstart = new Quickstart(browser.params.quickstart.name);
+  });
+
+  afterEach(async () => {
+    support.info('--- After each ---');
+    support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+    support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    index++;
+  });
+
+  afterAll(async () => {
+    support.info('--- After all ---');
+    if (browser.params.reset.environment === 'true') {
+      support.info('--- Reset environmet ---');
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.resetEnvironment();
+
+      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    }
+  });
+
+  it('Login', async () => {
+    support.info('--- Login ---');
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
-
-    let userProfilePage = await dashboardPage.gotoUserProfile();
-    support.debug(">>> Go to user's Profile Page - OK");
-    support.debug('>>> Go to Edit Profile Page');
-    let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug('>>> Go to Edit Profile Page - OK');
-    support.debug('>>> Go to Reset Env Page');
-    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug('>>> Go to Reset Env Page - OK');
-
-    await cleanupEnvPage.cleanup(browser.params.login.user);
-
+    await login.run();
   });
 
-  afterEach( async () => {
-    await browser.sleep(support.DEFAULT_WAIT);
+  it('Check feature level', async () => {
+    let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
+    expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
 
-    support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
-    support.info('\n ============ End of test reached ============ \n');
-    // support.info('\n ============ End of test reached, logging out ============ \n');
-    /* Logout is causing random failures on prod-preview - possibky due to navigating browser windows? */
-    // await dashboardPage.logout();
+    // TODO: Remove reset of environment. This was added due to the following issue
+    // underlying fabric8-test issue https://github.com/fabric8io/fabric8-test/issues/644
+    if (browser.params.reset.environment === 'true' && featureLevel === FeatureLevel.RELEASED) {
+      support.info('--- Reset environmet ---');
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.resetEnvironment();
+
+      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+      index++;
+    }
   });
 
-  /* Simple test - accept all defaults for new quickstarts */
+  it('Create space ', async () => {
+    support.info('--- Create space ' + spaceName + ' ---');
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.createSpace(spaceName);
+  });
 
-  it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-    let quickstart = new Quickstart(browser.params.quickstart.name);
-    let spaceName = support.newSpaceName();
-    globalSpaceName = spaceName;
-    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+  it('Create quickstart', async () => {
+    support.info('--- Create quickstart ' + quickstart.name + ' ---');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
+  });
 
-    let wizard = await spaceDashboardPage.addToSpace();
+  it('Run che', async () => {
+    support.info('--- Run che workspace ' + quickstart.name + ' ---');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.openCodebasesPage();
 
-    support.info('Creating quickstart: ' + quickstart.name);
-    await wizard.newQuickstartProject({ project: quickstart.name });
-    await spaceDashboardPage.ready();
-
-    /* This statement does not reliably wait for the modal dialog to disappear:
-       await browser.wait(until.not(until.visibilityOf(spaceDashboardPage.modalFade)), support.LONGEST_WAIT);
-
-       The above statement fails with this error: Failed: unknown error: Element <a id="spacehome-pipelines-title"
-       href="/username/spaceName/create/pipelines">...</a> is not clickable at point (725, 667). Other element would
-       receive the click: <modal-container class="modal fade" role="dialog" tabindex="-1" style="display:
-       block;">...</modal-container>
-
-       The only reliable way to avoid this is a sleep statement: await browser.sleep(5000); */
-    await browser.sleep(5000);
-
-    /* Open Che display page */
-
-    // tslint:disable:max-line-length
-    await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
-
-    // await browser.sleep(60000);
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
-    /* A new browser window is opened when Che opens - switch to that new window now */
-    let handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs before = ' + handles.length);
-
-    /* TODO - Need to create a query to look for/wait for the 2nd browser window and remove the sleep statement */
-    await browser.sleep(60000);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/che_workspace_parta_' + spaceName + '.png');
-
-    /* Switch to the Che browser window */
-    await browser.switchTo().window(handles[1]);
+    await support.switchToWindow(2, 1);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
-// Defer this test to speed up test execution as hourly ee test    
-//    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
-//
-//    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
-//    await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
-//
-//    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, 'Succeeded in deploying verticle'), support.LONGER_WAIT);
-//    let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
-//    support.info('Output from run = ' + textStr);
-//    expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
-
     /* Switch back to the OSIO browser window */
-    await browser.switchTo().window(handles[0]);
+    await support.switchToWindow(2, 0);
   });
 
 });
