@@ -1,148 +1,115 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBrowser } from 'protractor';
+import { WebDriver, error as SE } from 'selenium-webdriver';
+
 import * as support from './support';
 import { BuildStatus } from './support/build_status';
+import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
-import { TextInput, Button } from './ui';
+import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
+import { PipelinesInteractions } from './interactions/pipelines_interactions';
+import { SpaceDashboardInteractions } from './interactions/space_dashboard_interactions';
+import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
+import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
+import { SpaceChePage } from './page_objects/space_che.page';
+import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
+import { Button } from './ui';
+import { PageOpenMode } from '..';
+import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
-import { MainDashboardPage } from './page_objects/main_dashboard.page';
+describe('Analytic E2E test suite', () => {
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
+  let quickstart: Quickstart;
+  let strategy: string;
+  let spaceName: string;
+  let index: number = 1;
 
-/* Tests to verify the build pipeline */
-
-describe('Creating new quickstart in OSIO', () => {
-  let dashboardPage: MainDashboardPage;
-
-  beforeEach(async () => {
+  beforeAll(async () => {
+    support.info('--- Before all ---');
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    spaceName = support.newSpaceName();
+    strategy = browser.params.release.strategy;
+    quickstart = new Quickstart(browser.params.quickstart.name);
   });
 
   afterEach(async () => {
-    await browser.sleep(support.DEFAULT_WAIT);
-    // await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
-    support.writeScreenshot('target/screenshots/pipeline_analytic_' + globalSpaceName + '.png');
-    support.writePageSource('target/screenshots/pipeline_analytic_' + globalSpaceName + '.html');
-    support.info('\n ============ End of test reached, logging out ============ \n');
-    await dashboardPage.logout();
+    support.info('--- After each ---');
+    support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+    support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    index++;
   });
 
-  /* Simple test - accept all defaults for new quickstarts */
+  afterAll(async () => {
+    support.info('--- After all ---');
+    if (browser.params.reset.environment === 'true') {
+      support.info('--- Reset environmet ---');
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.resetEnvironment();
 
-  it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-    let quickstart = new Quickstart(browser.params.quickstart.name);
-    let spaceName = support.newSpaceName();
-    globalSpaceName = spaceName;
-    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
+      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    }
+  });
 
-    let wizard = await spaceDashboardPage.addToSpace();
+  it('Login', async () => {
+    support.info('--- Login ---');
+    let login = new support.LoginInteraction();
+    await login.run();
+  });
 
-    support.info('Creating quickstart: ' + quickstart.name);
-    await wizard.newQuickstartProject({ project: quickstart.name });
-    await spaceDashboardPage.ready();
+  it('Check feature level', async () => {
+    let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
+    expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
 
-    /* This statement does not reliably wait for the modal dialog to disappear:
-       await browser.wait(until.not(until.visibilityOf(spaceDashboardPage.modalFade)), support.LONGEST_WAIT);
+    // TODO: Remove reset of environment. This was added due to the following issue
+    // underlying fabric8-test issue https://github.com/fabric8io/fabric8-test/issues/644
+    if (browser.params.reset.environment === 'true' && featureLevel === FeatureLevel.RELEASED) {
+      support.info('--- Reset environmet ---');
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.resetEnvironment();
 
-       The above statement fails with this error: Failed: unknown error: Element <a id="spacehome-pipelines-title"
-       href="/username/spaceName/create/pipelines">...</a> is not clickable at point (725, 667). Other element would
-       receive the click: <modal-container class="modal fade" role="dialog" tabindex="-1" style="display:
-       block;">...</modal-container>
+      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+      index++;
+    }
+  });
 
-       The only reliable way to avoid this is a sleep statement: await browser.sleep(5000); */
-    await browser.sleep(5000);
+  it('Create space ', async () => {
+    support.info('--- Create space ' + spaceName + ' ---');
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.createSpace(spaceName);
+  });
 
-    // tslint:disable:max-line-length
+  it('Create quickstart', async () => {
+    support.info('--- Create quickstart ' + quickstart.name + ' ---');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
+  });
 
-    /* Open the pipeline page, select the pipeline by name */
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
-    support.debug('Accessed pipeline page');
+  it('Run pipeline', async () => {
+    support.info('--- Run pipeline ---');
+    let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName);
+    await pipelineInteractions.showPipelinesScreen();
+    let pipeline = await pipelineInteractions.verifyBuildInfo();
+    await pipelineInteractions.waitToFinish(pipeline);
+    await pipelineInteractions.verifyBuildStages(pipeline);
+  });
 
-    let spacePipelinePage = new SpacePipelinePage();
-    globalSpacePipelinePage = spacePipelinePage;
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
+  it('Verify deployment', async () => {
+    support.info('--- Verify deployments ---');
+    let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
+    await deploymentsInteractions.showDeploymentsScreen();
+    await deploymentsInteractions.verifyApplication();
+    await deploymentsInteractions.verifyResourceUsage();
+  });
 
-    support.debug('Looking for the pipeline name');
-    await pipelineByName.untilPresent(support.LONGER_WAIT);
-
-    /* Verify that only (1) new matching pipeline is found */
-    support.debug('Verifying that only 1 pipeline is found with a matching name');
-    expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
-
-    /* Save the pipeline page output to stdout for logging purposes */
-    let pipelineText = await spacePipelinePage.pipelinesPage.getText();
-    support.debug('Pipelines page contents = ' + pipelineText);
-
-    /* Find the pipeline name */
-    await pipelineByName.untilClickable(support.LONGER_WAIT);
-
-    /* If the build log link is not viewable - the build failed to start */
-    support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
-    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-    expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
-
-    /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
-    support.debug('Verifying that the promote dialog is opened');
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
-
-    await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
-    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
-
-    /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
-
-    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
-
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
-    await dashboardPage.header.recentItemsDropdown.clickWhenReady();
-    await dashboardPage.recentSpaceByName(spaceName).click();
-    await dashboardPage.ready();
-
-    let codebasesCard = await spaceDashboardPage.getCodebaseCard();
-    expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
-
-    let githubName = browser.params.github.username;
-    let codebases = await codebasesCard.getCodebases();
-    expect(codebases.length).toBe(1, 'number of codebases');
-    expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + spaceName);
-
-    let workItemsCard = await spaceDashboardPage.getWorkItemsCard();
-    expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
-
-    let pipelinesCard = await spaceDashboardPage.getPipelinesCard();
-    expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
-
-    let pipelines = await pipelinesCard.getPipelines();
-    expect(pipelines.length).toBe(1, 'number of pipelines');
-    expect(pipelines[0].getApplication()).toBe(spaceName, 'application name on pipeline');
-    expect(pipelines[0].getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
-    expect(pipelines[0].getBuildNumber()).toBe(1, 'build number');
-
-    let deploymentsCard = await spaceDashboardPage.getDeploymentsCard();
-    // expect(await deploymentsCard.getCount()).toBe(1, 'number of deployments on page');
-
-    let applications = await deploymentsCard.getApplications();
-    expect(applications.length).toBe(1, 'number of applications');
-    expect(await applications[0].getName()).toBe(spaceName, 'deployed application name');
-    expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-    expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
-
-    let analyticsCard = await spaceDashboardPage.getAnalyticsCard();
-    let totalCount = await analyticsCard.getTotalDependenciesCount();
-    let analyzedCount = await analyticsCard.getAnalyzedDependenciesCount();
-    let unknownCount = await analyticsCard.getUnknownDependenciesCount();
-
-    expect(totalCount).toBeGreaterThanOrEqual(0, 'total dependencies count');
-    expect(analyzedCount).toBeGreaterThanOrEqual(0, 'total analyzed count');
-    expect(unknownCount).toBeGreaterThanOrEqual(0, 'total unknown count');
-    expect(totalCount).toBe(analyzedCount + unknownCount, 'total = analyzed + unknown');
+  it('Verify dashboard', async () => {
+    support.info('--- Verify dashboard ---');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
+    await dashboardInteractions.verifyCodebases();
+    await dashboardInteractions.verifyAnalytics();
+    await dashboardInteractions.verifyApplications();
+    await dashboardInteractions.verifyWorkItems();
   });
 });
