@@ -61,10 +61,12 @@ export class SpaceCheWorkspacePage extends AppPage {
   cheMenuRun = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/runGroup-true\']')), 'Run menu');
   cheMenuRunTest = new Button (element(by.xpath('.//*[@id=\'topmenu\/Run\/Test\']')), 'Run -> Test');
   cheMenuRunTestJunit = new Button (element(by.xpath('.//*[@id=\'topmenu\/Run\/Test\/Run JUnit Test\']')), 'Run -> Test -> Junit');
+  cheMenuDebugTestJunit = new Button (element(by.xpath('.//*[@id=\'topmenu\/Run\/Test\/Debug JUnit Test\']')), 'Debug -> Test -> Junit');
 
   /* Junit output is displayed here */
   debugInfoPanel = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-infoPanel\']')));
-
+  testRunnerResultsButton = new Button(element(by.xpath('.//*[@id=\'gwt-debug-partButton-Test Results\']')),'testRunnerResultsButton');
+  
   /* File context menu */
   cheContextMenuEditFile = new Button (element(by.xpath('.//*[@id=\'contextMenu\/Edit file\']')), 'Edit file');
 
