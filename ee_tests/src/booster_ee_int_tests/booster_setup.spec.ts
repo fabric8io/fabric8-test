@@ -14,8 +14,16 @@ import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { CheWorkspace } from '../support';
 
+import { DeploymentsInteractions, DeploymentsInteractionsFactory } from '../interactions/deployments_interactions';
+import { PipelinesInteractions } from '../interactions/pipelines_interactions';
+import { SpaceDashboardInteractions } from '../interactions/space_dashboard_interactions';
+import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
+import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
+import { PageOpenMode } from '../..';
+
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
+let strategy: string = browser.params.release.strategy;
 
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
@@ -46,56 +54,34 @@ describe('Creating new quickstart in OSIO', () => {
 
     // Create a space
     let spaceName = support.newSpaceName();
-    globalSpaceName = spaceName;
-    let spaceDashboardPage;
-    if (browser.params.ngx_launcher.enabled === 'true') {
-      spaceDashboardPage = await dashboardPage.createNewSpaceByLauncher(spaceName);
-    } else {
-      spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
-    }
+    support.info('--- Create space ' + spaceName + ' ---');
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.createSpace(spaceName);
 
     // Create a QuickStart
     let quickstart = new Quickstart(browser.params.quickstart.name);
-    support.info('Creating quickstart: ' + quickstart.name);
-    let wizard = await spaceDashboardPage.addToSpace();
-    await wizard.ready();
-    if (browser.params.ngx_launcher.enabled === 'true') {
-      support.info('Use the new ngx launcher...');
-      await wizard.newQuickstartProjectByLauncher(quickstart.id, spaceName, browser.params.release.strategy);
-    } else {
-      support.info('Use the legacy launcher...');
-      await wizard.newQuickstartProject({ project: quickstart.name });
-    }
-    await spaceDashboardPage.ready();
+    support.info('--- Create quickstart ' + quickstart.name + ' ---');
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
 
     // Create a Che workspace
-    await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
+    support.info('--- Run che workspace ' + quickstart.name + ' ---');
+    dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+    await dashboardInteractions.openCodebasesPage();
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
-    // A new browser window is opened when Che opens - switch to that new window now
-    let handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs before = ' + handles.length);
-    await browser.wait(windowCount(2), support.DEFAULT_WAIT);
-    handles = await browser.getAllWindowHandles();
-
-    support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/che_workspace_parta_' + spaceName + '.png');
-
-    // Switch to the Che browser window
-    await browser.switchTo().window(handles[1]);
+    await support.switchToWindow(2, 1);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
 
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-
-    let cheWorkspaceUrl = await browser.getCurrentUrl();
-    support.info('Che Workspace URL: ' + cheWorkspaceUrl);
-    support.updateCheWorkspaceUrl(cheWorkspaceUrl);
-
+    await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
     support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
@@ -103,17 +89,9 @@ describe('Creating new quickstart in OSIO', () => {
     // Close Che Tab window
     await browser.close();
 
-    // Switch back to the OSIO browser window
-    await browser.switchTo().window(handles[0]);
+    /* Switch back to the OSIO browser window */
+    await support.switchToWindow(1, 0);
+
   });
-
-  function windowCount(count: number) {
-    return function () {
-      return browser.getAllWindowHandles().then(function (handles) {
-        return handles.length === count;
-      });
-    };
-  }
-
 
 });
