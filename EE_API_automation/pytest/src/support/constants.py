@@ -65,6 +65,12 @@ class workitem_constants:
     witypefeature =  "0a24d3c2-e0a6-4686-8051-ec0ea1915a28"
     witypebug =  "26787039-b68f-4e28-8814-c2f93be1ef4e"
     witypetask = "bbf35418-04b6-426c-a60b-7f80beb0b624"
+
+    witypeepic = "f450d7d0-3d38-4887-83ca-38d27c109b59"
+    witypefeature1 = "83852318-a69a-4092-a412-bb67527c4ba6"
+    witypebacklogitem = "23b1dfd5-f497-4843-97c3-e3eefdc9930e"
+    witypebug1 = "90e961d1-0de8-49f4-b197-ba13418c20a8"
+    witypetask1 = "db906e00-a5fa-4a86-8ef7-772c89f703ac"
     
     wilinktype_parent = "25c326a7-6d03-4f5a-b23b-86a9ee4171e9"
     
@@ -83,31 +89,32 @@ class workitem_constants:
 
 
 class dynamic_data:
-    username = None
-    userfullname = None
-    userid = None
-    
-    spaceid = None
-    spacename = None
-    spacelink = None
-    
-    ###Planner
-    parent_area_id = None
-    parent_area_name = None
-    area_names_to_ids = {}
-    
-    parent_iteration_id = None
-    parent_iteration_name = None
-    iteration_names_to_ids = {}
-    nested_iters_names_to_ids = {}
-    
-    labels_names_to_ids = {}
-    
-    wi_names_to_ids = {}
-    wi_names_to_links = {}
-    
-    ###Forge
-    quickstart_selected = None
+    def __init__(self):
+        self.reset()
+    def reset(self):
+        # set all members to their initial value
+        self.username = None
+        self.userfullname = None
+        self.userid = None
+        
+        self.spaceid = None
+        self.spacename = None
+        self.spacelink = None
+        
+        ###Planner
+        self.parent_area_id = None
+        self.parent_area_name = None
+        self.area_names_to_ids = {}
+        
+        self.parent_iteration_id = None
+        self.parent_iteration_name = None
+        self.iteration_names_to_ids = {}
+        self.nested_iters_names_to_ids = {}
+        
+        self.labels_names_to_ids = {}
+        
+        self.wi_names_to_ids = {}
+        self.wi_names_to_links = {}
 
 dynamic_vars = dynamic_data()
 

@@ -5,10 +5,10 @@ import constants
 
 count = 1
 
-def create_space_name():
+def create_space_name(template="SDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
-    space = constants.launch_detail.userid_primary + "-space-" + var
+    space = constants.launch_detail.userid_primary + "-" + template + "-space-" + var
     print "\nSpace Name = ", space
     return space
 
@@ -131,7 +131,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
         mylist = list(reversed(mylist))
     return mylist
 
-def create_workitem(title=None, spaceid=None, witype=None, iterationid=None):
+def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None):
     if None in [title, spaceid, witype]:
         print "None value supplied for either SpaceID / WI-Title / WI-Type"
         return None
@@ -149,6 +149,35 @@ def create_workitem(title=None, spaceid=None, witype=None, iterationid=None):
         api = "api/spaces/" + spaceid + "/workitems"
         url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_backlog.json', replace={'$wi_nos_generated':title, '$witype': witype})
+        r = req.post(url, headers=constants.request_detail.headers_default, json=f)
+        constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
+        constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
+        return r
+
+def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=None):
+    if None in [title, spaceid, witype]:
+        print "None value supplied for either SpaceID / WI-Title / WI-Type"
+        return None
+    ## Create workitems in Iterations context
+    elif iterationid is not None:
+        api = "api/spaces/" + spaceid + "/workitems"
+        url = constants.launch_detail.create_url(api)
+        if witype == constants.workitem_constants.witypetask1:
+            f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do', '$iteration_id': iterationid})
+        else:
+            f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New', '$iteration_id': iterationid})
+        r = req.post(url, headers=constants.request_detail.headers_default, json=f)
+        constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
+        constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
+        return r
+    ## Create workitems in backlog view
+    else:
+        api = "api/spaces/" + spaceid + "/workitems"
+        url = constants.launch_detail.create_url(api)
+        if witype == constants.workitem_constants.witypetask1:
+            f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do'})
+        else:
+            f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New'})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
