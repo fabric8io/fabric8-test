@@ -61,7 +61,7 @@ export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInter
     }
 
     public async createSpace(name: string): Promise<void> {
-        await this.dashboardPage.createNewSpace(name);
+        await this.dashboardPage.createNewSpaceByLauncher(name);
     }
 
     public async resetEnvironment(): Promise<void> {
@@ -77,7 +77,4 @@ export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInter
 
 export class BetaAccountHomeInteractions extends ReleasedAccountHomeInteractions {
 
-    public async createSpace(name: string): Promise<void> {
-        await this.dashboardPage.createNewSpaceByLauncher(name);
-    }
 }
