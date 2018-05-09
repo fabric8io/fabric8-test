@@ -41,12 +41,15 @@ describe('Main E2E test suite', () => {
   afterAll(async () => {
     support.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
-      support.info('--- Reset environmet ---');
-      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      try {
+        support.info('--- Reset environmet ---');
+        let accountHomeInteractions = AccountHomeInteractionsFactory.create();
       await accountHomeInteractions.resetEnvironment();
-
-      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+      } catch (e) {
+        support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
+        support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        throw e;
+      }
     }
   });
 
@@ -63,13 +66,16 @@ describe('Main E2E test suite', () => {
     // TODO: Remove reset of environment. This was added due to the following issue
     // underlying fabric8-test issue https://github.com/fabric8io/fabric8-test/issues/644
     if (browser.params.reset.environment === 'true' && featureLevel === FeatureLevel.RELEASED) {
-      support.info('--- Reset environmet ---');
-      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-      await accountHomeInteractions.resetEnvironment();
-
-      support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-      support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
-      index++;
+      try {
+        support.info('--- Reset environmet ---');
+        let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+        await accountHomeInteractions.resetEnvironment();
+      } catch (e) {
+        support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
+        support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        index++;
+        throw e;
+      }
     }
   });
 
