@@ -104,7 +104,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async createQuickstart(name: string, strategy: string): Promise<void> {
         let wizard = await this.spaceDashboardPage.addToSpace();
-        await wizard.newQuickstartProject({ project: name, strategy });
+        await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
     }
 
     public async verifyCodebases(): Promise<void> {
@@ -160,11 +160,6 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 }
 
 export class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions {
-
-    public async createQuickstart(name: string, strategy: string): Promise<void> {
-        let wizard = await this.spaceDashboardPage.addToSpace();
-        await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
-    }
 
     public async verifyWorkItems(): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
