@@ -60,26 +60,17 @@ export class CleanupUserEnvPage extends AppPage {
     support.debug('... checking if erase button is there - OK');
   }
 
-  async cleanup(username: string) {
-    await this.cleanupSupport(username);
-
-    await browser.wait(until.presenceOf(this.alertBox), support.LONG_WAIT);
-    let alertText = await this.alertBox.getText();
-
-    /* An intermittent error is resulting in some user enviroment resets failing
+  /* An intermittent error is resulting in some user enviroment resets failing
        https://github.com/openshiftio/openshift.io/issues/1637
        If this happens - try one more time - if that fails something serious
        has happened and the test will/and should fail */
-    support.info('Alert text: ' + alertText);
-    if (alertText.includes(this.CLEANUP_SUCCESSFUL_MESSAGE)) {
-      support.info('Reset successfull');
-    } else {
-      support.info('Reset failed - retrying');
-      this.cleanupSupport(username);
-
-      /* Check for success - if this check also fails - the test will fail */
-      await browser.wait(until.presenceOf(
-        element(by.cssContainingText('fabric8-cleanup', this.CLEANUP_SUCCESSFUL_MESSAGE))));
+  async cleanup(username: string) {
+    try {
+      await this.cleanupSupport(username);
+    } catch (e) {
+      await browser.sleep(support.LONG_WAIT);
+      support.info('Retrying reset');
+      await this.cleanupSupport(username);
     }
   }
 
@@ -91,6 +82,17 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmationInput.clear();
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
+
+    await browser.wait(until.presenceOf(this.alertBox), support.LONG_WAIT);
+    let alertText = await this.alertBox.getText();
+
+    support.info('Alert text: ' + alertText);
+    if (alertText.includes(this.CLEANUP_SUCCESSFUL_MESSAGE)) {
+      support.info('Reset successfull');
+    } else {
+      support.info('Reset failed');
+      throw 'Reset of the environment failed';
+    }
   }
 }
 
