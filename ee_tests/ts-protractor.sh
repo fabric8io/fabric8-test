@@ -65,7 +65,7 @@ main() {
   # NOTE: do NOT quote $protractor as we want spaces to be interpreted as
   # seperate arguments
   DIRECT_CONNECTION=${direct_connection} $protractor --baseUrl "$OSIO_URL" \
-    protractor.config.js \
+    target/ts-output/protractor.config.js \
     --suite "${suite}" \
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \

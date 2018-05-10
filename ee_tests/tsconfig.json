@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
+    "outDir": "target/ts-output",
     "module": "commonjs",
     "target": "es6",
     "sourceMap": true,
-    "allowJs": true,
-    "checkJs": true,
-    "strict": true,
-    "strictNullChecks": true
+    "strict": true
   },
   "exclude": [
-    "./*.js"
+    "./*.js", "target"
   ]
 }
