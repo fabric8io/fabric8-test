@@ -6,6 +6,8 @@ import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
+import { TextInput, Button } from '../ui';
+import { SpaceChePage } from '../page_objects/space_che.page';
 
 export enum BrowserMode {
   Phone,
@@ -452,3 +454,25 @@ export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspac
     }
   }
 
+  /* Find the project in the project tree */
+  export async function findProjectInTree (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+
+    support.writeScreenshot('target/screenshots/che_workspace_partb_' + support.currentSpaceName() + '.png');
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
+    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()).getText());
+    support.writeScreenshot('target/screenshots/che_workspace_partc_' + support.currentSpaceName() + '.png');
+  }
+
+  /* Open the codebase page, and then open the Che workspace */
+  export async function openCodebasePageSwitchWindow (spaceChePage: SpaceChePage) {
+
+    /* Open the codebase page and the workspace in Che */
+    await openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+//    let spaceChePage = new SpaceChePage();
+    await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
+
+    /* A new browser window is opened when Che opens */
+    await support.switchToWindow(2, 1);
+
+  }

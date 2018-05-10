@@ -36,7 +36,7 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
   });
 
   afterEach(async () => {
-    support.writeScreenshot('target/screenshots/booster_junit_tests_end.png');
+    support.writeScreenshot('target/screenshots/booster_debug_tests_end.png');
     await dashboardPage.logout();
   });
 
@@ -45,29 +45,22 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
     // TODO: implement
     support.info('Test starting now...');
 
-    await support.openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    /* Open and switch to the Che window */
     let spaceChePage = new SpaceChePage();
+    await support.openCodebasePageSwitchWindow(spaceChePage);
 
-    await spaceChePage.codebaseOpenButton(browser.params.github.username, support.currentSpaceName()).clickWhenReady();
-
-    /* A new browser window is opened when Che opens - switch to that new window now */
-    let handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs before = ' + handles.length);
-    await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/che_workspace_parta_' + support.currentSpaceName() + '.png');
-
-    /* Switch to the Che browser window */
-    await browser.switchTo().window(handles[1]);
+    /* Find the project in the Che workspace */
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    support.writeScreenshot('target/screenshots/che_workspace_partb_' + support.currentSpaceName() + '.png');
+    await support.findProjectInTree(spaceCheWorkSpacePage);
 
-    /* Find the project */
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    support.writeScreenshot('target/screenshots/che_workspace_partc_' + support.currentSpaceName() + '.png');
-    expect(await spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()).getText()).toContain(support.currentSpaceName());
+    /* We have to allow time for the project to be fully populated - achieve this by
+       verifying that the pom.xml file is present */
+    try {
+      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName());
+      await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('pom.xml')), support.DEFAULT_WAIT);
+    } catch (e) {
+      support.info('Exception in Che project directory tree = ' + e);
+  }
 
     /* Open the terminal window and execute maven install command */
     await spaceCheWorkSpacePage.bottomPanelTerminalTab.clickWhenReady();
@@ -81,7 +74,7 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
     await expect(spaceCheWorkSpacePage.bottomPanelTerminal.getText()).not.toContain('BUILD FAILURE');
 
     /* Run the Junit tests */
-    await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(), '\/src', '\/test', '\/java', '\/io', '\/openshift', '\/booster');
+    await spaceCheWorkSpacePage.walkTree('\/src', '\/test', '\/java', '\/io', '\/openshift', '\/booster');
     await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(quickstart.testFileName)), support.DEFAULT_WAIT);
 
     let theText = await spaceCheWorkSpacePage.cheFileName(quickstart.testFileName).getText();
@@ -120,8 +113,10 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
     await expect(spaceCheWorkSpacePage.debugInfoPanel.getText()).toContain('Total tests run: ' + quickstart.junitTestCount);
     support.writeScreenshot('target/screenshots/che_workspace_partd_' + support.currentSpaceName() + '.png');
 
-    /* Switch back to the OSIO browser window */
-    await browser.switchTo().window(handles[0]);
+    await browser.close();
+
+    /* Switch back to the OSIO window */
+    await support.switchToWindow(1, 0);
   });
 
 });
