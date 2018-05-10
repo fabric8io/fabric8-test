@@ -27,8 +27,7 @@ const EXPECTED_SUCCESS_TEXT = (
 
 // tslint:disable:max-line-length
 
-/* This test performs these steps:
-   - Execute the quickstart/booster through the Che run menu, verify output from the deployed app  */
+/* This test executes the quickstart/booster through the Che run menu, verifies output from the deployed app  */
 
 describe('Verify the Che preview URL for a deployed app:', () => {
   let dashboardPage: MainDashboardPage;
@@ -44,31 +43,17 @@ describe('Verify the Che preview URL for a deployed app:', () => {
     await dashboardPage.logout();
   });
 
+  /* Run the app, verify the deployed app performs as expected */
   it('Login, run in Che, verify URL, logout', async () => {
     support.info('Che preview URL test starting now...');
 
-    /* Run the app, verify the deployed app performs as expected */
-
-    /* Open the codebase page and the workspace in Che */
-    await support.openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    /* Open and switch to the Che window */
     let spaceChePage = new SpaceChePage();
-    await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
+    await support.openCodebasePageSwitchWindow(spaceChePage);
 
-    /* A new browser window is opened when Che opens */
-    let handles = await browser.getAllWindowHandles();
-    support.writeScreenshot('target/screenshots/che_edit_open_che_' + support.currentSpaceName() + '.png');
-    await browser.wait(support.windowCount(handles.length), support.DEFAULT_WAIT);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after opening Che browser window = ' + handles.length);
-
-    /* Switch to the Che browser window */
-    await browser.switchTo().window(handles[handles.length - 1]);
+    /* Find the project in the Che workspace */
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-
-    /* Find the project in the project tree */
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.DEFAULT_WAIT);
-    support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
+    await support.findProjectInTree(spaceCheWorkSpacePage);
 
     /* Run the project - verify the output from the deployed (in Che preview) serviceendpoint */
     await support.runBooster(spaceCheWorkSpacePage, EXPECTED_SUCCESS_TEXT);
@@ -81,14 +66,13 @@ describe('Verify the Che preview URL for a deployed app:', () => {
     await browser.close();
 
     /* Close the Che window */
-    handles = await browser.getAllWindowHandles();
-    await browser.switchTo().window(handles[handles.length - 1]);
+    await support.switchToWindow(2, 1);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await browser.switchTo().window(handles[0]);
+    await support.switchToWindow(1, 0);
 
   });
 

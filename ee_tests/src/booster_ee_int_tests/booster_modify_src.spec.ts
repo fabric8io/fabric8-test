@@ -54,30 +54,19 @@ describe('Modify the project source code in Che:', () => {
 
     /* Part 1 - Run the app, verify the deployed app performs as expected */
 
-    /* Open the codebase page and the workspace in Che */
-    await support.openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+    /* Open and switch to the Che window */
     let spaceChePage = new SpaceChePage();
-    await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
-
-    /* A new browser window is opened when Che opens */
-    let handles = await browser.getAllWindowHandles();
-    support.writeScreenshot('target/screenshots/che_edit_open_che_' + support.currentSpaceName() + '.png');
-    await browser.wait(support.windowCount(handles.length), support.DEFAULT_WAIT);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after opening Che browser window = ' + handles.length);
-
-    /* Switch to the Che browser window */
-    await browser.switchTo().window(handles[handles.length - 1]);
-    let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
+    await support.openCodebasePageSwitchWindow(spaceChePage);
 
     /* Find the project in the project tree */
+    let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
 
     await support.runBooster(spaceCheWorkSpacePage, EXPECTED_SUCCESS_TEXT);
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    projectInCheTree.clickWhenReady();
+    await projectInCheTree.clickWhenReady();
 
     /* Disable param and braces - to avoid introducing extra characters */
     await support.togglePreferences(spaceCheWorkSpacePage);
@@ -112,9 +101,6 @@ describe('Modify the project source code in Che:', () => {
     }
     support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + support.currentSpaceName() + '.png');
 
-    /* Close the editor window and select the project in the project tree */
-    await browser.switchTo().window(handles[1]);
-
     await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines,
       REDEPLOY_TEXT_1), support.LONGER_WAIT);
     await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines,
@@ -137,17 +123,14 @@ describe('Modify the project source code in Che:', () => {
     await browser.close();
 
     /* Close the Che window */
-    handles = await browser.getAllWindowHandles();
-    await browser.switchTo().window(handles[handles.length - 1]);
+    await support.switchToWindow(2, 1);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
-
-    /* Re-enable preferences */
-    await support.togglePreferences(spaceCheWorkSpacePage);
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await browser.switchTo().window(handles[0]);
+    await support.switchToWindow(1, 0);
+
 
   });
 
