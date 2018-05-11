@@ -9,7 +9,7 @@ if [ -z $ZABBIX_TIMESTAMP ]; then
   export ZABBIX_TIMESTAMP=`date +%s`;
 fi
 
-VALUES=(`cat $INPUT-report_requests.csv | grep -F "$ENDPOINT" | cut -d ',' -f 3-10 | tr ',' ' '`)
+VALUES=(`cat $LOG_DIR/csv/$INPUT-report_requests.csv | grep -F "$ENDPOINT" | cut -d ',' -f 3-10 | tr ',' ' '`)
 VAL_REQ=$((${VALUES[0]}+${VALUES[1]}))
 VAL_PASS=${VALUES[0]}
 VAL_FAIL=${VALUES[1]}

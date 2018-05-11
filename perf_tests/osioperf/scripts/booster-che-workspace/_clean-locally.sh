@@ -13,4 +13,3 @@ rm -vf _execute.sh
 rm -vf osioperf.py*
 rm -vf $JOB_BASE_NAME-$BUILD_NUMBER-*
 rm -rvf common.git
-rm -rvf slave-*

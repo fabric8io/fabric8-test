@@ -9,6 +9,9 @@
 # Should be provided by Jenkins.
 #export BUILD_NUMBER=0
 
+# A name of the directory where logs and reports are placed during the test execution
+export LOG_DIR=$JOB_BASE_NAME-$BUILD_NUMBER-logs
+
 # Auth server HTTP scheme http/https
 #export SERVER_SCHEME=https
 
