@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source _setenv.sh
+mkdir -p $LOG_DIR
 
 METRIC_META_FILE=${1:-_metrics.meta}
 
