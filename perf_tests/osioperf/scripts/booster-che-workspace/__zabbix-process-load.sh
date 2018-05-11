@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 source _setenv.sh
 
 INPUT="$JOB_BASE_NAME-$BUILD_NUMBER"
