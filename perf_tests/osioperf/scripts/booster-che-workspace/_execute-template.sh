@@ -107,7 +107,7 @@ export REPORT_CHART_HEIGHT=600
 function distribution_2_csv {
 	HEAD=(`cat $1 | head -n 1 | sed -e 's,",,g' | sed -e 's, ,_,g' | sed -e 's,%,,g' | tr "," " "`)
 	DATA=(`cat $1 | grep -F "$2" | sed -e 's,",,g' | sed -e 's, ,_,g' | tr "," " "`)
-	NAME=`echo $1 | sed -e 's,-report_distribution,,g' | sed -e 's,$LOG_DIR/csv/.*\.csv,,g'`-`echo "$2" | sed -e 's,",,g' | sed -e 's, ,_,g;'`
+	NAME=`echo $1 | sed -e 's,.*/csv/\(.*\)-report_distribution.csv,\1,g'`-`echo "$2" | sed -e 's,",,g' | sed -e 's, ,_,g;'`
 
 	rm -rf $LOG_DIR/csv/$NAME-rt-histo.csv;
 	for i in $(seq 2 $(( ${#HEAD[*]} - 1 )) ); do
@@ -130,7 +130,7 @@ if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 fi
 
 RESULTS_FILE=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-results.md
-sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" $JOB_BASE_NAME-$BUILD_NUMBER-results-template.md |
+sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-results-template.md |
 sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
 # Create HTML report

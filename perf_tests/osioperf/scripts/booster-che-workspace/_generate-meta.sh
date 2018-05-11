@@ -41,14 +41,14 @@ for i in `cat $METRIC_META_FILE`; do
 
 		#@@GENARATE_LOAD_TEST_CHARTS@@
 		ltch="$ltch\n#### \`$metric_name\` Response Time"
-		ltch="$ltch\n![$metric_name-reponse-time](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-response-time.png)"
-		ltch="$ltch\n![$metric_name-minimal-reponse-time](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-minimal-response-time.png)"
-		ltch="$ltch\n![$metric_name-median-reponse-time](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-median-response-time.png)"
-		ltch="$ltch\n![$metric_name-maximal-reponse-time](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-maximal-response-time.png)"
-		ltch="$ltch\n![$metric_name-average-reponse-time](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-average-response-time.png)"
-		ltch="$ltch\n![$metric_name-rt-histo](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-rt-histo.png)"
+		ltch="$ltch\n![$metric_name-reponse-time](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-response-time.png)"
+		ltch="$ltch\n![$metric_name-minimal-reponse-time](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-minimal-response-time.png)"
+		ltch="$ltch\n![$metric_name-median-reponse-time](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-median-response-time.png)"
+		ltch="$ltch\n![$metric_name-maximal-reponse-time](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-maximal-response-time.png)"
+		ltch="$ltch\n![$metric_name-average-reponse-time](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-average-response-time.png)"
+		ltch="$ltch\n![$metric_name-rt-histo](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-rt-histo.png)"
 		ltch="$ltch\n#### \`$metric_name\` Failures"
-		ltch="$ltch\n![$metric_name-failures](./$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-failures.png)"
+		ltch="$ltch\n![$metric_name-failures](./png/$JOB_BASE_NAME-$BUILD_NUMBER-$metric_request_type""_$metric_name-failures.png)"
 	fi
 done
 
