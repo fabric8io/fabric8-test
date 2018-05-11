@@ -58,9 +58,7 @@ fi
 /usr/sbin/setenforce 0
 
 # Get all the deps in
-yum -y install \
-  docker \
-  rsync
+yum -y install docker
 service docker start
 
 # Build builder image
@@ -72,7 +70,7 @@ REGISTRY="registry.devshift.net"
 
 mkdir -p dist
 echo "Pull fabric8-test image"
-docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest > /dev/null
+docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 echo "Run test container"
 
 # Assign values to variable names expected by typescript testsmore
@@ -89,6 +87,11 @@ export FEATURE_LEVEL=$FEATURE_LEVEL
 export ZABBIX_ENABLED=$ZABBIX_ENABLED
 export ZABBIX_HOST=$ZABBIX_HOST
 export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
+
+# Shutdown container if running
+if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
+    docker rm -f fabric8-test
+fi
 
 docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
@@ -130,5 +133,10 @@ docker exec fabric8-test mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
 docker exec fabric8-test bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 docker exec fabric8-test bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 docker exec fabric8-test rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
+
+# Shutdown container if running
+if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
+    docker rm -f fabric8-test
+fi
 
 exit $RTN_CODE
