@@ -5,6 +5,10 @@ source _setenv.sh
 export COMMON="common.git"
 git clone https://github.com/pmacik/openshiftio-performance-common $COMMON
 
+cd $COMMON
+git checkout fix-separate-logs
+cd ..
+
 echo " Wait for the server to become available"
 ./_wait-for-server.sh
 if [ $? -gt 0 ]; then
