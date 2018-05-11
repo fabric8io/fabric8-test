@@ -107,29 +107,29 @@ export REPORT_CHART_HEIGHT=600
 function distribution_2_csv {
 	HEAD=(`cat $1 | head -n 1 | sed -e 's,",,g' | sed -e 's, ,_,g' | sed -e 's,%,,g' | tr "," " "`)
 	DATA=(`cat $1 | grep -F "$2" | sed -e 's,",,g' | sed -e 's, ,_,g' | tr "," " "`)
-	NAME=`echo $1 | sed -e 's,-report_distribution,,g' | sed -e 's,\.csv,,g'`-`echo "$2" | sed -e 's,",,g' | sed -e 's, ,_,g;'`
+	NAME=`echo $1 | sed -e 's,-report_distribution,,g' | sed -e 's,$LOG_DIR/csv/.*\.csv,,g'`-`echo "$2" | sed -e 's,",,g' | sed -e 's, ,_,g;'`
 
-	rm -rf $NAME-rt-histo.csv;
+	rm -rf $LOG_DIR/csv/$NAME-rt-histo.csv;
 	for i in $(seq 2 $(( ${#HEAD[*]} - 1 )) ); do
-		echo "${HEAD[$i]};${DATA[$i]}" >> $NAME-rt-histo.csv;
+		echo "${HEAD[$i]};${DATA[$i]}" >> $LOG_DIR/csv/$NAME-rt-histo.csv;
 	done;
 }
-for c in $(find *.csv | grep '\-report_distribution.csv'); do
+for c in $(find $LOG_DIR/csv -name '*-report_distribution.csv'); do
 	@@GENERATE_DISTRIBUTION_2_CSV@@
 done
-for c in $(find *rt-histo.csv); do echo $c; $COMMON/_csv-rt-histogram-to-png.sh $c; done
+for c in $(find $LOG_DIR/csv -name '*rt-histo.csv'); do echo $c; $COMMON/_csv-rt-histogram-to-png.sh $c; done
 
 echo " Prepare results for Zabbix"
 rm -rvf *-zabbix.log
-export ZABBIX_LOG=$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
+export ZABBIX_LOG=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-zabbix.log
 ./_zabbix-process-results.sh $ZABBIX_LOG
 
 if [[ "$ZABBIX_REPORT_ENABLED" = "true" ]]; then
 	echo "  Uploading report to zabbix...";
-	zabbix_sender -vv -i $ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
+	zabbix_sender -vv -i $LOG_DIR/$ZABBIX_LOG -T -z $ZABBIX_SERVER -p $ZABBIX_PORT;
 fi
 
-RESULTS_FILE=$JOB_BASE_NAME-$BUILD_NUMBER-results.md
+RESULTS_FILE=$LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-results.md
 sed -e "s,@@JOB_BASE_NAME@@,$JOB_BASE_NAME,g" $JOB_BASE_NAME-$BUILD_NUMBER-results-template.md |
 sed -e "s,@@BUILD_NUMBER@@,$BUILD_NUMBER,g" > $RESULTS_FILE
 
@@ -144,7 +144,7 @@ function filterZabbixValue {
 REPORT_TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S (%Z)'`
 sed -i -e "s,@@TIMESTAMP@@,$REPORT_TIMESTAMP,g" $RESULTS_FILE
 
-REPORT_FILE=$JOB_BASE_NAME-report.md
+REPORT_FILE=$LOG_DIR/$JOB_BASE_NAME-report.md
 cat README.md $RESULTS_FILE > $REPORT_FILE
 if [ -z "$GRIP_USER" ]; then
 	grip --export $REPORT_FILE
@@ -158,4 +158,4 @@ if [ "$RUN_LOCALLY" != "true" ]; then
 fi
 
 echo " Check for errors in Locust master log"
-if [[ "0" -ne `cat $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log | grep 'Error report' | wc -l` ]]; then echo '[:(] THERE WERE ERRORS OR FAILURES!!!'; else echo '[:)] NO ERRORS OR FAILURES DETECTED.'; fi
+if [[ "0" -ne `cat $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log | grep 'Error report' | wc -l` ]]; then echo '[:(] THERE WERE ERRORS OR FAILURES!!!'; else echo '[:)] NO ERRORS OR FAILURES DETECTED.'; fi

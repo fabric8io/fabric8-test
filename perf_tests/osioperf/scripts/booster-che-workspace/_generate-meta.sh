@@ -13,13 +13,13 @@ for i in `cat $METRIC_META_FILE`; do
 		zabbix_metric_prefix="$JOB_BASE_NAME.$metric_request_type.$metric_name"
 
 		#@@GENERATE_LOCUST_LOG_TO_CSV@@
-		lltc="$lltc\n\$COMMON/_locust-log-to-csv.sh '$metric_request_type $metric_name' $JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log"
+		lltc="$lltc\n\$COMMON/_locust-log-to-csv.sh '$metric_request_type $metric_name' $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-locust-master.log"
 
 		#@@GENERATE_ZABBIX_PROCESS_LOAD@@
 		zpl="$zpl\n./__zabbix-process-load.sh '\"$metric_request_type\"\\,\"$metric_name\"' \"$zabbix_metric_prefix\" >> \$ZABBIX_LOG"
 
 		#@@GENERATE_CSV_TO_PNG@@
-		ctp="$ctp\nfor c in \$(find *.csv | grep '\\\\-$metric_request_type\_$metric_name\\'); do echo \$c; \$COMMON/_csv-response-time-to-png.sh \$c; \$COMMON/_csv-throughput-to-png.sh \$c; \$COMMON/_csv-failures-to-png.sh \$c; done"
+		ctp="$ctp\nfor c in \$(find \$LOG_DIR/csv -name '*.csv' | grep '\\\\-$metric_request_type\_$metric_name\\'); do echo \$c; \$COMMON/_csv-response-time-to-png.sh \$c; \$COMMON/_csv-throughput-to-png.sh \$c; \$COMMON/_csv-failures-to-png.sh \$c; done"
 
 		#@@GENERATE_DISTRIBUTION_2_CSV@@
 		dtc="$dtc\ndistribution_2_csv \$c '\"$metric_request_type $metric_name\"';"
@@ -62,4 +62,4 @@ sed -e 's,@@GENERATE_ZABBIX_PROCESS_LOAD@@,'"$zpl"',g' _zabbix-process-results-t
 chmod +x _zabbix-process-results.sh
 
 sed -e 's,@@GENERATE_LOAD_TEST_TABLE@@,'"$ltt"',g' results-template.md \
-| sed -e 's,@@GENARATE_LOAD_TEST_CHARTS@@,'"$ltch"',g' > $JOB_BASE_NAME-$BUILD_NUMBER-results-template.md
+| sed -e 's,@@GENARATE_LOAD_TEST_CHARTS@@,'"$ltch"',g' > $LOG_DIR/$JOB_BASE_NAME-$BUILD_NUMBER-results-template.md
