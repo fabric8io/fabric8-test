@@ -66,7 +66,7 @@ let conf: Config = {
 
     suites: {
 
-      smoketest: ['src/quickstart_deployments.spec.js'],
+      smoketest: ['src/smoke.spec.js'],
       all: ['src/*.spec.js'],
       local: ['src/local/*.js'],
 
