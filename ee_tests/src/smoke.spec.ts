@@ -16,7 +16,7 @@ import { Button } from './ui';
 import { PageOpenMode } from '..';
 import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
-describe('smoketest', () => {
+describe('e2e_smoketest', () => {
 
   let quickstart: Quickstart;
   let strategy: string;
