@@ -154,8 +154,8 @@ export class PipelineDetails extends BaseElement {
     return Promise.resolve(this.string2Number(buildNumber, 'Unexpected build number'));
   }
 
-  public async viewLog(): Promise<number> {
-    throw 'not implemented';
+  public async viewLog(): Promise<void> {
+    await this.element(by.cssContainingText('a', 'View Log')).click();
   }
 
   public async getStages(): Promise<PipelineStage[]> {
