@@ -7,6 +7,7 @@ import { SpaceDashboardPage, PipelineStage, MainDashboardPage } from '../page_ob
 import { PageOpenMode } from '../..';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
+import { LONG_WAIT } from '../support';
 
 // TODO - Error conditions to trap (copied from original code)
 // 1) Jenkins build log - find errors if the test fails
@@ -70,7 +71,13 @@ export abstract class PipelinesInteractions {
 
         await this.waitToFinishInternal(pipeline);
         support.info('Pipeline is finished');
+    }
 
+    public async verifyBuildResult(pipeline: PipelineDetails) {
+        support.info('Check the Jenkins log');
+        await this.verifyJenkinsLog(pipeline);
+
+        support.info('Check build status');
         expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
     }
 
@@ -84,6 +91,15 @@ export abstract class PipelinesInteractions {
     protected abstract async waitToFinishInternal(pipeline: PipelineDetails): Promise<void>;
 
     protected abstract async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void>;
+
+    protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
+        await pipeline.viewLog();
+        await support.switchToWindow(3, 2);
+        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT);
+        await support.writeScreenshot('target/screenshots/pipelines-log.png');
+        await support.writePageSource('target/screenshots/pipelines-log.html');
+        await support.switchToWindow(3, 0);
+    }
 }
 
 export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions {

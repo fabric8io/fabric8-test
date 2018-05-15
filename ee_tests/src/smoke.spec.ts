@@ -123,6 +123,7 @@ describe('smoketest', () => {
     await pipelineInteractions.showPipelinesScreen();
     let pipeline = await pipelineInteractions.verifyBuildInfo();
     await pipelineInteractions.waitToFinish(pipeline);
+    await pipelineInteractions.verifyBuildResult(pipeline);
     await pipelineInteractions.verifyBuildStages(pipeline);
   });
 
