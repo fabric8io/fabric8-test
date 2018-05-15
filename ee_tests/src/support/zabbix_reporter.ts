@@ -85,7 +85,8 @@ export class ZabbixReporter implements CustomReporter {
     }
 
     private getTimestamp(): string {
-        return this.suiteStartTime.getTime().toString() + ' ';
+        let timestamp = this.suiteStartTime.getTime();
+        return Math.round((timestamp / 1000)).toString() + ' ';
     }
 
     private getDuration(status: string | undefined): string {
