@@ -73,12 +73,6 @@ let conf: Config = {
       launchertest: ['src/launcher.spec.js'],
       logintest: ['src/quickstart_login.spec.js'],
 
-      // these tests were already merged into smoke test
-      // TODO https://github.com/fabric8io/fabric8-test/issues/579
-      chetest: ['src/quickstart_che.spec.js'],
-      analyticstest: ['src/quickstart_analytic.spec.js'],
-      quickstartTest: ['src/quickstart_analytic.spec.js'],
-
       // TODO https://github.com/fabric8io/fabric8-test/issues/578
       boosterTest: ['src/booster_pipeline.spec.js'],
       importTest: ['src/workshop-import-to-space.spec.js'],
