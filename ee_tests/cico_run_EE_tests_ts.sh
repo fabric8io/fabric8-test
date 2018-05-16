@@ -88,7 +88,8 @@ export ZABBIX_ENABLED=$ZABBIX_ENABLED
 export ZABBIX_HOST=$ZABBIX_HOST
 export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
 
-export CONTAINER_NAME = $JOB_NAME;
+export CONTAINER_NAME=$JOB_NAME;
+echo "Container name: $CONTAINER_NAME"
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
