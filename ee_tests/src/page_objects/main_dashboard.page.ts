@@ -41,7 +41,7 @@ Page layout
     url = '_home';
 
     /* Dialog to create new space and project */
-    newSpaceName = new TextInput($('#name'), 'Name of Space');
+    newSpaceName = new TextInput($('#add-space-overlay-name'), 'Name of Space');
     createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
 
     // TODO: create a UI component that abstracts this element
