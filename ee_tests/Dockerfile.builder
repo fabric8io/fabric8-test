@@ -64,11 +64,13 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # && yum -y --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-RUN wget https://github.com/openshift/origin/releases/download/v1.5.0/openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
-    tar -xzvf openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit.tar.gz &&\
-    mv openshift-origin-client-tools-v1.5.0-031cbe4-linux-64bit/oc oc
+RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
+    tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
-# install all dependencies
+# Install jq
+RUN yum install --setopt tsflags='nodocs' -y jq
+
+# install all node dependencies
 COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called
 RUN npm --unsafe-perm install
