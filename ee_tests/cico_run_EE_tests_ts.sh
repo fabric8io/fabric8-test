@@ -142,4 +142,11 @@ if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
     docker rm -f $CONTAINER_NAME
 fi
 
+# Set build as unstable if tests have failed
+if [ $RTN_CODE -eq 1 ]; then 
+  echo "Tests failed; setting build as unstable"
+  wget ${JENKINS_URL}jnlpJars/jenkins-cli.jar 
+  java -jar jenkins-cli.jar set-build-result unstable && exit 0
+fi
+
 exit $RTN_CODE
