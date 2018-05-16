@@ -274,6 +274,17 @@ export async function writePageSource(filename: string) {
   info(`Saved page source to: ${filename}`);
 }
 
+/**
+ * Store the page source
+ */
+export async function writeText(filename: string, text: string) {
+  info(`Saving text to: ${filename}`);
+  let stream = fs.createWriteStream(filename);
+  stream.write(new Buffer(text));
+  stream.end();
+  info(`Saved text to: ${filename}`);
+}
+
 function timestamp(): string {
   let date = new Date();
   let time = date.toLocaleTimeString('en-US', {hour12: false});

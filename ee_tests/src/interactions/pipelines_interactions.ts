@@ -69,14 +69,23 @@ export abstract class PipelinesInteractions {
     public async waitToFinish(pipeline: PipelineDetails) {
         support.info('Waiting for pipeline to finish');
 
-        await this.waitToFinishInternal(pipeline);
-        support.info('Pipeline is finished');
+        try {
+            await this.waitToFinishInternal(pipeline);
+            support.info('Pipeline is finished');
+        } finally {
+            try {
+                // save Jenkins log no matter if pipeline finished
+                support.info('Check the Jenkins log');
+                await this.verifyJenkinsLog(pipeline);
+            } finally {
+                // save OC logs no matter if Jenkins log was retrieved
+                support.info('Save OC Jenkins pod log');
+                await this.saveOCJenkinsLogs();
+            }
+        }
     }
 
     public async verifyBuildResult(pipeline: PipelineDetails) {
-        support.info('Check the Jenkins log');
-        await this.verifyJenkinsLog(pipeline);
-
         support.info('Check build status');
         expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
     }
@@ -99,6 +108,30 @@ export abstract class PipelinesInteractions {
         await support.writeScreenshot('target/screenshots/pipelines-log.png');
         await support.writePageSource('target/screenshots/pipelines-log.html');
         await support.switchToWindow(3, 0);
+    }
+
+    protected async saveOCJenkinsLogs(): Promise<void> {
+        let finished: boolean = false;
+        const { exec } = require('child_process');
+
+        support.info('Executing shell script to retrieve logs from OpenShift');
+
+        exec('./oc-get-jenkins-logs.sh ' +
+            browser.params.login.user + ' ' +
+            browser.params.login.password + 
+            ' &> ./target/screenshots/oc-logs-output.txt',
+            (err: Error, stdout: string | Buffer, stderr: string | Buffer) => {
+                if (err !== null) {
+                    support.info('External script failed');
+                    support.info('STDERR:');
+                    support.info(stderr);
+                }
+                finished = true;
+                return;
+            }
+        );
+        await browser.wait(() => finished === true);
+        support.info('Script finished');
     }
 }
 
