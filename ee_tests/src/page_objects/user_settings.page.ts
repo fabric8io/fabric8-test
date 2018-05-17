@@ -11,10 +11,16 @@ export class UserSettingsPage extends AppPage {
 }
 
 export class FeaturesTab {
-
+    readonly featureInputXpath = '//input/ancestor::*[contains(@class, \'active\')]//span[contains(@class,\'icon-\')]';
     public async getFeatureLevel(): Promise<string> {
-        await browser.wait(until.presenceOf(element(by.css('input:checked'))));
-        let checkedInput = await element(by.css('input:checked'));
-        return await checkedInput.getAttribute('id');
+        await browser.wait(until.presenceOf(element(by.xpath(this.featureInputXpath))));
+        let checkedInput = await element(by.xpath(this.featureInputXpath));
+        let featureInputIconCss = await checkedInput.getAttribute('class');
+        let featureCss = featureInputIconCss.match('icon-(internal|experimental|beta|released)');
+        await expect(featureCss).not.toBeNull('feature css');
+        if (featureCss != null) {
+            return featureCss[1];
+        }
+        return 'null';
     }
 }
