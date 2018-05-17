@@ -27,7 +27,7 @@
 
 1. Browse to the directory pytest/ and run the command:
 
-   *sh run_me.sh "SYSTEM_UNDER_TEST" "TEST_USER_ID" "OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER"*
+   *sh run_me.sh "SYSTEM_UNDER_TEST" "TEST_USER_ID" "OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER" True*
 
    Where,
 
@@ -36,10 +36,12 @@
    *TEST_USER_ID* is the OSIO UserID you wish to use
    
    *OSIO_OFFLINE_TOKEN_FOR_THE_TEST_USER* is the Offline Token for the UserID
+
+   *True/False* is the flag to cleanup spaces post test run. True will trigger a cleanup
    
    Example:
 
-   *sh run_me.sh "https://api.openshift.io" "dummyuser" "dummyuser_offline_osio_token"*
+   *sh run_me.sh "https://api.openshift.io" "dummyuser" "dummyuser_offline_osio_token" True*
 
 **OR ...**
 

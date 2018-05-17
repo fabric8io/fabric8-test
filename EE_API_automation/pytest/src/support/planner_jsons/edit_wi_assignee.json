@@ -1,0 +1,23 @@
+{
+  "data": {
+    "id": "$wi_id",
+    "attributes": {
+      "system.description.markup": "Markdown",
+      "version": 1
+    },
+    "links": {
+      "self": "$wi_link"
+    },
+    "relationships": {
+      "assignees": {
+        "data": [
+          {
+            "id": "$assignee",
+            "type": "identities"
+          }
+        ]
+      }
+    },
+    "type": "workitems"
+  }
+}

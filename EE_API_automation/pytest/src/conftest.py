@@ -16,6 +16,8 @@ def pytest_addoption(parser):
         help="offline_token: token to generate an access token")
     parser.addoption("--userid", action="store", default=None,
         help="userid: OSIO userid of the primary test user")
+    parser.addoption("--cleanup", action="store", default=False,
+        help="cleanup: OSIO spaces created are deleted if set to 1")
       
 @pytest.fixture
 def sut(request):
@@ -32,3 +34,7 @@ def offline_token(request):
 @pytest.fixture
 def userid(request):
     return request.config.getoption("--userid")
+
+@pytest.fixture
+def cleanup(request):
+    return request.config.getoption("--cleanup")

@@ -1,0 +1,14 @@
+{
+  "data": {
+    "id": "$wi_id",
+    "attributes": {
+      "system.state": "$state",
+      "system.description.markup": "Markdown",
+      "version": 2
+    },
+    "links": {
+      "self": "$wi_link"
+    },
+    "type": "workitems"
+  }
+}
