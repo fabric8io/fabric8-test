@@ -21,4 +21,4 @@ pip install requests pytest jmespath
 
 cd pytest
 chmod +x run_me.sh
-./run_me.sh 'https://api.openshift.io/' 'rgarg-osiotest1' $EE_TEST_OSIO_TOKEN
+./run_me.sh 'https://api.openshift.io/' 'rgarg-osiotest1' $EE_TEST_OSIO_TOKEN True

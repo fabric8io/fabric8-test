@@ -9,7 +9,6 @@ def create_space_name(template="SDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
     space = constants.launch_detail.userid_primary + "-" + template + "-space-" + var
-    print "\nSpace Name = ", space
     return space
 
 def find_in_obj(obj, condition, path=None):
@@ -238,4 +237,15 @@ def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
         f = read_post_data_file('create_wi_hierarchy.json', replace={'$wilinktype_parent': constants.workitem_constants.wilinktype_parent, '$wi_parent_id': constants.dynamic_vars.wi_names_to_ids[wi_parent_title], '$wi_child_id': constants.dynamic_vars.wi_names_to_ids[wi_child_title]})
         ##Make the request
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
+        return r
+
+def delete_space(spaceid=None):
+    if spaceid is None:
+        print "Please specify a valid space ID"
+        return None
+    else:
+        ## Delete a space
+        api = "api/spaces/" + spaceid
+        url = constants.launch_detail.create_url(api)
+        r = req.delete(url, headers=constants.request_detail.headers_default)
         return r

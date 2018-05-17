@@ -73,6 +73,7 @@ class TestClass_SDD(object):
             spacename = helpers.extract_value("data.attributes.name", r)
             spacelink = helpers.extract_value("data.links.self", r)
             content_type_header = helpers.extract_header("Content-Type", r)
+            print "\nSpace created : ", spacename
             ##Save and retain dynamic data for later use
             dynamic_vars.spaceid = spaceid
             dynamic_vars.spacename = spacename
@@ -302,6 +303,51 @@ class TestClass_SDD(object):
             ##Validate the response
             assert r.status_code == 201
 
+    #### Edit Work item tests follows::::::::
+    class TestClass_EditSDDWorkitem(object):
+        def test_edit_workitem_desc(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_desc = "This is the new description"
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_desc.json', replace={'$wi_id': wi_id, '$wi_desc': wi_new_desc, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
+            assert wi_new_desc in desc_rendered
+        
+        def test_edit_workitem_assignee(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_assignee = dynamic_vars.userid
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_assignee.json', replace={'$wi_id': wi_id, '$assignee': wi_new_assignee, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            assert helpers.extract_value("data.relationships.assignees.data[0].id", r) == wi_new_assignee
+
+        def test_edit_workitem_state(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_state = "resolved"
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_state.json', replace={'$wi_id': wi_id, '$state': wi_new_state, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            assert helpers.extract_value("data.attributes.\"system.state\"", r) == wi_new_state
+
     #### Backlog List-view tests follows::::::::
     class TestClass_ListViewSDD(object):  
         ##Load list view page - "Scenarios", "Experiences", "Requirements"
@@ -328,7 +374,7 @@ class TestClass_SDD(object):
             assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
     class TestClass_Teardown(object):
-        def test_teardown(self):
+        def test_teardown(self, cleanup):
             import os, json
             launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
             launch_detail.launch_details_dict["space_id"] = dynamic_vars.spaceid
@@ -339,15 +385,23 @@ class TestClass_SDD(object):
             launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
             launch_detail.launch_details_dict["offline_token"] = launch_detail.offref_token_userid_primary
             
-            # try:
-            #     curr_dir = os.path.dirname(__file__)
-            #     filepath = os.path.join(curr_dir, '..' , 'launch_info_dump.json')
-            #     with open(filepath, 'w') as f:
-            #         json.dump(launch_detail.launch_details_dict, f, sort_keys=True, indent=4)
-            # except:
-            #     print "Exception creating launch_info_dump.json"
+            try:
+                curr_dir = os.path.dirname(__file__)
+                filepath = os.path.join(curr_dir, '..' , 'launch_info_dump.json')
+                with open(filepath, 'w') as f:
+                    json.dump(launch_detail.launch_details_dict, f, sort_keys=True, indent=4)
+            except:
+                print "Exception creating launch_info_dump.json"
+
+            if cleanup:
+                print "\nDeleting Space %s" % dynamic_vars.spacename
+                r = helpers.delete_space(dynamic_vars.spaceid)
+                if r.status_code is 200:
+                    print "Space %s successfully deleted" % dynamic_vars.spacename
+                else:
+                    print "Error deleting space %s" % dynamic_vars.spacename
+                    print "Bug: https://github.com/openshiftio/openshift.io/issues/3503"
             
-            # print "\n+++++++++++++++++ Planner API Tests Complete ++++++++++++++++\n"
 
 class TestClass_SCRUM(object):
     class TestClass_CreateSpace(object):
@@ -386,6 +440,7 @@ class TestClass_SCRUM(object):
             spacename = helpers.extract_value("data.attributes.name", r)
             spacelink = helpers.extract_value("data.links.self", r)
             content_type_header = helpers.extract_header("Content-Type", r)
+            print "\nSpace created : ", spacename
             ##Save and retain dynamic data for later use
             dynamic_vars.spaceid = spaceid
             dynamic_vars.spacename = spacename
@@ -603,6 +658,51 @@ class TestClass_SCRUM(object):
             ##Validate the response
             assert r.status_code == 201
 
+    #### Edit Work item tests follows::::::::
+    class TestClass_EditSCRUMWorkitem(object):
+        def test_edit_workitem_desc(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_desc = "This is the new description"
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_desc.json', replace={'$wi_id': wi_id, '$wi_desc': wi_new_desc, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
+            assert wi_new_desc in desc_rendered
+        
+        def test_edit_workitem_assignee(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_assignee = dynamic_vars.userid
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_assignee.json', replace={'$wi_id': wi_id, '$assignee': wi_new_assignee, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            assert helpers.extract_value("data.relationships.assignees.data[0].id", r) == wi_new_assignee
+
+        def test_edit_workitem_state(self):
+            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
+            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
+            #Design the URL
+            wi_new_state = "Done"
+            api = wi_link
+            url = api
+            f = helpers.read_post_data_file('edit_wi_state.json', replace={'$wi_id': wi_id, '$state': wi_new_state, '$wi_link': wi_link})
+            ##Make the request
+            r = req.patch(url, headers=request_detail.headers_default, json=f)
+            ##Analyze the response
+            assert r.status_code == 200
+            assert helpers.extract_value("data.attributes.\"system.state\"", r) == wi_new_state
+
     #### Backlog List-view tests follows::::::::
     class TestClass_ListViewSCRUM(object):  
         ##Load list view page - "Epics", "Features", "Backlog items"
@@ -629,7 +729,7 @@ class TestClass_SCRUM(object):
             assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
     class TestClass_Teardown(object):
-        def test_teardown(self):
+        def test_teardown(self, cleanup):
             import os, json
             launch_detail.launch_details_dict["space_name_scrum"] = dynamic_vars.spacename
             launch_detail.launch_details_dict["space_id_scrum"] = dynamic_vars.spaceid
@@ -642,6 +742,15 @@ class TestClass_SCRUM(object):
                     json.dump(launch_detail.launch_details_dict, f, sort_keys=True, indent=4)
             except:
                 print "Exception creating launch_info_dump.json"
+            
+            if cleanup:
+                print "\nDeleting Space %s" % dynamic_vars.spacename
+                r = helpers.delete_space(dynamic_vars.spaceid)
+                if r.status_code is 200:
+                    print "Space %s successfully deleted" % dynamic_vars.spacename
+                else:
+                    print "Error deleting space %s" % dynamic_vars.spacename
+                    print "Bug: https://github.com/openshiftio/openshift.io/issues/3503"
             
             print "\n+++++++++++++++++ Planner API Tests Complete ++++++++++++++++\n"
 
