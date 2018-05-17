@@ -116,7 +116,7 @@ describe('Modify the project source code in Che:', () => {
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support. invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
+    await support.invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
       'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
