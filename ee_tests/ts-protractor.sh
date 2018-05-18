@@ -17,6 +17,7 @@ validate_config() {
   # git provider requesting 'Log In & Authorize' for the logged in user. That will
   # be gone in the future.
   export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
+  export GITHUB_REPO=${GITHUB_REPO:-}
   export NGX_LAUNCHER_ENABLED=${NGX_LAUNCHER_ENABLED:-false}
   export ZABBIX_ENABLED=${ZABBIX_ENABLED:-false}
   export ZABBIX_HOST=${ZABBIX_HOST:-}
@@ -71,6 +72,7 @@ main() {
     --params.login.password="$OSIO_PASSWORD" \
     --params.github.username="$GITHUB_USERNAME" \
     --params.github.password="$GITHUB_PASSWORD" \
+    --params.github.repo="$GITHUB_REPO" \
     --params.oso.username="$OSO_USERNAME" \
     --params.target.url="$OSIO_URL" \
     --params.quickstart.name="$QUICKSTART_NAME" \

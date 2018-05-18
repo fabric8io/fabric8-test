@@ -232,6 +232,15 @@ export function updateCheWorkspaceUrl(url: string) {
   CheWorkspace.url = url;
 }
 
+export function currentRepoName(): string {
+  let configuredRepoName = browser.params.github.repo;
+  if (configuredRepoName !== '') {
+    return configuredRepoName;
+  } else {
+    return support.currentSpaceName();
+  }
+}
+
 export async function sleep(ms: number) {
   info('Sleeping for ' + ms + ' ms...');
   return new Promise(resolve => setTimeout(resolve, ms));
