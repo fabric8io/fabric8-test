@@ -38,6 +38,8 @@ export interface SpaceDashboardInteractions {
 
     createQuickstart(name: string, strategy: string): void;
 
+    importRepo(appName: string, repoName: string, strategy: string): void;
+
     verifyCodebases(): void;
 
     verifyApplications(): void;
@@ -62,6 +64,8 @@ export abstract class AbstractSpaceDashboardInteractions implements SpaceDashboa
     public abstract async openPipelinesPage(): Promise<void>;
 
     public abstract async createQuickstart(name: string, strategy: string): Promise<void>;
+
+    public abstract async importRepo(appName: string, repoName: string, strategy: string): Promise<void>;
 
     public abstract async verifyCodebases(): Promise<void>;
 
@@ -105,6 +109,11 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     public async createQuickstart(name: string, strategy: string): Promise<void> {
         let wizard = await this.spaceDashboardPage.addToSpace();
         await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
+    }
+
+    public async importRepo(appName: string, repoName: string, strategy: string): Promise<void> {
+        let wizard = await this.spaceDashboardPage.addToSpace();
+        await wizard.importProjectByLauncher(appName, repoName, strategy);
     }
 
     public async verifyCodebases(): Promise<void> {
