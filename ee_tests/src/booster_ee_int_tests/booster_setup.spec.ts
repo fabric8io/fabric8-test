@@ -86,6 +86,10 @@ describe('Creating new quickstart in OSIO', () => {
 
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
+    let cheWorkspaceUrl = await browser.getCurrentUrl();
+    await support.debug('Updating current Che workspace URL: ' + cheWorkspaceUrl);
+    support.updateCheWorkspaceUrl(cheWorkspaceUrl);
+
     // Close Che Tab window
     await browser.close();
 
