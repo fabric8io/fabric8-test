@@ -2,7 +2,7 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 import * as ui from '../../ui'
 import { Button, TextInput, BaseElement } from '../../ui';
 import * as support from '../../support'
-import { LauncherSection, LauncherSetupAppPage } from '..';
+import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
@@ -280,6 +280,39 @@ export class AddToSpaceDialog extends ui.ModalDialog {
 
     await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
+
+  async importProjectByLauncher(appName: string, repoName: string, strategy: string) {
+    let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
+
+    await dialog.projectName.clear();
+    await dialog.projectName.sendKeys(appName);
+
+    let launcher: LauncherSection = await dialog.selectImportExistingApplication();
+    await launcher.ready();
+
+    await launcher.selectGithubOrganization(browser.params.github.username);
+    await launcher.ghRepositoryText.clickWhenReady();
+    await launcher.ghRepositoryText.sendKeys(repoName);
+    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + appName + '.png');
+    await launcher.gitProviderImportContinueButton.clickWhenReady();
+
+    let pipeline = new LauncherReleaseStrategy(strategy);
+    await launcher.selectPipeline(pipeline.name);
+    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + appName + '.png');
+    await launcher.releaseStrategyImportContinueButton.clickWhenReady();
+
+    let importApplicationPage: LauncherImportAppPage = await launcher.importApplication();
+    await importApplicationPage.ready();
+
+    await importApplicationPage.newProjectBoosterOkIcon('Creating your project on OpenShift').untilDisplayed();
+    await importApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
+    await importApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
+      .untilDisplayed();
+
+    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-imported-' + appName + '.png');
+
+    await importApplicationPage.viewNewApplicationButton.clickWhenReady();
+  }
 }
 
 export class NewImportExperienceDialog extends ui.BaseElement {
@@ -314,6 +347,12 @@ export class NewImportExperienceDialog extends ui.BaseElement {
 
   async selectCreateNewApplication(): Promise<LauncherSection> {
     await this.createNewApplicationCard.clickWhenReady();
+    await this.continueButton.clickWhenReady();
+    return new LauncherSection(element(by.xpath('//f8-app-launcher')));
+  }
+
+  async selectImportExistingApplication(): Promise<LauncherSection> {
+    await this.importExistingApplicationCard.clickWhenReady();
     await this.continueButton.clickWhenReady();
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }

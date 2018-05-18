@@ -7,6 +7,7 @@ export * from './space_pipeline.page';
 export * from './oso_dashboard.page';
 export * from './launcher_section';
 export * from './launcher_setup_app.page';
+export * from './launcher_import_app.page';
 
 
 // TODO: move page to a different file
