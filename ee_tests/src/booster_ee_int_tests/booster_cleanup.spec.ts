@@ -10,6 +10,8 @@ import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { StageRunPage } from '../page_objects/space_stage_run.page';
+import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
+import { PageOpenMode } from '../..';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -32,17 +34,9 @@ describe('Clean up user environment:', () => {
 
   it('Login, Reset environment, logout', async () => {
     // Reset Environment
-    let userProfilePage = await dashboardPage.gotoUserProfile();
-    support.debug(">>> Go to user's Profile Page - OK");
-    support.debug('>>> Go to Edit Profile Page');
-    let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug('>>> Go to Edit Profile Page - OK');
-    support.debug('>>> Go to Reset Env Page');
-    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug('>>> Go to Reset Env Page - OK');
-
-    await cleanupEnvPage.cleanup(browser.params.login.user);
-    await cleanupEnvPage.dashboardButton.clickWhenReady();
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.resetEnvironment();
+    await accountHomeInteractions.openAccountHome(PageOpenMode.UseMenu);
   });
 
 });
