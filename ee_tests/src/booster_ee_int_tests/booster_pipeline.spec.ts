@@ -66,6 +66,10 @@ describe('Verify the completion of the build pipeline:', () => {
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
+    // TODO - Replace this necessary delay with a better approach - perhaps
+    // multiple attempts to access the staged app?
+    await browser.sleep(30000);
+
     /* Go to the application stage page */
     await spacePipelinePage.stageIcon.clickWhenReady(support.LONGEST_WAIT);
 
@@ -82,6 +86,8 @@ describe('Verify the completion of the build pipeline:', () => {
     let invokeButton = new ui.Button($('#invoke'), 'Invoke Button');
     let stageOutput = await element(by.id('greeting-result')).getText();
     await invokeButton.clickWhenReady(support.DEFAULT_WAIT);
+
+    // TODO - Replace thie sleep statement
     browser.sleep(3000);
     support.writeScreenshot('target/screenshots/boosterstageSuccessful.png');
 
