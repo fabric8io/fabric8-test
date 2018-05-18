@@ -41,21 +41,12 @@ describe('Creating new quickstart in OSIO', () => {
 
   it('Reset Environment, create a new space, new ' + browser.params.quickstart.name + ' quickstart', async () => {
     // Reset Environment
-    let userProfilePage = await dashboardPage.gotoUserProfile();
-    support.debug(">>> Go to user's Profile Page - OK");
-    support.debug('>>> Go to Edit Profile Page');
-    let editProfilePage = await userProfilePage.gotoEditProfile();
-    support.debug('>>> Go to Edit Profile Page - OK');
-    support.debug('>>> Go to Reset Env Page');
-    let cleanupEnvPage = await editProfilePage.gotoResetEnvironment();
-    support.debug('>>> Go to Reset Env Page - OK');
-
-    await cleanupEnvPage.cleanup(browser.params.login.user);
+    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+    await accountHomeInteractions.resetEnvironment();
 
     // Create a space
     let spaceName = support.newSpaceName();
     support.info('--- Create space ' + spaceName + ' ---');
-    let accountHomeInteractions = AccountHomeInteractionsFactory.create();
     await accountHomeInteractions.createSpace(spaceName);
 
     // Create a QuickStart
