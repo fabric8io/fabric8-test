@@ -10,6 +10,7 @@ export OSO_USERNAME="${OSO_USERNAME:-$OSIO_USERNAME}"
 # github
 export GITHUB_USERNAME="${GITHUB_USERNAME:-}"
 export GITHUB_PASSWORD="${GITHUB_PASSWORD:-}"
+#export GITHUB_REPO="${$GITHUB_REPO:-testmay-to-be-imported}"
 
 # test params
 export TEST_SUITE="${TEST_SUITE:-runTest}"
