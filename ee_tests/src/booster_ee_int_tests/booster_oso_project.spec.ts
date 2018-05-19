@@ -101,19 +101,21 @@ describe('Access project in OSO:', () => {
       support.LONGER_WAIT
     );
 
-    let terminalText = await spaceCheWorkSpacePage.bottomPanelTerminal.getText();
+    await expect (spaceCheWorkSpacePage.bottomPanelTerminal.getText()).
+      toContain(browser.params.oso.username + '-che');
+    await expect (spaceCheWorkSpacePage.bottomPanelTerminal.getText()).
+      toContain(browser.params.oso.username + '-jenkins');
+    await expect (spaceCheWorkSpacePage.bottomPanelTerminal.getText()).
+      toContain(browser.params.oso.username + '-run');
+    await expect (spaceCheWorkSpacePage.bottomPanelTerminal.getText()).
+      toContain(browser.params.oso.username + '-stage');
 
-    let osoProjectArray = terminalText.match(/"(.*)-che"/);
-    let osoProject = osoProjectArray == null ? '' : osoProjectArray[1];
-
-    support.info('Switching to OSO project: "' + osoProject + '"');
-
-    await support.printTerminal(spaceCheWorkSpacePage, 'oc project ' + osoProject);
+    await support.printTerminal(spaceCheWorkSpacePage, 'oc project ' + browser.params.oso.username + '-jenkins');
 
     await browser.wait(
       until.textToBePresentInElement(
         spaceCheWorkSpacePage.bottomPanelTerminal,
-        'Now using project "' + osoProject + '" on server'
+        'project "' + browser.params.oso.username + '-jenkins" on server'
       ),
       support.LONGER_WAIT
     );
