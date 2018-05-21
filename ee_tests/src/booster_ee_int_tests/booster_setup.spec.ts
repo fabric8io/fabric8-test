@@ -20,10 +20,11 @@ import { SpaceDashboardInteractions } from '../interactions/space_dashboard_inte
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
 import { PageOpenMode } from '../..';
+import { ReleaseStrategy } from '../support/release_strategy';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
-let strategy: string = browser.params.release.strategy;
+let strategy: ReleaseStrategy = browser.params.release.strategy;
 
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;

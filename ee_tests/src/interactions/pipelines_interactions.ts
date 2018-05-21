@@ -20,7 +20,7 @@ export abstract class PipelinesInteractions {
 
     protected spacePipelinePage: SpacePipelinePage;
 
-    public static create(strategy: string, spaceName: string) {
+    public static create(strategy: ReleaseStrategy, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
             return new PipelinesInteractionsReleaseStrategy(spaceName);
         }

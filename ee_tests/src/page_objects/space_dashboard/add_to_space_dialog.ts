@@ -5,6 +5,7 @@ import * as support from '../../support'
 import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
+import { ReleaseStrategy } from '../../support/release_strategy';
 
 
 export class Wizard extends ui.BaseElement {
@@ -219,7 +220,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     return new NewImportExperienceDialog(this.element(by.xpath('//f8-add-app-overlay')));
   }
 
-  async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: string) {
+  async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: ReleaseStrategy) {
     support.info('Start create new quickstart');
     let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
 
@@ -281,7 +282,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
 
-  async importProjectByLauncher(appName: string, repoName: string, strategy: string) {
+  async importProjectByLauncher(appName: string, repoName: string, strategy: ReleaseStrategy) {
     let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
 
     await dialog.projectName.clear();

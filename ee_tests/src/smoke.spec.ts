@@ -14,12 +14,13 @@ import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
 import { PageOpenMode } from '..';
-import { DEFAULT_WAIT, LONG_WAIT } from './support';
+import { DEFAULT_WAIT, LONG_WAIT, info } from './support';
+import { ReleaseStrategy } from './support/release_strategy';
 
 describe('smoketest', () => {
 
   let quickstart: Quickstart;
-  let strategy: string;
+  let strategy: ReleaseStrategy;
   let spaceName: string;
   let index: number = 1;
 

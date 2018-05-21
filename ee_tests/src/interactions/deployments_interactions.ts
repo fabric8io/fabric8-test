@@ -8,7 +8,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 
 export abstract class DeploymentsInteractionsFactory {
 
-    public static create(strategy: string, spaceName: string): DeploymentsInteractions {
+    public static create(strategy: ReleaseStrategy, spaceName: string): DeploymentsInteractions {
         if (FeatureLevelUtils.isReleased()) {
             return <DeploymentsInteractions>{
                 showDeploymentsScreen(): void {},

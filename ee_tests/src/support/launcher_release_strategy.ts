@@ -1,29 +1,23 @@
+import { ReleaseStrategy } from "./release_strategy";
+
 export class LauncherReleaseStrategy {
 
-  static RELEASE = 'release';
-  static RELEASE_AND_STAGE = 'releaseAndStage';
-  static RELEASE_STAGE_APPROVE_AND_PROMOTE = 'releaseStageApproveAndPromote';
-
-  id: string;
+  id: ReleaseStrategy;
   name: string;
 
-  static runtime(id: string) {
-    return new LauncherReleaseStrategy(id);
-  }
+  constructor(strategy: ReleaseStrategy) {
+    this.id = strategy;
 
-  constructor(runtime: string) {
-    this.id = runtime;
-
-    switch (runtime) {
-      case LauncherReleaseStrategy.RELEASE: {
+    switch (this.id) {
+      case ReleaseStrategy.RELEASE: {
         this.name = 'Integration Test';
         break;
       }
-      case LauncherReleaseStrategy.RELEASE_AND_STAGE: {
+      case ReleaseStrategy.STAGE: {
         this.name = 'Rollout to Stage';
         break;
       }
-      case LauncherReleaseStrategy.RELEASE_STAGE_APPROVE_AND_PROMOTE:
+      case ReleaseStrategy.RUN:
       default: {
         this.name = 'Rollout to Run';
         break;

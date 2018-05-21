@@ -16,11 +16,12 @@ import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { Button } from '../ui';
 import { PageOpenMode } from '../..';
 import { DEFAULT_WAIT, LONG_WAIT } from '../support';
+import { ReleaseStrategy } from '../support/release_strategy';
 
 describe('Analytic E2E test suite', () => {
 
   let quickstart: Quickstart;
-  let strategy: string;
+  let strategy: ReleaseStrategy;
   let spaceName: string;
   let index: number = 1;
   let dashboardPage: MainDashboardPage;
