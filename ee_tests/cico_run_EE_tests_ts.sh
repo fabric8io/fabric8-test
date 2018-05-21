@@ -34,6 +34,9 @@ ZABBIX_ENABLED=${8:-"true"}
 
 ZABBIX_HOST=${9:-"unknown"}
 
+DEFAULT_GITHUB_REPO=""
+GITHUB_REPO=${10:-$DEFAULT_GITHUB_REPO}
+
 # Do not reveal secrets
 set +x
 
@@ -48,7 +51,7 @@ chmod 600 ./password_file
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
+    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|ghprbActualCommit|BUILD_URL|ghprbPullId|EE_TEST_USERNAME|EE_TEST_PASSWORD|ARTIFACT_PASS|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|QUICKSTART_NAME|RELEASE_STRATEGY)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -79,6 +82,7 @@ export OSIO_PASSWORD=$EE_TEST_PASSWORD
 export OSIO_URL=$TEST_URL
 export OSO_USERNAME=$EE_TEST_USERNAME
 export GITHUB_USERNAME=$GITHUB_USERNAME
+export GITHUB_REPO="$GITHUB_REPO"
 export DEBUG="true"
 export QUICKSTART_NAME=$QUICKSTART_NAME
 export RELEASE_STRATEGY=$RELEASE_STRATEGY
@@ -97,7 +101,7 @@ if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
 fi
 
 docker run --shm-size=256m --detach=true --name=$CONTAINER_NAME --cap-add=SYS_ADMIN \
-          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME \
+          -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL -e OSO_USERNAME -e GITHUB_USERNAME -e GITHUB_REPO \
           -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY -e FEATURE_LEVEL -e DEBUG -e "API_URL=http://api.openshift.io/api/" \
           -e ARTIFACT_PASSWORD=$ARTIFACT_PASS -e BUILD_NUMBER -e JOB_NAME -e RESET_ENVIRONMENT \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
