@@ -8,7 +8,7 @@ locally in a shell, locally in a docker container, and in a docker container in
 Centos CI. The tests can be run against a local or remote server by specifying
 the server's URL as a parameter to the tests.
 
-### Running the EE Tests Locally ###
+### Running the EE or Booster Tests Locally ###
 #### Setup the Environmental Variables ####
 
 Before running the tests, you must define env variables. These are stored in file config/local_osio.conf.sh. You need to create the file by yourself by copying its template and filling in the values.
@@ -19,9 +19,13 @@ cp config/local_osio.conf.sh.template config/local_osio.conf.sh
 ```
 npm install
 ```
-#### Run the tests ####
+#### Run the EE tests ####
 ```
 npm start
+```
+#### Run the Booster tests ####
+```
+npm test
 ```
 ### Running the EE Tests Locally from Docker Image ###
 #### Setup the Environmental Variables ####
@@ -30,9 +34,13 @@ Setup environmental variables in the same way as when running tests locally (wit
 ```
 npm run image:build
 ```
-#### Run Tests Inside Docker Image ####
+#### Run the EE Tests Inside Docker Image ####
 ```
 npm run image:start
+```
+#### Run the Booster Tests Inside Docker Image ####
+```
+npm run image:test
 ```
 
 ### Running the EE Tests Locally against static html page stored on filesystem ###
@@ -42,9 +50,13 @@ During the test development, it is sometimes convenient to run some subset of te
 Copy template `src/local/local.template.ts` to the same directory `src/local` and 
 implement the test.
 
-#### Run the tests ####
+#### Run the EE tests Locally ####
 ```
 npm start local
+```
+#### Run the Booster tests Locally ####
+```
+npm test local
 ```
 
 ## The rest of the documentation should be reviewed
