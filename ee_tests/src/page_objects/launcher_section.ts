@@ -21,6 +21,12 @@ export class LauncherSection extends BaseElement {
     'Pipeline Continue'
   );
 
+  releaseStrategyImportContinueButton = new Button(
+    this.element(by.xpath('//f8launcher-releasestrategy-importapp-step' +
+      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
+    'Pipeline Continue'
+  );
+
   loginAndAuthorizeButton = new Button(
     this.element(by.xpath('//f8launcher-gitprovider-createapp-step' +
       '//*[contains(@class,\'f8launcher-authorize-account\')]')),
@@ -29,6 +35,12 @@ export class LauncherSection extends BaseElement {
 
   gitProviderContinueButton = new Button(
     this.element(by.xpath('//f8launcher-gitprovider-createapp-step' +
+      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
+    'Git Provider Continue'
+  );
+
+  gitProviderImportContinueButton = new Button(
+    this.element(by.xpath('//f8launcher-gitprovider-importapp-step' +
       '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
     'Git Provider Continue'
   );
