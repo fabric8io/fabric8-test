@@ -30,7 +30,6 @@
     "image:start": "./local_cico_run_ee_tests.sh",
     "protractor": "protractor",
     "start": ". config/local_osio.conf.sh && ./ts-protractor.sh",
-    "test": ". config/local_osio.conf.sh && ./ts-protractor.sh boostersuite",
     "tsc": "tsc",
     "tscw": "tsc -w",
     "tslint": "tslint",
