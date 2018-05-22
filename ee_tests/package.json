@@ -27,7 +27,7 @@
   "scripts": {
     "postinstall": "npm run webdriver:update",
     "image:build": "docker build -t fabric8-test:latest -f Dockerfile.builder .",
-    "image:start": "./local_cico_run_ee_tests.sh",
+    "image:start": "./local_cico_run_e2e_tests.sh",
     "protractor": "protractor",
     "start": ". config/local_osio.conf.sh && ./ts-protractor.sh",
     "tsc": "tsc",
