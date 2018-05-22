@@ -15,15 +15,15 @@ Before running the tests, you must define env variables. These are stored in fil
 ```
 cp config/local_osio.conf.sh.template config/local_osio.conf.sh
 ```
-#### Install All Dependencies ####
+#### Install all dependencies ####
 ```
 npm install
 ```
-#### Run the EE Tests ####
+#### Run the EE tests ####
 ```
 npm start
 ```
-#### Run the Booster Tests ####
+#### Run the Booster tests ####
 ```
 npm test
 ```
@@ -43,18 +43,18 @@ npm run image:start
 npm run image:test
 ```
 
-### Running the EE Tests Locally Against Static HTML Page Stored on Filesystem ###
+### Running the EE Tests Locally against static html page stored on filesystem ###
 During the test development, it is sometimes convenient to run some subset of test against locally stored static html page. This is especially useful during debugging of css selectors. 
 
-#### Implement Tests ####
+#### Implement tests ####
 Copy template `src/local/local.template.ts` to the same directory `src/local` and 
 implement the test.
 
-#### Run the EE Tests Locally ####
+#### Run the EE tests Locally ####
 ```
 npm start local
 ```
-#### Run the Booster Tests Locally ####
+#### Run the Booster tests Locally ####
 ```
 npm test local
 ```
@@ -63,7 +63,7 @@ npm test local
 
 
 
-##### Debugging #####
+##### debugging #####
 
 You can use chrome devtools to pause and debug typescript tests by inserting
 the `debugger` statement in the spec and running the test with `NODE_DEBUG`
@@ -73,7 +73,7 @@ environment flag set. E.g.
 NODE_DEBUG=true npm start
 ```
 
-##### Turn Debug Satements On #####
+##### Turn debug statements on #####
 
 ```
 DEBUG=true npm start
@@ -87,7 +87,7 @@ variable before you start script mentioned above:
 SELENIUM_BROWSER=firefox
 ```
 
-### End-to-End Tests on Fabric8
+### End-to-End tests on Fabric8
 
 To run against a fabric8 installation (e.g. via minishift) run the following command:
 
@@ -128,7 +128,7 @@ Then in IDEA:
 * if a test fails you should have nice links in the output to source lines - you can also set breakpoints and debug the tests!
 
 
-## Running the E2E Tests Inside a Pod
+## Running the E2E tests inside a pod
 
 You can run the E2E tests on a running fabric8 cluster using the [gofabric8](https://github.com/fabric8io/gofabric8/releases) CLI tool.
 
@@ -169,7 +169,7 @@ For each argument name `foo` you pass the argument using `--foo=value` or `--foo
 * `url` : the URL of the remote fabric8 console. If not specified it uses the URL of the current `fabric8` service in the current namespace (or the specified `namespace` argument)
 * `platform` : the kind of platform to test. e.g. `osio`, `fabric8-openshift` or `fabric8-kubernetes`. Typically you can ignore this argument as gofabric8 will deadfult this for you
 
-#### Custom Boosters
+#### Custom boosters
 
 *  `booster` : the name of the booster (quickstart) to use in the tests
 *  `booster-git-ref` : the booster git repository reference (branch, tag, sha)
