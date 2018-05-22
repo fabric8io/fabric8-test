@@ -195,12 +195,13 @@ export class SpaceName {
   static spaceName: string;
 
   static newSpaceName(): string {
-    let d = new Date();
-    let month = d.toLocaleString('en-US', { month: 'short' }).toLowerCase();
-    let day = d.getDate();
-    let time = d.getTime();
-    let spaceName = `test${month}${day}${time}`;
-
+    const d = new Date();
+    const month = ( d.getMonth() < 9 ) ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
+    const day = ( d.getDate() < 10 ) ? `0${d.getDate()}` : `${d.getDate()}`;
+    const hour = ( d.getHours() < 10 ) ? `0${d.getHours()}` : `${d.getHours()}`;
+    const minute = ( d.getMinutes() < 10 ) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
+    const second = ( d.getSeconds() < 10 ) ? `0${d.getSeconds()}` : `${d.getSeconds()}`;
+    const spaceName = `e2e-${month}${day}-${hour}${minute}${second}`;
     info('New space name: ', spaceName);
 
     SpaceName.spaceName = spaceName;
