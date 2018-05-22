@@ -234,13 +234,24 @@ export function updateCheWorkspaceUrl(url: string) {
   CheWorkspace.url = url;
 }
 
+export class RepoName {
+  static repoName: string;
+}
+
 export function currentRepoName(): string {
   let configuredRepoName = browser.params.github.repo;
-  if (configuredRepoName !== '') {
-    return configuredRepoName;
-  } else {
-    return support.currentSpaceName();
+  if (RepoName.repoName === undefined) {
+    if (configuredRepoName !== '') {
+      RepoName.repoName =  configuredRepoName;
+    } else {
+      RepoName.repoName = support.currentSpaceName();
+    }
   }
+  return RepoName.repoName;
+}
+
+export function updateCurrentRepoName(repoName: string) {
+  RepoName.repoName = repoName;
 }
 
 export async function sleep(ms: number) {

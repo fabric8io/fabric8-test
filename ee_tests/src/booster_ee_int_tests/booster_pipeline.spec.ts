@@ -32,6 +32,7 @@ describe('Verify the completion of the build pipeline:', () => {
 
   it('Login, test deployment to stage and run, logout', async () => {
     let spaceName = support.currentSpaceName();
+    let repoName = support.currentRepoName();
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
@@ -40,21 +41,21 @@ describe('Verify the completion of the build pipeline:', () => {
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
 
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
+    let pipelineByName = new Button(spacePipelinePage.pipelineByName(repoName), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
     await pipelineByName.untilPresent(support.LONGER_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
     support.debug('Verifying that only 1 pipeline is found with a matching name');
-    expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
+    expect(await spacePipelinePage.allPipelineByName(repoName).count()).toBe(1);
 
     /* Find the pipeline name */
     await pipelineByName.untilClickable(support.LONGER_WAIT);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(repoName), 'InputRequired button');
 
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
     await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);

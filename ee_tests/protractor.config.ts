@@ -77,6 +77,12 @@ let conf: Config = {
       boosterTest: ['src/booster_pipeline.spec.js'],
       importTest: ['src/workshop-import-to-space.spec.js'],
 
+      boosterimport: [
+        'src/booster_ee_int_tests/booster_import_to_space.spec.js',
+        'src/booster_ee_int_tests/booster_pipeline.spec.js',
+        'src/booster_ee_int_tests/booster_cleanup.spec.js'
+      ],
+
       boostersuite: [
         'src/booster_ee_int_tests/booster_setup.spec.js',
         'src/booster_ee_int_tests/booster_oso_project.spec.js',
