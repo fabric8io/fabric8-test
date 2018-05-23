@@ -197,8 +197,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
   stackReportDependencyCardTotalCount = this.stackReportDependencyCard.get(0).$('.info-value');
   stackReportDependencyCardAnalyzedCount = this.stackReportDependencyCard.get(1).$('.info-value');
   stackReportDependencyCardUnknownCount = this.stackReportDependencyCard.get(2).$('.info-value');
-   // tslint:enable:max-line-length
-
+  
   /* UI Page Section: My Workitems */
   workitems = $('#spacehome-my-workitems-card');
 
@@ -208,6 +207,10 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* UI Page Section: Pipelines */
   pipelines = $('#spacehome-pipelines-card');
+
+  /* Pipeline Runs */
+  viewPipelineRuns = new Button (element(by.xpath('.//*[contains(text(), \'View Pipeline Runs\')]')), 'View Pipeline Runs');
+  pipelineList = element.all (by.xpath('.//*[contains(@class,\'build-pipeline\')]'));
 
   /* Pipelines section title/link */
   pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
@@ -421,6 +424,8 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
     return Promise.all(applications);
   }
 }
+ 
+// tslint:enable:max-line-length
 
 export class DeployedApplicationInfo extends BaseElement {
 

@@ -25,6 +25,16 @@ export class SpaceCheWorkspacePage extends AppPage {
   /* Main Menu Panel debug button debug selection */
   mainMenuDebugButtonDebugSelection = new Button (element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel GDPEHSMCJAB\')]')), 'Che Main Menu Run Selection Button');
 
+  /* Bottom Panel Git commit tab */
+  bottomPanelGitCommitTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git commit\')]')), 'Che Bottom Panel Git commit Tab');
+  bottomPanelGitCommitTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git commit\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Git Commit Tab close button');
+  bottomPanelGitCommitConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolePart\']'));
+ 
+  /* Bottom Panel Git push tab */
+  bottomPanelGitPushTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git push\')]')), 'Che Bottom Panel Git push Tab');
+  bottomPanelGitPushTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git push\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Git Push Tab close button');
+  bottomPanelGitPushConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolePart\']'));
+ 
   /* Bottom Panel run tab */
   bottomPanelRunTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
   bottomPanelRunTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Run Tab close button');
@@ -56,6 +66,16 @@ export class SpaceCheWorkspacePage extends AppPage {
   navigateFileName = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-navigateToFile-fileName\']')));
   navigateFilePopupPanel = element(by.xpath('.//*[contains(@class,\'gwt-PopupPanel\')]'));
   fileNameTab = new Button (element(by.xpath('.//*[contains(@class=\'GDPEHSMCDDC GDPEHSMCGK\')]')), 'File tab');
+
+  /* Che Menu Panel Git buttons */
+  cheMenuGit = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/git-true\']')), 'Git menu');
+  cheMenuGitCommit = new Button (element(by.xpath('.//*[@id=\'topmenu\/Git\/Commit ...\']')), 'Git -> Commit');
+  cheCommitMessage = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-git-commit-message\']')), 'Git Commit Text');
+  cheCommitConfirmButton = new Button (element(by.xpath('.//*[@id=\'git-commit-commit\']')), 'Git Commit Button');
+  cheMenuGitRemotes = new Button (element(by.xpath('.//*[@id=\'topmenu\/Git\/Remotes...\']')), 'Git -> Remotes');
+  cheMenuGitRemotesPush = new Button (element(by.xpath('.//*[@id=\'topmenu\/Git\/Remotes...\/Push...\']')), 'Git -> Remotes -> Push');
+  cheMenuGitRemotesPushForce = new Button (element(by.xpath('.//*[@id=\'gwt-debug-git-remotes-force-push-checkbox-input\']')), 'Git Remotes Push Force');
+  cheMenuGitRemotesPushButton = new Button (element(by.xpath('.//*[@id=\'git-remotes-push-push\']')), 'Git Remotes Push Force');
 
   /* Che menu - Run, Test, Junit commands */
   cheMenuRun = new Button (element(by.xpath('.//*[@id=\'gwt-debug-MenuItem\/runGroup-true\']')), 'Run menu');
@@ -93,6 +113,15 @@ export class SpaceCheWorkspacePage extends AppPage {
   chePreferencesAutoBraces = new Button (element(by.xpath('(.//*[contains (@class,\'gwt-CheckBox\')])[7]')), 'Preferences Auto Braces');
   chePreferencesStoreChanges = new Button (element(by.xpath('.//*[@id=\'window-preferences-storeChanges\']')), 'Preferences store changes button');
   chePreferencesClose = new Button (element(by.xpath('.//*[@id=\'window-preferences-close\']')), 'Preferences close button');
+  chePreferencesGit = new Button (element(by.xpath('.//*[@id=\'gwt-debug-projectWizard-Committer\']')), 'Preferences Git button');
+  chePreferencesGitName = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-committer-preferences-name\']')), 'Preferences Git name');
+  chePreferencesGitEmail = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-committer-preferences-email\']')), 'Preferences Git email');
+
+  /* Checkbox for file to commit */
+  filenameCheckbox (filename: string): Button {
+    let xpathString = '(.\/\/*[contains(@id, \'content-Tree\')]//div[contains(text(),\'' + filename + '\')]/ancestor::div//*[contains(@class,\'gwt-CheckBox\')])[1]';
+    return new Button (element(by.xpath(xpathString)), 'Commit filename checkbox');
+  }
 
   /* Preview link for app as deployed in Che preview */
   previewLink (usernameGithub: string): Button {
