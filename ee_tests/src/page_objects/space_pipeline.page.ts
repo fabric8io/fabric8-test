@@ -81,6 +81,12 @@ export class SpacePipelinePage extends AppPage {
     'Open In OpenShift Console'
   );
 
+ 
+
+
+
+
+
   async ready() {
     await super.ready();
     // https://github.com/fabric8io/fabric8-test/issues/592
