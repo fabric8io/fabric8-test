@@ -8,6 +8,7 @@ import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { TextInput, Button } from '../ui';
 import { SpaceChePage } from '../page_objects/space_che.page';
+import { Quickstart } from './quickstart';
 
 export enum BrowserMode {
   Phone,
@@ -427,7 +428,9 @@ export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspac
       await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, expectedString), support.LONGER_WAIT);
       let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
       support.info('Output from run = ' + textStr);
-      expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain('Succeeded in deploying verticle');
+      expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain(
+        new Quickstart(browser.params.quickstart.name).runtime.quickstartStartedTerminal
+      );
     } catch (e) {
       support.info('Exception running booster = ' + e);
     }
