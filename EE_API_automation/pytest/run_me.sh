@@ -20,7 +20,7 @@ else
         echo "==> Launching the Planner API tests to generate TestDB..."
         echo ""
         cd src/
-        pytest -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
+        pytest test_gen_testdb.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
         echo ""
     elif [ "$4" = "True" ] || [ "$4" = "true" ]
     then
@@ -28,7 +28,7 @@ else
         echo "==> Launching the Planner API tests to check Planner sanity..."
         echo ""
         cd src/
-        pytest -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 --cleanup=$4 2>&1 | tee $CLILOG
+        pytest test_planner.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 --cleanup=$4 2>&1 | tee $CLILOG
         echo ""
     fi
 fi

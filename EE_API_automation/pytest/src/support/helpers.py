@@ -219,7 +219,7 @@ def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
             wi_id = workitem_link.rsplit('/', 1)[1]
             wi_patch_api = workitem_link
             if type(label_id) == list:
-                f = read_post_data_file('add_wi_labels.json', replace={'$wi_id':wi_id, '$wi_link':workitem_link, '$label_1_id':label_id[0], '$label_2_id':label_id[1], '$label_3_id':label_id[2]})
+                f = read_post_data_file('add_wi_labels.json', replace={'$wi_id':wi_id, '$wi_link':workitem_link, '$label_1_id':label_id[0], '$label_2_id':label_id[1]})
                 r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default, json=f)
             else:       
                 f = read_post_data_file('add_wi_label.json', replace={'$wi_id':wi_id, '$wi_link':workitem_link, '$wi_ver':0, '$label_id':label_id})
