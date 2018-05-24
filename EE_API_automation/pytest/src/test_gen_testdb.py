@@ -118,7 +118,7 @@ class TestClass_SDD(object):
                 ##Validate the response
                 r.raise_for_status()
         
-        @pytest.mark.parametrize("area_name", helpers.generate_entity_names("Area", 5))
+        @pytest.mark.parametrize("area_name", helpers.generate_entity_names("Area", 2))
         def test_create_child_areas(self, area_name):
             #Design the URL
             api = "api/areas/" + dynamic_vars.parent_area_id
@@ -144,7 +144,7 @@ class TestClass_SDD(object):
                 ##Validate the response
                 r.raise_for_status()
                 
-        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration", 5, True, reset_counter = True))
+        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration", 2, True, reset_counter = True))
         def test_create_child_iters(self, iter_name):
             #Design the URL
             api = "api/iterations/" + dynamic_vars.parent_iteration_id
@@ -157,7 +157,7 @@ class TestClass_SDD(object):
             ##Validate the response
             assert r.status_code == 201
             
-        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration1", 5, True, reset_counter = True))
+        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration1", 1, True, reset_counter = True))
         def test_create_nested_iters(self, iter_name):
             #Design the URL
             api = "api/iterations/" + dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_1]
@@ -171,208 +171,47 @@ class TestClass_SDD(object):
             assert r.status_code == 201
 
     #### Workitem related tests follows::::::::
-    class TestClass_CreateWorkitems(object):  
-        ##Create workitems in Iteration-1
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2, reset_counter = True))
-        def test_create_iter1_workitems(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask, iterationid=dynamic_vars.nested_iters_names_to_ids[workitem_constants.iteration1_1])
-            ##Validate the response
-            assert r.status_code == 201
-
-        ##Create workitems in Iteration-2
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_iter2_workitems(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask, iterationid=dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_2])
-            ##Validate the response
-            assert r.status_code == 201
-
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
+    class TestClass_CreateWorkitems(object):
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_scenarios(self, wi_name):
             r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypescenario)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem. If label doen't exist, add one
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_1]
             except KeyError:
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_1] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_1, label_id=None)
                 r.raise_for_status()
-
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_backlog_fundamentals(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypefundamental)
+            
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
+        def test_create_backlog_experiences(self, wi_name):
+            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeexperience)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
             except KeyError:
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_2] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=None)
                 r.raise_for_status()
-
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_backlog_papercuts(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypepapercut)
-            ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
-            ## Add a label to the workitem
-            try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_3]
-            except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_3] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_3, label_id=None)
-                r.raise_for_status()
-
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_backlog_valueprops(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypevalue)
-            ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
-            ## Add a label to the workitem
-            try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_4]
-            except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_4] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_4, label_id=None)
-                r.raise_for_status()
             
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_backlog_experiences(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeexperience)
-            ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
-            ## Add a label to the workitem
-            try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_5]
-            except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_5] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_5, label_id=None)
-                r.raise_for_status()
-            
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
-        def test_create_backlog_bugs(self, wi_name):
-            r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypebug)
-            ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
-            ## Add a few labels to the workitem
-            helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_id=[dynamic_vars.labels_names_to_ids[workitem_constants.label_1], dynamic_vars.labels_names_to_ids[workitem_constants.label_2]])
-            
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_features(self, wi_name):
             r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypefeature)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ### Add a few labels to the workitem
             helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_id=[dynamic_vars.labels_names_to_ids[workitem_constants.label_1], dynamic_vars.labels_names_to_ids[workitem_constants.label_2]])
             
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 2))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_tasks(self, wi_name):
             r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a few labels to the workitem
             helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_id=[dynamic_vars.labels_names_to_ids[workitem_constants.label_1], dynamic_vars.labels_names_to_ids[workitem_constants.label_2]])
             
-        def test_create_wi5_wi11_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_5", "Workitem_Title_11")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi11_wi17_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_11", "Workitem_Title_17")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi17_wi19_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_17", "Workitem_Title_19")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi7_wi13_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_7", "Workitem_Title_13")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi13_wi15_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_13", "Workitem_Title_15")
-            ##Validate the response
-            assert r.status_code == 201
-
-    #### Edit Work item tests follows::::::::
-    class TestClass_EditSDDWorkitem(object):
-        def test_edit_workitem_desc(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_desc = "This is the new description"
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_desc.json', replace={'$wi_id': wi_id, '$wi_desc': wi_new_desc, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
-            assert wi_new_desc in desc_rendered
-        
-        def test_edit_workitem_assignee(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_assignee = dynamic_vars.userid
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_assignee.json', replace={'$wi_id': wi_id, '$assignee': wi_new_assignee, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_value("data.relationships.assignees.data[0].id", r) == wi_new_assignee
-
-        def test_edit_workitem_state(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_state = "resolved"
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_state.json', replace={'$wi_id': wi_id, '$state': wi_new_state, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_value("data.attributes.\"system.state\"", r) == wi_new_state
-
-    #### Backlog List-view tests follows::::::::
-    class TestClass_ListViewSDD(object):  
-        ##Load list view page - "Scenarios", "Experiences", "Requirements"
-        @pytest.mark.parametrize("type_group", ["Scenarios", "Experiences", "Requirements"])
-        def test_load_list_view_type_groups(self, type_group):
-            #Design the URL
-            api = 'api/search?' + 'page[limit]=200' + '&' + 'filter[expression]=' + '{"$AND":[{"space":{"$EQ":"' + spaceid + '"}},{"typegroup.name":{"$EQ":"' + type_group + '"}},{"state":{"$NE":"closed"}}],"$OPTS":{"tree-view":true}}'
-            url = launch_detail.create_url(api)
-            ##Make the request
-            r = req.get(url, headers=request_detail.headers_default)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_header("Content-Encoding", r) == "gzip"
-
-        ##Load list view page - Execution (Iteration2)
-        def test_load_list_view_execution(self):
-            #Design the URL
-            api = 'api/search?' + 'page[limit]=200' + '&' + 'filter[expression]=' + '{"$AND":[{"space":{"$EQ":"' + spaceid +'"}},{"typegroup.name":{"$EQ":"Execution"}},{"iteration":{"$EQ":"' + dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_2] + '"}},{"state":{"$NE":"closed"}}],"$OPTS":{"tree-view":true}}'
-            url = launch_detail.create_url(api)
-            ##Make the request
-            r = req.get(url, headers=request_detail.headers_default)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_header("Content-Encoding", r) == "gzip"
-
     class TestClass_Teardown(object):
         def test_teardown(self, cleanup):
             import os, json
@@ -485,7 +324,7 @@ class TestClass_SCRUM(object):
                 ##Validate the response
                 r.raise_for_status()
         
-        @pytest.mark.parametrize("area_name", helpers.generate_entity_names("Area", 5))
+        @pytest.mark.parametrize("area_name", helpers.generate_entity_names("Area", 2))
         def test_create_child_areas(self, area_name):
             #Design the URL
             api = "api/areas/" + dynamic_vars.parent_area_id
@@ -511,7 +350,7 @@ class TestClass_SCRUM(object):
                 ##Validate the response
                 r.raise_for_status()
                 
-        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration", 5, True, reset_counter = True))
+        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration", 2, True, reset_counter = True))
         def test_create_child_iters(self, iter_name):
             #Design the URL
             api = "api/iterations/" + dynamic_vars.parent_iteration_id
@@ -524,7 +363,7 @@ class TestClass_SCRUM(object):
             ##Validate the response
             assert r.status_code == 201
             
-        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration1", 5, True, reset_counter = True))
+        @pytest.mark.parametrize("iter_name", helpers.generate_entity_names("Iteration1", 1, True, reset_counter = True))
         def test_create_nested_iters(self, iter_name):
             #Design the URL
             api = "api/iterations/" + dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_1]
@@ -539,26 +378,11 @@ class TestClass_SCRUM(object):
 
     #### Workitem related tests follows::::::::
     class TestClass_CreateWorkitems(object):  
-        ##Create workitems in Iteration-1
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 5, reset_counter = True))
-        def test_create_iter1_tasks(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask1, iterationid=dynamic_vars.nested_iters_names_to_ids[workitem_constants.iteration1_1])
-            ##Validate the response
-            assert r.status_code == 201
-
-        ##Create workitems in Iteration-2
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 5))
-        def test_create_iter2_tasks(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask1, iterationid=dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_2])
-            ##Validate the response
-            assert r.status_code == 201
-
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 10))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_epics(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeepic)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem. If label doen't exist, add one
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_1]
@@ -566,12 +390,11 @@ class TestClass_SCRUM(object):
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_1] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_1, label_id=None)
                 r.raise_for_status()
 
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 10))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_features(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypefeature1)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
@@ -579,12 +402,11 @@ class TestClass_SCRUM(object):
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_2] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=None)
                 r.raise_for_status()
 
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 10))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_bugs(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypebug1)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_3]
@@ -592,12 +414,11 @@ class TestClass_SCRUM(object):
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_3] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_3, label_id=None)
                 r.raise_for_status()
 
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 10))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_backlogitems(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypebacklogitem)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_4]
@@ -605,128 +426,17 @@ class TestClass_SCRUM(object):
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_4] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_4, label_id=None)
                 r.raise_for_status()
             
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 5))
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
         def test_create_backlog_tasks(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask1)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_5]
             except KeyError:
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_5] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_5, label_id=None)
                 r.raise_for_status()
-            
-        def test_create_wi11_wi21_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_11", "Workitem_Title_21")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi21_wi41_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_21", "Workitem_Title_41")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi41_wi45_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_41", "Workitem_Title_45")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi41_wi51_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_41", "Workitem_Title_51")
-            ##Validate the response
-            assert r.status_code == 201
-            
-        def test_create_wi51_wi1_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_51", "Workitem_Title_1")
-            ##Validate the response
-            assert r.status_code == 201
-        
-        def test_create_wi21_wi31_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_21", "Workitem_Title_31")
-            ##Validate the response
-            assert r.status_code == 201
-
-        def test_create_wi31_wi52_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_31", "Workitem_Title_52")
-            ##Validate the response
-            assert r.status_code == 201
-
-        def test_create_wi52_wi6_link(self):
-            r = helpers.add_workitem_parent_link("Workitem_Title_52", "Workitem_Title_6")
-            ##Validate the response
-            assert r.status_code == 201
-
-    #### Edit Work item tests follows::::::::
-    class TestClass_EditSCRUMWorkitem(object):
-        def test_edit_workitem_desc(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_desc = "This is the new description"
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_desc.json', replace={'$wi_id': wi_id, '$wi_desc': wi_new_desc, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
-            assert wi_new_desc in desc_rendered
-        
-        def test_edit_workitem_assignee(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_assignee = dynamic_vars.userid
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_assignee.json', replace={'$wi_id': wi_id, '$assignee': wi_new_assignee, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_value("data.relationships.assignees.data[0].id", r) == wi_new_assignee
-
-        def test_edit_workitem_state(self):
-            wi_id = dynamic_vars.wi_names_to_ids["Workitem_Title_12"]
-            wi_link = dynamic_vars.wi_names_to_links["Workitem_Title_12"]
-            #Design the URL
-            wi_new_state = "Done"
-            api = wi_link
-            url = api
-            f = helpers.read_post_data_file('edit_wi_state.json', replace={'$wi_id': wi_id, '$state': wi_new_state, '$wi_link': wi_link})
-            ##Make the request
-            r = req.patch(url, headers=request_detail.headers_default, json=f)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_value("data.attributes.\"system.state\"", r) == wi_new_state
-
-    #### Backlog List-view tests follows::::::::
-    class TestClass_ListViewSCRUM(object):  
-        ##Load list view page - "Epics", "Features", "Backlog items"
-        @pytest.mark.parametrize("type_group", ["Epics", "Features", "Backlog items"])
-        def test_load_list_view_type_groups(self, type_group):
-            #Design the URL
-            api = 'api/search?' + 'page[limit]=200' + '&' + 'filter[expression]=' + '{"$AND":[{"space":{"$EQ":"' + spaceid + '"}},{"typegroup.name":{"$EQ":"' + type_group + '"}},{"state":{"$NE":"closed"}}],"$OPTS":{"tree-view":true}}'
-            url = launch_detail.create_url(api)
-            ##Make the request
-            r = req.get(url, headers=request_detail.headers_default)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_header("Content-Encoding", r) == "gzip"
-
-        ##Load list view page - Execution (Iteration2)
-        def test_load_list_view_execution(self):
-            #Design the URL
-            api = 'api/search?' + 'page[limit]=200' + '&' + 'filter[expression]=' + '{"$AND":[{"space":{"$EQ":"' + spaceid +'"}},{"typegroup.name":{"$EQ":"Execution"}},{"iteration":{"$EQ":"' + dynamic_vars.iteration_names_to_ids[workitem_constants.iteration_2] + '"}},{"state":{"$NE":"closed"}}],"$OPTS":{"tree-view":true}}'
-            url = launch_detail.create_url(api)
-            ##Make the request
-            r = req.get(url, headers=request_detail.headers_default)
-            ##Analyze the response
-            assert r.status_code == 200
-            assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
     class TestClass_Teardown(object):
         def test_teardown(self, cleanup):
