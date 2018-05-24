@@ -15,9 +15,9 @@ chmod 600 ./password_file
 if [ -e "../jenkins-env" ]; then
   cat ../jenkins-env \
     | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|\
-    ghprbActualCommit|BUILD_URL|ghprbPullId|RESET_ENVIRONMENT|\
-    OSIO_CLUSTER|OSIO_USERNAME|OSIO_PASSWORD|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|\
-    QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" \
+    |ghprbActualCommit|BUILD_URL|ghprbPullId|RESET_ENVIRONMENT|\
+    |OSIO_CLUSTER|OSIO_USERNAME|OSIO_PASSWORD|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|\
+    |QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
