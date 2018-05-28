@@ -97,6 +97,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     }
 
     public async openCodebasesPage(): Promise<void> {
+        await browser.executeScript('window.scrollTo(0,0);');
         await this.spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
     }
 

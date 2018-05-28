@@ -11,6 +11,7 @@ import * as support from '../support';
 import { TextInput, Button } from '../ui';
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
+import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 
 
 export class MainDashboardPage extends AppPage {
@@ -142,7 +143,6 @@ Page layout
 
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
-    await this.devProcessPulldown.enterText('Scenario Driven Planning');
 
     await this.createSpaceButton.clickWhenReady();
     await this.noThanksButton.clickWhenReady();
@@ -166,7 +166,6 @@ Page layout
 
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
-    await this.devProcessPulldown.enterText('Scenario Driven Planning');
 
     await this.createSpaceButton.clickWhenReady();
     await this.cancelCreateAppButton.clickWhenReady();
@@ -182,6 +181,22 @@ Page layout
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();
     return spaceDashboard;
+  }
+
+  // tslint:disable-next-line:max-line-length
+  async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string) {
+    await this.header.recentItemsDropdown.createSpaceItem.select();
+
+    support.info('Creating space');
+    await this.newSpaceName.enterText(spaceName);
+    await this.createSpaceButton.clickWhenReady();
+    support.info('Space created');
+
+    support.info('Creating application from new codebase');
+    let wizard  = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
+    await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Create an Application'))));
+    await wizard.newQuickstartProjectByLauncher(templateName, spaceName, strategy);
+    support.info('Application created');
   }
 
 //  async ready() {

@@ -332,7 +332,7 @@ export class NewImportExperienceDialog extends ui.BaseElement {
   );
 
   continueButton = new Button(
-    element(by.xpath('//*[contains(text(),\'Continue\')]')),
+    element(by.xpath('//*[not(@disabled) and contains(text(),\'Continue\')]')),
     'Continue'
   );
 
@@ -347,6 +347,8 @@ export class NewImportExperienceDialog extends ui.BaseElement {
 
   async selectCreateNewApplication(): Promise<LauncherSection> {
     await this.createNewApplicationCard.clickWhenReady();
+    // https://github.com/fabric8io/fabric8-test/issues/714
+    await browser.sleep(1000);
     await this.continueButton.clickWhenReady();
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
