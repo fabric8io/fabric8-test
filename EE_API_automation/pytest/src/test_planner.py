@@ -279,17 +279,13 @@ class TestClass_SDD(object):
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a few labels to the workitem
             helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_id=[dynamic_vars.labels_names_to_ids[workitem_constants.label_1], dynamic_vars.labels_names_to_ids[workitem_constants.label_2]])
-<<<<<<< HEAD
 
         def test_create_single_task(self):
             r = helpers.create_workitem_SDD(title="A simple workitem", spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask)
             ##Validate the response
             assert r.status_code == 201
-            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "PlainText"
 
-=======
-            
->>>>>>> 8aecdd6797bcf1c91ae1d7073273c885bea76a21
         def test_create_wi5_wi11_link(self):
             r = helpers.add_workitem_parent_link("Workitem_Title_5", "Workitem_Title_11")
             ##Validate the response
@@ -637,7 +633,7 @@ class TestClass_SCRUM(object):
             r = helpers.create_workitem_SCRUM(title="A simple workitem", spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask1)
             ##Validate the response
             assert r.status_code == 201
-            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "PlainText"
             
         def test_create_wi11_wi21_link(self):
             r = helpers.add_workitem_parent_link("Workitem_Title_11", "Workitem_Title_21")
