@@ -190,12 +190,14 @@ class TestClass_SDD(object):
         def test_create_backlog_scenarios(self, wi_name):
             r = helpers.create_workitem_SDD(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypescenario)
             ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
+            ret = helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem. If label doen't exist, add one
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_1]
             except KeyError:
+                assert workitem_constants.comment_1_text in str(helpers.extract_value("data.attributes.\"body.rendered\"", ret)).strip()
+                assert helpers.extract_value("data.attributes.markup", ret) == "Markdown"
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_1] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_1, label_id=None)
                 r.raise_for_status()
 
@@ -277,7 +279,13 @@ class TestClass_SDD(object):
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a few labels to the workitem
             helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_id=[dynamic_vars.labels_names_to_ids[workitem_constants.label_1], dynamic_vars.labels_names_to_ids[workitem_constants.label_2]])
-            
+
+        def test_create_single_task(self):
+            r = helpers.create_workitem_SDD(title="A simple workitem", spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask)
+            ##Validate the response
+            assert r.status_code == 201
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
+
         def test_create_wi5_wi11_link(self):
             r = helpers.add_workitem_parent_link("Workitem_Title_5", "Workitem_Title_11")
             ##Validate the response
@@ -317,7 +325,8 @@ class TestClass_SDD(object):
             r = req.patch(url, headers=request_detail.headers_default, json=f)
             ##Analyze the response
             assert r.status_code == 200
-            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
+            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r)).strip()
             assert wi_new_desc in desc_rendered
         
         def test_edit_workitem_assignee(self):
@@ -557,12 +566,14 @@ class TestClass_SCRUM(object):
         def test_create_backlog_epics(self, wi_name):
             r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeepic)
             ## Add a couple of comments to the workitem
-            helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
+            ret = helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_2_text)
             ## Add a label to the workitem. If label doen't exist, add one
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_1]
             except KeyError:
+                assert workitem_constants.comment_1_text in str(helpers.extract_value("data.attributes.\"body.rendered\"", ret)).strip()
+                assert helpers.extract_value("data.attributes.markup", ret) == "Markdown"
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_1] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_1, label_id=None)
                 r.raise_for_status()
 
@@ -617,6 +628,12 @@ class TestClass_SCRUM(object):
             except KeyError:
                 r, dynamic_vars.labels_names_to_ids[workitem_constants.label_5] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_5, label_id=None)
                 r.raise_for_status()
+
+        def test_create_single_task(self):
+            r = helpers.create_workitem_SCRUM(title="A simple workitem", spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetask1)
+            ##Validate the response
+            assert r.status_code == 201
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
             
         def test_create_wi11_wi21_link(self):
             r = helpers.add_workitem_parent_link("Workitem_Title_11", "Workitem_Title_21")
@@ -672,7 +689,8 @@ class TestClass_SCRUM(object):
             r = req.patch(url, headers=request_detail.headers_default, json=f)
             ##Analyze the response
             assert r.status_code == 200
-            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r))
+            assert helpers.extract_value("data.attributes.\"system.description.markup\"", r) == "Markdown"
+            desc_rendered = str(helpers.extract_value("data.attributes.\"system.description.rendered\"", r)).strip()
             assert wi_new_desc in desc_rendered
         
         def test_edit_workitem_assignee(self):
