@@ -114,6 +114,7 @@ fi
 # Set build as unstable if tests have failed
 if [ $RTN_CODE -eq 1 ]; then
   echo "Tests failed; setting build as unstable"
+  yum -y install wget java-1.8.0-openjdk
   wget ${JENKINS_URL}jnlpJars/jenkins-cli.jar
   java -jar jenkins-cli.jar set-build-result unstable && exit 0
 fi
