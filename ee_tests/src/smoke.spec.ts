@@ -33,8 +33,8 @@ describe('e2e_smoketest', () => {
 
   afterEach(async () => {
     support.info('--- After each ---');
-    support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-    support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+    await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
     index++;
   });
 
@@ -44,10 +44,10 @@ describe('e2e_smoketest', () => {
       try {
         support.info('--- Reset environmet ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-      await accountHomeInteractions.resetEnvironment();
+        await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
-        support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
+        await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
         throw e;
       }
     }
@@ -64,17 +64,10 @@ describe('e2e_smoketest', () => {
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
   });
 
-  it('create_space', async () => {
-    support.info('--- Create space ' + spaceName + ' ---');
+  it('create_space_new_codebase', async () => {
+    support.info('--- Create space with new codebase ' + spaceName + ' ---');
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpace(spaceName);
-  });
-
-  it('create_quickstart', async () => {
-    support.info('--- Create quickstart ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
-    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
-    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
+    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
   });
 
   it('run_che', async () => {

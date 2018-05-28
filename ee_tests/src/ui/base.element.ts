@@ -83,10 +83,8 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   async clickWhenReady(timeout?: number) {
-    await this.run('click', async () => {
-      await this.untilClickable(timeout);
-      await this.click();
-    })
+    await this.untilClickable(timeout);
+    await this.click();
     this.log('Clicked');
   }
 
