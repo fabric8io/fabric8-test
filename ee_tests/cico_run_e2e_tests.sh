@@ -109,7 +109,11 @@ docker exec $CONTAINER_NAME bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}
 docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
-docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER -p $ZABBIX_PORT
+
+if [ "$ZABBIX_ENABLED" = true ] ; then
+    docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER -p $ZABBIX_PORT
+fi
+
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
