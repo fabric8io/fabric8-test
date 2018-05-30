@@ -102,11 +102,13 @@ docker exec $CONTAINER_NAME chmod 600 password_file
 docker exec $CONTAINER_NAME chown root password_file
 docker exec $CONTAINER_NAME ls -l password_file
 docker exec $CONTAINER_NAME ls -l ./target/screenshots
-docker exec $CONTAINER_NAME ls -l ./target/zabbix
 
 docker exec $CONTAINER_NAME mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
 docker exec $CONTAINER_NAME bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
-docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+if [ "$ZABBIX_ENABLED" = true ] ; then
+    docker exec $CONTAINER_NAME ls -l ./target/zabbix
+    docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+fi
 docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
 
 
