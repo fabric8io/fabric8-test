@@ -2,5 +2,28 @@
 
 source _setenv.sh
 
-./_generate-meta.sh
-./_execute.sh
+./_clean-locally.sh
+
+export COMMON="common.git"
+git clone https://github.com/pmacik/openshiftio-performance-common $COMMON
+
+# TODO: Remove right before merging to master!
+cd $COMMON
+git checkout metric-generator
+cd ..
+
+source $COMMON/config/_setenv.sh
+
+echo " Wait for the server to become available"
+./_wait-for-server.sh
+if [ $? -gt 0 ]; then
+   exit 1
+fi
+
+echo " Prepare locustfile template"
+./_prepare-locustfile.sh $JOB_BASE_NAME.py
+
+rm -rvf $LOG_DIR;
+
+$COMMON/_execute.sh
+./_clean-chromedriver.sh

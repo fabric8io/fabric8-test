@@ -85,14 +85,21 @@ class UserScenario(TaskSet):
         )
 
     def _report_success(self, request_type, name, response_time):
-        # print "[OK]   request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0"
-        events.request_success.fire(request_type=request_type, name=name, response_time=response_time, response_length=0)
+        events.request_success.fire(
+            request_type=request_type,
+            name=name,
+            response_time=response_time,
+            response_length=0
+        )
 
     def _report_failure(self, driver, request_type, name, response_time, msg):
-        # print "[FAIL] request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0"
-        # driver.get_screenshot_as_file(request_type + "_" + name + "-failure-screenshot-" + str(time.time()) + ".png")
         driver.quit()
-        events.request_failure.fire(request_type=request_type, name=name, response_time=response_time, exception=LocustError(msg))
+        events.request_failure.fire(
+            request_type=request_type,
+            name=name,
+            response_time=response_time,
+            exception=LocustError(msg)
+        )
 
     def login(self, driver):
         request_type = "login"
@@ -101,18 +108,37 @@ class UserScenario(TaskSet):
         try:
             driver.get(self.locust.host)
             login_link = self._wait_for_clickable_link(driver, "LOG IN")
-            self._report_success(request_type, "open-start-page", self._tick_timer())
+            self._report_success(
+                request_type,
+                "open-start-page",
+                self._tick_timer()
+            )
         except TimeoutException:
-            self._report_failure(driver, request_type, "open-start-page", self._tick_timer(), "Timeout waiting for 'LOG IN' button to be clickable.")
+            self._report_failure(
+                driver, request_type,
+                "open-start-page",
+                self._tick_timer(),
+                "Timeout waiting for 'LOG IN' button to be clickable."
+            )
             return False
 
         self._reset_timer()
         try:
             login_link.click()
             self._wait_for_clickable_element(driver, By.ID, "kc-login")
-            self._report_success(request_type, "open-login-page", self._tick_timer())
+            self._report_success(
+                request_type,
+                "open-login-page",
+                self._tick_timer()
+            )
         except TimeoutException:
-            self._report_failure(driver, request_type, "open-login-page", self._tick_timer(), "Timeout")
+            self._report_failure(
+                driver,
+                request_type,
+                "open-login-page",
+                self._tick_timer(),
+                "Timeout"
+            )
             return False
 
         driver.find_element_by_id("username").send_keys(self.taskUserName)
@@ -127,7 +153,13 @@ class UserScenario(TaskSet):
             )
             self._report_success(request_type, "login", self._tick_timer())
         except TimeoutException:
-            self._report_failure(driver, request_type, "login", self._tick_timer(), "Timeout")
+            self._report_failure(
+                driver,
+                request_type,
+                "login",
+                self._tick_timer(),
+                "Timeout"
+            )
             return False
         return True
 
@@ -144,6 +176,6 @@ class UserScenario(TaskSet):
 
 class UserLocust(HttpLocust):
     task_set = UserScenario
-    host = _serverScheme + "://" + _serverHost
+    host = "{}://{}".format(_serverScheme, _serverHost)
     min_wait = 1000
     max_wait = 1000
