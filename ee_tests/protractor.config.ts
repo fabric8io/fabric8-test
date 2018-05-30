@@ -71,7 +71,7 @@ let conf: Config = {
       local: ['src/local/*.js'],
 
       launchertest: ['src/launcher.spec.js'],
-      logintest: ['src/quickstart_login.spec.js'],
+      logintest: ['src/login.spec.js'],
 
       // TODO https://github.com/fabric8io/fabric8-test/issues/578
       boosterTest: ['src/booster_pipeline.spec.js'],
