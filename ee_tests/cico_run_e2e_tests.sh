@@ -39,7 +39,7 @@ export ZABBIX_ENABLED=${ZABBIX_ENABLED:-"true"}
 export ZABBIX_HOST=$OSIO_CLUSTER
 export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
 export ZABBIX_PORT="9443"
-export ZABBIX_SERVER="https://zabbix.devshift.net/"
+export ZABBIX_SERVER="zabbix.devshift.net"
 
 # We need to disable selinux for now, XXX
 /usr/sbin/setenforce 0
@@ -113,7 +113,7 @@ docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relati
 
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
-    docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER -p $ZABBIX_PORT
+    docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
 fi
 
 
