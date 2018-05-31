@@ -90,8 +90,8 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
 
   async ready() {
     // TODO: may have to revert back to just until present
-    // await this.untilPresent();
-    await this.untilDisplayed();
+    await this.untilPresent();
+    //await this.untilDisplayed();
   }
 
   async run(msg: string, fn: () => Promise<any>) {

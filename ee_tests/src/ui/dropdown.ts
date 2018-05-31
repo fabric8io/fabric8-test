@@ -1,4 +1,4 @@
-import { ElementFinder, by, $ } from 'protractor';
+import { browser, ElementFinder, by, $ } from 'protractor';
 import { BaseElement, Clickable } from './base.element';
 import * as support from '../support';
 
@@ -19,7 +19,12 @@ export class DropdownItem extends BaseElement {
   async select() {
     await this.run(`select item: '${this.name}'`, async () => {
       await this.parent.ready();
+
+      // Added ****************** why is this sleep necessary now - page loading issue???
+      await browser.sleep(30000);
       await this.parent.click();
+      // Added ******************
+
       await this.ready();
       await this.click();
     })
