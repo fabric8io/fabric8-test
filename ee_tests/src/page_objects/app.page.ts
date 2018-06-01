@@ -35,10 +35,10 @@ export abstract class AppPage extends BasePage {
   }
 
   async ready() {
-    await browser.wait(until.presenceOf(this.appTag));
-    await browser.wait(until.presenceOf(this.header));
+    await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT);
+    await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT);
     // wait for "Recent Spaces" card
-    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))));
+    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))), support.DEFAULT_WAIT);
   }
 
   async gotoUserProfile(): Promise<UserProfilePage> {
