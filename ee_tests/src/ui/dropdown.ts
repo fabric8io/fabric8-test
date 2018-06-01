@@ -2,7 +2,6 @@ import { ElementFinder, by, $ } from 'protractor';
 import { BaseElement, Clickable } from './base.element';
 import * as support from '../support';
 
-
 export class DropdownItem extends BaseElement {
   constructor(element: ElementFinder, parent: ElementFinder, name: string = '') {
     super(element, name);
@@ -18,14 +17,13 @@ export class DropdownItem extends BaseElement {
 
   async select() {
     await this.run(`select item: '${this.name}'`, async () => {
-      await this.parent.ready();
       await this.parent.click();
+      await this.parent.ready();
       await this.ready();
       await this.click();
-    })
+    });
   }
 }
-
 
 export class DropdownMenu extends BaseElement {
 
@@ -55,7 +53,7 @@ export class Dropdown extends BaseElement {
   }
 
   item(text: string): DropdownItem {
-    return this.menu.item(text)
+    return this.menu.item(text);
   }
 
   async select(text: string) {
@@ -63,26 +61,24 @@ export class Dropdown extends BaseElement {
   }
 
   async ready() {
-    await this.run('ready', async() => {
+    await this.run('ready', async () => {
       await super.ready();
       await this.untilClickable();
       await this.menu.ready();
-    })
+    });
   }
 }
 
-
 export class SingleSelectionDropdown extends Dropdown {
-  input = new Clickable(this.$('input.combobox[type="text"]'), '')
+  input = new Clickable(this.$('input.combobox[type="text"]'), '');
 
-	constructor(element: ElementFinder, name: string = '') {
-		super(element, name);
-    this.input.name = name
-	}
+  constructor(element: ElementFinder, name: string = '') {
+    super(element, name);
+    this.input.name = name;
+  }
 
   async ready() {
     await super.ready();
-    await this.input.ready()
+    await this.input.ready();
   }
 }
-

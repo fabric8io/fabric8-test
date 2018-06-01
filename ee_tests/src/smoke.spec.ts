@@ -60,6 +60,7 @@ describe('e2e_smoketest', () => {
   });
 
   it('feature_level', async () => {
+    support.info('--- Check if feature level is set correctly ---');
     let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
   });
