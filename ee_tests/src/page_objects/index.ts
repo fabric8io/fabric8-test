@@ -8,8 +8,7 @@ export * from './oso_dashboard.page';
 export * from './launcher_section';
 export * from './launcher_setup_app.page';
 export * from './launcher_import_app.page';
-export * from './space_settings_area.page';
-export * from './collaborators_page';
+export * from './space_settings.page';
 
 
 // TODO: move page to a different file
