@@ -123,6 +123,16 @@ Page layout
     }
     // tslint:enable:max-line-length
 
+   async ready() {
+      super.ready();
+      await browser.wait(
+        until.presenceOf(element(by.cssContainingText('div', 'Recent Spaces'))), support.DEFAULT_WAIT);
+      await browser.wait(
+        until.presenceOf(element(by.cssContainingText('div', 'My Work Items'))), support.DEFAULT_WAIT);
+      await browser.wait(
+        until.presenceOf(element(by.cssContainingText('div', 'Recent Active Pipelines'))), support.DEFAULT_WAIT);
+  }
+
   async openUsingMenu() {
     await this.header.recentItemsDropdown.clickWhenReady();
     await this.header.recentItemsDropdown.accountHomeItem.clickWhenReady();

@@ -1,39 +1,45 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
-
 import * as support from './support';
-import { Quickstart } from './support/quickstart';
-import { TextInput, Button } from './ui';
-
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
-import { StageRunPage } from './page_objects/space_stage_run.page';
+import { browser } from 'protractor';
+import { LoginInteraction } from './support';
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
+/**
+ * Simple test for log in and log out. 
+ */
+describe('e2e_logintest', () => {
 
-/* Tests to verify user login/logout */
+  let login: LoginInteraction;
 
-describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
 
-  beforeEach(async () => {
+  let i = 1;
+
+  beforeAll(async () => {
+    await support.desktopTestSetup();
   });
 
   afterEach(async () => {
-    let spaceName = support.newSpaceName();
-    support.writeScreenshot('target/screenshots/login_test_success_' + spaceName + '.png');
-    await dashboardPage.logout();
+    await support.writeScreenshot('target/screenshots/login_test_' + i + '.png');
+    await support.writePageSource('target/screenshots/login_test_' + i + '.html');
+    i++;
   });
 
-  it('Create a new space, new ' + browser.params.quickstart.name + ' quickstart, run its pipeline', async () => {
-
-    await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+  it('login', async () => {
+    support.info('--- Login ---');
+    login = new support.LoginInteraction();
     dashboardPage = await login.run();
 
+    expect(dashboardPage.header.recentItemsDropdown.isPresent()).toBeTruthy();
+    expect(dashboardPage.header.recentItemsDropdown.getText()).toBe(browser.params.login.user);
+
+    expect(login.page.loginButton.isPresent()).toBeFalsy();
   });
 
+  it('logout', async () => {
+    support.info('--- Logout ---');
+    await dashboardPage.logout();
+
+    expect(dashboardPage.header.recentItemsDropdown.isPresent()).toBeFalsy();
+    expect(login.page.loginButton.isPresent()).toBeTruthy();
+  });
 });
