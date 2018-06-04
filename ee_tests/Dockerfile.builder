@@ -24,19 +24,25 @@ RUN set -ex \
     gpg --import "/gpg/${key}.gpg" ; \
   done
 
-# activate EPEL repository, necessary for libappindicator-gtk3 (used by Chrome)
-RUN yum install --setopt tsflags='nodocs' -y \
-    http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-
-# install chrome
+# install dependencies
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN yum --setopt tsflags='nodocs' -y update && \
-    yum install --setopt tsflags='nodocs' -y bzip2 fontconfig java-1.8.0 nmap-ncat psmisc gtk3 git \
-      python-setuptools xorg-x11-xauth wget unzip which \
-      xorg-x11-server-Xvfb libXfont GConf2 \
-      xorg-x11-fonts-75dpi xorg-x11-fonts-100dpi xorg-x11-fonts-cyrillic \
-      ipa-gothic-fonts xorg-x11-utils xorg-x11-fonts-Type1 xorg-x11-fonts-misc && \
-    yum install --setopt tsflags='nodocs' -y google-chrome-stable
+    yum install -y --setopt tsflags='nodocs' \
+      epel-release \
+      rsync \
+      wget \
+      gtk3 \
+      xorg-x11-xauth \
+      xorg-x11-server-Xvfb \
+      xorg-x11-fonts-75dpi \
+      xorg-x11-fonts-100dpi \
+      xorg-x11-utils \
+      xorg-x11-fonts-Type1 \
+      xorg-x11-fonts-misc \
+      https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.9-1.el7.x86_64.rpm
+
+# the following packages depend on EPEL repository and need to be installed separately
+RUN yum install -y --setopt tsflags='nodocs' jq google-chrome-stable
 
 # install node
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
@@ -66,9 +72,6 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
 RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
-
-# Install jq
-RUN yum install --setopt tsflags='nodocs' -y jq
 
 # install all node dependencies
 COPY package.json package-lock.json ./

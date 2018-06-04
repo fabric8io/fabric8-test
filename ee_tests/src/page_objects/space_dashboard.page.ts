@@ -15,6 +15,7 @@ import { stat } from 'fs';
 import { DeployedApplication } from './space_deployments.page';
 import { SpacePipelinePage, MainDashboardPage, PageOpenMode } from '.';
 import { DEFAULT_WAIT } from '../support';
+import { FeatureLevel } from '../support/feature_level';
 
 /*
 Page layout
@@ -215,7 +216,10 @@ export class SpaceDashboardPage extends SpaceTabPage {
   /* Pipelines section title/link */
   pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
 
-  addToSpaceButton = new Button(element(by.xpath('.//button[contains(text(),\'Add to space\')]')));
+  addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
+
+  createAnApplicationButton = this.innerElement(
+    ui.Button, '#analyze-overview-dashboard-add-to-space-button', 'Create an Application');
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');
@@ -250,7 +254,16 @@ export class SpaceDashboardPage extends SpaceTabPage {
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {
-    await this.addToSpaceButton.clickWhenReady()
+    switch (browser.params.feature.level) {
+      case FeatureLevel.INTERNAL:
+        await this.createAnApplicationButton.clickWhenReady();
+        break;
+      case FeatureLevel.RELEASED:
+      case FeatureLevel.BETA:
+      case FeatureLevel.EXPERIMENTAL:
+      default:
+        await this.addToSpaceButton.clickWhenReady();
+    }
     // NOTE: outside the dialog is outside of $(this)
     let wizard  = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'))
     return wizard;

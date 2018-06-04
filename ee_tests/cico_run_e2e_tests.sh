@@ -38,6 +38,8 @@ export TEST_SUITE=${TEST_SUITE:-"smoketest"}
 export ZABBIX_ENABLED=${ZABBIX_ENABLED:-"true"}
 export ZABBIX_HOST=$OSIO_CLUSTER
 export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
+export ZABBIX_PORT="9443"
+export ZABBIX_SERVER="zabbix.devshift.net"
 
 # We need to disable selinux for now, XXX
 /usr/sbin/setenforce 0
@@ -70,6 +72,7 @@ docker run --shm-size=256m --detach=true --name=$CONTAINER_NAME --cap-add=SYS_AD
           -e OSIO_PASSWORD -e OSIO_URL -e OSIO_USERNAME -e OSO_USERNAME \
           -e QUICKSTART_NAME -e RELEASE_STRATEGY -e RESET_ENVIRONMENT -e TEST_SUITE \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
+          -e ZABBIX_PORT -e ZABBIX_SERVER \
           -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
@@ -99,23 +102,24 @@ docker exec $CONTAINER_NAME chmod 600 password_file
 docker exec $CONTAINER_NAME chown root password_file
 docker exec $CONTAINER_NAME ls -l password_file
 docker exec $CONTAINER_NAME ls -l ./target/screenshots
-docker exec $CONTAINER_NAME ls -l ./target/zabbix
 
 docker exec $CONTAINER_NAME mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
 docker exec $CONTAINER_NAME bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
-docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+if [ "$ZABBIX_ENABLED" = true ] ; then
+    docker exec $CONTAINER_NAME ls -l ./target/zabbix
+    docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+fi
 docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
+
+
+if [ "$ZABBIX_ENABLED" = true ] ; then
+    docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
+fi
+
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
     docker rm -f $CONTAINER_NAME
-fi
-
-# Set build as unstable if tests have failed
-if [ $RTN_CODE -eq 1 ]; then
-  echo "Tests failed; setting build as unstable"
-  wget ${JENKINS_URL}jnlpJars/jenkins-cli.jar
-  java -jar jenkins-cli.jar set-build-result unstable && exit 0
 fi
 
 exit $RTN_CODE

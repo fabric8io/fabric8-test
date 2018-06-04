@@ -35,9 +35,14 @@ export abstract class AppPage extends BasePage {
   }
 
   async ready() {
-    await browser.wait(until.presenceOf(this.appTag));
-    await browser.wait(until.presenceOf(this.header));
-    await this.header.ready();
+    await support.writeScreenshot('target/screenshots/app_page_ready_1.png');
+    support.debug('app.page.ready() starting...');
+    await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT);
+    await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT);
+    // wait for "Recent Spaces" card
+    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))), support.DEFAULT_WAIT);
+    support.debug('app.page.ready() complete...');
+    await support.writeScreenshot('target/screenshots/app_page_ready_2.png');
   }
 
   async gotoUserProfile(): Promise<UserProfilePage> {
@@ -46,7 +51,6 @@ export abstract class AppPage extends BasePage {
     await this.header.profileDropdown.select('Profile');
     support.debug('... Select "Profile" menu item - OK');
 
-    // tslint:disable-next-line:no-use-before-declare
     let page = new UserProfilePage();
     await page.open();
     return page;
@@ -66,13 +70,13 @@ export abstract class AppPage extends BasePage {
   async logout() {
     await this.ready();
     await browser.wait(until.invisibilityOf(this.successAlert));
-    support.debug('... Selecting logout')
+    support.debug('... Selecting logout');
     await this.header.profileDropdown.logoutItem.select();
-    support.debug('... Selecting logout', 'OK')
+    support.debug('... Selecting logout', 'OK');
 
 
     // ensure there is no f8-app tag after logout
-    let untilNoAppTag = until.not(until.presenceOf(this.appTag))
+    let untilNoAppTag = until.not(until.presenceOf(this.appTag));
     await browser.wait(untilNoAppTag);
 
     // make sure we are back to the baseUrl
@@ -82,10 +86,10 @@ export abstract class AppPage extends BasePage {
     let untilBackToBaseUrl = until.or(
       until.urlIs(baseUrl),
       until.urlIs(`${baseUrl}/`)
-    )
+    );
 
     await browser.wait(untilBackToBaseUrl, 5000, `Url is not ${baseUrl}`);
-    support.debug('... Wait for base url', 'OK')
+    support.debug('... Wait for base url', 'OK');
 
     return new LandingPage().open();
   }

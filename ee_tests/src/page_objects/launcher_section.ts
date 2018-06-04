@@ -1,7 +1,7 @@
 import { ExpectedConditions as until, ElementFinder, browser, By, by } from 'protractor';
 import { Quickstart } from '../support/quickstart';
 import { BaseElement, Button, Checkbox, TextInput } from '../ui';
-import { LauncherSetupAppPage } from '.';
+import { LauncherSetupAppPage, LauncherImportAppPage } from '.';
 
 export class LauncherSection extends BaseElement {
   nav = new BaseElement(this.$('.f8launcher-container_nav'));
@@ -71,6 +71,12 @@ export class LauncherSection extends BaseElement {
     'Set Up Application'
   );
 
+  importApplicationButton = new Button(
+    this.element(
+      by.xpath('//*[contains(@class,\'btn\')][contains(text(),\'Import Application\')]')),
+    'Import Application'
+  );
+
   ghOrgItem(name: string): Button {
     return new Button(
       this.ghOrgSelect.element(by.xpath('./option[contains(text(),\'' + name + '\')]')),
@@ -110,7 +116,7 @@ export class LauncherSection extends BaseElement {
   }
 
   constructor(element: ElementFinder) {
-    super(element, 'Create a New Application Launcher');
+    super(element, 'Ngx Launcher');
   }
 
   async ready() {
@@ -165,5 +171,10 @@ export class LauncherSection extends BaseElement {
   async setUpApplication(): Promise<LauncherSetupAppPage> {
     await this.setUpApplicationButton.clickWhenReady();
     return new LauncherSetupAppPage(this.element(by.xpath('//f8launcher-projectprogress-createapp-nextstep')));
+  }
+
+  async importApplication(): Promise<LauncherImportAppPage> {
+    await this.importApplicationButton.clickWhenReady();
+    return new LauncherImportAppPage(this.element(by.xpath('//f8launcher-projectprogress-importapp-nextstep')));
   }
 }

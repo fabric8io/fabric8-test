@@ -71,11 +71,17 @@ let conf: Config = {
       local: ['src/local/*.js'],
 
       launchertest: ['src/launcher.spec.js'],
-      logintest: ['src/quickstart_login.spec.js'],
+      logintest: ['src/login.spec.js'],
 
       // TODO https://github.com/fabric8io/fabric8-test/issues/578
       boosterTest: ['src/booster_pipeline.spec.js'],
       importTest: ['src/workshop-import-to-space.spec.js'],
+
+      boosterimport: [
+        'src/booster_ee_int_tests/booster_import_to_space.spec.js',
+        'src/booster_ee_int_tests/booster_pipeline.spec.js',
+        'src/booster_ee_int_tests/booster_cleanup.spec.js'
+      ],
 
       boostersuite: [
         'src/booster_ee_int_tests/booster_setup.spec.js',

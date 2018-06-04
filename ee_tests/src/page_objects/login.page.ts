@@ -45,12 +45,16 @@ export class LoginPage extends BasePage {
     this.debug('... Login: input details and click Login');
     await this.usernameInput.enterText(username);
     await this.passwordInput.enterText(password);
+
+    support.writeScreenshot('target/screenshots/login_1.png');
     await this.loginButton.clickWhenReady();
 
     this.debug('... Login: input details and click Login - OK');
 
-    let mainDashboard = new MainDashboardPage()
-    await mainDashboard.open()
+    let mainDashboard = new MainDashboardPage();
+    await mainDashboard.open();
+
+    support.writeScreenshot('target/screenshots/login_2.png');
     return mainDashboard;
   }
 

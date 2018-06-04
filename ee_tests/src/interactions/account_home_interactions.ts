@@ -6,6 +6,7 @@ import * as support from '../support';
 import { SpaceDashboardPage, CleanupUserEnvPage } from '../..';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
+import { SpaceDashboardInteractionsFactory, SpaceDashboardInteractions } from './space_dashboard_interactions';
 
 export abstract class AccountHomeInteractionsFactory {
 
@@ -27,6 +28,8 @@ export interface AccountHomeInteractions {
 
     createSpace(name: string): void;
 
+    createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): void;
+
     resetEnvironment(): void;
 
     openSpaceDashboard(name: string): void;
@@ -37,6 +40,9 @@ export abstract class AbstractSpaceDashboardInteractions implements AccountHomeI
     public async abstract openAccountHome(mode: PageOpenMode): Promise<void>;
 
     public async abstract createSpace(name: string): Promise<void>;
+
+    // tslint:disable-next-line:max-line-length
+    public async abstract createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void>;
 
     public async abstract resetEnvironment(): Promise<void>;
 
@@ -58,6 +64,15 @@ export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInter
 
     public async createSpace(name: string): Promise<void> {
         await this.dashboardPage.createNewSpaceByLauncher(name);
+    }
+
+    public async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void> {
+        await this.dashboardPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
+
+        let spaceDashboardInteractions: SpaceDashboardInteractions =
+            SpaceDashboardInteractionsFactory.create(spaceName);
+        await spaceDashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+        await spaceDashboardInteractions.verifyCodebases();
     }
 
     public async resetEnvironment(): Promise<void> {

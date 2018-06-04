@@ -29,6 +29,7 @@ describe('Clean up user environment:', () => {
 
   afterEach(async () => {
     support.writeScreenshot('target/screenshots/booster_cleanup_success.png');
+    await dashboardPage.openInBrowser();
     await dashboardPage.logout();
   });
 

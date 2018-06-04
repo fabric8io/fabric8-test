@@ -16,7 +16,7 @@ import { Button } from './ui';
 import { PageOpenMode } from '..';
 import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
-describe('smoketest', () => {
+describe('e2e_smoketest', () => {
 
   let quickstart: Quickstart;
   let strategy: string;
@@ -33,8 +33,8 @@ describe('smoketest', () => {
 
   afterEach(async () => {
     support.info('--- After each ---');
-    support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-    support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
+    await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
+    await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
     index++;
   });
 
@@ -44,10 +44,10 @@ describe('smoketest', () => {
       try {
         support.info('--- Reset environmet ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-      await accountHomeInteractions.resetEnvironment();
+        await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
-        support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
+        await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
         throw e;
       }
     }
@@ -60,36 +60,15 @@ describe('smoketest', () => {
   });
 
   it('feature_level', async () => {
+    support.info('--- Check if feature level is set correctly ---');
     let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
-
-    // TODO: Remove reset of environment. This was added due to the following issue
-    // underlying fabric8-test issue https://github.com/fabric8io/fabric8-test/issues/644
-    if (browser.params.reset.environment === 'true' && featureLevel === FeatureLevel.RELEASED) {
-      try {
-        support.info('--- Reset environmet ---');
-        let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-        await accountHomeInteractions.resetEnvironment();
-      } catch (e) {
-        support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
-        support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
-        index++;
-        throw e;
-      }
-    }
   });
 
-  it('create_space', async () => {
-    support.info('--- Create space ' + spaceName + ' ---');
+  it('create_space_new_codebase', async () => {
+    support.info('--- Create space with new codebase ' + spaceName + ' ---');
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpace(spaceName);
-  });
-
-  it('create_quickstart', async () => {
-    support.info('--- Create quickstart ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
-    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
-    await dashboardInteractions.createQuickstart(quickstart.name, strategy);
+    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
   });
 
   it('run_che', async () => {
