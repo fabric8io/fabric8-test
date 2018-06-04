@@ -35,14 +35,9 @@ export abstract class AppPage extends BasePage {
   }
 
   async ready() {
-    await support.writeScreenshot('target/screenshots/app_page_ready_1.png');
-    support.debug('app.page.ready() starting...');
     await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT);
     await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT);
-    // wait for "Recent Spaces" card
-    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))), support.DEFAULT_WAIT);
-    support.debug('app.page.ready() complete...');
-    await support.writeScreenshot('target/screenshots/app_page_ready_2.png');
+    await this.header.ready();
   }
 
   async gotoUserProfile(): Promise<UserProfilePage> {

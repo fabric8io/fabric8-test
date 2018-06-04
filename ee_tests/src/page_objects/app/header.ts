@@ -14,9 +14,6 @@ export class ProfileDropdown extends ui.Dropdown {
   async ready() {
     support.debug(' ... check if ProfileDropdown is Ready');
     await super.ready();
-    await this.profileItem.ready();
-//    await this.aboutItem.ready();
-    await this.logoutItem.ready();
     support.debug(' ... check if ProfileDropdown is Ready - OK');
   }
 }
@@ -33,9 +30,6 @@ export class RecentItemsDropdown extends ui.Dropdown {
   async ready() {
     support.debug(' ... check if RecentItems is ready');
     await super.ready();
-    await this.accountHomeItem.ready();
-    await this.createSpaceItem.ready();
-    await this.viewAllSpaces.ready();
     support.debug(' ... check if RecentItems is ready');
   }
 }
@@ -46,9 +40,8 @@ export class RecentItemsDropdown extends ui.Dropdown {
 
 
 export class Header extends ui.BaseElement {
-  profileDropdown = new ProfileDropdown(this.$('.pull-right.dropdown'));
-  recentItemsDropdown = new RecentItemsDropdown(this.$$('.dropdown').get(0));
-  // statusDropdown = new Dropdown(this.$$('.dropdown').get(0));
+  profileDropdown = new ProfileDropdown(this.$('.user-dropdown-menu'));
+  recentItemsDropdown = new RecentItemsDropdown(this.$('.recent-items-dropdown'));
 
   constructor(el: ElementFinder) {
     super(el);
