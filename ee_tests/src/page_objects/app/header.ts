@@ -2,43 +2,6 @@ import { $, by, ElementFinder, browser, ExpectedConditions as until } from 'prot
 import * as support from '../../support';
 import * as ui from '../../ui';
 
-export class ProfileDropdown extends ui.Dropdown {
-  profileItem = this.item('Profile');
-  aboutItem = this.item('About');
-  logoutItem = this.item('Log Out')
-
-  constructor(element: ElementFinder) {
-    super(element);
-  }
-
-  async ready() {
-    support.debug(' ... check if ProfileDropdown is Ready');
-    await super.ready();
-    support.debug(' ... check if ProfileDropdown is Ready - OK');
-  }
-}
-
-export class RecentItemsDropdown extends ui.Dropdown {
-  accountHomeItem = this.item('Account home');
-  createSpaceItem = this.item('Create space');
-  viewAllSpaces = this.item('View all spaces');
-
-  constructor(element: ElementFinder) {
-    super(element);
-  }
-
-  async ready() {
-    support.debug(' ... check if RecentItems is ready');
-    await super.ready();
-    support.debug(' ... check if RecentItems is ready');
-  }
-}
-
-// export class StatusDropdown extends ui.Dropdown {
-
-// }
-
-
 export class Header extends ui.BaseElement {
   profileDropdown = new ProfileDropdown(this.$('.user-dropdown-menu'));
   recentItemsDropdown = new RecentItemsDropdown(this.$('.recent-items-dropdown'));
@@ -54,4 +17,47 @@ export class Header extends ui.BaseElement {
     support.debug(' ... check if Header is ready - OK');
   }
 }
+
+export class ProfileDropdown extends ui.Dropdown {
+
+  constructor(element: ElementFinder) {
+    super(element);
+  }
+
+  async selectProfile() {
+    super.select('Profile');
+  }
+
+  async selectSettings() {
+    super.select('Settings');
+  }
+
+  async selectLogOut() {
+    super.select('Log Out');
+  }
+}
+
+export class RecentItemsDropdown extends ui.Dropdown {
+
+  constructor(element: ElementFinder) {
+    super(element);
+  }
+
+  async selectAccountHome() {
+    super.select('Account home');
+  }
+
+  async selectCreateSpace() {
+    super.select('Create space');
+  }
+
+  async selectViewAllSpaces() {
+    super.select('View all spaces');
+  }
+
+  async selecMySpaces() {
+    super.select('My spaces');
+  }
+}
+
 

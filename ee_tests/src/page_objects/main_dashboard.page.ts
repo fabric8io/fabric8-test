@@ -134,8 +134,7 @@ Page layout
   }
 
   async openUsingMenu() {
-    await this.header.recentItemsDropdown.clickWhenReady();
-    await this.header.recentItemsDropdown.accountHomeItem.clickWhenReady();
+    await this.header.recentItemsDropdown.selectAccountHome();
   }
 
   async openSpace(spaceName: string): Promise<SpaceDashboardPage> {
@@ -149,7 +148,7 @@ Page layout
 
   /* Helper function to create a new OSIO space */
   async createNewSpace(spaceName: string): Promise<SpaceDashboardPage> {
-    await this.header.recentItemsDropdown.createSpaceItem.select();
+    await this.header.recentItemsDropdown.selectCreateSpace();
 
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
@@ -172,7 +171,7 @@ Page layout
 
   /* Helper function to create a new OSIO space */
   async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
-    await this.header.recentItemsDropdown.createSpaceItem.select();
+    await this.header.recentItemsDropdown.selectCreateSpace();
 
     // TODO: create a new BaseFragment for the model Dialog
     await this.newSpaceName.enterText(spaceName);
@@ -195,7 +194,7 @@ Page layout
 
   // tslint:disable-next-line:max-line-length
   async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string) {
-    await this.header.recentItemsDropdown.createSpaceItem.select();
+    await this.header.recentItemsDropdown.selectCreateSpace();
 
     support.info('Creating space');
     await this.newSpaceName.enterText(spaceName);
