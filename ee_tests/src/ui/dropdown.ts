@@ -1,71 +1,54 @@
-import { ElementFinder, by, $ } from 'protractor';
+import { browser, ElementFinder, by, $, ExpectedConditions as until } from 'protractor';
 import { BaseElement, Clickable } from './base.element';
 import * as support from '../support';
 
-export class DropdownItem extends BaseElement {
-  constructor(element: ElementFinder, parent: ElementFinder, name: string = '') {
-    super(element, name);
-    this.parent = parent;
-  }
-
-  async ready() {
-    await this.run('ready', async () => {
-      await super.ready();
-      await this.untilClickable();
-    });
-  }
-
-  async select() {
-    await this.run(`select item: '${this.name}'`, async () => {
-      await this.parent.click();
-      await this.parent.ready();
-      await this.ready();
-      await this.click();
-    });
-  }
-}
-
-export class DropdownMenu extends BaseElement {
-
-  constructor(element: ElementFinder, parent: ElementFinder, name: string = '') {
-    super(element, name);
-    this.parent = parent;
-  }
-
-  item(text: string): DropdownItem {
-    let item = this.element(by.cssContainingText('li', text));
-    return new DropdownItem(item, this.parent, text);
-  }
-
-  async ready() {
-    // NOTE: not calling super as the menu is usually hidden and
-    // supper.ready waits for item to be displayed
-    await this.untilPresent();
-  }
-
-}
-
 export class Dropdown extends BaseElement {
-  menu = new DropdownMenu(this.$('ul.dropdown-menu'), this);
+
+  private menu = new DropdownMenu(this.$('ul.dropdown-menu'));
+
+  constructor(element: ElementFinder, name: string = '') {
+    super(element, name);
+  }
+
+  async select(text: string) {
+    support.info('Select menu item ' + text);
+    await this.toggle();
+    await browser.wait(until.presenceOf(this.menu));
+    await this.item(text).select();
+  }
+
+  async toggle() {
+    support.debug('Toggle the menu');
+    await browser.wait(until.presenceOf(this.element(by.className('dropdown-toggle'))));
+    await this.element(by.className('dropdown-toggle')).click();
+  }
+
+  protected item(text: string): DropdownItem {
+    return this.menu.item(text);
+  }
+}
+
+class DropdownMenu extends BaseElement {
 
   constructor(element: ElementFinder, name: string = '') {
     super(element, name);
   }
 
   item(text: string): DropdownItem {
-    return this.menu.item(text);
+    let item = this.element(by.cssContainingText('li', text));
+    return new DropdownItem(item, text);
+  }
+}
+
+class DropdownItem extends BaseElement {
+
+  constructor(element: ElementFinder, name: string = '') {
+    super(element, name);
   }
 
-  async select(text: string) {
-    await this.item(text).select();
-  }
-
-  async ready() {
-    await this.run('ready', async () => {
-      await super.ready();
-      await this.untilClickable();
-      await this.menu.ready();
-    });
+  async select() {
+    support.debug('Select menu item');
+    await this.clickWhenReady();
   }
 }
 

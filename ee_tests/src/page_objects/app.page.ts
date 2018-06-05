@@ -43,7 +43,7 @@ export abstract class AppPage extends BasePage {
   async gotoUserProfile(): Promise<UserProfilePage> {
     await this.ready();
     support.debug('... Select "Profile" menu item');
-    await this.header.profileDropdown.select('Profile');
+    await this.header.profileDropdown.selectProfile();
     support.debug('... Select "Profile" menu item - OK');
 
     let page = new UserProfilePage();
@@ -54,7 +54,7 @@ export abstract class AppPage extends BasePage {
   async gotoUserSettins(): Promise<UserSettingsPage> {
     await this.ready();
     support.debug('... Select "Settings" menu item');
-    await this.header.profileDropdown.select('Settings');
+    await this.header.profileDropdown.selectSettings();
     support.debug('... Select "Settings" menu item - OK');
 
     let page = new UserSettingsPage();
@@ -66,7 +66,7 @@ export abstract class AppPage extends BasePage {
     await this.ready();
     await browser.wait(until.invisibilityOf(this.successAlert));
     support.debug('... Selecting logout');
-    await this.header.profileDropdown.logoutItem.select();
+    await this.header.profileDropdown.selectLogOut();
     support.debug('... Selecting logout', 'OK');
 
 

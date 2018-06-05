@@ -119,7 +119,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async verifyCodebases(): Promise<void> {
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
-        browser.wait(async function() {
+        await browser.wait(async function() {
             return (await codebasesCard.getCount()) === 1;
         }, DEFAULT_WAIT);
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
