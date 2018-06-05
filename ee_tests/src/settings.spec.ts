@@ -3,7 +3,7 @@ import * as support from './support';
 import { MainDashboardPage, SpaceDashboardPage, SpaceSettings } from './page_objects';
 
 
-describe('Adding areas and Collaborators to space', () => {
+describe('Adding areas and Collaborators to a space', () => {
   let dashboardPage: MainDashboardPage,
     SettingsPage = new SpaceSettings(),
     spaceName:string = "";

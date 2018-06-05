@@ -6,17 +6,21 @@ import { BasePage } from '.';
 
 export class SpaceSettings extends BasePage {
   settings = new BaseElement($('.pficon-settings'), 'Settings');
-  areasTab = new Button (element(by.xpath('//span[contains(text(),\'Areas\')]')), 'Areas');
-  collaboratorsTab = new Button (element(by.xpath('//span[contains(text(),\'Collaborators\')]')), ' Collaborators Tab');
-  addCollaboratorsButton = new Button (element(by.xpath('//span[contains(text(),\'Add Collaborators\')]')), 'Add Collaborators Button');
+
+  /* UI elements - Areas Tab*/
+  areasTab = new Clickable(element(by.cssContainingText('.nav.navbar-nav.navbar-persistent li', ' Areas')),'Areas Tab');
   addAreasButton = new Button($('.add-codebase-tooltip'),'Add Areas Button');
   list = new BaseElementArray($$('.list-pf-item'));
   createAreaDialog = new BaseElement($('.create-dialog'), 'create area dialog');
-  areaInputField = new TextInput($('#name'), 'Enter a name for are input field');
-  cancelButton = new Button (element(by.xpath('//button[contains(text(),\'Cancel\')]')), 'cancel button');
-  createButton = new Button (element(by.xpath('//button[contains(text(),\'Create\')]')), 'create button');
+  areaInputField = new TextInput(this.createAreaDialog.$('#name'), 'Enter a name for are input field');
+  cancelButton = new Button (this.createAreaDialog.$('.btn.btn-default'), 'cancel button');
+  createButton = new Button (this.createAreaDialog.$('.btn.btn-primary'), 'create button');
   showAreasChildren = new Clickable($('.toggle-children'), 'show Areas children');
   modal = new BaseElement($('.modal-backdrop.fade'),'modal fade');
+
+  /* UI elements - Collaborators Tab*/
+  collaboratorsTab = new Clickable(element(by.cssContainingText('.nav.navbar-nav.navbar-persistent li', ' Collaborators')),'Collaborators Tab');
+  addCollaboratorsButton = new Button ($('.table-action-heading'), 'Add Collaborators Button');
 
   async clickSettings() {
     await this.settings.clickWhenReady();
