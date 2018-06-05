@@ -68,7 +68,7 @@ export abstract class AbstractDeploymentsInteractions implements DeploymentsInte
         expect(applications.length).toBe(1, 'number of deployed applications');
 
         let application = applications[0];
-        expect(application.getName()).toBe(this.spaceName, 'application name');
+        expect(application.getName()).toContain(this.spaceName, 'application name');     
 
         support.info('Verifying application\'s environments');
         let environments = await application.getEnvironments();
