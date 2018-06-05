@@ -66,7 +66,8 @@ export class DeployedApplication {
   }
 
   async getName(): Promise<string> {
-    return this.finder.element(by.id('deploymentCardApplicationTitle')).getText();
+    let name = await this.finder.element(by.id('deploymentCardApplicationTitle')).getText();
+    return Promise.resolve(name.trim());
   }
 
   async getEnvironments(): Promise<DeployedApplicationEnvironment[]> {
