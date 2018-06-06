@@ -29,4 +29,16 @@ describe('Adding areas and Collaborators to a space', () => {
     await SettingsPage.clickShowAreas();
     expect(await SettingsPage.list.getText()).toContain('New Area');
   });
+
+  it('should Navigate to collaborators and add a new collaborator', async () => {
+    let user = browser.params.login.user;
+
+    await SettingsPage.clickSettings();
+    await SettingsPage.clickCollaboratorsTab();
+    expect(await browser.getCurrentUrl()).toContain('collaborators');
+    await SettingsPage.list.untilCount(1);
+    expect(await SettingsPage.getCollaboratorList()).toContain(user);
+    await SettingsPage.addCollaborators('Osio10');
+    expect(await SettingsPage.getCollaboratorList()).toContain('Osio10');
+  });
 });
