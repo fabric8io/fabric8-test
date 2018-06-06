@@ -9,6 +9,8 @@ def create_space_name(template="SDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
     var = var.replace(":", "-")
+    var = var.replace("@", "-")
+    var = var.replace(".", "-")
     space = constants.launch_detail.userid_primary + "-" + template + "-space-" + var
     return space
 
