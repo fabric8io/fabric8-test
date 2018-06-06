@@ -1,0 +1,7 @@
+# Order of the features in this file is significant, so shuffle them carefully.
+features/1_createSpace.feature
+features/2_importBooster.feature
+features/3_verifyPipeline.feature
+features/4_verifyStage.feature
+features/5_verifyRun.feature
+
