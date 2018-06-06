@@ -1,0 +1,1 @@
+{"data":{"id":"$wi_id","attributes":{"version":0},"links":{"self":"$wi_link"},"type":"workitems","relationships":{"labels":{"data":[{"id":"$label_1_id","type":"labels"},{"id":"$label_2_id","type":"labels"},{"id":"$label_3_id","type":"labels"}]}}}}

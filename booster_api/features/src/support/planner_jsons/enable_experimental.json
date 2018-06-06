@@ -1,0 +1,13 @@
+{
+  "data": {
+    "attributes": {
+      "contextInformation": {
+        "experimentalFeatures": {
+          "enabled": true
+        }
+      },
+      "identityID": "$loggedin_user_id"
+    },
+    "type": "identities"
+  }
+}
