@@ -403,7 +403,7 @@ class TestClass_SDD(object):
                 print "Exception creating launch_info_dump.json"
 
             if cleanup:
-                print "\nDeleting Space %s" % dynamic_vars.spacename
+                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
                 assert r.status_code == 200
             
@@ -760,7 +760,7 @@ class TestClass_SCRUM(object):
                 print "Exception creating launch_info_dump.json"
             
             if cleanup:
-                print "\nDeleting Space %s" % dynamic_vars.spacename
+                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
                 assert r.status_code == 200
             
