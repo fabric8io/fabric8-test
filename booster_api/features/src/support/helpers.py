@@ -3,7 +3,19 @@ import requests as req
 import json, jmespath, operator
 import constants
 
+from loginusers_oauth2 import LoginUsersOauth2, user_tokens
+
 count = 1
+
+def login_user(username="", password=""):
+    loginUser = LoginUsersOauth2(username, password)
+    loginUser.login_users()
+
+def is_user_logged_in():
+    return len(user_tokens) > 0
+
+def get_user_tokens(index=0):
+    return user_tokens[index]
 
 def create_space_name(template="SDD"):
     var = datetime.datetime.now()
