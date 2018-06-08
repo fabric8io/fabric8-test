@@ -1,4 +1,5 @@
 # Order of the features in this file is significant, so shuffle them carefully.
+features/0_loginUser.feature
 features/1_createSpace.feature
 features/2_importBooster.feature
 features/3_verifyPipeline.feature

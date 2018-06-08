@@ -14,7 +14,7 @@ class poc2(object):
         # Environment variables
         # 
         # Note: Pipelines = https://forge.api.openshift.io/api/services/jenkins/pipelines
-        theToken = os.environ.get('THE_TOKEN')
+        theToken = helpers.get_user_tokens().split(";")[0] # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         gitRepo = os.environ.get('GIT_REPO')
         projectName = os.environ.get('PROJECT_NAME')
         pipeline = os.environ.get('PIPELINE')
