@@ -109,7 +109,9 @@ if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec $CONTAINER_NAME ls -l ./target/zabbix
     docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 fi
+
 docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
+echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/e2e/${JOB_NAME}/${BUILD_NUMBER}"
 
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
