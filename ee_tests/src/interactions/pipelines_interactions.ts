@@ -77,6 +77,15 @@ export abstract class PipelinesInteractions {
                 // save Jenkins log no matter if pipeline finished
                 support.info('Check the Jenkins log');
                 await this.verifyJenkinsLog(pipeline);
+            } catch (e) {
+                // if the UI Show log fails, try navigating to jenkins directly
+                support.info('Check the Jenkins log failed, go to Jenkins URL directly');
+                let osioURL: string = browser.params.target.url;
+                let jenkinsURL = 'https://jenkins.' + osioURL.replace('https://', '');
+                await browser.get(jenkinsURL);
+                await support.writeScreenshot('target/screenshots/jenkins-direct-log.png');
+                await support.writePageSource('target/screenshots/jenkins-log.html');
+                throw e;
             } finally {
                 // save OC logs no matter if Jenkins log was retrieved
                 support.info('Save OC Jenkins pod log');
@@ -105,8 +114,8 @@ export abstract class PipelinesInteractions {
         await pipeline.viewLog();
         await support.switchToWindow(3, 2);
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT);
-        await support.writeScreenshot('target/screenshots/pipelines-log.png');
-        await support.writePageSource('target/screenshots/pipelines-log.html');
+        await support.writeScreenshot('target/screenshots/jenkins-log.png');
+        await support.writePageSource('target/screenshots/jenkins-log.html');
         await support.switchToWindow(3, 0);
     }
 
