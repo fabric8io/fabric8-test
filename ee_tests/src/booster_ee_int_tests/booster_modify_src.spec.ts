@@ -60,7 +60,8 @@ describe('Modify the project source code in Che:', () => {
 
     /* Find the project in the project tree */
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),'Project in Che Tree');
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),
+      'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
 
@@ -77,11 +78,11 @@ describe('Modify the project source code in Che:', () => {
       await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(SRCFILENAME)), support.DEFAULT_WAIT);
     } catch (e) {
       support.info('Exception in Che project directory tree = ' + e);
-  }
+    }
 
     /* Modify the deployed app source code */
     let theText = await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).getText();
-    support.info ('filename = ' + theText);
+    support.info('filename = ' + theText);
     await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).clickWhenReady();
 
     /* Right click on file name */
@@ -97,7 +98,7 @@ describe('Modify the project source code in Che:', () => {
       await spaceCheWorkSpacePage.cheMenuEdit.clickWhenReady(support.LONG_WAIT);
       await spaceCheWorkSpacePage.cheEditFormat.clickWhenReady(support.LONG_WAIT);
     } catch (e) {
-     support.info('Exception in writing to file in Che = ' + e);
+      support.info('Exception in writing to file in Che = ' + e);
     }
     support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + support.currentSpaceName() + '.png');
 
@@ -116,7 +117,7 @@ describe('Modify the project source code in Che:', () => {
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support.invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
+    await support.invokeApp(boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
       'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
@@ -130,8 +131,6 @@ describe('Modify the project source code in Che:', () => {
 
     /* Switch back to the OSIO window */
     await support.switchToWindow(1, 0);
-
-
   });
 
 });

@@ -1,4 +1,4 @@
-import { ExpectedConditions as until, ElementFinder } from 'protractor';
+import { ElementFinder } from 'protractor';
 import { BaseElement } from './base.element';
 
 export class ModalDialog extends BaseElement {
@@ -11,7 +11,7 @@ export class ModalDialog extends BaseElement {
   }
 
   async ready() {
-		await super.ready();
+    await super.ready();
     await this.content.ready();
   }
 

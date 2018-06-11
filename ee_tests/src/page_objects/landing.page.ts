@@ -6,7 +6,7 @@
   * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
 */
 
-import { browser, element, by, By, ExpectedConditions as EC, $, $$, ElementFinder } from 'protractor';
+import { browser, $ } from 'protractor';
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from '../ui';
@@ -14,7 +14,7 @@ import { Button } from '../ui';
 export class LandingPage extends BasePage {
 
   loginButton = new Button($('#login'), 'Login');
-  loggedInUserButton = new Button($('#loggedInUserName'), 'User Name')
+  loggedInUserButton = new Button($('#loggedInUserName'), 'User Name');
 
   constructor(url: string = '') {
     // '' is relative to base url so it means baseUrl
@@ -29,7 +29,7 @@ export class LandingPage extends BasePage {
     await Promise.race([
       this.loginButton.untilClickable(),
       this.loggedInUserButton.untilClickable()
-    ])
+    ]);
   }
 
   async open() {

@@ -1,6 +1,5 @@
-import { browser } from 'protractor';
 import * as support from './support';
-import { PageOpenMode, SpaceDashboardPage } from './page_objects';
+import { SpaceDashboardPage } from './page_objects';
 
 
 describe('Planner Tab', () => {
@@ -26,12 +25,12 @@ describe('Planner Tab', () => {
     await planner.createWorkItem({
       title: 'Workitem Title',
       description: 'Describes the work item'
-    })
+    });
 
     await planner.createWorkItem({
       title: 'Workitem Title',
       description: 'Describes the work item'
-    })
+    });
 
   });
 

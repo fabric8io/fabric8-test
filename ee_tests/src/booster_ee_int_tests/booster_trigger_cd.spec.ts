@@ -99,7 +99,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await spaceCheWorkSpacePage.cheCommitMessage.sendKeys('ABCDEF');
     await spaceCheWorkSpacePage.filenameCheckbox(SRCFILENAME).clickWhenReady();
     await spaceCheWorkSpacePage.cheCommitConfirmButton.clickWhenReady();
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitCommitConsoleLines, 
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitCommitConsoleLines,
       'Committed with revision'), support.LONG_WAIT);
     await spaceCheWorkSpacePage.bottomPanelGitCommitTabCloseButton.clickWhenReady();
 
@@ -108,7 +108,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await spaceCheWorkSpacePage.cheMenuGitRemotes.clickWhenReady();
     await spaceCheWorkSpacePage.cheMenuGitRemotesPush.clickWhenReady();
     await spaceCheWorkSpacePage.cheMenuGitRemotesPushButton.clickWhenReady();
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitPushConsoleLines, 
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitPushConsoleLines,
       'Successfully pushed'), support.LONG_WAIT);
     await spaceCheWorkSpacePage.bottomPanelGitPushTabCloseButton.clickWhenReady();
 
