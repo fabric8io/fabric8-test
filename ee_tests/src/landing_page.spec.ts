@@ -49,6 +49,6 @@ describe('Landing Page', () => {
   it('can logout afer logging in', async () => {
     let login = new support.LoginInteraction();
     let mainDashboard = await login.run();
-    await mainDashboard.logout()
+    await mainDashboard.logout();
   });
 });

@@ -1,6 +1,5 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import * as support from '../support';
-import { SpaceDeploymentsPage, DeploymentStatus, DeployedApplication} from '../page_objects/space_deployments.page';
+import { SpaceDeploymentsPage, DeploymentStatus } from '../page_objects/space_deployments.page';
 import { DeployedApplicationEnvironment, Environment, ResourceUsageData } from '../page_objects/space_deployments.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
 import { ReleaseStrategy } from '../support/release_strategy';

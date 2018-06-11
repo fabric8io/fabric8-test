@@ -1,11 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { SpaceDashboardPage, PipelineStage, MainDashboardPage } from '../page_objects';
+import { PipelineStage } from '../page_objects';
 import { PageOpenMode } from '../..';
-import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { LONG_WAIT } from '../support';
 
@@ -127,7 +126,7 @@ export abstract class PipelinesInteractions {
 
         exec('./oc-get-jenkins-logs.sh ' +
             browser.params.login.user + ' ' +
-            browser.params.login.password + 
+            browser.params.login.password +
             ' &> ./target/screenshots/oc-logs-output.txt',
             (err: Error, stdout: string | Buffer, stderr: string | Buffer) => {
                 if (err !== null) {

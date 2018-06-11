@@ -1,11 +1,8 @@
 import { browser, by, ExpectedConditions as until, $, element } from 'protractor';
 import * as support from '../support';
-import { TextInput, Button, BaseElement } from '../ui';
-
+import { Button } from '../ui';
 import { AppPage } from './app.page';
-
 import * as ui from '../ui';
-
 
 class CleanupConfirmationModal extends ui.ModalDialog {
 
@@ -19,8 +16,8 @@ class CleanupConfirmationModal extends ui.ModalDialog {
   confirmEraseButton = new ui.Button(
     this.bodyContent.$('form button'), 'I understand my actions ...');
 
-  constructor(element: ui.BaseElement) {
-    super(element, 'Cleanup confirmation Dialog');
+  constructor(elem: ui.BaseElement) {
+    super(elem, 'Cleanup confirmation Dialog');
   }
 
   async ready() {

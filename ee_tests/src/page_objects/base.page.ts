@@ -55,7 +55,7 @@ export abstract class BasePage {
       throw Error('Trying to open and undefined url');
     }
 
-    this.log('Opening', this.url)
+    this.log('Opening', this.url);
     let currentUrl = await browser.getCurrentUrl();
     this.debug('at  :', currentUrl);
 

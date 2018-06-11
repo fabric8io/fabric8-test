@@ -1,19 +1,18 @@
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import * as ui from '../../ui'
+import { browser, element, by, $, ElementFinder } from 'protractor';
+import * as ui from '../../ui';
 import { Button, TextInput, BaseElement } from '../../ui';
-import * as support from '../../support'
+import * as support from '../../support';
 import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
-
 export class Wizard extends ui.BaseElement {
 
   footer = new ui.BaseElement(this.$('div.modal-footer'));
-  primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next')
+  primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next');
 
-  constructor(element: ElementFinder, name: string = '') {
-    super(element, name);
+  constructor(elem: ElementFinder, name: string = '') {
+    super(elem, name);
   }
 
   async ready() {
@@ -30,19 +29,18 @@ export interface ProjectDetail {
   strategy?: string;
 }
 
-
 const PROJECT_CARD = 'div.card-pf';
 
 export class QuickStartWizard extends Wizard {
-  filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter')
+  filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter');
 
   // TODO: may be turn this into a widget
-  projectSelector = new ui.BaseElement(this.$('ob-project-select'))
-  projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD))
+  projectSelector = new ui.BaseElement(this.$('ob-project-select'));
+  projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD));
 
-  projectInfoStep = new ui.BaseElement(this.$('project-info-step'))
+  projectInfoStep = new ui.BaseElement(this.$('project-info-step'));
   // we worry about proj
-  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
+  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'));
 
   // tslint:disable:max-line-length
   release = new Button(element(by.xpath('.//*[@value=\'Release\']')));
@@ -52,39 +50,39 @@ export class QuickStartWizard extends Wizard {
 
   async ready() {
     await super.ready();
-    this.debug(' .... wizard ', 'ok')
-    await this.footer.ready()
-    this.debug(' .... footer ', 'ok')
+    this.debug(' .... wizard ', 'ok');
+    await this.footer.ready();
+    this.debug(' .... footer ', 'ok');
 
     await this.filterTextInput.ready();
-    await this.projectSelector.ready()
-    this.debug(' .... selection ', 'ok')
+    await this.projectSelector.ready();
+    this.debug(' .... selection ', 'ok');
     await this.projectCards.ready();
-    this.debug(' .... cards ', 'ok')
+    this.debug(' .... cards ', 'ok');
   }
 
   async findCard(name: string): Promise<ui.Clickable> {
-    support.debug(' .... finding card', name)
+    support.debug('.... finding card', name);
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
-    let element = this.projectSelector.element(cardFinder)
-    let card = new ui.Clickable(element, name);
+    let elem = this.projectSelector.element(cardFinder);
+    let card = new ui.Clickable(elem, name);
     await card.ready();
-    support.debug(' .... found card', name)
+    support.debug('.... found card', name);
     return card;
   }
 
   async waitForProjectInfoStep() {
-    await this.projectInfoStep.ready()
-    await this.projectNameInput.ready()
-    await this.primaryButton.ready()
+    await this.projectInfoStep.ready();
+    await this.projectNameInput.ready();
+    await this.primaryButton.ready();
   }
 
   async newProject({ project, name = '', strategy }: ProjectDetail) {
     let card = await this.findCard(project);
-    await card.clickWhenReady()
+    await card.clickWhenReady();
 
     await this.primaryButton.clickWhenReady();
-    await this.waitForProjectInfoStep()
+    await this.waitForProjectInfoStep();
 
     await this.projectNameInput.enterText(name);
     await this.primaryButton.clickWhenReady();
@@ -126,17 +124,17 @@ export class QuickStartWizard extends Wizard {
 }
 
 export interface RepoDetail {
-  org: string
-  repositories: string[]
-};
+  org: string;
+  repositories: string[];
+}
 
 export class ImportCodeWizard extends Wizard {
 
   githubOrg = new ui.SingleSelectionDropdown(
-    this.$('organisation-step single-selection-dropdown'), 'Github Org')
+    this.$('organisation-step single-selection-dropdown'), 'Github Org');
 
   repoList = new ui.MultipleSelectionList(
-    this.$('multiple-selection-list'), 'Repository List')
+    this.$('multiple-selection-list'), 'Repository List');
 
   async ready() {
     await super.ready();
@@ -148,20 +146,20 @@ export class ImportCodeWizard extends Wizard {
   }
 
   async importCode({ org, repositories }: RepoDetail) {
-    await this.primaryButton.ready()
-    await this.waitForGithubOrg()
+    await this.primaryButton.ready();
+    await this.waitForGithubOrg();
     await this.githubOrg.select(org);
     await this.primaryButton.clickWhenReady();
 
     await this.repoList.ready();
-    repositories.forEach(async (r) => await this.repoList.select(r))
-    await this.primaryButton.clickWhenReady()
+    repositories.forEach(async (r) => await this.repoList.select(r));
+    await this.primaryButton.clickWhenReady();
     // deployment choose default
-    await this.primaryButton.clickWhenReady()
+    await this.primaryButton.clickWhenReady();
 
     await this.primaryButton.untilTextIsPresent('Finish');
     this.primaryButton.name = 'Finish';
-    await this.primaryButton.clickWhenReady()
+    await this.primaryButton.clickWhenReady();
 
     await this.primaryButton.untilTextIsPresent('Ok');
     this.primaryButton.name = 'Ok';
@@ -180,16 +178,16 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     $('#forgeQuickStartButton'), 'New Quickstart Project');
 
   // NOTE: not visible initially
-  quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'))
-  importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
+  quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'));
+  importCodeWizard = new ImportCodeWizard(this.$('import-wizard'));
 
   newImportExperienceButton = new ui.Button(
     this.element(by.xpath('//*[contains(text(),\'Try our new Getting Started experience\')]')),
     'Try our new Getting Started experience'
   );
 
-  constructor(element: ElementFinder) {
-    super(element, 'Add to Space Wizard');
+  constructor(elem: ElementFinder) {
+    super(elem, 'Add to Space Wizard');
   }
 
   async ready() {
@@ -211,7 +209,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   async importExistingCode(details: RepoDetail) {
     await this.importExistingCodeButton.clickWhenReady();
     await this.importCodeWizard.ready();
-    support.debug("... going to import repo", details.repositories)
+    support.debug('... going to import repo', details.repositories);
     await this.importCodeWizard.importCode(details);
   }
 
@@ -359,4 +357,3 @@ export class NewImportExperienceDialog extends ui.BaseElement {
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
 }
-

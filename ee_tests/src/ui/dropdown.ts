@@ -1,4 +1,4 @@
-import { browser, ElementFinder, by, $, ExpectedConditions as until } from 'protractor';
+import { browser, ElementFinder, by, ExpectedConditions as until } from 'protractor';
 import { BaseElement, Clickable } from './base.element';
 import * as support from '../support';
 

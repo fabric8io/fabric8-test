@@ -30,8 +30,8 @@ export abstract class AppPage extends BasePage {
    *
    */
   innerElement(UI: typeof BaseElement, css: string, text: string): BaseElement {
-    const element = this.appTag.element(by.cssContainingText(css, text));
-    return new UI(element, text);
+    const elem = this.appTag.element(by.cssContainingText(css, text));
+    return new UI(elem, text);
   }
 
   async ready() {

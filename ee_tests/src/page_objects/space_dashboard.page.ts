@@ -6,48 +6,21 @@
   * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
 */
 
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, $, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
 import * as ui from '../ui';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
-import { TextInput, Button, BaseElement } from '../ui';
-import { stat } from 'fs';
-import { DeployedApplication } from './space_deployments.page';
-import { SpacePipelinePage, MainDashboardPage, PageOpenMode } from '.';
+import { Button, BaseElement } from '../ui';
+import { SpacePipelinePage } from '.';
 import { DEFAULT_WAIT } from '../support';
 import { FeatureLevel } from '../support/feature_level';
-
-/*
-Page layout
-|--------------------------------------------------------------------------------------------------------------------|
-|                                          Top Navigation Bar                                                        |
-| Left Navigation Bar            |                                                  | Right Navigation Bar           |
-|                                |                                                  |                                |
-|                                                                                                                    |
-| Persistent navigation bar                                                                                          |
-|--------------------------------------------------------------------------------------------------------------------|
-|                                       |                                                                            |
-|                                       |                                                                            |
-|          Codebases                    |                       Stack Reporrs                                        |
-|                                       |                                                                            |
-|                                       |                                                                            |
-|--------------------------------------------------------------------------------------------------------------------|
-|                                       |                                    |                                       |
-|                                       |                                    |                                       |
-|          My Work Items                |             Pipelines              |        Environments                   |
-|                                       |                                    |                                       |
-|                                       |                                    |                                       |
-|--------------------------------------------------------------------------------------------------------------------|
-*/
-
 
 abstract class SpaceTabPage extends AppPage {
 
   mainNavBar = new ui.BaseElement(
     this.header.$('ul.nav.navbar-nav.navbar-primary.persistent-secondary'),
     'Main Navigation Bar'
-
-  )
+  );
 
   planTab = new ui.Clickable(
     this.mainNavBar.element(by.cssContainingText('li', 'Plan')),
@@ -60,74 +33,74 @@ abstract class SpaceTabPage extends AppPage {
 
   // todo: add ready when we can consider the headers ready
   async ready() {
-    await super.ready()
-    await this.mainNavBar.ready()
-    await this.planTab.ready()
+    await super.ready();
+    await this.mainNavBar.ready();
+    await this.planTab.ready();
   }
 
   async gotoPlanTab(): Promise<PlannerTab> {
-    await this.planTab.clickWhenReady()
+    await this.planTab.clickWhenReady();
     // NOTE: outside the dialog is outside of $(this)
-    let planner  = new PlannerTab(this.spaceName)
+    let planner = new PlannerTab(this.spaceName);
     await planner.open();
     return planner;
   }
 
 }
 
-type WorkItemType = 'task' | 'feature' | 'bug'
+type WorkItemType = 'task' | 'feature' | 'bug';
 
 interface WorkItem {
-  title: string
-  description?: string
-  type?: WorkItemType
+  title: string;
+  description?: string;
+  type?: WorkItemType;
 }
 
 class WorkItemQuickAdd extends ui.Clickable {
-  titleTextInput = new ui.TextInput(this.$('input.f8-quickadd-input'), 'Work item Title')
-  buttonsDiv = this.$('div.f8-quickadd__wiblk-btn.pull-right')
-  acceptButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓')
-  cancelButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-default'), 'x')
+  titleTextInput = new ui.TextInput(this.$('input.f8-quickadd-input'), 'Work item Title');
+  buttonsDiv = this.$('div.f8-quickadd__wiblk-btn.pull-right');
+  acceptButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓');
+  cancelButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-default'), 'x');
 
   constructor(el: ElementFinder, name = 'Work Item Quick Add') {
-    super(el, name)
+    super(el, name);
   }
 
   async ready() {
-    await super.ready()
-    await this.untilClickable()
+    await super.ready();
+    await this.untilClickable();
   }
 
   async createWorkItem({ title, description = '', type = 'feature' }: WorkItem) {
     await this.clickWhenReady();
-    await this.titleTextInput.ready()
-    await this.titleTextInput.enterText(title)
+    await this.titleTextInput.ready();
+    await this.titleTextInput.enterText(title);
     await this.cancelButton.untilClickable();
 
-    await this.acceptButton.clickWhenReady()
+    await this.acceptButton.clickWhenReady();
 
     // TODO add more confirmation that the item has been added
-    await this.cancelButton.clickWhenReady()
+    await this.cancelButton.clickWhenReady();
 
     // TODO choose the type of item
-    this.log('New WorkItem', `${title} added`)
+    this.log('New WorkItem', `${title} added`);
   }
 }
 
 class WorkItemList extends ui.BaseElement {
   overlay = new ui.BaseElement(this.$('div.lock-overlay-list'));
 
-  quickAdd =  new WorkItemQuickAdd(
+  quickAdd = new WorkItemQuickAdd(
     this.$('#workItemList_quickAdd > alm-work-item-quick-add > div'));
 
   constructor(el: ElementFinder, name = 'Work Item List') {
-    super(el, name)
+    super(el, name);
   }
 
   async ready() {
-    await super.ready()
-    await this.overlay.untilAbsent()
-    await this.quickAdd.ready()
+    await super.ready();
+    await this.overlay.untilAbsent();
+    await this.quickAdd.ready();
   }
 }
 
@@ -137,7 +110,7 @@ class PlannerTab extends SpaceTabPage {
 
   constructor(public spaceName: string) {
     super(spaceName);
-    this.url = `${browser.params.login.user}/${spaceName}/plan`
+    this.url = `${browser.params.login.user}/${spaceName}/plan`;
   }
 
   async ready() {
@@ -146,15 +119,15 @@ class PlannerTab extends SpaceTabPage {
   }
 
   async createWorkItem(item: WorkItem) {
-    this.debug('create item', JSON.stringify(item))
-    await this.workItemList.quickAdd.createWorkItem(item)
+    this.debug('create item', JSON.stringify(item));
+    await this.workItemList.quickAdd.createWorkItem(item);
   }
 }
 
 // The main page that represents a Space
 export class SpaceDashboardPage extends SpaceTabPage {
 
- /* Dialog to create new space and project */
+  /* Dialog to create new space and project */
   newSpaceName = $('#name');
   createSpaceButton = $('#createSpaceButton');
   devProcessPulldown = $('#developmentProcess');
@@ -179,8 +152,8 @@ export class SpaceDashboardPage extends SpaceTabPage {
   codebases = $('#spacehome-codebases-card');
 
   /* Codebases section title/link */
-//  codebasesSectionTitle = $('#spacehome-codebases-title');
-  codebasesSectionTitle = new Button ($('#spacehome-codebases-title'), 'Codebases Section Title');
+  //  codebasesSectionTitle = $('#spacehome-codebases-title');
+  codebasesSectionTitle = new Button($('#spacehome-codebases-title'), 'Codebases Section Title');
 
   /* Codebases create code base link */
   // tslint:disable:max-line-length
@@ -192,13 +165,13 @@ export class SpaceDashboardPage extends SpaceTabPage {
 
   /* Stack/Analytical Reports */
   stackReportsSectionTitle = $('#spacehome-analytical-report-title');
-  stackReportsButton = new Button(element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
-  analyticsCloseButton = new Button(element (by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
+  stackReportsButton = new Button(element(by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
+  analyticsCloseButton = new Button(element(by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
   stackReportDependencyCard = $('analytics-report-summary .analytics-summary-report').$$('analytics-summary-card').get(3).$('analytics-summary-content').$$('ana-summary-info');
   stackReportDependencyCardTotalCount = this.stackReportDependencyCard.get(0).$('.info-value');
   stackReportDependencyCardAnalyzedCount = this.stackReportDependencyCard.get(1).$('.info-value');
   stackReportDependencyCardUnknownCount = this.stackReportDependencyCard.get(2).$('.info-value');
-  
+
   /* UI Page Section: My Workitems */
   workitems = $('#spacehome-my-workitems-card');
 
@@ -210,11 +183,11 @@ export class SpaceDashboardPage extends SpaceTabPage {
   pipelines = $('#spacehome-pipelines-card');
 
   /* Pipeline Runs */
-  viewPipelineRuns = new Button (element(by.xpath('.//*[contains(text(), \'View Pipeline Runs\')]')), 'View Pipeline Runs');
-  pipelineList = element.all (by.xpath('.//*[contains(@class,\'build-pipeline\')]'));
+  viewPipelineRuns = new Button(element(by.xpath('.//*[contains(text(), \'View Pipeline Runs\')]')), 'View Pipeline Runs');
+  pipelineList = element.all(by.xpath('.//*[contains(@class,\'build-pipeline\')]'));
 
   /* Pipelines section title/link */
-  pipelinesSectionTitle = new Button ($('#spacehome-pipelines-title'), 'Pipeline Section Title');
+  pipelinesSectionTitle = new Button($('#spacehome-pipelines-title'), 'Pipeline Section Title');
 
   addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
 
@@ -246,7 +219,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
     super(spaceName);
 
     // TODO: create a better way to access globals like username
-    this.url = `${browser.params.login.user}/${spaceName}`
+    this.url = `${browser.params.login.user}/${spaceName}`;
   }
 
   async ready() {
@@ -265,7 +238,7 @@ export class SpaceDashboardPage extends SpaceTabPage {
         await this.addToSpaceButton.clickWhenReady();
     }
     // NOTE: outside the dialog is outside of $(this)
-    let wizard  = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'))
+    let wizard = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
     return wizard;
   }
 
@@ -318,13 +291,13 @@ export class CodebaseCard extends SpaceDashboardPageCard {
     super(finder, 'Codebases');
   }
 
-  public async getCount(): Promise<number>{
+  public async getCount(): Promise<number> {
     return this.getCountByID('spacehome-codebases-badge', 'codebases');
   }
 
   public async getCodebases(): Promise<string[]> {
     let elementsFinders: ElementFinder[] = await this.all(by.className('f8-card-codebase-url'));
-    let codeBases = await elementsFinders.map(async(finder) => await finder.getText());
+    let codeBases = await elementsFinders.map(async (finder) => await finder.getText());
     return Promise.all(codeBases);
   }
 }
@@ -425,19 +398,19 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
     super(finder, 'Deployments');
   }
 
-  public async getCount(): Promise<number>{
+  public async getCount(): Promise<number> {
     return this.getCountByID('spacehome-environments-badge', 'deployments');
   }
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
     await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))), DEFAULT_WAIT);
-    let elementsFinders: ElementFinder[] = 
+    let elementsFinders: ElementFinder[] =
       await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));
     return Promise.all(applications);
   }
 }
- 
+
 // tslint:enable:max-line-length
 
 export class DeployedApplicationInfo extends BaseElement {

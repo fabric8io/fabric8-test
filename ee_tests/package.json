@@ -32,7 +32,7 @@
     "start": ". config/local_osio.conf.sh && ./ts-protractor.sh",
     "tsc": "tsc",
     "tscw": "tsc -w",
-    "tslint": "tslint",
+    "tslint": "tslint --project .",
     "typedoc": "typedoc",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update --gecko false"

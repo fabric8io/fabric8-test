@@ -4,7 +4,7 @@ import { browser } from 'protractor';
 import { LoginInteraction } from './support';
 
 /**
- * Simple test for log in and log out. 
+ * Simple test for log in and log out.
  */
 describe('e2e_logintest', () => {
 
