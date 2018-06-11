@@ -42,7 +42,7 @@ describe('e2e_smoketest', () => {
     support.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
       try {
-        support.info('--- Reset environmet ---');
+        support.info('--- Reset environment ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {

@@ -51,7 +51,7 @@ export abstract class AppPage extends BasePage {
     return page;
   }
 
-  async gotoUserSettins(): Promise<UserSettingsPage> {
+  async gotoUserSettings(): Promise<UserSettingsPage> {
     await this.ready();
     support.debug('... Select "Settings" menu item');
     await this.header.profileDropdown.selectSettings();
