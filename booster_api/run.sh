@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export SERVER_ADDRESS="https://openshift.io"
+
 # Login config
 ## Openshift.io user's name
 export OSIO_USERNAME=""

@@ -17,10 +17,10 @@ def is_user_logged_in():
 def get_user_tokens(index=0):
     return user_tokens[index]
 
-def create_space_name(template="SDD"):
+def create_space_name(template="BDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
-    space = constants.launch_detail.userid_primary + "-" + template + "-space-" + var
+    space = os.getenv("OSIO_USERNAME") + "-" + template + "-space-" + var
     space = space.replace('@','-')
     space = space.replace(':','-')
     space = space.replace('.','-')
