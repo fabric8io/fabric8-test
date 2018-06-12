@@ -1,5 +1,6 @@
 from behave import *
 from src.support import helpers
+from src.space import *
 
 @given(u'I am logged in to OpenShift.io')
 def step_impl(context):
@@ -8,9 +9,13 @@ def step_impl(context):
 
 @when(u'I input a spacename')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When I input a spacename')
-
+    space = Space()
+    global spaceID
+    spaceID = space.createSpace(helpers.create_space_name())
+   
 
 @then(u'I should see a new space created')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see a new space created')
+    global spaceID
+    print spaceID
+    assert spaceID != None
