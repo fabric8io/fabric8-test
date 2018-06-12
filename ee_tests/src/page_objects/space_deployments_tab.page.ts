@@ -11,7 +11,6 @@ import * as support from '../support';
 // tslint:ensable:max-line-length
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
-import { SpaceHeader } from './app/spaceHeader';
 
 export class SpaceDeploymentsPage extends AppPage {
 
