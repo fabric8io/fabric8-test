@@ -110,7 +110,8 @@ describe('e2e_smoketest', () => {
     support.info('--- Verify deployments ---');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.showDeploymentsScreen();
-    await deploymentsInteractions.verifyApplication();
+    let application = await deploymentsInteractions.verifyApplication();
+    await deploymentsInteractions.verifyEnvironments(application);
     await deploymentsInteractions.verifyResourceUsage();
   });
 

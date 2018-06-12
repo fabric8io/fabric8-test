@@ -1,10 +1,13 @@
 import * as support from '../support';
 import { SpaceDeploymentsPage, DeploymentStatus } from '../page_objects/space_deployments_tab.page';
+import { DeployedApplication } from '../page_objects/space_deployments_tab.page';
 import { DeployedApplicationEnvironment } from '../page_objects/space_deployments_tab.page';
 import { Environment, ResourceUsageData } from '../page_objects/space_deployments_tab.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
+import { element } from 'protractor';
+import { MainDashboardPage } from '../..';
 
 export abstract class DeploymentsInteractionsFactory {
 
@@ -12,7 +15,11 @@ export abstract class DeploymentsInteractionsFactory {
         if (FeatureLevelUtils.isReleased()) {
             return <DeploymentsInteractions>{
                 showDeploymentsScreen(): void {},
-                verifyApplication(): void {},
+                verifyApplication(): Promise<DeployedApplication> {
+                    // just return dummy value
+                    return Promise.resolve(new DeployedApplication(new MainDashboardPage().header));
+                },
+                verifyEnvironments(application: DeployedApplication): void {},
                 verifyResourceUsage(): void {}
             };
         }
@@ -36,7 +43,9 @@ export interface DeploymentsInteractions {
 
     showDeploymentsScreen(): void;
 
-    verifyApplication(): void;
+    verifyApplication(): Promise<DeployedApplication>;
+
+    verifyEnvironments(application: DeployedApplication): void;
 
     verifyResourceUsage(): void;
 }
@@ -62,18 +71,14 @@ export abstract class AbstractDeploymentsInteractions implements DeploymentsInte
         await this.spaceDeploymentsPage.open();
     }
 
-    public async verifyApplication(): Promise<void> {
+    public async verifyApplication(): Promise<DeployedApplication> {
         support.info('Verifying deployed applications');
         let applications = await this.spaceDeploymentsPage.getDeployedApplications();
         expect(applications.length).toBe(1, 'number of deployed applications');
 
         let application = applications[0];
         expect(application.getName()).toBe(this.spaceName, 'application name');
-
-        support.info('Verifying application\'s environments');
-        let environments = await application.getEnvironments();
-        expect(environments.length).toBe(2, 'number of environments');
-        await this.testEnvironmentsInternal(environments);
+        return application;
     }
 
     public async verifyResourceUsage() {
@@ -83,17 +88,18 @@ export abstract class AbstractDeploymentsInteractions implements DeploymentsInte
         await this.verifyResourceUsageInternal(data);
     }
 
-    protected abstract async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]): Promise<void>;
+    public abstract async verifyEnvironments(application: DeployedApplication): Promise<void>;
 
     protected abstract async verifyResourceUsageInternal(data: ResourceUsageData[]): Promise<void>;
 }
 
 export class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
 
-    protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
-        // nothing to test here
+    public async verifyEnvironments(application: DeployedApplication): Promise<void> {
+        support.info('Verifying application\'s environments');
+        let environments = await application.getEnvironments();
+        expect(environments.length).toBe(0, 'number of environments');
     }
-
 
     protected async verifyResourceUsageInternal(data: ResourceUsageData[]) {
         // nothing to test here
@@ -101,8 +107,15 @@ export class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsI
 }
 
 export class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleaseStrategy {
+
+    public async verifyEnvironments(application: DeployedApplication): Promise<void> {
+        support.info('Verifying application\'s environments');
+        let environments = await application.getEnvironments();
+        expect(environments.length).toBe(2, 'number of environments');
+        await this.testEnvironmentsInternal(environments);
+    }
+
     protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
-        await super.testEnvironmentsInternal(environments);
         support.info('Verifying application\'s stage environment');
 
         let environment = environments[Environment.STAGE];
