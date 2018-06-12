@@ -300,6 +300,7 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
     await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))), DEFAULT_WAIT);
+    await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))), DEFAULT_WAIT);
     let elementsFinders: ElementFinder[] =
       await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));
