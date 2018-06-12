@@ -16,7 +16,7 @@ export class LauncherReleaseStrategy {
 
     switch (runtime) {
       case LauncherReleaseStrategy.RELEASE: {
-        this.name = 'Integration Test';
+        this.name = 'Build Release';
         break;
       }
       case LauncherReleaseStrategy.RELEASE_AND_STAGE: {
