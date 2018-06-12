@@ -1,0 +1,13 @@
+{
+	"data": {
+		"id": "$wi_id",
+		"attributes": {
+			"system.title": "$wi_title",
+			"version": 3
+		},
+		"links": {
+			"self": "$wi_link"
+		},
+		"type": "workitems"
+	}
+}
