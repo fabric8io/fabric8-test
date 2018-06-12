@@ -1,7 +1,7 @@
 import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
-import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { PipelineStage } from '../page_objects';
 import { PageOpenMode } from '../..';

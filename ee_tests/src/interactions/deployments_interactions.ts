@@ -1,7 +1,8 @@
 import * as support from '../support';
-import { SpaceDeploymentsPage, DeploymentStatus } from '../page_objects/space_deployments.page';
-import { DeployedApplicationEnvironment, Environment, ResourceUsageData } from '../page_objects/space_deployments.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpaceDeploymentsPage, DeploymentStatus } from '../page_objects/space_deployments_tab.page';
+import { DeployedApplicationEnvironment } from '../page_objects/space_deployments_tab.page';
+import { Environment, ResourceUsageData } from '../page_objects/space_deployments_tab.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
 
@@ -56,7 +57,7 @@ export abstract class AbstractDeploymentsInteractions implements DeploymentsInte
 
     public async showDeploymentsScreen() {
         support.info('Verifying deployments page');
-        await this.spacePipelinePage.spaceHeader.deploymentsOption.clickWhenReady();
+        await this.spacePipelinePage.deploymentsOption.clickWhenReady();
         this.spaceDeploymentsPage = new SpaceDeploymentsPage();
         await this.spaceDeploymentsPage.open();
     }

@@ -10,14 +10,12 @@ import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFi
 // tslint:ensable:max-line-length
 import * as support from '../support';
 import { AppPage } from './app.page';
+import { SpaceTabPage } from './space_tab.page';
 import { TextInput, Button, BaseElement } from '../ui';
-import { SpaceHeader } from './app/spaceHeader';
 import { OsoDashboardPage } from '.';
 import { stat } from 'fs';
 
-export class SpacePipelinePage extends AppPage {
-
-  spaceHeader = new SpaceHeader(this.appTag.$('header > alm-app-header > nav'));
+export class SpacePipelinePage extends SpaceTabPage {
 
   /* Page UI element - contains all pipelines */
   pipelinesPage = element(by.xpath('.//*[contains (@class,\'pipelines-page\')]'));

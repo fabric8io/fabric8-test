@@ -3,7 +3,7 @@ import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, Elem
 // tslint:ensable:max-line-length
 import * as fs from 'fs';
 import * as support from '../support';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { TextInput, Button } from '../ui';
