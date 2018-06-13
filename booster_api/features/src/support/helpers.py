@@ -21,11 +21,16 @@ def get_user_tokens(index=0):
 def create_space_name(template="BDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
-    space = os.getenv("OSIO_USERNAME") + "-" + template + "-space-" + var
+    space = "{}-{}-space-{}".format(
+        os.getenv("OSIO_USERNAME"),
+        template,
+        var
+    )
+
     space = space.replace('@','-')
     space = space.replace(':','-')
     space = space.replace('.','-')
-    print 'The spacename is: ' + space
+    print "The spacename is: {}".format(space)
     return space
 
 def getSpaceID():
@@ -145,7 +150,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
     total_entities = count + no_of_names
     for i in xrange(count, total_entities):
         if static_string is not None:
-            mylist.append(static_string + "_" + str(i))
+            mylist.append("{}_{}".format(static_string,str(i)))
         else:
             mylist.append(i)
     #Updating global counter
@@ -161,7 +166,7 @@ def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None)
         return None
     ## Create workitems in Iterations context
     elif iterationid is not None:
-        api = "api/spaces/" + spaceid + "/workitems"
+        api = "api/spaces/{}/workitems".format(spaceid)
         url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_iter.json', replace={'$wi_nos_generated':title, '$witype': witype, '$iteration_id': iterationid})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
@@ -170,7 +175,7 @@ def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None)
         return r
     ## Create workitems in backlog view
     else:
-        api = "api/spaces/" + spaceid + "/workitems"
+        api = "api/spaces/{}/workitems".format(spaceid)
         url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_backlog.json', replace={'$wi_nos_generated':title, '$witype': witype})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
@@ -184,7 +189,7 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
         return None
     ## Create workitems in Iterations context
     elif iterationid is not None:
-        api = "api/spaces/" + spaceid + "/workitems"
+        api = "api/spaces/{}/workitems".format(spaceid)
         url = constants.launch_detail.create_url(api)
         if witype == constants.workitem_constants.witypetask1:
             f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do', '$iteration_id': iterationid})
@@ -196,7 +201,7 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
         return r
     ## Create workitems in backlog view
     else:
-        api = "api/spaces/" + spaceid + "/workitems"
+        api = "api/spaces/{}/workitems".format(spaceid)
         url = constants.launch_detail.create_url(api)
         if witype == constants.workitem_constants.witypetask1:
             f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do'})
@@ -213,7 +218,7 @@ def add_workitem_comment(workitem_link=None, comment_text=None):
         return None
     else:
         ## Add a comment to the workitem
-        wi_comment_api = workitem_link + "/comments"
+        wi_comment_api = "{}/comments".format(workitem_link)
         f = read_post_data_file('add_wi_comment.json', replace={'$comment_text':comment_text})
         return req.post(wi_comment_api, headers=constants.request_detail.headers_default, json=f)
 
@@ -223,7 +228,7 @@ def create_new_label(label_text=None):
         return None
     else:
         ## Add a Label to the space
-        create_label_api = "api/spaces/" + constants.dynamic_vars.spaceid + "/labels"
+        create_label_api = "api/spaces/{}/labels".format(constants.dynamic_vars.spaceid)
         url = constants.launch_detail.create_url(create_label_api)
         f = read_post_data_file('create_label.json', replace={'$label_name':label_text})
         return req.post(url, headers=constants.request_detail.headers_default, json=f)
@@ -270,7 +275,7 @@ def delete_space(spaceid=None):
         return None
     else:
         ## Delete a space
-        api = "api/spaces/" + spaceid
+        api = "api/spaces/{}".format(spaceid)
         url = constants.launch_detail.create_url(api)
         r = req.delete(url, headers=constants.request_detail.headers_default)
         return r

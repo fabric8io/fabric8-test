@@ -20,6 +20,7 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 
 user_tokens = []
 
+
 class LoginUsersOauth2:
     timeout = 60
 
@@ -55,14 +56,17 @@ class LoginUsersOauth2:
 
         self.clientId = os.getenv("AUTH_CLIENT_ID")
 
-        self.redirectUrl = self.baseUrl + "/api/status"
+        self.redirectUrl = "{}/api/status".format(self.baseUrl)
 
         self.userTokensIncludeUsername = (
-            os.getenv("USER_TOKENS_INCLUDE_USERNAME", "False") == "True")
+            os.getenv("USER_TOKENS_INCLUDE_USERNAME", "False") == "True"
+        )
 
         if username == "" or password == "":
             usersPropertiesFile = os.getenv(
-                "USERS_PROPERTIES_FILE", "users.properties")
+                "USERS_PROPERTIES_FILE",
+                "users.properties"
+            )
 
             usersProperties = open(usersPropertiesFile)
 
@@ -74,7 +78,6 @@ class LoginUsersOauth2:
         else:
             self.userNames.append(username)
             self.userPasswords.append(password)
-
 
     def reset_timer(self):
         self.start = time.time()
@@ -99,21 +102,33 @@ class LoginUsersOauth2:
         )
 
     def log(self, msg):
-        print "[INFO] " + str(msg)
+        print "[INFO] {}".format(
+            str(msg)
+        )
 
     def report_success(self, name, response_time):
-        self.log("[OK]    " + name + ":" + str(response_time) + "ms")
+        self.log(
+            "[OK]    {}:{}ms".format(
+                name,
+                str(response_time)
+            )
+        )
 
     def report_failure(self, name, response_time, msg):
         traceback.print_exc()
-        self.log("[ERROR] " + name + ":" + str(response_time) + "ms")
+        self.log(
+            "[ERROR] {}:{}ms".format(
+                name,
+                str(response_time)
+            )
+        )
         self.driver.quit()
 
     def save_snapshot(self, name):
-        self.driver.save_screenshot(name + ".png")
+        self.driver.save_screenshot("{}.png".format(name))
 
     def save_browser_log(self, name):
-        f = open(name + ".log", "w")
+        f = open("{}.log".format(name), "w")
         f.write(str(self.driver.get_log('browser')))
 
     def login(self, userIndex=0, _failed=False):
@@ -129,27 +144,38 @@ class LoginUsersOauth2:
         if not failed:
             self.reset_timer()
             try:
-                startUrl = self.baseUrl + "/api/authorize?response_type=code&client_id=" + \
-                    self.clientId + "&redirect_uri=" + self.redirectUrl + "&state=" + state
+                startUrl = '{}/api/authorize?response_type=code&client_id={}&redirect_uri={}&state={}'.format(
+                    self.baseUrl,
+                    self.clientId,
+                    self.redirectUrl,
+                    state
+                )
                 self.driver.get(startUrl)
                 self.wait_for_clickable_element(By.ID, "kc-login")
                 rt = self.tick_timer()
                 self.metrics[metric].append(rt)
-                self.report_success(userName + "-" + metric, rt)
+                self.report_success("{}-{}".format(userName, metric), rt)
             except Exception as ex:
-                self.report_failure(userName + "-" + metric,
-                                    self.tick_timer(), str(ex))
+                self.report_failure(
+                    "{}-{}".format(userName, metric),
+                    self.tick_timer(),
+                    str(ex)
+                )
                 failed = True
         else:
-            self.report_failure(userName + "-" + metric,
-                                self.tick_timer(), "Timeout")
+            self.report_failure(
+                "{}-{}".format(userName, metric),
+                self.tick_timer(),
+                "Timeout"
+            )
 
         rt_get_code = -1
         metric = "get-code"
         if not failed:
             try:
                 self.driver.find_element_by_id(
-                    "username").send_keys(self.userNames[userIndex])
+                    "username"
+                ).send_keys(self.userNames[userIndex])
                 passwd = self.driver.find_element_by_id("password")
                 passwd.send_keys(self.userPasswords[userIndex])
 
@@ -161,57 +187,87 @@ class LoginUsersOauth2:
                 code = urlparse.parse_qs(parsed.query)['code'][0]
                 rt_get_code = self.tick_timer()
                 self.metrics[metric].append(rt_get_code)
-                self.report_success(userName + "-" + metric, rt_get_code)
+                self.report_success(
+                    "{}-{}".format(userName, metric),
+                    rt_get_code
+                )
             except Exception as ex:
-                self.report_failure(userName + "-" + metric,
-                                    self.tick_timer(), str(ex))
+                self.report_failure(
+                    "{}-{}".format(userName, metric),
+                    self.tick_timer(),
+                    str(ex)
+                )
                 failed = True
         else:
-            self.report_failure(userName + "-" + metric,
-                                self.tick_timer(), "Timeout")
+            self.report_failure(
+                "{}-{}".format(userName, metric),
+                self.tick_timer(),
+                "Timeout"
+            )
 
         global user_tokens
         metric = "get-token"
         if not failed:
             self.reset_timer()
             try:
-                data = "grant_type=authorization_code&client_id=" + self.clientId + \
-                    "&code=" + code + "&redirect_uri=" + self.redirectUrl
+                data = "grant_type=authorization_code&client_id={}&code={}&redirect_uri={}".format(
+                    self.clientId,
+                    code,
+                    self.redirectUrl
+                )
                 headers = {"Content-type": "application/x-www-form-urlencoded"}
-                tokenUrl = self.baseUrl + "/api/token"
+                tokenUrl = "{}/api/token".format(self.baseUrl)
                 response = requests.post(tokenUrl, data, headers=headers)
                 content = response.content
                 try:
                     resp_json = response.json()
                     if not response.ok:
                         self.report_failure(
-                            userName + "-" + metric,
+                            "{}-{}".format(userName, metric),
                             self.tick_timer(),
-                            "Got wrong response: [" + content + "]"
+                            "Got wrong response: [{}]".format(content)
                         )
                     else:
                         rt = self.tick_timer()
-                        out = resp_json["access_token"] + \
-                            ";" + resp_json["refresh_token"]
+                        out = "{};{}".format(
+                            resp_json["access_token"],
+                            resp_json["refresh_token"]
+                        )
                         if self.userTokensIncludeUsername:
-                            out += ";" + self.userNames[userIndex]
+                            out = "{};{}".format(
+                                out,
+                                self.userNames[userIndex]
+                            )
 
                         user_tokens.append(out)
 
                         self.metrics[metric].append(rt)
-                        self.report_success(userName + "-" + metric, rt)
+                        self.report_success(
+                            "{}-{}".format(userName, metric),
+                            rt
+                        )
                         self.metrics["login"].append(rt + rt_get_code)
                         self.report_success(
-                            userName + "-" + "login", rt+rt_get_code)
+                            "{}-login".format(userName),
+                            rt+rt_get_code
+                        )
                 except ValueError:
-                    response.failure("Got wrong response: [" + content + "]")
+                    response.failure(
+                        "Got wrong response: [{}]".format(content)
+                    )
             except Exception as ex:
-                self.report_failure(userName + "-" + metric,
-                                    self.tick_timer(), str(ex))
+                self.report_failure(
+                    "{}-{}".format(userName, metric),
+                    self.tick_timer(),
+                    str(ex)
+                )
                 failed = True
         else:
-            self.report_failure(userName + "-" + metric,
-                                self.tick_timer(), "Timeout")
+            self.report_failure(
+                "{}-{}".format(userName, metric),
+                self.tick_timer(),
+                "Timeout"
+            )
 
         return failed
 
@@ -229,7 +285,7 @@ class LoginUsersOauth2:
             del user_tokens[:]
             n = 0
             for u in self.userNames:
-                self.log("Loggin user " + u + " in")
+                self.log("Loggin user {} in".format(u))
                 if self.maxUsers > 0 and n >= self.maxUsers:
                     break
                 self.driver = webdriver.Chrome(chrome_options=opts)
@@ -238,17 +294,27 @@ class LoginUsersOauth2:
                 n += 1
 
             if not failed:
-                self.log("All " + str(n) + " users done.")
+                self.log("All {} users done.".format(str(n)))
 
                 for k in self.metrics.keys():
                     mSorted = self.metrics[k]
                     mSorted.sort()
-                    self.log(k + "-time-stats:count=" + str(n) + ";min=" + str(
-                        mSorted[0]) + ";med=" + str(mSorted[int(n/2)]) + ";max=" + str(mSorted[n-1]))
+                    self.log(
+                        "{}-time-stats:count={};min={};med={};max={}".format(
+                            k,
+                            n,
+                            mSorted[0],
+                            mSorted[int(n/2)],
+                            mSorted[int(n-1)]
+                        )
+                    )
 
             else:
-                self.report_failure("global",
-                                    (time.time() - overall_start) * 1000, "Something went wrong.")
+                self.report_failure(
+                    "global",
+                    (time.time() - overall_start) * 1000,
+                    "Something went wrong."
+                )
 
         except NoSuchWindowException:
             sys.exit(1)

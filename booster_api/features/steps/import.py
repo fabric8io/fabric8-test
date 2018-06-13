@@ -12,7 +12,7 @@ def step_impl(context):
 def step_impl(context):
     global result
     result = poc.runTest('testing 1234567890')
-    print ('Result = ' + result)
+    print ('Result = {}'.format(result))
 
 @then(u'I should see "Success"')
 def step_impl(context):

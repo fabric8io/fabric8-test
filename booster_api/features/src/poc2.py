@@ -19,7 +19,7 @@ class poc2(object):
         projectName = os.environ.get('PROJECT_NAME')
         pipeline = os.environ.get('PIPELINE')
         spaceId = helpers.getSpaceID()
-        authHeader = 'Bearer ' + theToken
+        authHeader = 'Bearer {}'.format(theToken)
 
         print 'starting test.....'
 
@@ -37,7 +37,7 @@ class poc2(object):
 
         print 'making request ...'
         r = requests.post('https://forge.api.openshift.io/api/osio/import', headers=headers, data=data)
-        print 'request results = ' + r.text
+        print 'request results = {}'.format(r.text)
 
         result = r.text
         if re.search('uuid' , result):

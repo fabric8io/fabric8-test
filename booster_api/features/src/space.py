@@ -16,7 +16,7 @@ class Space:
 
         serverAddress = os.getenv("SERVER_ADDRESS")
 
-        authHeader = 'Bearer ' + theToken
+        authHeader = 'Bearer {}'.format(theToken)
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
@@ -24,20 +24,24 @@ class Space:
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
-        data = '{\
-            "data": {\
-                "attributes": {\
+        data = '{{\
+            "data": {{\
+                "attributes": {{\
                     "description": "This is the osioperf collaboration space",\
-                    "name": "' + spaceName + '"\
-                },\
+                    "name": "{}"\
+                }},\
                 "type": "spaces"\
-            }\
-        }'
+            }}\
+        }}'.format(spaceName)
 
 
         print 'making request ...'
-        r = requests.post(serverAddress + '/api/spaces', headers=headers, data=data)
-        print 'request results = ' + r.content
+        r = requests.post(
+            '{}/api/spaces'.format(serverAddress),
+            headers=headers,
+            data=data
+        )
+        print 'request results = {}'.format(r.content)
 
         try:
             respJson = r.json()
