@@ -164,10 +164,7 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
     elif iterationid is not None:
         api = "api/spaces/" + spaceid + "/workitems"
         url = constants.launch_detail.create_url(api)
-        if witype == constants.workitem_constants.witypetask1:
-            f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do', '$iteration_id': iterationid})
-        else:
-            f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New', '$iteration_id': iterationid})
+        f = read_post_data_file('create_wi_in_iter_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New', '$iteration_id': iterationid})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
