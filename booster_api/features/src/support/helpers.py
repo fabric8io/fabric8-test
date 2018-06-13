@@ -6,6 +6,7 @@ import constants
 from loginusers_oauth2 import LoginUsersOauth2, user_tokens
 
 count = 1
+spaceID = ''
 
 def login_user(username="", password=""):
     loginUser = LoginUsersOauth2(username, password)
@@ -26,6 +27,13 @@ def create_space_name(template="BDD"):
     space = space.replace('.','-')
     print 'The spacename is: ' + space
     return space
+
+def getSpaceID():
+    return spaceID
+
+def setSpaceID(theID):
+    global spaceID
+    spaceID = theID
 
 def find_in_obj(obj, condition, path=None):
 
