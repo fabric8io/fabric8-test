@@ -83,7 +83,7 @@ export abstract class PipelinesInteractions {
                 let jenkinsURL = 'https://jenkins.' + osioURL.replace('https://', '');
                 await browser.get(jenkinsURL);
                 await support.writeScreenshot('target/screenshots/jenkins-direct-log.png');
-                await support.writePageSource('target/screenshots/jenkins-log.html');
+                await support.writePageSource('target/screenshots/jenkins-direct-log.html');
                 throw e;
             } finally {
                 // save OC logs no matter if Jenkins log was retrieved
