@@ -1,4 +1,5 @@
-import { browser, element, by, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
+// tslint:disable-next-line:max-line-length
+import { browser, element, by, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
 import { WebDriver, error as SE } from 'selenium-webdriver';
 
 import * as support from '../support';
@@ -16,8 +17,40 @@ import { info } from '../support';
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
 
+/* Locate a pipeline by name */
+function allPipelineByName (nameString: string): ElementArrayFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element.all(by.xpath(xpathString));
+}
+
+/* Locate a pipeline by name */
+function pipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element(by.xpath(xpathString));
+}
+
+/* Element - input required button - by pipeline name - in pipeline list */
+function inputRequiredByPipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' +
+    nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
+  return element(by.xpath(xpathString));
+}
+
 describe('Verify the completion of the build pipeline:', () => {
   let dashboardPage: MainDashboardPage;
+
+  let stageIcon = new Button (element(by.xpath
+    ('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
+
+  /* Run icon */
+  let runIcon = new Button (element(by.xpath
+      ('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
+
+  /* View the Jenkins Log */
+  let viewLog = new Button (element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
+
+  /* Buttons displayed in the promote dialog */
+  let promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
   beforeEach(async () => {
     await support.desktopTestSetup();
@@ -41,29 +74,29 @@ describe('Verify the completion of the build pipeline:', () => {
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
 
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(repoName), 'Pipeline By Name');
+    let pipeline = new Button(pipelineByName(repoName), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
-    await pipelineByName.untilPresent(support.LONGER_WAIT);
+    await pipeline.untilPresent(support.LONGER_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
     support.debug('Verifying that only 1 pipeline is found with a matching name');
-    expect(await spacePipelinePage.allPipelineByName(repoName).count()).toBe(1);
+    expect(await allPipelineByName(repoName).count()).toBe(1);
 
     /* Find the pipeline name */
-    await pipelineByName.untilClickable(support.LONGER_WAIT);
+    await pipeline.untilClickable(support.LONGER_WAIT);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(repoName), 'InputRequired button');
+    let inputRequired = new Button(inputRequiredByPipelineByName(repoName), 'InputRequired button');
 
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
+    await promoteButton.clickWhenReady(support.LONGER_WAIT);
     support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
     /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    await stageIcon.untilClickable(support.LONGEST_WAIT);
+    await runIcon.untilClickable(support.LONGEST_WAIT);
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 
@@ -72,7 +105,7 @@ describe('Verify the completion of the build pipeline:', () => {
     await browser.sleep(30000);
 
     /* Go to the application stage page */
-    await spacePipelinePage.stageIcon.clickWhenReady(support.LONGEST_WAIT);
+    await stageIcon.clickWhenReady(support.LONGEST_WAIT);
 
     /* A new browser window is opened when the stage page opens - switch to that new window */
     let handles = await browser.getAllWindowHandles();
@@ -103,7 +136,7 @@ describe('Verify the completion of the build pipeline:', () => {
     await browser.switchTo().window(handles[0]);
 
     /* Switch to the run deployment page */
-    await spacePipelinePage.runIcon.clickWhenReady(support.LONGEST_WAIT);
+    await runIcon.clickWhenReady(support.LONGEST_WAIT);
     await browser.switchTo().window(handles[1]);
 
     await invokeButton.clickWhenReady(support.LONGEST_WAIT);

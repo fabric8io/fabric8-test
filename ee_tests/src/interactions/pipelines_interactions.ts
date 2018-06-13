@@ -3,16 +3,11 @@ import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { PipelineStage } from '../page_objects';
+import { PipelineStage } from '../page_objects/space_pipeline_tab.page';
 import { PageOpenMode } from '../..';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { LONG_WAIT } from '../support';
 
-// TODO - Error conditions to trap (copied from original code)
-// 1) Jenkins build log - find errors if the test fails
-// 2) Jenkins pod log - find errors if the test fails
-// 3) Presence of build errors in UI
-// 4) Follow the stage and run links */
 export abstract class PipelinesInteractions {
 
     protected spaceName: string;
@@ -66,11 +61,12 @@ export abstract class PipelinesInteractions {
     }
 
     public async waitToFinish(pipeline: PipelineDetails) {
-        support.info('Waiting for pipeline to finish');
-
         try {
+            support.info('Waiting for pipeline to finish');
             await this.waitToFinishInternal(pipeline);
             support.info('Pipeline is finished');
+        } catch (e) {
+            support.info('Waiting for pipeline to finish failed with error: ' + e);
         } finally {
             try {
                 // save Jenkins log no matter if pipeline finished
@@ -81,6 +77,7 @@ export abstract class PipelinesInteractions {
                 await support.writePageSource('target/screenshots/jenkins-log-failed.html');
                 // if the UI Show log fails, try navigating to jenkins directly
                 support.info('Check the Jenkins log failed, go to Jenkins URL directly');
+                support.info('Exception: ' + e);
                 let osioURL: string = browser.params.target.url;
                 let jenkinsURL = 'https://jenkins.' + osioURL.replace('https://', '');
                 await browser.get(jenkinsURL);
@@ -114,8 +111,8 @@ export abstract class PipelinesInteractions {
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
         await support.switchToWindow(3, 2);
-        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT),
-                'Jenkins log is finished';
+        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT,
+                'Jenkins log is finished');
         await support.writeScreenshot('target/screenshots/jenkins-log.png');
         await support.writePageSource('target/screenshots/jenkins-log.html');
         await support.switchToWindow(3, 0);
@@ -195,10 +192,11 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
         await browser.wait(async function () {
             let currentStatus = await pipeline.getStatus();
             if (BuildStatusUtils.buildEnded(currentStatus)) {
+                support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
-                if (await pipeline.approvalRequired()) {
-                    await pipeline.approve();
+                if (await pipeline.isInputRequired()) {
+                    await pipeline.promote();
                 }
                 await browser.sleep(5000);
                 return false;
