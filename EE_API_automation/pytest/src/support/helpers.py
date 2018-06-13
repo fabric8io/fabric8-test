@@ -176,10 +176,7 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
     else:
         api = "api/spaces/" + spaceid + "/workitems"
         url = constants.launch_detail.create_url(api)
-        if witype == constants.workitem_constants.witypetask1:
-            f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'To Do'})
-        else:
-            f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New'})
+        f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={'$wi_nos_generated':title, '$witype': witype, '$state': 'New'})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
@@ -216,7 +213,7 @@ def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
             r = create_new_label(label_text)
             if r is not None:
                 label_id = extract_value("data.id", r)
-        
+             
         if label_id is not None:
             ## Add a label to the workitem
             wi_id = workitem_link.rsplit('/', 1)[1]
@@ -227,7 +224,8 @@ def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
             else:       
                 f = read_post_data_file('add_wi_label.json', replace={'$wi_id':wi_id, '$wi_link':workitem_link, '$wi_ver':0, '$label_id':label_id})
                 r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default, json=f)
-        return r, label_id 
+        
+        return r, label_id
     
 def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
     if None in [wi_parent_title, wi_child_title]:

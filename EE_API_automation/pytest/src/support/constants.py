@@ -66,11 +66,14 @@ class workitem_constants:
     witypebug =  "26787039-b68f-4e28-8814-c2f93be1ef4e"
     witypetask = "bbf35418-04b6-426c-a60b-7f80beb0b624"
 
-    witypeepic = "f450d7d0-3d38-4887-83ca-38d27c109b59"
-    witypefeature1 = "83852318-a69a-4092-a412-bb67527c4ba6"
-    witypebacklogitem = "23b1dfd5-f497-4843-97c3-e3eefdc9930e"
-    witypebug1 = "90e961d1-0de8-49f4-b197-ba13418c20a8"
-    witypetask1 = "db906e00-a5fa-4a86-8ef7-772c89f703ac"
+    witypetheme = "5182fc8c-b1d6-4c3d-83ca-6a3c781fa18a"
+    witypeepic = "2c169431-a55d-49eb-af74-cc19e895356f"
+    witypestory = "6ff83406-caa7-47a9-9200-4ca796be11bb"
+    witypedefect = "fce0921f-ea70-4513-bb91-31d3aa8017f1"
+    witypetask1 = "2853459d-60ef-4fbe-aaf4-eccb9f554b34"
+
+    witypegrp_agile_workitems = "1c21af72-59ab-43d7-a84c-e76ee8ed3342"
+    witypegrp_agile_execution = "49d1a19f-02b4-4a10-a774-5723299f8944"
     
     wilinktype_parent = "25c326a7-6d03-4f5a-b23b-86a9ee4171e9"
     
