@@ -1,4 +1,5 @@
-import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+// tslint:disable-next-line:max-line-length
+import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
 import { WebDriver, error as SE } from 'selenium-webdriver';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
@@ -27,7 +28,24 @@ const REDEPLOY_TEXT_2 = 'INFO: Redeploying';
 const REDEPLOY_TEXT_3 = 'INFO: Redeployment done';
 
 // tslint:disable:max-line-length
+/* Locate a pipeline by name */
+function allPipelineByName (nameString: string): ElementArrayFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element.all(by.xpath(xpathString));
+}
 
+/* Locate a pipeline by name */
+function pipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element(by.xpath(xpathString));
+}
+
+/* Element - input required button - by pipeline name - in pipeline list */
+function inputRequiredByPipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' +
+    nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
+  return element(by.xpath(xpathString));
+}
 /* This test performs these steps:
    - Execute the quickstart/booster through the Che run menu, verify output from the deployed app
    - Update the source of the quickstart/booster
@@ -125,10 +143,10 @@ describe('Triggers the CD Build (Jenkins):', () => {
 
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
+    let pipeline = new Button(pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
-    await pipelineByName.untilPresent(support.LONGER_WAIT);
+    await pipeline.untilPresent(support.LONGER_WAIT);
     await spaceDashboardPage.viewPipelineRuns.clickWhenReady();
 
     let build2 = element(by.xpath('.//a[contains(text(),\'Build #2\')]'));

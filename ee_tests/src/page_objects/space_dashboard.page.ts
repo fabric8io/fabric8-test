@@ -13,7 +13,7 @@ import { SpaceTabPage } from './space_tab.page';
 import * as ui from '../ui';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { Button, BaseElement } from '../ui';
-import { SpacePipelinePage } from '.';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { DEFAULT_WAIT } from '../support';
 import { FeatureLevel } from '../support/feature_level';
 
@@ -135,30 +135,40 @@ export class SpaceDashboardPage extends SpaceAppPage {
   }
 
   async getCodebaseCard(): Promise<CodebaseCard> {
-    let finder = element(by.tagName('fabric8-add-codebase-widget'));
-    return new CodebaseCard(finder);
+    let codeBaseWidget = new BaseElement(element(by.tagName('fabric8-add-codebase-widget')), 'Codebase widget');
+    await codeBaseWidget.ready();
+
+    return new CodebaseCard(codeBaseWidget);
   }
 
   async getAnalyticsCard(): Promise<AnalyticsCard> {
-    let finder = element(by.tagName('fabric8-analytical-report-widget'));
-    let card = new AnalyticsCard(finder);
+    let analyticsWidget = new BaseElement(element(by.tagName('fabric8-analytical-report-widget')), 'Analytics widget');
+    await analyticsWidget.ready();
+
+    let card = new AnalyticsCard(analyticsWidget);
     await card.ready();
     return card;
   }
 
   async getWorkItemsCard(): Promise<WorkItemsCard> {
-    let finder = element(by.tagName('fabric8-create-work-item-widget'));
-    return new WorkItemsCard(finder);
+    let workItemsWidget = new BaseElement(element(by.tagName('fabric8-create-work-item-widget')), 'WorkItems widget');
+    await workItemsWidget.ready();
+
+    return new WorkItemsCard(workItemsWidget);
   }
 
   async getPipelinesCard(): Promise<PipelinesCard> {
-    let finder = element(by.tagName('fabric8-pipelines-widget'));
-    return new PipelinesCard(finder);
+    let pipelinesWidget = new BaseElement(element(by.tagName('fabric8-pipelines-widget')), 'Pipelines widget');
+    await pipelinesWidget.ready();
+
+    return new PipelinesCard(pipelinesWidget);
   }
 
   async getDeploymentsCard(): Promise<DeploymentsCard> {
-    let finder = element(by.tagName('fabric8-environment-widget'));
-    return new DeploymentsCard(finder);
+    let deploymentsWidget = new BaseElement(element(by.tagName('fabric8-environment-widget')), 'Deployments widget');
+    await deploymentsWidget.ready();
+
+    return new DeploymentsCard(deploymentsWidget);
   }
 }
 

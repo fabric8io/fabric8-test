@@ -105,26 +105,6 @@ export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePag
 /*
  * Display the contents of the Jenkins build log.
  */
-export async function dumpLog (spacePipelinePage: SpacePipelinePage) {
-  await spacePipelinePage.viewLog.clickWhenReady();
-  let handles = await browser.getAllWindowHandles();
-
-  /* Switch to the build log browser window */
-  await browser.switchTo().window(handles[1]);
-  await spacePipelinePage.loginWithOpenshift.clickWhenReady();
-
-//  handles = await browser.getAllWindowHandles();
-  let theText = await spacePipelinePage.buildLogOutput.getText();
-  await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
-  await console.log (theText);
-  expect (await theText).toContain('Finished: SUCCESS');
-
-  await browser.switchTo().window(handles[0]);
-}
-
-/*
- * Display the contents of the Jenkins build log.
- */
 export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName: string) {
 
   // tslint:disable:max-line-length
@@ -141,14 +121,17 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
 
   await browser.get(theUrl);
 //  await browser.sleep(30000);
-  await spacePipelinePage.loginWithOpenshift.clickWhenReady(LONGER_WAIT);
+  let loginWithOpenshift = new Button (element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
+  await loginWithOpenshift.clickWhenReady(LONGER_WAIT);
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    await spacePipelinePage.keyCloakButton.clickWhenReady(LONGER_WAIT);
+    let keyCloakButton = new Button (element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Login with Keycloak button');
+    await keyCloakButton.clickWhenReady(LONGER_WAIT);
   }
 
   await browser.sleep(30000);
-  let theText = await spacePipelinePage.buildLogOutput.getText();
+  let buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
+  let theText = await buildLogOutput.getText();
   await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
   await console.log (theText);
 //  expect (await theText).toContain('Finished: SUCCESS');
