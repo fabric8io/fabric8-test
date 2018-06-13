@@ -1,17 +1,22 @@
 from behave import *
+from src.poc_stage import *
+from unittest import *
 
 @given(u'I have verified a booster\'s pipeline has completed')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Given I have verified a booster\'s pipeline has completed')
-
+    print ('Attempting to use query for running Pipeline...')
+    global poc
+    poc = poc_stage()
 
 @when(u'I query a pipeline\'s stage endpoint')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When I query a pipeline\'s stage endpoint')
-
+    global result
+    result = poc.runTest('testing 1234567890')
+    print ('Result = {}'.format(result))
 
 @then(u'I should see the deployed app running on stage')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see the deployed app running on stage')
-
+    global expected_result
+    expected_result = 'Success'
+    assert (expected_result == result)
 
