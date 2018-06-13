@@ -12,8 +12,8 @@ def step_impl(context):
     space = Space()
     global spaceID
     spaceID = space.createSpace(helpers.create_space_name())
+    helpers.setSpaceID(spaceID)
    
-
 @then(u'I should see a new space created')
 def step_impl(context):
     global spaceID

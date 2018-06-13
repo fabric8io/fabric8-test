@@ -18,17 +18,10 @@ class poc2(object):
         gitRepo = os.environ.get('GIT_REPO')
         projectName = os.environ.get('PROJECT_NAME')
         pipeline = os.environ.get('PIPELINE')
-        spaceId = os.environ.get('SPACE_ID')
+        spaceId = helpers.getSpaceID()
+        authHeader = 'Bearer ' + theToken
 
         print 'starting test.....'
-
-        ###############################################
-        # Return all spaces
-        authHeader = 'Bearer ' + theToken
-        headers = {'Accept': 'application/json', 
-                   'Authorization':authHeader }
-        r = requests.get('https://openshift.io/api/spaces', headers=headers)
-        ## print r.text
 
         ###############################################
         # Import the booster
@@ -51,4 +44,5 @@ class poc2(object):
             return 'Success'
         else:
             return 'Fail'
+
 
