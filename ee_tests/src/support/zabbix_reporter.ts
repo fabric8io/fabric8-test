@@ -90,7 +90,7 @@ export class ZabbixReporter implements CustomReporter {
     }
 
     private getDuration(status: string | undefined): string {
-        if (status === 'passed' || status === 'failed') {
+        if (status === 'passed') {
             return this.elapsedTime() + '\n';
         }
         return '0\n';
