@@ -77,6 +77,8 @@ export abstract class PipelinesInteractions {
                 support.info('Check the Jenkins log');
                 await this.verifyJenkinsLog(pipeline);
             } catch (e) {
+                await support.writeScreenshot('target/screenshots/jenkins-log-failed.png');
+                await support.writePageSource('target/screenshots/jenkins-log-failed.html');
                 // if the UI Show log fails, try navigating to jenkins directly
                 support.info('Check the Jenkins log failed, go to Jenkins URL directly');
                 let osioURL: string = browser.params.target.url;
@@ -112,7 +114,8 @@ export abstract class PipelinesInteractions {
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
         await support.switchToWindow(3, 2);
-        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT);
+        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT),
+                'Jenkins log is finished';
         await support.writeScreenshot('target/screenshots/jenkins-log.png');
         await support.writePageSource('target/screenshots/jenkins-log.html');
         await support.switchToWindow(3, 0);
