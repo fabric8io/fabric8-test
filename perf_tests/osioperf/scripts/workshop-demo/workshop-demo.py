@@ -110,29 +110,43 @@ class UserScenario(TaskSet):
         )
 
     def _report_success(self, request_type, name, response_time):
-        # sys.stdout.write("[OK]   request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0")
         events.request_success.fire(
             request_type=request_type, name=name, response_time=response_time, response_length=0)
 
     def _report_failure(self, driver, request_type, name, response_time, msg):
-        # traceback.print_exc()
-        # sys.stderr.write("[FAIL] request_type=" + request_type + ", name=" + name + ", response_time=" + str(response_time) + ", response_length=0: " + msg)
         if not msg == self.SKIPPED_MSG:
-            self._save_snapshot(driver, request_type + "_" +
-                                name + "-failure-screenshot-" + str(time.time()))
+            timestamp = time.time()
+            self._save_snapshot(
+                driver,
+                "{}_{}-failure-screeshot-{}".format(
+                    request_type,
+                    name,
+                    timestamp
+                )
+            )
             self._save_browser_log(
-                driver, request_type + "_" + name + "-failure-browser-" + str(time.time()))
+                driver,
+                "{}_{}-failure-browser-{}".format(
+                    request_type,
+                    name,
+                    timestamp
+                )
+            )
 
         # driver.quit()
         events.request_failure.fire(request_type=request_type, name=name,
                                     response_time=response_time, exception=LocustError(msg))
 
     def _save_snapshot(self, driver, name):
-        driver.save_screenshot(jobBaseName + "-" +
-                               buildNumber + "-" + name + ".png")
+        driver.save_screenshot(
+            "{}-{}-{}.png".format(jobBaseName, buildNumber, name)
+        )
 
     def _save_browser_log(self, driver, name):
-        f = open(jobBaseName + "-" + buildNumber + "-" + name + ".log", "w")
+        f = open(
+            "{}-{}-{}.log".format(jobBaseName, buildNumber, name),
+            "w"
+        )
         f.write(str(driver.get_log('browser')))
 
     def login(self, driver, _failed=False):
@@ -198,10 +212,13 @@ class UserScenario(TaskSet):
         metric = "reset-environment"
         if not failed:
             try:
-                driver.get(self.locust.host + "/" +
-                           self.taskUserName + "/_cleanup")
-                self._wait_for_url(driver, self.locust.host +
-                                   "/" + self.taskUserName + "/_cleanup")
+                cleanUrl = "{}/{}/_cleanup".format(
+                    self.locust.host,
+                    self.taskUserName
+                )
+                driver.get(cleanUrl)
+
+                self._wait_for_url(driver, cleanUrl)
                 time.sleep(3)
                 target_element = self._wait_for_clickable_element(
                     driver, By.XPATH, "//*[text()='Erase My OpenShift.io Environment']")
@@ -236,17 +253,24 @@ class UserScenario(TaskSet):
         failed = _failed
         request_type = "create_space_ngx"
 
-        self.newSpaceName = spacePrefix + "-" + buildNumber + "-" + \
-            str(self.taskUser) + "-" + str(long(time.time() * 1000))
-        self.ghRepoName = (self.newSpaceName + "-" +
-                           self.taskUserName.replace("@", "_").replace(".", "_")).lower()
+        self.newSpaceName = "{}-{}-{}-{}".format(
+            spacePrefix,
+            buildNumber,
+            self.taskUser,
+            (long(time.time() * 1000))
+        )
+        self.ghRepoName = "{}-{}".format(
+            self.newSpaceName,
+            self.taskUserName.replace("@", "_").replace(".", "_")
+        ).lower()
 
         metric = "open-home"
         if not failed:
             self._reset_timer()
             try:
-                driver.get(self.locust.host + "/_home")
-                self._wait_for_url(driver, self.locust.host + "/_home")
+                homeUrl = "{}/_home".format(self.locust.host)
+                driver.get(homeUrl)
+                self._wait_for_url(driver, homeUrl)
                 target_element = self._wait_for_clickable_element(
                     driver,
                     By.ID,
@@ -287,7 +311,7 @@ class UserScenario(TaskSet):
                 target_element = self._wait_for_clickable_element(
                     driver,
                     By.XPATH,
-                    "//f8-feature-toggle[@featurename='AppLauncher']//*[contains(@class,'pficon pficon-add-circle-o')]"
+                    "//*[contains(@class,'pficon pficon-add-circle-o')]"
                 )
                 target_element.click()
                 self._wait_for_clickable_element(
@@ -317,14 +341,15 @@ class UserScenario(TaskSet):
                 target_element = self._wait_for_clickable_element(
                     driver,
                     By.XPATH,
-                    "//*[contains(@class,'f8launcher-container_close')]" +
-                    "//*[contains(@class,'pficon-close')]"
+                    "//*[contains(@class,'f8launcher-container_close')]//*[contains(@class,'pficon-close')]"
                 )
                 target_element.click()
                 self._wait_for_url(driver, self.newSpaceName)
                 self.spaceUrl = driver.current_url
                 self.userUrl = self.spaceUrl.replace(
-                    "/" + self.newSpaceName, "")
+                    "/{}".format(self.newSpaceName),
+                    ""
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -345,9 +370,11 @@ class UserScenario(TaskSet):
         if not failed:
             self._reset_timer()
             try:
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.ID,
-                                                                  "spacehome-pipelines-add-button")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.ID,
+                    "spacehome-pipelines-add-button"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -366,14 +393,17 @@ class UserScenario(TaskSet):
                     driver, By.ID, "projectName")
                 target_element.clear()
                 target_element.send_keys(self.newSpaceName)
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//*[contains(text(),'Create a new codebase')]" +
-                                                                  "/ancestor::*[contains(@class,'code-imports--step_content')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Create a new codebase')]/ancestor::*[contains(@class,'code-imports--step_content')]"
+                )
                 target_element.click()
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//*[contains(text(),'Continue')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Continue')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -392,9 +422,13 @@ class UserScenario(TaskSet):
                     driver, By.CSS_SELECTOR, ".f8launcher-container_nav")
                 self._wait_for_clickable_element(
                     driver, By.CSS_SELECTOR, ".f8launcher-container_main")
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//div[@class='list-group-item-heading'][contains(text(),'" + launcherRuntime + "')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//div[@class='list-group-item-heading'][contains(text(),'{}')]".format(
+                        launcherRuntime
+                    )
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -411,22 +445,29 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 target_element.click()
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//div[@class='list-group-item-heading'][contains(text(),'" + launcherMission + "')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//div[@class='list-group-item-heading'][contains(text(),'{}')]".format(
+                        launcherMission
+                    )
+                )
                 target_element.click()
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//f8launcher-missionruntime-createapp-step" +
-                                                                  "//*[@class='f8launcher-continue']//*[contains(@class,'btn')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//f8launcher-missionruntime-createapp-step//*[@class='f8launcher-continue']//*[contains(@class,'btn')]"
+                )
                 driver.execute_script(
                     "arguments[0].scrollIntoView(false);", target_element)
                 target_element.click()
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//*[contains(@class,'f8launcher-section-release-strategy')]" +
-                                                                  "//*[contains(@class,'list-view-pf-description')]" +
-                                                                  "//span[last()]//*[@class='f8launcher-pipeline-stages--name'][contains(text(),'" + launcherStrategy + "')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//*[contains(@class,'f8launcher-section-release-strategy')]//*[contains(@class,'list-view-pf-description')]//span[last()]//*[@class='f8launcher-pipeline-stages--name'][contains(text(),'{}')]".format(
+                        launcherStrategy
+                    )
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -445,10 +486,11 @@ class UserScenario(TaskSet):
                 driver.execute_script(
                     "arguments[0].scrollIntoView(false);", target_element)
                 target_element.click()
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//f8launcher-releasestrategy-createapp-step" +
-                                                                  "//*[@class='f8launcher-continue']//*[contains(@class,'btn')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//f8launcher-releasestrategy-createapp-step//*[@class='f8launcher-continue']//*[contains(@class,'btn')]"
+                )
                 driver.execute_script(
                     "arguments[0].scrollIntoView(false);", target_element)
                 target_element.click()
@@ -475,15 +517,18 @@ class UserScenario(TaskSet):
 
                 select = Select(target_element)
                 select.select_by_visible_text(githubUsername)
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.ID,
-                                                                  "ghRepo")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.ID,
+                    "ghRepo"
+                )
                 target_element.clear()
                 target_element.send_keys(self.ghRepoName)
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//f8launcher-gitprovider-createapp-step" +
-                                                                  "//*[@class='f8launcher-continue']//*[contains(@class,'btn')]")
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//f8launcher-gitprovider-createapp-step//*[@class='f8launcher-continue']//*[contains(@class,'btn')]"
+                )
                 driver.execute_script(
                     "arguments[0].scrollIntoView(false);", target_element)
                 self._report_success(request_type, metric, self._tick_timer())
@@ -502,21 +547,29 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 target_element.click()
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 "//f8launcher-projectsummary-createapp-step//*[contains(text(),'Mission')]" +
-                                                 "//ancestor::*[contains(@class,'card-pf--xsmall')]" +
-                                                 "//*[contains(text(),'" + launcherMission + "')]")
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 "//f8launcher-projectsummary-createapp-step//*[contains(text(),'Runtime')]" +
-                                                 "//ancestor::*[contains(@class,'card-pf--xsmall')]" +
-                                                 "//*[contains(text(),'" + launcherRuntime + "')]")
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//*[contains(@class,'btn')][contains(text(),'Set Up Application')]")
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//f8launcher-projectsummary-createapp-step//*[contains(text(),'Mission')]//ancestor::*[contains(@class,'card-pf--xsmall')]//*[contains(text(),'{}')]".format(
+                        launcherMission
+                    )
+                )
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//f8launcher-projectsummary-createapp-step//*[contains(text(),'Runtime')]//ancestor::*[contains(@class,'card-pf--xsmall')]//*[contains(text(),'{}')]".format(
+                        launcherRuntime
+                    )
+                )
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//*[contains(@class,'btn')][contains(text(),'Set Up Application')]"
+                )
                 driver.execute_script(
-                    "arguments[0].scrollIntoView(false);", target_element)
+                    "arguments[0].scrollIntoView(false);",
+                    target_element
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -532,25 +585,46 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 target_element.click()
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 self._project_booster_ok_icon("Creating your new GitHub repository"))
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 self._project_booster_ok_icon("Pushing your customized Booster code into the repo"))
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 self._project_booster_ok_icon("Creating your project on OpenShift"))
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 self._project_booster_ok_icon("Setting up your build pipeline"))
-                self._wait_for_clickable_element(driver,
-                                                 By.XPATH,
-                                                 self._project_booster_ok_icon("Configuring to trigger builds on Git pushes"))
-                target_element = self._wait_for_clickable_element(driver,
-                                                                  By.XPATH,
-                                                                  "//*[contains(@class,'f8launcher-continue')]" +
-                                                                  "//*[contains(text(),'View New Application')]")
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    self._project_booster_ok_icon(
+                        "Creating your new GitHub repository"
+                    )
+                )
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    self._project_booster_ok_icon(
+                        "Pushing your customized Booster code into the repo"
+                    )
+                )
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    self._project_booster_ok_icon(
+                        "Creating your project on OpenShift"
+                    )
+                )
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    self._project_booster_ok_icon(
+                        "Setting up your build pipeline"
+                    )
+                )
+                self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    self._project_booster_ok_icon(
+                        "Configuring to trigger builds on Git pushes"
+                    )
+                )
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    "//*[contains(@class,'f8launcher-continue')]//*[contains(text(),'View New Application')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -580,9 +654,9 @@ class UserScenario(TaskSet):
 
     @staticmethod
     def _project_booster_ok_icon(name):
-        return "//*[contains(text(),'" + name + "')]" + \
-               "//ancestor::*[contains(@class,'pfng-list-content')]" + \
-               "//*[contains(@class,'pficon-ok')]"
+        return "//*[contains(text(),'{}')]//ancestor::*[contains(@class,'pfng-list-content')]//*[contains(@class,'pficon-ok')]".format(
+            name
+        )
 
     def che_workspace(self, driver, _failed=False):
         failed = _failed
@@ -593,11 +667,17 @@ class UserScenario(TaskSet):
             try:
                 driver.get(self.spaceUrl)
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, ".//*[contains(text(),'Create')]")
+                    driver,
+                    By.XPATH,
+                    ".//*[contains(text(),'Create')]"
+                )
                 self._reset_timer()
                 target_element.click()
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, ".//codebases-item-workspaces")
+                    driver,
+                    By.XPATH,
+                    ".//codebases-item-workspaces"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -630,9 +710,17 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[@name='" + self.ghRepoName + "']", timeout=self.midTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[@id='gwt-debug-projectTree']//*[@name='{}']".format(
+                        self.ghRepoName
+                    ),
+                    timeout=self.midTimeout)
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, ".//*[@id='gwt-debug-multiSplitPanel-tabsPanel']//*[contains(text(),'Terminal')]")
+                    driver,
+                    By.XPATH,
+                    ".//*[@id='gwt-debug-multiSplitPanel-tabsPanel']//*[contains(text(),'Terminal')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -641,36 +729,6 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type,
                                  metric, self._tick_timer(), self.SKIPPED_MSG)
-
-        '''
-        metric = "run-project"
-        if not failed:
-            self._reset_timer()
-            try:
-                for path in [self.ghRepoName, "pom.xml"]:
-                    target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[@id='gwt-debug-projectTree']//*[contains(text(),'" + path + "')]/ancestor::*[contains(@class,'GEU2T3BBDEB')]")
-                    print 'doubleclicking on ' + path
-                    ActionChains(driver).click(target_element).double_click(target_element).perform();
-
-                self._wait_for_clickable_element(driver, By.XPATH, "//*[contains(text(),'http://maven.apache.org/POM/4.0.0')]")
-                target_element = self._wait_for_clickable_element(driver, By.ID, "gwt-debug-command_toolbar-button_Run")
-                target_element.click()
-                target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'gwt-PopupPanel')]")
-                time.sleep(0.5)
-                target_element.click()
-                target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'run')]")
-                target_element.click()
-                WebDriverWait(driver, self.longTimeout).until(
-                    EC.text_to_be_present_in_element((By.XPATH, ".//*[@id='gwt-debug-consolesPanel']"), quickstartStartedTerminal)
-                )
-                self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
-                self._report_success(request_type, metric, self._tick_timer())
-            except Exception as ex:
-                self._report_failure(driver, request_type, metric, self._tick_timer(), str(ex))
-                failed = True
-        else:
-            self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
-        '''
 
         driver.close()
         driver.switch_to_window(driver.window_handles[0])
@@ -686,10 +744,17 @@ class UserScenario(TaskSet):
             self._reset_timer()
             build_release_started = -1
             try:
-                driver.get(self.spaceUrl + "/create/pipelines")
-                self._wait_for_url(driver, self.spaceUrl + "/create/pipelines")
+                createPipelinesUrl = "{}/create/pipelines".format(
+                    self.spaceUrl
+                )
+                driver.get(createPipelinesUrl)
+                self._wait_for_url(driver, createPipelinesUrl)
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Build Release')][contains(@title,'status: IN_PROGRESS')]", timeout=self.longTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Build Release')][contains(@title,'status: IN_PROGRESS')]",
+                    timeout=self.longTimeout
+                )
                 if qs_created_time > 0:
                     build_release_started = (
                         time.time() - qs_created_time) * 1000
@@ -710,7 +775,11 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Rollout to Stage')][contains(@title,'status: IN_PROGRESS')]", timeout=self.longTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Rollout to Stage')][contains(@title,'status: IN_PROGRESS')]",
+                    timeout=self.longTimeout
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -726,7 +795,11 @@ class UserScenario(TaskSet):
             try:
 
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Input Required')]", timeout=self.longTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Input Required')]",
+                    timeout=self.longTimeout
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -742,7 +815,10 @@ class UserScenario(TaskSet):
             try:
                 target_element.click()
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Promote')]")
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Promote')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -758,7 +834,11 @@ class UserScenario(TaskSet):
             try:
                 target_element.click()
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Rollout to Run')][contains(@title,'status: IN_PROGRESS')]", timeout=self.longTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Rollout to Run')][contains(@title,'status: IN_PROGRESS')]",
+                    timeout=self.longTimeout
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -773,7 +853,11 @@ class UserScenario(TaskSet):
             self._reset_timer()
             try:
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(),'Rollout to Run')][contains(@title,'status: SUCCESS')]", timeout=self.longTimeout)
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(),'Rollout to Run')][contains(@title,'status: SUCCESS')]",
+                    timeout=self.longTimeout
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -792,10 +876,14 @@ class UserScenario(TaskSet):
         if not failed:
             self._reset_timer()
             try:
-                driver.get(self.userUrl + "/_myspaces")
+                mySpacesUrl = "{}/_myspaces".format(self.userUrl)
+                driver.get(mySpacesUrl)
                 self._wait_for_url(driver, "_myspaces")
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, "//input[contains(@placeholder, 'Filter by Name')]")
+                    driver,
+                    By.XPATH,
+                    "//input[contains(@placeholder, 'Filter by Name')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -812,9 +900,15 @@ class UserScenario(TaskSet):
                 target_element.send_keys(self.newSpaceName)
                 target_element.send_keys(Keys.RETURN)
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(text(), 'Active filters:')]")
+                    driver,
+                    By.XPATH,
+                    "//*[contains(text(), 'Active filters:')]"
+                )
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[contains(@class,'list-pf-actions')]//*[@dropdowntoggle]")
+                    driver,
+                    By.XPATH,
+                    "//*[contains(@class,'list-pf-actions')]//*[@dropdowntoggle]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -830,14 +924,23 @@ class UserScenario(TaskSet):
             try:
                 target_element.click()
                 target_element = self._wait_for_clickable_element(
-                    driver, By.PARTIAL_LINK_TEXT, "Remove space")
+                    driver,
+                    By.PARTIAL_LINK_TEXT,
+                    "Remove space"
+                )
                 target_element.click()
                 remove_button_selector = "body > modal-container > div > div > div.modal-body > button.btn.btn-danger"
                 target_element = self._wait_for_clickable_element(
-                    driver, By.CSS_SELECTOR, remove_button_selector)
+                    driver,
+                    By.CSS_SELECTOR,
+                    remove_button_selector
+                )
                 target_element.click()
                 self._wait_for_clickable_element(
-                    driver, By.XPATH, "//button[contains(text(),'Create Space')]")
+                    driver,
+                    By.XPATH,
+                    "//button[contains(text(),'Create Space')]"
+                )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
@@ -892,6 +995,6 @@ class UserScenario(TaskSet):
 
 class UserLocust(HttpLocust):
     task_set = UserScenario
-    host = _serverScheme + "://" + _serverHost
+    host = "{}://{}".format(_serverScheme, _serverHost)
     min_wait = 1000
     max_wait = 1000
