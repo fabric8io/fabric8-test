@@ -12,6 +12,10 @@
        - build-discarder:
            days-to-keep: 28
     parameters:
+       - bool:
+           name: RUN_LOCALLY
+           default: true
+           description: '"true" if locust test is to be run locally (i.e. no master, no slaves, no remote execution).'
        - choice:
            name: SERVER_SCHEME
            choices:
@@ -37,16 +41,16 @@
        - choice:
            name: SLAVES
            choices:
-              - '2'
-              - '9'
-              - '8'
-              - '7'
-              - '6'
-              - '5'
-              - '4'
-              - '3'
-              - '10'
               - '1'
+              - '2'
+              - '3'
+              - '4'
+              - '5'
+              - '6'
+              - '7'
+              - '8'
+              - '9'
+              - '10'
            description: A number of Locust slaves to use.
        - string:
            name: SLAVE_PREFIX
@@ -54,19 +58,40 @@
            description: A prefix for a Locust slave node address.
        - string:
            name: USERS
-           default: '2'
+           default: '1'
            description: A number of users to swawn.
        - string:
            name: USER_HATCH_RATE
-           default: '2'
+           default: '1'
            description: A hatch rate (number of users to spawn per second).
        - string:
            name: DURATION
-           default: '1800'
+           default: '3600'
            description: A number of seconds for how long the load test should run.
+       - choice:
+           name: LAUNCHER_MISSION
+           choices:
+              - 'REST API Level 0'
+              - 'Externalized Configuration'
+              - 'Health Check'
+       - choice:
+           name: LAUNCHER_RUNTIME
+           choices:
+              - 'Eclipse Vert.x'
+              - 'Spring Boot'
+              - 'WildFly Swarm'
+       - choice:
+           name: LAUNCHER_STRATEGY
+           choices:
+              - 'Rollout to Run'
+              - 'Integration Test'
+              - 'Rollout to Stage'
+       - string:
+           name: SPACE_PREFIX
+           default: 'wd'
        - bool:
            name: ZABBIX_REPORT_ENABLED
-           default: false
+           default: true
            description: Checked if a report is to be sent to the Zabbix instance.
        - string:
            name: ZABBIX_SERVER
@@ -79,14 +104,14 @@
        - string:
            name: ZABBIX_HOST
            default: qa_openshift.io
-           description: A hostname in Zabbix the report is for
+           description: A hostname in Zabbix the results is for
     scm:
         - git:
-            url: https://github.com/fabric8io/fabric8-test.git
+            url: https://github.com/pmacik/fabric8-test.git
             branches:
-                - '*/master'
-#    triggers:
-#        - timed: H * * * *
+                - 'perf-tests-update-commons'
+    triggers:
+        - timed: H 5 * * *
     wrappers:
         - workspace-cleanup:
             dirmatch: false
@@ -98,6 +123,10 @@
                 credential-id: grip-creds
                 username: GRIP_USER
                 password: GRIP_PASS
+            - username-password-separated:
+                credential-id: osioperftest.github.token
+                username: GH_USER
+                password: GH_TOKEN
     builders:
         - shell: |-
             cd perf_tests/osioperf/scripts/workshop-demo
