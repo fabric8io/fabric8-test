@@ -1,7 +1,7 @@
 - job:
     name: 'osio-jenkins-pods-check'
     project-type: freestyle
-    node: osioperf-server-1-centos7-x86_64
+    node: osioperf-master1
     properties:
        - ownership:
            owner: pmacik

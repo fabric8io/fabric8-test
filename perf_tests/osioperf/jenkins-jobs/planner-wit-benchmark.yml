@@ -1,7 +1,7 @@
 - job:
     name: 'planner-wit-benchmark'
     project-type: freestyle
-    node: osioperf-server-1-centos7-x86_64
+    node: osioperf-master1
     properties:
        - ownership:
            owner: pmacik
@@ -22,7 +22,7 @@
            description: A port of Zabbix server used by zabbix_sender utility.
        - string:
            name: ZABBIX_HOST
-           default: osioperf-server-1
+           default: osioperf-master1
            description: A hostname in Zabbix the report is for.
     scm:
         - git:
