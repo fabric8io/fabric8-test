@@ -17,11 +17,17 @@ export STAGE_SERVER="stage.8a09.starter-us-east-2.openshiftapps.com"
 ## Openshift.io user's password
 ##export OSIO_PASSWORD=""
 
+## Login to OSO to get OSO username and token
+oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
+if [ $? -gt 0 ]; then
+   echo "ERROR: Unable to login user $OSIO_USERNAME"
+fi
+
 ## OpenShift Online user's name
-##export OSO_USERNAME=""
+export OSO_USERNAME=`oc whoami`
 
 ## OpenShift Online token
-##export OSO_TOKEN=""
+export OSO_TOKEN=`oc whoami -t`
 
 ## OpenShift.io pipeline release strategy
 export PIPELINE="maven-releaseandstage"
