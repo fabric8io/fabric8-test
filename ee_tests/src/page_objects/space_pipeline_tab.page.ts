@@ -5,15 +5,12 @@
   * main_dashboard.page.ts - Account dashboard page - This is the user's top level page insisde of OSIO
   * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
 */
-// tslint:disable:max-line-length
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-// tslint:ensable:max-line-length
+import { browser, element, by, ExpectedConditions as until, $, ElementFinder, ElementArrayFinder } from 'protractor';
 import * as support from '../support';
-import { AppPage } from './app.page';
 import { SpaceTabPage } from './space_tab.page';
-import { TextInput, Button, BaseElement } from '../ui';
+import { Button, BaseElement } from '../ui';
 import { OsoDashboardPage } from '.';
-import { stat } from 'fs';
+import { ProtractorLocator } from 'protractor/built/locators';
 
 export class SpacePipelinePage extends SpaceTabPage {
 
@@ -24,33 +21,33 @@ export class SpacePipelinePage extends SpaceTabPage {
   pipelinesList = $('#pipeline-list');
 
   /* Kebab displayed after build pipeline performs stage and test */
-  pipelineKebab = new Button ($('#dropdownKebabRight9'), 'Pipeline kebab');
+  pipelineKebab = new Button($('#dropdownKebabRight9'), 'Pipeline kebab');
 
   /* Kebab displayed after build pipeline performs stage and test */
   pipelineKebabStartPipeline = element(by.xpath('.//*[contains(text(), \'Start Pipeline\')]'));
 
   /* Stage icon */
   // tslint:disable:max-line-length
-  successBar = new Button (element(by.xpath('.//div[contains(@class,\'pipeline-status-bar SUCCESS\')]')), 'Success bar');
+  successBar = new Button(element(by.xpath('.//div[contains(@class,\'pipeline-status-bar SUCCESS\')]')), 'Success bar');
 
-  stageIcon = new Button (element(by.xpath('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
+  stageIcon = new Button(element(by.xpath('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
 
   /* Run icon */
-  runIcon = new Button (element(by.xpath('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
+  runIcon = new Button(element(by.xpath('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
 
   /* Button displayed after build pipeline performs stage and test */
   inputRequiredButton = element(by.xpath('.//a[contains(text(),\'Input Required\')][1]'));
 
   /* View the Jenkins Log */
-  viewLog = new Button (element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
+  viewLog = new Button(element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
 
   /* Buttons displayed in the promote dialog */
-  closeButton = new Button (element(by.xpath('.//button[contains(text(),\'Close\')]')), 'Close button');
-  abortButton = new Button (element(by.xpath('.//button[contains(text(),\'Abort\')]')), 'Abort button');
-  promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
+  closeButton = new Button(element(by.xpath('.//button[contains(text(),\'Close\')]')), 'Close button');
+  abortButton = new Button(element(by.xpath('.//button[contains(text(),\'Abort\')]')), 'Abort button');
+  promoteButton = new Button(element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
   /* Link to analytics report */
-  stackReportsButton = element (by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
+  stackReportsButton = element(by.xpath('.//*[contains(@class,\'stack-reports-btn\')]'));
 
   /* Links displayed in the promote dialog */
   viewApplicationOnStage = element(by.xpath('.//a[contains(text(),\'View application on stage\')]'));
@@ -61,10 +58,10 @@ export class SpacePipelinePage extends SpaceTabPage {
   buildError = element(by.xpath('.//*[contains(@class,\'pficon-error-circle-o\')]'));
 
   /* Login with Openshift */
-  loginWithOpenshift = new Button (element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
+  loginWithOpenshift = new Button(element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
 
   /* Login with Key Cloak */
-  keyCloakButton = new Button (element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Login with Keycloak button');
+  keyCloakButton = new Button(element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Login with Keycloak button');
 
   /* Build log output */
   buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
@@ -94,25 +91,25 @@ export class SpacePipelinePage extends SpaceTabPage {
   }
 
   /* Locate a codebase by name */
-  importCodebaseByName (nameString: string): ElementFinder {
+  importCodebaseByName(nameString: string): ElementFinder {
     let xpathString = './/multiple-selection-list/div/ul/li/label/span[contains(text(),\'' + nameString + '\')]';
     return element(by.xpath(xpathString));
   }
 
   /* Locate a pipeline by name */
-  allPipelineByName (nameString: string): ElementArrayFinder {
+  allPipelineByName(nameString: string): ElementArrayFinder {
     let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
     return element.all(by.xpath(xpathString));
   }
 
   /* Locate a pipeline by name */
-  pipelineByName (nameString: string): ElementFinder {
+  pipelineByName(nameString: string): ElementFinder {
     let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
     return element(by.xpath(xpathString));
   }
 
   /* Element - input required button - by pipeline name - in pipeline list */
-  inputRequiredByPipelineByName (nameString: string): ElementFinder {
+  inputRequiredByPipelineByName(nameString: string): ElementFinder {
     let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
     return element(by.xpath(xpathString));
   }
@@ -127,6 +124,8 @@ export class SpacePipelinePage extends SpaceTabPage {
 }
 
 export class PipelineDetails extends BaseElement {
+
+  inputRequiredButton: ProtractorLocator = by.cssContainingText('a', 'Input Required');
 
   constructor(finder: ElementFinder) {
     super(finder, 'Pipeline');
@@ -163,12 +162,13 @@ export class PipelineDetails extends BaseElement {
   }
 
   public async approvalRequired(): Promise<boolean> {
-    return this.isElementPresent(by.cssContainingText('a', 'Input Required'));
+    return this.isElementPresent(this.inputRequiredButton);
   }
 
   public async approve() {
-    await this.element(by.cssContainingText('a', 'Input Required')).click();
-    await new SpacePipelinePage().promoteButton.clickWhenReady(support.LONGER_WAIT);
+    await browser.wait(until.visibilityOf(this.element(this.inputRequiredButton)), support.DEFAULT_WAIT);
+    await this.element(this.inputRequiredButton).click();
+    await new SpacePipelinePage().promoteButton.clickWhenReady(support.DEFAULT_WAIT);
   }
 }
 
