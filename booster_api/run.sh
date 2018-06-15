@@ -24,8 +24,8 @@ if [ $? -gt 0 ]; then
    echo "ERROR: Unable to login user $OSIO_USERNAME"
 fi
 
-## OpenShift Online user's name
-export OSO_USERNAME=`oc whoami`
+## OpenShift Online user's name (remove @ and following chars)
+export OSO_USERNAME=`oc whoami | sed -e 's/@[^\@]*$//'`
 
 ## OpenShift Online token
 export OSO_TOKEN=`oc whoami -t`
