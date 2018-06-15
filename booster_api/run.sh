@@ -2,6 +2,7 @@
 
 export SERVER_ADDRESS="https://openshift.io"
 export FORGE_API="https://forge.api.openshift.io"
+export WIT_API="https://api.openshift.io"
 
 # Example of OSO API endpoint:
 # https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/jsmith/builds'
