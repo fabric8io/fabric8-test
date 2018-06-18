@@ -6,7 +6,6 @@ import { ReleaseStrategy } from '../support/release_strategy';
 import { PipelineStage } from '../page_objects/space_pipeline_tab.page';
 import { PageOpenMode } from '../..';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
-import { LONG_WAIT } from '../support';
 
 export abstract class PipelinesInteractions {
 
@@ -78,8 +77,8 @@ export abstract class PipelinesInteractions {
                 // if the UI Show log fails, try navigating to jenkins directly
                 support.info('Check the Jenkins log failed, go to Jenkins URL directly');
                 support.info('Exception: ' + e);
-                let osioURL: string = browser.params.target.url;
-                let jenkinsURL = 'https://jenkins.' + osioURL.replace('https://', '');
+                let osioURL: string = browser.params.target.url.replace('https://', '');
+                let jenkinsURL = 'https://jenkins.' + osioURL;
                 await browser.get(jenkinsURL);
                 await support.writeScreenshot('target/screenshots/jenkins-direct-log.png');
                 await support.writePageSource('target/screenshots/jenkins-direct-log.html');
@@ -111,8 +110,8 @@ export abstract class PipelinesInteractions {
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
         await support.switchToWindow(3, 2);
-        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT,
-                'Jenkins log is finished');
+        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
+          support.LONG_WAIT, 'Jenkins log is finished');
         await support.writeScreenshot('target/screenshots/jenkins-log.png');
         await support.writePageSource('target/screenshots/jenkins-log.html');
         await support.switchToWindow(3, 0);
@@ -151,6 +150,7 @@ export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions 
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 return true;
             } else {
+              support.debug('... Current pipeline status: ' + currentStatus);
                 await browser.sleep(5000);
                 return false;
             }
@@ -195,6 +195,7 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
                 support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
+              support.debug('... Current pipeline status: ' + currentStatus);
                 if (await pipeline.isInputRequired()) {
                     await pipeline.promote();
                 }
