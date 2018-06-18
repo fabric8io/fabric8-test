@@ -1,20 +1,27 @@
+import os
+
 from behave import *
-from src.poc2 import *
+from src.import_booster import ImportBooster
+from src.support import helpers
 from unittest import *
 
-@given(u'I am using the Poc2')
+@given(u'I have a space created')
 def step_impl(context):
-    print ('Attempting to use OSIO booster service intregration POC...')
-    global poc
-    poc = poc2()
+    global spaceID
+    spaceID = helpers.getSpaceID()
+    assert spaceID != None
 
-@when(u'I input "booster #1"')
+    print ('Attempting to use OSIO booster service intregration POC...')
+    global importBooster
+    importBooster = ImportBooster()
+
+@when(u'I input a name of the GitHub repository with a booster')
 def step_impl(context):
     global result
-    result = poc.runTest('testing 1234567890')
+    result = importBooster.importGithubRepo(os.getenv('GIT_REPO'))
     print ('Result = {}'.format(result))
 
-@then(u'I should see "Success"')
+@then(u'I should see the booster imported')
 def step_impl(context):
     global expected_result
     expected_result = 'Success'

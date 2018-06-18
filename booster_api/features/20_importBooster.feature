@@ -1,10 +1,8 @@
 Feature: Import a new Booster into OpenShift.io
  
   Background:
-    Given I am using the Poc2
+    Given I have a space created.
  
-  Scenario: runTest our POC
-    When I input "booster #1"
-    Then I should see "Success"
-
-
+  Scenario: Import booster from a GitHub repository
+    When I input a name of the GitHub repository with a booster
+    Then I should see the booster imported
