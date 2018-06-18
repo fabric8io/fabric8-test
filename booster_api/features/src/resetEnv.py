@@ -74,4 +74,9 @@ class ResetEnvironment:
             headers=headers
         )
         assert r.status_code == 200
+        r = requests.patch(
+            '{}/api/user/services'.format(serverAddress),
+            headers=headers
+        )
+        assert r.status_code == 200
         print 'Tenant is cleaned.....'
