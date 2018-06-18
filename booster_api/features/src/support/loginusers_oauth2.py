@@ -52,7 +52,7 @@ class LoginUsersOauth2:
 
         self.maxUsers = int(os.getenv("MAX_USERS", "-1"))
 
-        self.baseUrl = os.getenv("AUTH_SERVER_ADDRESS")
+        self.baseUrl = os.getenv("AUTH_API")
 
         self.clientId = os.getenv("AUTH_CLIENT_ID")
 

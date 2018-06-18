@@ -16,8 +16,6 @@ class poc_stage(object):
         # Initialize variables from Environment setting
 
         osoUsername = os.environ.get('OSO_USERNAME')
-        projectName = os.environ.get('PROJECT_NAME')
-        stageServer = os.environ.get('STAGE_SERVER')
         clusterAddress = os.environ.get('OSO_CLUSTER_ADDRESS')
 
         oso_token = os.environ.get('OSO_TOKEN')
