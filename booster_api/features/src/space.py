@@ -41,7 +41,7 @@ class Space:
             headers=headers,
             data=data
         )
-        print 'request results = {}'.format(r.content)
+        # print 'request results = {}'.format(r.content)
 
         try:
             respJson = r.json()
