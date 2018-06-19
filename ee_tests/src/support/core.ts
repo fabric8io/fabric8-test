@@ -361,26 +361,6 @@ export function targetPlatform(): string {
   return 'fabric8-openshift';
 }
 
-export function windowCount(count: number) {
-  return function () {
-    return browser.getAllWindowHandles().then(function (handles) {
-      return handles.length === count;
-    });
-  };
-}
-
-/* A new browser window is opened - switch to that new window now */
-export async function switchToWindow(windowTotal: number, windowId: number) {
-  let handles = await browser.getAllWindowHandles();
-  support.debug('Number of browser tabs before = ' + handles.length);
-  await browser.wait(support.windowCount(windowTotal), support.DEFAULT_WAIT);
-  handles = await browser.getAllWindowHandles();
-  support.debug('Number of browser tabs after = ' + handles.length);
-
-  /* Switch to the new browser window */
-  await browser.switchTo().window(handles[windowId]);
-}
-
 /* Open the selected codebases page */
 export async function openCodebasesPage(osioUrl: string, userName: string, spaceName: string) {
   let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
@@ -450,7 +430,7 @@ export async function invokeApp(boosterEndpointPage: BoosterEndpoint, mySpaceChe
 
   /* A new browser window is opened when Che opens the app endpoint */
   let handles = await browser.getAllWindowHandles();
-  await browser.wait(windowCount(handles.length), support.DEFAULT_WAIT);
+  await browser.wait(windowManager.windowCountCondition(handles.length), support.DEFAULT_WAIT);
   handles = await browser.getAllWindowHandles();
   support.debug('Number of browser tabs after opening Che app window = ' + handles.length);
 
@@ -491,8 +471,7 @@ export async function openCodebasePageSwitchWindow(spaceChePage: SpaceChePage) {
   await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
 
   /* A new browser window is opened when Che opens */
-  await support.switchToWindow(2, 1);
-
+  await windowManager.switchToWindow(2, 1);
 }
 
 export class ScreenshotManager {
@@ -522,4 +501,42 @@ export class ScreenshotManager {
 }
 
 export let screenshotManager: ScreenshotManager = new ScreenshotManager();
+
+export class WindowManager {
+
+  private windowCount = 1;
+
+  async switchToMainWindow() {
+    await support.debug('Window changing to index 0 (main window)');
+    let handles = await browser.getAllWindowHandles();
+    await browser.switchTo().window(handles[0]);
+    await support.debug('Window changed to index 0 (main window)');
+  }
+
+  async switchToNewWindow() {
+    this.windowCount++;
+    await this.switchToWindow(this.windowCount, this.windowCount - 1);
+  }
+
+  async switchToWindow(expectedWindowCount: number, windowIndex: number) {
+    await support.debug('Waiting for the specified number or windows to be present: ' + this.windowCount);
+    await browser.wait(this.windowCountCondition(expectedWindowCount), support.DEFAULT_WAIT);
+
+    await support.debug('Window changing to index ' + windowIndex);
+    let handles = await browser.getAllWindowHandles();
+    await support.debug('Switching to handle: ' + handles[windowIndex]);
+    await browser.switchTo().window(handles[windowIndex]);
+    await support.debug('Window changed to index ' + windowIndex);
+  }
+
+  windowCountCondition(count: number) {
+    return function () {
+      return browser.getAllWindowHandles().then(function (handles) {
+        return handles.length === count;
+      });
+    };
+  }
+}
+
+export let windowManager: WindowManager = new WindowManager();
 

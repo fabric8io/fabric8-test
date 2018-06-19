@@ -107,11 +107,11 @@ export abstract class PipelinesInteractions {
 
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
-        await support.switchToWindow(3, 2);
+        await support.windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
           support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
-        await support.switchToWindow(3, 0);
+        await support.windowManager.switchToMainWindow();
     }
 
     protected async saveOCJenkinsLogs(): Promise<void> {

@@ -134,7 +134,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
 
     let spaceDashboardPage = new SpaceDashboardPage(support.currentSpaceName());
     await spaceDashboardPage.openInBrowser();
