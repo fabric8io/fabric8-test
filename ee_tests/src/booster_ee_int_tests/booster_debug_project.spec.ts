@@ -116,7 +116,7 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
   });
 
 });

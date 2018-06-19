@@ -47,7 +47,7 @@ describe('Access project in OSO:', () => {
 
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);
-    await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
+    await browser.wait(support.windowManager.windowCountCondition(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
     support.writeScreenshot('target/screenshots/booster_oso_project_openshift_console_' + spaceName + '.png');

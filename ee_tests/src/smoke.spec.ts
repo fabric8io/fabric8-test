@@ -79,7 +79,7 @@ describe('e2e_smoketest', () => {
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToNewWindow();
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
@@ -87,7 +87,7 @@ describe('e2e_smoketest', () => {
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */
-    await support.switchToWindow(2, 0);
+    await support.windowManager.switchToMainWindow();
   });
 
   it('pipeline', async () => {

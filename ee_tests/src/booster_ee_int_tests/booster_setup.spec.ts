@@ -65,7 +65,7 @@ describe('Creating new quickstart in OSIO', () => {
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
 
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToWindow(2, 1);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
@@ -85,7 +85,7 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.close();
 
     /* Switch back to the OSIO browser window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
 
   });
 

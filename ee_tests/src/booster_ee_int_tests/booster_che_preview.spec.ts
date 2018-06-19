@@ -66,13 +66,13 @@ describe('Verify the Che preview URL for a deployed app:', () => {
     await browser.close();
 
     /* Close the Che window */
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToWindow(2, 1);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
 
   });
 
