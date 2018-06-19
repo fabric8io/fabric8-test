@@ -21,7 +21,6 @@ describe('e2e_smoketest', () => {
   let quickstart: Quickstart;
   let strategy: string;
   let spaceName: string;
-  let index: number = 1;
 
   beforeAll(async () => {
     support.info('--- Before all ---');
@@ -31,11 +30,13 @@ describe('e2e_smoketest', () => {
     quickstart = new Quickstart(browser.params.quickstart.name);
   });
 
+  beforeEach(async() => {
+    support.screenshotManager.nextTest();
+  });
+
   afterEach(async () => {
     support.info('--- After each ---');
-    await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-    await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
-    index++;
+    await support.screenshotManager.writeScreenshot('afterEach');
   });
 
   afterAll(async () => {
@@ -46,8 +47,7 @@ describe('e2e_smoketest', () => {
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
-        await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        await support.screenshotManager.writeScreenshot('resetEnvironment');
         throw e;
       }
     }
@@ -79,17 +79,11 @@ describe('e2e_smoketest', () => {
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-
     await support.switchToWindow(2, 1);
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
-
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
-    support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
-
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */

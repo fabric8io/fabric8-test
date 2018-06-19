@@ -12,16 +12,17 @@ describe('e2e_logintest', () => {
 
   let dashboardPage: MainDashboardPage;
 
-  let i = 1;
-
   beforeAll(async () => {
     await support.desktopTestSetup();
   });
 
+  beforeEach(async() => {
+    support.screenshotManager.nextTest();
+  });
+
   afterEach(async () => {
-    await support.writeScreenshot('target/screenshots/login_test_' + i + '.png');
-    await support.writePageSource('target/screenshots/login_test_' + i + '.html');
-    i++;
+    support.info('--- After each ---');
+    await support.screenshotManager.writeScreenshot('afterEach');
   });
 
   it('login', async () => {

@@ -234,12 +234,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectMission(quickstart.mission.name);
     await launcher.selectRuntime(quickstart.runtime.name);
 
-    await support.writeScreenshot('target/screenshots/launcher-runtime-and-mission-' + name + '.png');
     await launcher.missionRuntimeContinueButton.clickWhenReady();
 
     let pipeline = new LauncherReleaseStrategy(strategy);
     await launcher.selectPipeline(pipeline.name);
-    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + name + '.png');
     await launcher.releaseStrategyContinueButton.clickWhenReady();
 
     // BEGIN: Workaround for the Github login
@@ -256,13 +254,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectGithubOrganization(browser.params.github.username);
     await launcher.ghRepositoryText.clear();
     await launcher.ghRepositoryText.sendKeys(name);
-    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + name + '.png');
     await launcher.gitProviderContinueButton.clickWhenReady();
 
     await launcher.summaryMission(quickstart.mission.name).isDisplayed();
     await launcher.summaryRuntime(quickstart.runtime.name).isDisplayed();
-
-    await support.writeScreenshot('target/screenshots/launcher-summary-' + name + '.png');
 
     let setupApplicationPage: LauncherSetupAppPage = await launcher.setUpApplication();
 
@@ -273,8 +268,6 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
-
-    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-created-' + name + '.png');
 
     await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
@@ -291,12 +284,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectGithubOrganization(browser.params.github.username);
     await launcher.ghRepositoryText.clickWhenReady();
     await launcher.ghRepositoryText.sendKeys(repoName);
-    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + appName + '.png');
     await launcher.gitProviderImportContinueButton.clickWhenReady();
 
     let pipeline = new LauncherReleaseStrategy(strategy);
     await launcher.selectPipeline(pipeline.name);
-    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + appName + '.png');
     await launcher.releaseStrategyImportContinueButton.clickWhenReady();
 
     let importApplicationPage: LauncherImportAppPage = await launcher.importApplication();
@@ -306,8 +297,6 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await importApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await importApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
-
-    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-imported-' + appName + '.png');
 
     await importApplicationPage.viewNewApplicationButton.clickWhenReady();
   }

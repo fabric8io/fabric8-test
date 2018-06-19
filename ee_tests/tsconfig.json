@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "target/ts-output",
     "module": "commonjs",
-    "target": "es6",
+    "target": "es2017",
     "sourceMap": true,
     "strict": true
   },
