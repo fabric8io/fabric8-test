@@ -2,16 +2,31 @@
 
 ## Goal of this Repository
 
-The goal of this repository is to provide automated End-to-End (EE) tests that can be easily
-installed and run. All the tests in this repository are configured to be run
-locally in a shell, locally in a docker container, and in a docker container in
-Centos CI. The tests can be run against a local or remote server by specifying
-the server's URL as a parameter to the tests.
+The goal of this repository is to provide automated end-to-end (E2E) tests for production and stage environment
+of OpenShift.io. 
+
+The main test suite is called `smoketest` which serves as a monitoring of the product. 
+It is expected to run relatively fast, runs on every cluster and for both `beta` and `released` feature levels.
+The `smoketest` suite tests (or will be testing) *basic* functionality of *all* OpenShift.io components, i.e.
+
+1. logs into the platform
+2. creates a new space
+3. creates a new Vert.x project 
+4. opens Che workspace
+5. verifies that pipeline behaves correctly
+6. verifies deployed application in stage and run environments
+7. verifies data in deployments page and analytics report
+
+It is expected to be expanded to do something meaningful in Che and to interact with Planner in the future.
+
+The `smoketest` suite will *NOT* test multiple boosters, multiple pipeline types, advanced interactions with Che etc.,
+this should be done by unit, functional or integration tests of particular components.
 
 ### Running the Tests Locally ###
 #### Setup the Environmental Variables ####
 
-Before running the tests, you must define env variables. These are stored in file config/local_osio.conf.sh. You need to create the file by yourself by copying its template and filling in the values.
+Before running the tests, you have to install Node.js and NPM and define environment variables. These are stored in file `config/local_osio.conf.sh`. You need to create the file by yourself by copying its template and filling in the values.
+
 ```
 cp config/local_osio.conf.sh.template config/local_osio.conf.sh
 ```
@@ -66,7 +81,7 @@ NODE_DEBUG=true npm start
 DEBUG=true npm start
 ```
 
-By default, Google Chrome browser is used by EE tests via Selenium. If you want
+By default, Google Chrome browser is used by E2E tests via Selenium. If you want
 to use different browser (Firefox for example), set up the following environment
 variable before you start script mentioned above:
 
