@@ -11,20 +11,20 @@ import { DEFAULT_WAIT } from '../support';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
-    public static create(spaceName: string): SpaceDashboardInteractions {
+    public static create(strategy: string, spaceName: string): SpaceDashboardInteractions {
 
         if (FeatureLevelUtils.isInternal() || FeatureLevelUtils.isExperimental()) {
             // TODO Implement new dashboard
             return <SpaceDashboardInteractions>{
-                openSpaceDashboard(mode: PageOpenMode): void {},
+                openSpaceDashboard(mode: PageOpenMode): void { },
             };
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            return new BetaSpaceDashboardInteractions(spaceName);
+            return new BetaSpaceDashboardInteractions(strategy, spaceName);
         }
 
-        return new ReleasedSpaceDashboardInteractions(spaceName);
+        return new ReleasedSpaceDashboardInteractions(strategy, spaceName);
     }
 }
 
@@ -80,8 +80,11 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     protected spaceDashboardPage: SpaceDashboardPage;
 
-    constructor(spaceName: string) {
+    protected strategy: string;
+
+    constructor(strategy: string, spaceName: string) {
         super(spaceName);
+        this.strategy = strategy;
         this.spaceDashboardPage = new SpaceDashboardPage(spaceName);
     }
 
@@ -102,7 +105,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     }
 
     public async openPipelinesPage(): Promise<void> {
-        await this.spaceDashboardPage.getPipelinesCard().then(async function(card) {
+        await this.spaceDashboardPage.getPipelinesCard().then(async function (card) {
             await card.openPipelinesPage();
         });
     }
@@ -119,7 +122,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async verifyCodebases(): Promise<void> {
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
-        await browser.wait(async function() {
+        await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
         }, DEFAULT_WAIT);
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
@@ -145,8 +148,33 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
         let applications = await deploymentsCard.getApplications();
         expect(applications.length).toBe(1, 'number of applications');
         expect(await applications[0].getName()).toBe(this.spaceName, 'deployed application name');
-        // expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-        // expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
+
+        if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
+            expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
+
+            await applications[0].openStageLink();
+            await support.windowManager.switchToNewWindow();
+            await support.screenshotManager.writeScreenshot('stage');
+            expect(await browser.getCurrentUrl()).toContain('stage', 'stage environment url');
+            expect(await element(by.cssContainingText('h2', 'HTTP Booster')).isPresent()).
+                toBeTruthy('stage page has text');
+
+            await support.windowManager.switchToMainWindow();
+        }
+
+        if (ReleaseStrategy.RUN === this.strategy) {
+            expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
+
+            await applications[0].openRunLink();
+            await support.windowManager.switchToLastWindow();
+            await browser.wait(until.urlContains('run'));
+            await support.screenshotManager.writeScreenshot('run');
+            expect(await browser.getCurrentUrl()).toContain('run', 'run environment url');
+            expect(await element(by.cssContainingText('h2', 'HTTP Booster')).isPresent()).
+                toBeTruthy('stage page has text');
+
+            await support.windowManager.switchToMainWindow();
+        }
     }
 
     public async verifyAnalytics(): Promise<void> {
@@ -163,7 +191,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async verifyWorkItems(): Promise<void> {
         // no work items card exptected
-        await element.all(by.id('spacehome-my-workitems-badge')).then(function(items) {
+        await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
             expect(items.length).toBe(0);
         });
     }

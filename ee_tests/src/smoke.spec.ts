@@ -73,7 +73,7 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.openCodebasesPage();
 
@@ -111,7 +111,7 @@ describe('e2e_smoketest', () => {
 
   it('dashboard', async () => {
     support.info('--- Verify dashboard ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases();
     await dashboardInteractions.verifyAnalytics();

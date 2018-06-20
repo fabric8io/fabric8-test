@@ -513,6 +513,10 @@ export class WindowManager {
     await support.debug('Window changed to index 0 (main window)');
   }
 
+  async switchToLastWindow() {
+    await this.switchToWindow(this.windowCount, this.windowCount - 1);
+  }
+
   async switchToNewWindow() {
     this.windowCount++;
     await this.switchToWindow(this.windowCount, this.windowCount - 1);

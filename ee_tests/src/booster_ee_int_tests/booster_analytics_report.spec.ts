@@ -54,7 +54,7 @@ describe('Analytic E2E test suite', () => {
 
   it('Verify dashboard', async () => {
     support.info('--- Verify dashboard ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases();
     await dashboardInteractions.verifyAnalytics();
