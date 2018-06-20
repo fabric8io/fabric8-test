@@ -38,8 +38,11 @@ export OSO_USERNAME=`oc whoami | sed -e 's/@[^\@]*$//'`
 ## OpenShift Online token
 export OSO_TOKEN=`oc whoami -t`
 
+## Github username
+export GITHUB_USERNAME=`oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode`
+
 ## OpenShift.io pipeline release strategy
-export PIPELINE="${PIPELINE:-maven-releaseandstage}"
+export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
 
 ## github repo name
 export GIT_REPO="${GIT_REPO:-test123}"
