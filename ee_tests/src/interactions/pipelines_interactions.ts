@@ -9,33 +9,37 @@ import { SpaceDashboardInteractionsFactory } from './space_dashboard_interaction
 
 export abstract class PipelinesInteractions {
 
+    protected strategy: string;
+
     protected spaceName: string;
 
     protected spacePipelinePage: SpacePipelinePage;
 
     public static create(strategy: string, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
-            return new PipelinesInteractionsReleaseStrategy(spaceName);
+            return new PipelinesInteractionsReleaseStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.STAGE) {
-            return new PipelinesInteractionsStageStrategy(spaceName);
+            return new PipelinesInteractionsStageStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.RUN) {
-            return new PipelinesInteractionsRunStrategy(spaceName);
+            return new PipelinesInteractionsRunStrategy(strategy, spaceName);
         }
         throw 'Unknown release strategy: ' + strategy;
     }
 
-    protected constructor(spaceName: string) {
+    protected constructor(strategy: string, spaceName: string) {
         this.spaceName = spaceName;
+        this.strategy = strategy;
         this.spacePipelinePage = new SpacePipelinePage();
     }
 
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
-        let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.spaceName);
+        let dashboardInteractions = 
+            SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
         await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
         await dashboardInteractions.openPipelinesPage();
 

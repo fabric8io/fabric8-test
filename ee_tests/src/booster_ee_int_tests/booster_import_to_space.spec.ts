@@ -56,7 +56,8 @@ describe('Creating new quickstart in OSIO', () => {
       // Create a QuickStart
       let quickstart = new Quickstart(browser.params.quickstart.name);
       support.info('--- Create quickstart ' + quickstart.name + ' ---');
-      let dashboardInteractions = SpaceDashboardInteractionsFactory.create(sourceSpaceName);
+      let dashboardInteractions = 
+        SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, sourceSpaceName);
       await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
       await dashboardInteractions.createQuickstart(quickstart.name, strategy);
 
@@ -76,7 +77,8 @@ describe('Creating new quickstart in OSIO', () => {
 
     // Import a githug repo
     support.info('--- Import a github repo: ' + repoName + ' ---');
-    let spaceDashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let spaceDashboardInteractions = 
+      SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await spaceDashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await spaceDashboardInteractions.importRepo(spaceName, repoName, strategy);
 

@@ -52,13 +52,15 @@ describe('Creating new quickstart in OSIO', () => {
     // Create a QuickStart
     let quickstart = new Quickstart(browser.params.quickstart.name);
     support.info('--- Create quickstart ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = 
+      SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.createQuickstart(quickstart.name, strategy);
 
     // Create a Che workspace
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
-    dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    dashboardInteractions = 
+      SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.openCodebasesPage();
 

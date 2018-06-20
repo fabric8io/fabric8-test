@@ -70,7 +70,7 @@ export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInter
         await this.dashboardPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
 
         let spaceDashboardInteractions: SpaceDashboardInteractions =
-            SpaceDashboardInteractionsFactory.create(spaceName);
+            SpaceDashboardInteractionsFactory.create(strategy, spaceName);
         await spaceDashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
         await spaceDashboardInteractions.verifyCodebases();
     }

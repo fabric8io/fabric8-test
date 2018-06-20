@@ -322,6 +322,10 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
 
 export class DeployedApplicationInfo extends BaseElement {
 
+  private stageLink = new BaseElement(this.element(by.cssContainingText('a', 'stage')), 'Stage link');
+
+  private runLink = new BaseElement(this.element(by.cssContainingText('a', 'run')), 'Run link');
+
   constructor(finder: ElementFinder) {
     super(finder, 'Deployed application');
   }
@@ -331,14 +335,22 @@ export class DeployedApplicationInfo extends BaseElement {
   }
 
   public async getStageVersion(): Promise<string> {
-    let text = await this.element(by.cssContainingText('a', 'stage')).getText();
+    let text = await this.stageLink.getText();
     text = text.split('-')[1].trim();
     return Promise.resolve(text);
   }
 
   public async getRunVersion(): Promise<string> {
-    let text = await this.element(by.cssContainingText('a', 'run')).getText();
+    let text = await this.runLink.getText();
     text = text.split('-')[1].trim();
     return Promise.resolve(text);
+  }
+
+  public async openStageLink() {
+    await this.stageLink.clickWhenReady();
+  }
+
+  public async openRunLink() {
+    await this.runLink.clickWhenReady();
   }
 }
