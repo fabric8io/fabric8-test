@@ -19,13 +19,12 @@ export class SpaceSettings extends BasePage {
   modal = new BaseElement($('.modal-backdrop.fade'),'modal fade');
 
   /* UI elements - Collaborators Tab*/
-  collaboratorsTab = new Clickable(element(by.cssContainingText('.nav.navbar-nav.navbar-persistent li', ' Collaborators')),'Collaborators Tab');
-  addCollaboratorsButton = new Button ($('.table-action-heading'), 'Add Collaborators Button');
+  collaboratorsTab = new Clickable(element(by.cssContainingText('.nav.navbar-nav.navbar-persistent li', ' Collaborators ')),'Collaborators Tab');
+  addCollaboratorsButton = new Clickable ($('.table-action-heading'), 'Add Collaborators Button');
   collaboratorDialog = new BaseElement($('add-collaborators-dialog.add-dialog'), ' Add Collaborators dialog');
-  openDropdown = new Button(this.collaboratorDialog.$('.dropdown-toggle'), ' open Collaborator dropdown');
-  dropdownMenu = new Button(this.collaboratorDialog.$('.dropdown-menu'), 'Collaborator dropdown menu');
-  searchCollaborator = new TextInput(this.dropdownMenu.$('input[placeholder="Search..."]'), 'Search Collaborator');
-  dropdownItem = new BaseElementArray(this.collaboratorDialog.$$('li.dropdown-item'));
+  searchCollaborator = new TextInput(this.collaboratorDialog.$('.ng-input>input'), 'Search Collaborator');
+  collaboratorDropdown = new Clickable(this.collaboratorDialog.$('.scrollable-content'), 'Collaborator dropdown');
+  selectCollaborator = new Clickable(this.collaboratorDropdown.$('.ng-option'), ' select collaborator');
   addButton = new Button (this.collaboratorDialog.$('.btn.btn-primary'), 'add collborator button');
 
   async clickSettings() {
@@ -59,19 +58,13 @@ export class SpaceSettings extends BasePage {
     await this.addCollaboratorsButton.untilDisplayed();
   }
 
-  selectCollaborator (text: string) {
-    return new BaseElement(element(by.xpath(".//add-collaborators-dialog//span[contains(text(), '" + text + "')]")));
-  }
-
   async addCollaborators(userName: string) {
     await this.addCollaboratorsButton.clickWhenReady();
     await this.collaboratorDialog.untilDisplayed();
-    await this.openDropdown.clickWhenReady();
-    await this.dropdownMenu.untilDisplayed();
+    await this.searchCollaborator.ready();
     await this.searchCollaborator.enterText(userName);
+    await this.collaboratorDropdown.untilDisplayed();
     await this.searchCollaborator.sendKeys(Key.ENTER);
-    await this.dropdownItem.untilCount(1);
-    await this.selectCollaborator(userName).clickWhenReady();
     await this.addButton.clickWhenReady();
     await this.modal.untilHidden();
   }
