@@ -20,4 +20,3 @@ export class SpaceHeader extends ui.BaseElement {
     throw 'Not yet implemented';
   }
 }
-

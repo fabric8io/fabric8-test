@@ -12,14 +12,13 @@ export class LauncherSetupAppPage extends BaseElement {
     'View New Application'
   );
 
-  async ready() {
-    super.ready();
-  }
-
   constructor(element: ElementFinder) {
     super(element, 'Set Up Application');
   }
 
+  async ready() {
+    super.ready();
+  }
 
   newProjectBoosterOkIcon(name: string): BaseElement {
     return new BaseElement(

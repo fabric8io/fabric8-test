@@ -140,7 +140,6 @@ export class DeployedApplicationEnvironment {
       throw 'Pod status is not displayed';
     }
 
-
     let text = await this.finder.element(by.id('pod_status_Running')).$('span').getText();
     let countString = text.match(/\d+/g);
     let count: number;
@@ -216,4 +215,3 @@ export class ResourceUsageDataItem {
     return Promise.resolve(value);
   }
 }
-

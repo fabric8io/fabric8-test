@@ -11,7 +11,6 @@ describe('Creating new spaces in OSIO', () => {
     dashboardPage = await login.run();
   });
 
-
   it('Create a new space without creating a new quickstart', async () => {
     let spaceName = support.newSpaceName();
     let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);

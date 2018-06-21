@@ -3,7 +3,6 @@ import * as support from '../support';
 import { TextInput, Button } from '../ui';
 import { BasePage } from '.';
 
-
 export class OsoDashboardPage extends BasePage {
 
   userMenu = new Button(element(by.xpath('//navbar-utility//span[contains(@class,\'username\')]')), 'User Menu');

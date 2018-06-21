@@ -7,10 +7,6 @@ export class LauncherReleaseStrategy {
   id: string;
   name: string;
 
-  static runtime(id: string) {
-    return new LauncherReleaseStrategy(id);
-  }
-
   constructor(runtime: string) {
     this.id = runtime;
 
@@ -29,5 +25,9 @@ export class LauncherReleaseStrategy {
         break;
       }
     }
+  }
+
+  static runtime(id: string) {
+    return new LauncherReleaseStrategy(id);
   }
 }

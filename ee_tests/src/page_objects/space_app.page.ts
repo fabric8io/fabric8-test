@@ -8,5 +8,3 @@ export abstract class SpaceAppPage extends AppPage {
   spaceHeader = new SpaceHeader(this.appTag.$('header > alm-app-header > nav'));
 
 }
-
-

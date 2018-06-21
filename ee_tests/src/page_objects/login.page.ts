@@ -31,7 +31,6 @@ export class LoginPage extends BasePage {
   microsoftLoginButton = $('#social-microsoft');
   jbossdeveloperLoginButton = $('#social-jbossdeveloper');
 
-
   // checks if the PageObject is valid
   async ready() {
     await Promise.all([

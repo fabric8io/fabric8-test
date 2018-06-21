@@ -94,7 +94,6 @@ describe('Creating new quickstart in OSIO', () => {
     await browser.switchTo().window(handles[0]);
   });
 
-
   function windowCount (count: number) {
     return function () {
         return browser.getAllWindowHandles().then(function (handles) {
