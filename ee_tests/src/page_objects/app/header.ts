@@ -59,5 +59,3 @@ export class RecentItemsDropdown extends ui.Dropdown {
     super.select('My spaces');
   }
 }
-
-

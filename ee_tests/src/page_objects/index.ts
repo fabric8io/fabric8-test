@@ -9,6 +9,5 @@ export * from './launcher_section';
 export * from './launcher_setup_app.page';
 export * from './launcher_import_app.page';
 
-
 // TODO: move page to a different file
 export { CleanupUserEnvPage } from './user_profile.page';

@@ -101,7 +101,6 @@ let conf: Config = {
       boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
       boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
 
-
     },
 
     // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
@@ -144,4 +143,3 @@ let conf: Config = {
 };
 
 exports.config = conf;
-

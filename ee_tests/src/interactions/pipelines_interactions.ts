@@ -15,6 +15,12 @@ export abstract class PipelinesInteractions {
 
     protected spacePipelinePage: SpacePipelinePage;
 
+    protected constructor(strategy: string, spaceName: string) {
+      this.spaceName = spaceName;
+      this.strategy = strategy;
+      this.spacePipelinePage = new SpacePipelinePage();
+    }
+
     public static create(strategy: string, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
             return new PipelinesInteractionsReleaseStrategy(strategy, spaceName);
@@ -30,15 +36,9 @@ export abstract class PipelinesInteractions {
         throw 'Unknown release strategy: ' + strategy;
     }
 
-    protected constructor(strategy: string, spaceName: string) {
-        this.spaceName = spaceName;
-        this.strategy = strategy;
-        this.spacePipelinePage = new SpacePipelinePage();
-    }
-
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
-        let dashboardInteractions = 
+        let dashboardInteractions =
             SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
         await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
         await dashboardInteractions.openPipelinesPage();

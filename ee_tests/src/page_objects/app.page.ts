@@ -69,7 +69,6 @@ export abstract class AppPage extends BasePage {
     await this.header.profileDropdown.selectLogOut();
     support.debug('... Selecting logout', 'OK');
 
-
     // ensure there is no f8-app tag after logout
     let untilNoAppTag = until.not(until.presenceOf(this.appTag));
     await browser.wait(untilNoAppTag);
@@ -90,7 +89,6 @@ export abstract class AppPage extends BasePage {
   }
 
 }
-
 
 // NOTE: imported here otherwise AppPage will not be defined when
 // UserProfilePage that inherts AppPage is created

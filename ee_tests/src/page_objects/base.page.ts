@@ -2,7 +2,6 @@ import { browser } from 'protractor';
 import * as mixins from '../mixins';
 import * as support from '../support';
 
-
 export enum PageOpenMode {
   AlreadyOpened,
   RefreshBrowser,

@@ -204,4 +204,3 @@ export class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardIntera
         expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
     }
 }
-

@@ -51,7 +51,6 @@ describe('Creating new quickstart in OSIO', () => {
   /* Buttons displayed in the promote dialog */
   let promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
-
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();

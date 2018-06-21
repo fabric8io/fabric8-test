@@ -77,6 +77,10 @@ export class LauncherSection extends BaseElement {
     'Import Application'
   );
 
+  constructor(element: ElementFinder) {
+    super(element, 'Ngx Launcher');
+  }
+
   ghOrgItem(name: string): Button {
     return new Button(
       this.ghOrgSelect.element(by.xpath('./option[contains(text(),\'' + name + '\')]')),
@@ -113,10 +117,6 @@ export class LauncherSection extends BaseElement {
     ),
       'Mission Summary ' + name
     );
-  }
-
-  constructor(element: ElementFinder) {
-    super(element, 'Ngx Launcher');
   }
 
   async ready() {
