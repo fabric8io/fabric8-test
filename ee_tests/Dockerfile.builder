@@ -10,7 +10,6 @@ COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN yum --setopt tsflags='nodocs' -y update && \
     yum install -y --setopt tsflags='nodocs' \
       epel-release \
-      rsync \
       wget \
       gtk3 \
       xorg-x11-xauth \
