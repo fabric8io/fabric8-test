@@ -9,7 +9,10 @@ set -x
 # Stop on error
 set -e
 
-mkdir -p dist
+mkdir -p dist target
+
+# If target did exist, remove artifacts from previous run
+rm -rf target/screenshots
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
@@ -27,7 +30,7 @@ docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN
 docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec EE tests
-docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee target/theLog.txt
+docker exec fabric8-test ./ts-protractor.sh $TEST_SUITE | tee target/protractor.log
 
 # Test results to archive
 docker cp fabric8-test:/opt/fabric8-test/target/. target
