@@ -74,6 +74,7 @@ docker run --shm-size=256m --detach=true --name=$CONTAINER_NAME --cap-add=SYS_AD
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
           -e ZABBIX_PORT -e ZABBIX_SERVER \
           -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
+          -v /etc/localtime:/etc/localtime:ro \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 # Start Xvfb
