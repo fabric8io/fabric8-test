@@ -7,11 +7,6 @@ source _setenv.sh
 export COMMON="common.git"
 git clone https://github.com/pmacik/openshiftio-performance-common $COMMON
 
-# TODO: Remove right before merging to master!
-cd $COMMON
-git checkout metric-generator
-cd ..
-
 source $COMMON/config/_setenv.sh
 
 
