@@ -151,29 +151,16 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
         if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
             expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-
             await applications[0].openStageLink();
             await support.windowManager.switchToNewWindow();
-            await support.screenshotManager.writeScreenshot('stage');
-            expect(await browser.getCurrentUrl()).toContain('stage', 'stage environment url');
-            expect(await element(by.cssContainingText('h2', 'HTTP Booster')).isPresent()).
-                toBeTruthy('stage page has text');
-
-            await support.windowManager.switchToMainWindow();
+            await this.verifyLink('stage');
         }
 
         if (ReleaseStrategy.RUN === this.strategy) {
             expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
-
             await applications[0].openRunLink();
             await support.windowManager.switchToLastWindow();
-            await browser.wait(until.urlContains('run'));
-            await support.screenshotManager.writeScreenshot('run');
-            expect(await browser.getCurrentUrl()).toContain('run', 'run environment url');
-            expect(await element(by.cssContainingText('h2', 'HTTP Booster')).isPresent()).
-                toBeTruthy('stage page has text');
-
-            await support.windowManager.switchToMainWindow();
+            await this.verifyLink('run');
         }
     }
 
@@ -194,6 +181,18 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
         await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
             expect(items.length).toBe(0);
         });
+    }
+
+    private async verifyLink(environment: string) {
+        await browser.wait(until.urlContains(environment));
+        await support.screenshotManager.writeScreenshot(environment);
+        expect(await browser.getCurrentUrl()).toContain(environment, `${environment} environment url`);
+
+        await browser.wait(until.presenceOf(element(by.id('_http_booster'))));
+        let text = await element(by.id('_http_booster')).getText();
+        expect(text).toContain('HTTP Booster', `${environment} page contains text`);
+
+        await support.windowManager.switchToMainWindow();
     }
 }
 
