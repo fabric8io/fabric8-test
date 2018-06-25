@@ -64,32 +64,56 @@ export abstract class PipelinesInteractions {
     }
 
     public async waitToFinish(pipeline: PipelineDetails) {
+        let waitToFinishInternalError: Error | undefined = undefined;
+        let verifyJenkinsLogError: Error | undefined = undefined;
+        let ocLogsError : Error | undefined = undefined;
+
+        // wait until the pipeline is finished
         try {
             support.info('Waiting for pipeline to finish');
             await this.waitToFinishInternal(pipeline);
             support.info('Pipeline is finished');
         } catch (e) {
             support.info('Waiting for pipeline to finish failed with error: ' + e);
-        } finally {
-            try {
-                // save Jenkins log no matter if pipeline finished
-                support.info('Check the Jenkins log');
-                await this.verifyJenkinsLog(pipeline);
-            } catch (e) {
-                await support.screenshotManager.writeScreenshot('jenkins-log-failed');
-                // if the UI Show log fails, try navigating to jenkins directly
-                support.info('Check the Jenkins log failed, go to Jenkins URL directly');
-                support.info('Exception: ' + e);
-                let osioURL: string = browser.params.target.url.replace('https://', '');
-                let jenkinsURL = 'https://jenkins.' + osioURL;
-                await browser.get(jenkinsURL);
-                await support.screenshotManager.writeScreenshot('jenkins-direct-log');
-                throw e;
-            } finally {
-                // save OC logs no matter if Jenkins log was retrieved
-                support.info('Save OC Jenkins pod log');
-                await this.saveOCJenkinsLogs();
-            }
+            await support.screenshotManager.writeScreenshot('pipeline-failed');
+            waitToFinishInternalError = e;
+        }
+
+        // save Jenkins log
+        try {
+            support.info('Check the Jenkins log');
+            await this.verifyJenkinsLog(pipeline);
+            support.info('Jenkins log is OK');
+        } catch (e) {
+            await support.screenshotManager.writeScreenshot('jenkins-log-failed');
+            support.info('Check the Jenkins log failed with error: ' + e);
+            verifyJenkinsLogError = e;
+        }
+
+        // save OC logs
+        try {
+            support.info('Save OC Jenkins pod log');
+            await this.saveOCJenkinsLogs();
+        } catch (e) {
+            support.info('Save OC Jenkins pod log failed with error: ' + e);
+            ocLogsError = e;
+        }
+
+        if (waitToFinishInternalError !== undefined) {
+            throw waitToFinishInternalError;
+        }
+
+        if (verifyJenkinsLogError !== undefined) {
+            // if the UI show Jenkins log faile, try navigating to jenkins directly
+            let osioURL: string = browser.params.target.url.replace('https://', '');
+            let jenkinsURL = 'https://jenkins.' + osioURL;
+            await browser.get(jenkinsURL);
+            await support.screenshotManager.writeScreenshot('jenkins-direct-log');
+            throw verifyJenkinsLogError;
+        }
+
+        if (ocLogsError !== undefined) {
+            throw ocLogsError;
         }
     }
 
