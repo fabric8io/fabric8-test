@@ -98,11 +98,11 @@ if [ $ret1 -eq 1 -a $ret2 -eq 0 ]; then RTN_CODE=0; else RTN_CODE=1; fi
 
 # Archive test results
 docker exec $CONTAINER_NAME ls -l ./target/screenshots
-docker cp /opt/fabric8-test/target/screenshots/. ${ARTIFACTS_DIR}
+docker cp $CONTAINER_NAME:/opt/fabric8-test/target/screenshots/. ${ARTIFACTS_DIR}
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec $CONTAINER_NAME ls -l ./target/zabbix
-    docker cp /opt/fabric8-test/target/zabbix/. ${ARTIFACTS_DIR}
+    docker cp $CONTAINER_NAME:/opt/fabric8-test/target/zabbix/. ${ARTIFACTS_DIR}
 fi
 
 chmod 600 ../artifacts.key
