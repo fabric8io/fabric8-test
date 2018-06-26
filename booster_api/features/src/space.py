@@ -13,7 +13,8 @@ start_time = time.time()
 class Space:
     def createSpace(self, spaceName):
 
-        theToken = helpers.get_user_tokens().split(";")[0]  # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
+        # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
+        theToken = helpers.get_user_tokens().split(";")[0]
         print 'starting test.....'
 
         serverAddress = os.getenv("SERVER_ADDRESS")

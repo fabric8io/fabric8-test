@@ -6,8 +6,6 @@ import sys
 import re
 import os
 
-start_time = time.time()
-
 
 class ImportBooster(object):
     def importGithubRepo(self, gitRepo):
@@ -16,7 +14,8 @@ class ImportBooster(object):
         # Environment variables
         #
         # Note: Pipelines = https://forge.api.openshift.io/api/services/jenkins/pipelines
-        theToken = helpers.get_user_tokens().split(";")[0]  # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
+        # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
+        theToken = helpers.get_user_tokens().split(";")[0]
         projectName = os.environ.get('PROJECT_NAME')
         pipeline = os.environ.get('PIPELINE')
         spaceId = helpers.getSpaceID()
@@ -37,7 +36,8 @@ class ImportBooster(object):
                 'space': spaceId}
 
         print 'making request ...'
-        r = requests.post('https://forge.api.openshift.io/api/osio/import', headers=headers, data=data)
+        r = requests.post('https://forge.api.openshift.io/api/osio/import',
+                          headers=headers, data=data)
         print 'request results = {}'.format(r.text)
 
         result = r.text

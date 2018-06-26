@@ -7,10 +7,8 @@ import re
 import os
 import time
 
-start_time = time.time()
 
-
-class poc_stage(object):
+class Stage(object):
 
     def runTest(self, theString):
 
