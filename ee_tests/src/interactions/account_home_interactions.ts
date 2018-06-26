@@ -1,24 +1,21 @@
 import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
+import { AccountHomePage } from '../page_objects/account_home.page';
 import { PageOpenMode } from '../page_objects/base.page';
-import * as support from '../support';
-import { SpaceDashboardPage, CleanupUserEnvPage } from '../..';
-import { BuildStatus } from '../support/build_status';
-import { ReleaseStrategy } from '../support/release_strategy';
+import { CleanupUserEnvPage } from '../..';
 import { SpaceDashboardInteractionsFactory, SpaceDashboardInteractions } from './space_dashboard_interactions';
+import { AppPage } from '../page_objects/app.page';
 
 export abstract class AccountHomeInteractionsFactory {
 
     public static create(): AccountHomeInteractions {
 
-        if (FeatureLevelUtils.isInternal()) {
-            return <AccountHomeInteractions>{
-                openAccountHome(mode: PageOpenMode): void {},
-            };
+        if (FeatureLevelUtils.isInternal() || FeatureLevelUtils.isExperimental()) {
+            return new NewAccountHomeInteractions(new AccountHomePage());
         }
 
-        return new ReleasedAccountHomeInteractions();
+        return new OldAccountHomeInteractions(new MainDashboardPage());
     }
 }
 
@@ -37,37 +34,22 @@ export interface AccountHomeInteractions {
 
 export abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteractions {
 
+    private appPage: AppPage;
+
+    constructor(appPage: AppPage) {
+        this.appPage = appPage;
+    }
+
     public async abstract openAccountHome(mode: PageOpenMode): Promise<void>;
 
-    public async abstract createSpace(name: string): Promise<void>;
-
-    // tslint:disable-next-line:max-line-length
-    public async abstract createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void>;
-
-    public async abstract resetEnvironment(): Promise<void>;
-
     public async abstract openSpaceDashboard(name: string): Promise<void>;
-}
-
-export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
-
-    protected dashboardPage: MainDashboardPage;
-
-    constructor() {
-        super();
-        this.dashboardPage = new MainDashboardPage();
-    }
-
-    public async openAccountHome(mode: PageOpenMode): Promise<void> {
-        await this.dashboardPage.open(mode);
-    }
 
     public async createSpace(name: string): Promise<void> {
-        await this.dashboardPage.createNewSpaceByLauncher(name);
+        await this.appPage.createNewSpaceByLauncher(name);
     }
 
     public async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void> {
-        await this.dashboardPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
+        await this.appPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
 
         let spaceDashboardInteractions: SpaceDashboardInteractions =
             SpaceDashboardInteractionsFactory.create(strategy, spaceName);
@@ -80,8 +62,40 @@ export class ReleasedAccountHomeInteractions extends AbstractSpaceDashboardInter
         cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(browser.params.login.user);
     }
+}
+
+export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
+
+    protected dashboardPage: MainDashboardPage;
+
+    constructor(page: MainDashboardPage) {
+        super(page);
+        this.dashboardPage = page;
+    }
+
+    public async openAccountHome(mode: PageOpenMode): Promise<void> {
+        await this.dashboardPage.open(mode);
+    }
 
     public async openSpaceDashboard(name: string): Promise<void> {
         await this.dashboardPage.openSpace(name);
+    }
+}
+
+export class NewAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
+
+    protected dashboardPage: AccountHomePage;
+
+    constructor(page: AccountHomePage) {
+        super(page);
+        this.dashboardPage = page;
+    }
+
+    public async openAccountHome(mode: PageOpenMode): Promise<void> {
+        await this.dashboardPage.open(mode);
+    }
+
+    public async openSpaceDashboard(name: string): Promise<void> {
+        throw 'Not implemented';
     }
 }

@@ -7,7 +7,8 @@ describe(' new spaces in OSIO', () => {
   beforeEach( async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    mainDashboard = await login.run();
+    await login.run();
+    mainDashboard = new MainDashboardPage();
   });
 
 

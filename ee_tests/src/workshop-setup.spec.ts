@@ -12,7 +12,8 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
 
     let login = new support.LoginInteraction();
     let dashboardPage: MainDashboardPage;
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
     support.debug('>>> Login & wait for dashboard - OK');
 
     // Clean the user account in OSO with the new clean tenant button
