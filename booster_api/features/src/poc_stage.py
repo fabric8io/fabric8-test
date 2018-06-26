@@ -1,4 +1,5 @@
-import pytest, time
+import pytest
+import time
 import requests
 import support.helpers as helpers
 import sys
@@ -7,6 +8,7 @@ import os
 import time
 
 start_time = time.time()
+
 
 class poc_stage(object):
 
@@ -20,20 +22,20 @@ class poc_stage(object):
 
         oso_token = os.environ.get('OSO_TOKEN')
         temp = 'Bearer ' + oso_token
-        headers = { 'Authorization': temp }
+        headers = {'Authorization': temp}
 
         # Generate a request to find the routes
-        urlString = '{}/oapi/v1/namespaces/{}-stage/routes'.format(clusterAddress,osoUsername)
+        urlString = '{}/oapi/v1/namespaces/{}-stage/routes'.format(clusterAddress, osoUsername)
 
         r = requests.get(urlString, headers=headers)
         # r = requests.get('https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/ldimaggi-stage/routes', headers=headers)
-        #print r.text
+        # print r.text
 
         respJson = r.json()
-        #print respJson
+        # print respJson
 
         routeString = respJson['items'][0]['status']['ingress'][0]['host']
-        #print routeString
+        # print routeString
 
         urlString = 'http://{}'.format(routeString)
 
@@ -46,11 +48,7 @@ class poc_stage(object):
         # print 'request results = {}'.format(r.text)
 
         result = r.text
-        if re.search('Using the greeting service' , result):
+        if re.search('Using the greeting service', result):
             return 'Success'
         else:
             return 'Fail'
-
-
-
-

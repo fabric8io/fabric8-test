@@ -249,7 +249,7 @@ class LoginUsersOauth2:
                         self.metrics["login"].append(rt + rt_get_code)
                         self.report_success(
                             "{}-login".format(userName),
-                            rt+rt_get_code
+                            rt + rt_get_code
                         )
                 except ValueError:
                     response.failure(
@@ -304,8 +304,8 @@ class LoginUsersOauth2:
                             k,
                             n,
                             mSorted[0],
-                            mSorted[int(n/2)],
-                            mSorted[int(n-1)]
+                            mSorted[int(n / 2)],
+                            mSorted[int(n - 1)]
                         )
                     )
 
