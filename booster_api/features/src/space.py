@@ -1,4 +1,5 @@
-import pytest, time
+import pytest
+import time
 import requests
 import support.helpers as helpers
 import sys
@@ -8,10 +9,11 @@ import json
 
 start_time = time.time()
 
+
 class Space:
     def createSpace(self, spaceName):
 
-        theToken = helpers.get_user_tokens().split(";")[0] # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
+        theToken = helpers.get_user_tokens().split(";")[0]  # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         print 'starting test.....'
 
         serverAddress = os.getenv("SERVER_ADDRESS")
@@ -34,7 +36,6 @@ class Space:
             }}\
         }}'.format(spaceName)
 
-
         print 'making request ...'
         r = requests.post(
             '{}/api/spaces'.format(serverAddress),
@@ -49,4 +50,3 @@ class Space:
             return spaceID
         except ValueError:
             return None
-

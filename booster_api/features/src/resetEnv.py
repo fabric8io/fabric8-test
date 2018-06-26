@@ -3,6 +3,7 @@ import support.helpers as helpers
 import os
 import json
 
+
 class ResetEnvironment:
     def getSpaces(self):
         serverAddress = os.getenv("WIT_API")

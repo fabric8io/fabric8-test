@@ -1,4 +1,5 @@
-import pytest, time
+import pytest
+import time
 import requests
 import support.helpers as helpers
 import sys
@@ -8,6 +9,7 @@ import time
 import json
 
 start_time = time.time()
+
 
 class poc_oso(object):
 
@@ -27,12 +29,12 @@ class poc_oso(object):
         # Find the running build pipeline, verify state transitions: New -> Running -> Complete
 
         headers = {'Authorization': authHeader}
-        urlString = '{}/oapi/v1/namespaces/{}/builds'.format(osoUrl,osoUsername)
+        urlString = '{}/oapi/v1/namespaces/{}/builds'.format(osoUrl, osoUsername)
         retValue = 'false'
 
         # Verify that the newly created build has a status of 'New'
         retValue = self.buildStatus(urlString, headers, 30, 5, 'New')
-        
+
         # Then, check for a build status of 'Running'
         if retValue == 'true':
             retValue = self.buildStatus(urlString, headers, 30, 20, 'Running')
@@ -48,14 +50,13 @@ class poc_oso(object):
         # Then, check for a build status of 'Complete'
         if retValue == 'true':
             retValue = self.buildStatus(urlString, headers, 30, 10, 'Complete')
-        
+
         if retValue == 'true':
             return 'Success'
         else:
             return 'Fail'
 
-
-    def buildStatus(self,urlString, headers, sleepTimer, maxTries, expectedBuildStatus, expectedAnnotation=None):
+    def buildStatus(self, urlString, headers, sleepTimer, maxTries, expectedBuildStatus, expectedAnnotation=None):
         """
         Function to query builds, wait/retry for expected build status
         """
@@ -74,13 +75,13 @@ class poc_oso(object):
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 
                 actualAnnotation = None
-                if expectedAnnotation != None:
+                if expectedAnnotation is not None:
                     actualAnnotation = respJson['items'][0]['metadata']['annotations'][expectedAnnotation]
 
-                if re.search(expectedBuildStatus , actualBuildStatus):
+                if re.search(expectedBuildStatus, actualBuildStatus):
                     print 'Expected build status {} found'.format(expectedBuildStatus)
-                    if expectedAnnotation != None:
-                        if actualAnnotation != None:
+                    if expectedAnnotation is not None:
+                        if actualAnnotation is not None:
                             print 'Expected annotation "{}" found'.format(expectedAnnotation)
                             requestSuccess = 'true'
                             break
@@ -103,8 +104,6 @@ class poc_oso(object):
 
         return requestSuccess
 
-    
-
     def promoteBuild(self):
         """
         Promote build from stage to run
@@ -115,7 +114,7 @@ class poc_oso(object):
         githubRepo = os.getenv("GIT_REPO")
 
         theToken = helpers.get_user_tokens().split(";")[0]
-        headers = { "Authorization": "Bearer {}".format(theToken)}
+        headers = {"Authorization": "Bearer {}".format(theToken)}
 
         promoteUrl = "{}/api/openshift/services/jenkins/{}-jenkins/job/{}/job/{}/job/master/lastBuild/input/Proceed/proceedEmpty".format(
             forgeApi,
