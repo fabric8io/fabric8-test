@@ -12,6 +12,7 @@ import { TextInput, Button } from '../ui';
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
+import { FeatureLevelUtils } from '../support/feature_level';
 
 
 export class MainDashboardPage extends AppPage {
@@ -129,8 +130,10 @@ Page layout
         until.presenceOf(element(by.cssContainingText('div', 'Recent Spaces'))), support.DEFAULT_WAIT);
       await browser.wait(
         until.presenceOf(element(by.cssContainingText('div', 'My Work Items'))), support.DEFAULT_WAIT);
-      await browser.wait(
-        until.presenceOf(element(by.cssContainingText('div', 'Recent Active Pipelines'))), support.DEFAULT_WAIT);
+      if (!FeatureLevelUtils.isInternal()) {
+        await browser.wait(
+          until.presenceOf(element(by.cssContainingText('div', 'Recent Active Pipelines'))), support.DEFAULT_WAIT);
+      }
   }
 
   async openUsingMenu() {
