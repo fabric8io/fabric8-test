@@ -10,7 +10,7 @@ See: https://github.com/fabric8io/fabric8-test/blob/master/ee_tests/README.md
 
 ## API tests on OSiO
 
-Our API tests use [pyresttest](https://github.com/svanoort/pyresttest.git) a pyton test framework that make all your API test declarative. No need to learn python, your test are plain old yaml file!
+Our API tests use [pyresttest](https://github.com/svanoort/pyresttest.git) a Python test framework that make all your API test declarative. No need to learn python, your test are plain old yaml file!
 
 ### Pre-requisite
 
@@ -60,7 +60,7 @@ cd EE_API_automation/pyresttest/
 ./run_forge_import_api_test.sh YOUR_OSIO_ACOUNT YOUR_OSIO_TOKEN
 ```
 
-> NOTE: Depending wether your github account belongto an organisation or not the API response is different. the bash script wraps the differentce and run the relevant tests.
+> NOTE: Depending whether your GitHub account belong to an organisation or not the API response is different. the bash script wraps the difference and run the relevant tests.
 
 * To run import wizard flow:
 
@@ -69,5 +69,5 @@ cd EE_API_automation/pyresttest/
 ./run_forge_quickstart_api_test.sh YOUR_OSIO_ACOUNT YOUR_OSIO_TOKEN [GITHUB_ACCOUNT] [GITHUB_TOKEN_WITH_DELETE_SCOPE]
 ```
 
-> NOTE: [GITHUB_ACCOUNT] and [GITHUB_TOKEN_WITH_DELETE_SCOPE] are optionals. If not provided your guthub account will keep the nely cretaed repository. This repository is prefixed with a UUID.
+> NOTE: [GITHUB_ACCOUNT] and [GITHUB_TOKEN_WITH_DELETE_SCOPE] are optionals. If not provided your GitHub account will keep the newly created repository. This repository is prefixed with a UUID.
 
