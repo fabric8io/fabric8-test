@@ -11,7 +11,7 @@ import json
 start_time = time.time()
 
 
-class poc_oso(object):
+class Pipeline(object):
 
     def runTest(self, theString):
 
@@ -26,32 +26,33 @@ class poc_oso(object):
         print 'starting test.....'
 
         ###############################################
-        # Find the running build pipeline, verify state transitions: New -> Running -> Complete
+        # Find the running build pipeline, verify state transitions: New -> Running -> Promote -> Complete
 
         headers = {'Authorization': authHeader}
         urlString = '{}/oapi/v1/namespaces/{}/builds'.format(osoUrl, osoUsername)
-        retValue = 'false'
+        failed = True
 
         # Verify that the newly created build has a status of 'New'
-        retValue = self.buildStatus(urlString, headers, 30, 5, 'New')
+        failed = self.buildStatus(urlString, headers, 30, 5, 'New')
 
         # Then, check for a build status of 'Running'
-        if retValue == 'true':
-            retValue = self.buildStatus(urlString, headers, 30, 20, 'Running')
+        if not failed:
+            failed = self.buildStatus(urlString, headers, 30, 30, 'Running')
 
         # Then, check for a build status of 'Running' with Promote input action
-        if retValue == 'true':
-            retValue = self.buildStatus(urlString, headers, 30, 20, 'Running', 'openshift.io/jenkins-pending-input-actions-json')
+        if not failed:
+            failed = self.buildStatus(urlString, headers, 30, 30, 'Running',
+                                      'openshift.io/jenkins-pending-input-actions-json')
 
         # Then, promote stage to run
-        if retValue == 'true':
-            retValue = self.promoteBuild()
+        if not failed:
+            failed = self.promoteBuild()
 
         # Then, check for a build status of 'Complete'
-        if retValue == 'true':
-            retValue = self.buildStatus(urlString, headers, 30, 10, 'Complete')
+        if not failed:
+            failed = self.buildStatus(urlString, headers, 30, 10, 'Complete')
 
-        if retValue == 'true':
+        if not failed:
             return 'Success'
         else:
             return 'Fail'
@@ -63,9 +64,9 @@ class poc_oso(object):
         print 'Look for build, expected build status: {}'.format(expectedBuildStatus)
 
         counter = 0
-        requestSuccess = 'false'
+        requestFailed = True
 
-        while (requestSuccess == 'false' and counter < maxTries):
+        while (requestFailed and (counter < maxTries)):
             counter = counter + 1
 
             try:
@@ -74,35 +75,37 @@ class poc_oso(object):
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 
-                actualAnnotation = None
+                expectedAnnotationFound = False
                 if expectedAnnotation is not None:
-                    actualAnnotation = respJson['items'][0]['metadata']['annotations'][expectedAnnotation]
+                    expectedAnnotationFound = expectedAnnotation in respJson['items'][0]['metadata']['annotations']
 
                 if re.search(expectedBuildStatus, actualBuildStatus):
                     print 'Expected build status {} found'.format(expectedBuildStatus)
                     if expectedAnnotation is not None:
-                        if actualAnnotation is not None:
+                        if expectedAnnotationFound:
                             print 'Expected annotation "{}" found'.format(expectedAnnotation)
-                            requestSuccess = 'true'
+                            requestFailed = False
                             break
                         else:
-                            print 'Expected annotation "{}" not found, retrying...'.format(expectedAnnotation)
+                            print 'Expected annotation "{}" not found, retrying...'.format(
+                                expectedAnnotation)
                             time.sleep(sleepTimer)
                             continue
-                    requestSuccess = 'true'
+                    requestFailed = False
                     break
                 else:
-                    print 'Expected build status not found, retrying - expected: "{}" actual: "{}" '.format(expectedBuildStatus, actualBuildStatus)
+                    print 'Expected build status not found, retrying - expected: "{}" actual: "{}" '.format(
+                        expectedBuildStatus, actualBuildStatus)
                     time.sleep(sleepTimer)
 
             except IndexError, e:
-                print "Unexpected error found: " + str(e)
-                print 'attempt ' + str(counter) + ' failed - retrying...'
+                print 'Unexpected error found: {}'.format(e)
+                print 'attempt {} failed - retrying...'.format(counter)
                 time.sleep(sleepTimer)
 
-        print 'The value of requestSuccess = {}'.format(requestSuccess)
+        print 'The value of requestFailed = {}'.format(requestFailed)
 
-        return requestSuccess
+        return requestFailed
 
     def promoteBuild(self):
         """
@@ -125,7 +128,8 @@ class poc_oso(object):
 
         print "Promote URL: {}".format(promoteUrl)
         r = requests.post(promoteUrl, headers=headers)
-        if r == 200:
-            return 'true'
+        print "Promote response: {}".format(r)
+        if r.status_code == 200:
+            return False
         else:
-            return 'false'
+            return True

@@ -28,18 +28,18 @@ export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 ## Login to OSO to get OSO username and token
 oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
 if [ $? -gt 0 ]; then
-   echo "ERROR: Unable to login user $OSIO_USERNAME"
-   exit 1
+	echo "ERROR: Unable to login user $OSIO_USERNAME"
+	exit 1
 fi
 
 ## OpenShift Online user's name (remove @ and following chars)
-export OSO_USERNAME=`oc whoami | sed -e 's/@[^\@]*$//'`
+export OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
 
 ## OpenShift Online token
-export OSO_TOKEN=`oc whoami -t`
+export OSO_TOKEN=$(oc whoami -t)
 
 ## Github username
-export GITHUB_USERNAME=`oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode`
+export GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
 
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
@@ -53,3 +53,7 @@ export PROJECT_NAME="${PROJECT_NAME:-test123}"
 ## A default client_id for the OAuth2 protocol used for user login
 ## (See https://github.com/fabric8-services/fabric8-auth/blob/d39e42ac2094b67eeaec9fc69ca7ebadb0458cea/controller/authorize.go#L42)
 export AUTH_CLIENT_ID="${AUTH_CLIENT_ID:-740650a2-9c44-4db5-b067-a3d1b2cd2d01}"
+
+
+## An output directory where the reports will be stored
+export REPORT_DIR=${REPORT_DIR:-test_output}
