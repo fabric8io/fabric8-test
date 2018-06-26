@@ -1,5 +1,5 @@
 import * as support from './support';
-import { SpaceDashboardPage, SpacePipelinePage } from './page_objects';
+import { SpaceDashboardPage, SpacePipelinePage, MainDashboardPage } from './page_objects';
 
 
 describe('Planner Tab', () => {
@@ -9,9 +9,10 @@ describe('Planner Tab', () => {
   beforeEach( async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    let mainDashboard = await login.run();
+    await login.run();
 
     spaceName = support.newSpaceName();
+    let mainDashboard = new MainDashboardPage();
     spaceDashboard = await mainDashboard.createNewSpace(spaceName);
 
     // HACK: use this to reuse an existing space

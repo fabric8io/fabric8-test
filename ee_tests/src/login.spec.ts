@@ -1,16 +1,15 @@
 import * as support from './support';
-import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { browser } from 'protractor';
-import { LoginInteraction } from './support';
+import { AppPage } from './page_objects/app.page';
 
 /**
  * Simple test for log in and log out.
  */
 describe('e2e_logintest', () => {
 
-  let login: LoginInteraction;
+  let loginInteractions = new support.LoginInteraction();
 
-  let dashboardPage: MainDashboardPage;
+  let page = new AppPage();
 
   beforeAll(async () => {
     await support.desktopTestSetup();
@@ -27,20 +26,20 @@ describe('e2e_logintest', () => {
 
   it('login', async () => {
     support.info('--- Login ---');
-    login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await loginInteractions.run();
 
-    expect(dashboardPage.header.recentItemsDropdown.isPresent()).toBeTruthy();
-    expect(dashboardPage.header.recentItemsDropdown.getText()).toBe(browser.params.login.user);
+    expect(await page.header.recentItemsDropdown.isPresent()).toBeTruthy('Recent items dropdown is present');
+    expect(await page.header.recentItemsDropdown.getText()).
+      toBe(browser.params.login.user, 'Recent items dropdown title is username');
 
-    expect(login.page.loginButton.isPresent()).toBeFalsy();
+    expect(await loginInteractions.isLoginButtonPresent()).toBeFalsy('Login button is not present');
   });
 
   it('logout', async () => {
     support.info('--- Logout ---');
-    await dashboardPage.logout();
+    await page.logout();
 
-    expect(dashboardPage.header.recentItemsDropdown.isPresent()).toBeFalsy();
-    expect(login.page.loginButton.isPresent()).toBeTruthy();
+    expect(await page.header.recentItemsDropdown.isPresent()).toBeFalsy('Recent items dropdown is not present');
+    expect(await loginInteractions.isLoginButtonPresent()).toBeTruthy('Login button is present');
   });
 });

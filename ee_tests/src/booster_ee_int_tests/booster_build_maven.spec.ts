@@ -25,7 +25,8 @@ describe('Build the project using Maven in the Che terminal window', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {

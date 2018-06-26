@@ -32,7 +32,8 @@ describe('Debug the project\'s Junit tests from the Che menu:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {

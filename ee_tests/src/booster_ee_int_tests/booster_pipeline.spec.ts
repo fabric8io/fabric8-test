@@ -55,7 +55,8 @@ describe('Verify the completion of the build pipeline:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {

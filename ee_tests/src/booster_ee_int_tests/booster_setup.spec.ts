@@ -31,7 +31,8 @@ describe('Creating new quickstart in OSIO', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {

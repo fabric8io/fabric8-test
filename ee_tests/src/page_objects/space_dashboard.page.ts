@@ -20,11 +20,6 @@ import { FeatureLevel } from '../support/feature_level';
 // The main page that represents a Space
 export class SpaceDashboardPage extends SpaceAppPage {
 
-  /* Dialog to create new space and project */
-  newSpaceName = $('#name');
-  createSpaceButton = $('#createSpaceButton');
-  devProcessPulldown = $('#developmentProcess');
-
   /* Analyze/Plan/Create - Navigation bar elements unique to space home display */
   headerAnalyze = element(by.xpath('.//*[contains(text(),\'Analyze\')]'));
   headerPlan = element(by.xpath('.//*[contains(text(),\'Plan\')]'));
