@@ -64,3 +64,7 @@ target/
 # IDE stuff
 .idea
 .project
+.vscode
+
+# python virtual environments
+venv
