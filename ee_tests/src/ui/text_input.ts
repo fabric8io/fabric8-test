@@ -15,4 +15,3 @@ export class TextInput extends BaseElement {
     this.log('Entered Text');
   }
 }
-

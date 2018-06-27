@@ -1,7 +1,6 @@
 import * as support from './support';
 import { SpaceDashboardPage, SpacePipelinePage, MainDashboardPage } from './page_objects';
 
-
 describe('Planner Tab', () => {
   let spaceDashboard: SpaceDashboardPage;
   let spaceName: string;
@@ -21,7 +20,6 @@ describe('Planner Tab', () => {
 
   });
 
-
   it('can create a work item', async () => {
     let planner = await new SpacePipelinePage().gotoPlanTab();
     await planner.createWorkItem({
@@ -37,4 +35,3 @@ describe('Planner Tab', () => {
   });
 
 });
-

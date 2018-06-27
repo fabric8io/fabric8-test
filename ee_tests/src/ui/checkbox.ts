@@ -7,4 +7,3 @@ export class Checkbox extends BaseElement {
   }
   // TODO add check and uncheck
 }
-

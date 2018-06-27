@@ -1,16 +1,5 @@
-/*
-  OSIO EE test - Page object model - The page hierarchy is:
-  * landing.page.ts - User starts here - User selects "Log In" and is moved to the login page
-  * login.page.ts - At this page the user selects the log in path, enters name/password
-  * main_dashboard.page.ts - Account dashboard page - This is the user's top level page insisde of OSIO
-  * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
-*/
-
 import { browser, element, by, ExpectedConditions as until, $, ElementFinder } from 'protractor';
-import { AppPage } from './app.page';
 import { SpaceAppPage } from './space_app.page';
-import { SpaceTabPage } from './space_tab.page';
-import * as ui from '../ui';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { Button, BaseElement } from '../ui';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
@@ -80,7 +69,7 @@ export class SpaceDashboardPage extends SpaceAppPage {
   addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
 
   createAnApplicationButton = this.innerElement(
-    ui.Button, '#analyze-overview-dashboard-add-to-space-button', 'Create an Application');
+    Button, '#analyze-overview-dashboard-add-to-space-button', 'Create an Application');
 
   /* UI Page Section: Environments */
   environments = $('spacehome-environments-card');

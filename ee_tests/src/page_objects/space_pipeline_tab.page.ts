@@ -1,5 +1,4 @@
-import { browser, element, by, By, ExpectedConditions as until } from 'protractor';
-import { $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
+import { browser, element, by, ExpectedConditions as until, ElementFinder } from 'protractor';
 import * as support from '../support';
 import { SpaceTabPage } from './space_tab.page';
 import { Button, BaseElement } from '../ui';

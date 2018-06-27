@@ -43,4 +43,3 @@ export class LauncherRuntime {
     return new LauncherRuntime(id);
   }
 }
-

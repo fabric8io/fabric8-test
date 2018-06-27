@@ -1,22 +1,21 @@
 import { browser, by, ExpectedConditions as until, $, element } from 'protractor';
 import * as support from '../support';
-import { Button } from '../ui';
+import { BaseElement, Button, ModalDialog, TextInput } from '../ui';
 import { AppPage } from './app.page';
-import * as ui from '../ui';
 
-class CleanupConfirmationModal extends ui.ModalDialog {
+class CleanupConfirmationModal extends ModalDialog {
 
   // NOTE: bodyContent is a tag
   body = this.content.$('.modal-body');
   bodyContent = this.body.$('modal-content');
 
-  confirmationInput = new ui.TextInput(
+  confirmationInput = new TextInput(
     this.bodyContent.$('form input'), 'username confirmation');
 
-  confirmEraseButton = new ui.Button(
+  confirmEraseButton = new Button(
     this.bodyContent.$('form button'), 'I understand my actions ...');
 
-  constructor(elem: ui.BaseElement) {
+  constructor(elem: BaseElement) {
     super(elem, 'Cleanup confirmation Dialog');
   }
 
@@ -35,11 +34,11 @@ class CleanupConfirmationModal extends ui.ModalDialog {
 export class CleanupUserEnvPage extends AppPage {
 
   eraseEnvButton = this.innerElement(
-    ui.Button, '#overview button',
+    Button, '#overview button',
     'Erase My OpenShift.io Environment'
   );
 
-  alertBox = new ui.BaseElement($('#overview div.alert'), 'Alert Box');
+  alertBox = new BaseElement($('#overview div.alert'), 'Alert Box');
   dashboardButton = new Button(element (by.xpath('.//button[contains(text(),\'Take me to my Dashboard\')]')),
   'Take me to my Dashboard button');
 
@@ -73,7 +72,7 @@ export class CleanupUserEnvPage extends AppPage {
 
   async cleanupSupport (username: string) {
     await this.eraseEnvButton.clickWhenReady();
-    let confirmationElement =  this.innerElement(ui.BaseElement, 'modal', '');
+    let confirmationElement =  this.innerElement(BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.clear();
@@ -95,7 +94,7 @@ export class CleanupUserEnvPage extends AppPage {
 
 export class EditUserProfilePage extends AppPage {
 
-  resetEnvButton = this.innerElement(ui.Button, '#overview button', 'Reset Environment');
+  resetEnvButton = this.innerElement(Button, '#overview button', 'Reset Environment');
 
   async ready() {
     await this.resetEnvButton.untilClickable();
@@ -120,7 +119,7 @@ export class EditUserProfilePage extends AppPage {
 export class UserProfilePage extends AppPage {
   // TODO is there a better way to find the button? can we get devs to add an id?
   updateProfileButton = this.innerElement(
-    ui.Button,
+    Button,
     'alm-overview button.profile-update-button',
     'Update Profile'
   );
@@ -139,4 +138,3 @@ export class UserProfilePage extends AppPage {
   }
 
 }
-

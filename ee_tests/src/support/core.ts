@@ -1,12 +1,10 @@
-// tslint:disable:max-line-length
-import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-// tslint:ensable:max-line-length
+import { browser, Key, element, by, ExpectedConditions as until } from 'protractor';
 import * as fs from 'fs';
 import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { Quickstart } from './quickstart';
 
@@ -24,7 +22,6 @@ export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
 export const LONGEST_WAIT = minutes(30);
-
 
 /* Modified test source code */
 export const FILETEXT: string = `package io.openshift.booster;
@@ -113,19 +110,27 @@ export async function dumpLog2(spacePipelinePage: SpacePipelinePage, spaceName: 
   //   https://jenkins-ldimaggi-osiotest1-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/osiotestmachine/job/dec21/job/master/1/console
   //   https://jenkins-ldimaggi-osiotest1-jenkins.1b7d.free-stg.openshiftapps.com/job/osiotestmachine/job/testjan5/job/master/1/console
 
-  let theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+  // tslint:enable:max-line-length
+
+  let theUrl = 'https://jenkins-' + browser.params.login.user +
+    '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username +
+    '/job/' + spaceName + '/job/master/1/console';
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.1b7d.free-stg.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+    theUrl = 'https://jenkins-' + browser.params.login.user +
+    '-jenkins.1b7d.free-stg.openshiftapps.com/job/' + browser.params.github.username +
+    '/job/' + spaceName + '/job/master/1/console';
   }
 
   await browser.get(theUrl);
   //  await browser.sleep(30000);
-  let loginWithOpenshift = new Button(element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')), 'Login with OpenShift');
+  let loginWithOpenshift = new Button(element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')),
+    'Login with OpenShift');
   await loginWithOpenshift.clickWhenReady(LONGER_WAIT);
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    let keyCloakButton = new Button(element(by.xpath('.//*[@class=\'login-redhat keycloak\']')), 'Login with Keycloak button');
+    let keyCloakButton = new Button(element(by.xpath('.//*[@class=\'login-redhat keycloak\']')),
+      'Login with Keycloak button');
     await keyCloakButton.clickWhenReady(LONGER_WAIT);
   }
 
@@ -138,12 +143,7 @@ export async function dumpLog2(spacePipelinePage: SpacePipelinePage, spaceName: 
 
   let handles = await browser.getAllWindowHandles();
   await browser.switchTo().window(handles[0]);
-
-
-
-  // tslint:enable:max-line-length
 }
-
 
 export async function desktopTestSetup() {
   browser.ignoreSynchronization = true;
@@ -173,7 +173,6 @@ export function joinURIPath(...args: string[]) {
   }
   return answer;
 }
-
 
 export class SpaceName {
   static spaceName: string;
@@ -297,7 +296,6 @@ export function info(...msg: any[]) {
 }
 
 export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
-
 
 /**
  * Returns the entity name of the current user which is used in the URL after, say,
@@ -543,4 +541,3 @@ export class WindowManager {
 }
 
 export let windowManager: WindowManager = new WindowManager();
-
