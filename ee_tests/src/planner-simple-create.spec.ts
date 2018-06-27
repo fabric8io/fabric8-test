@@ -1,17 +1,17 @@
-import { browser } from 'protractor';
 import * as support from './support';
-import { PageOpenMode, SpaceDashboardPage } from './page_objects';
-
+import { SpaceDashboardPage, SpacePipelinePage, MainDashboardPage } from './page_objects';
 
 describe('Planner Tab', () => {
   let spaceDashboard: SpaceDashboardPage;
+  let spaceName: string;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    let mainDashboard = await login.run();
+    await login.run();
 
-    let spaceName = support.newSpaceName();
+    spaceName = support.newSpaceName();
+    let mainDashboard = new MainDashboardPage();
     spaceDashboard = await mainDashboard.createNewSpace(spaceName);
 
     // HACK: use this to reuse an existing space
@@ -20,20 +20,18 @@ describe('Planner Tab', () => {
 
   });
 
-
   it('can create a work item', async () => {
-    let planner = await spaceDashboard.gotoPlanTab();
+    let planner = await new SpacePipelinePage().gotoPlanTab();
     await planner.createWorkItem({
       title: 'Workitem Title',
       description: 'Describes the work item'
-    })
+    });
 
     await planner.createWorkItem({
       title: 'Workitem Title',
       description: 'Describes the work item'
-    })
+    });
 
   });
 
 });
-

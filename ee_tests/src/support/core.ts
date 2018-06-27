@@ -1,12 +1,10 @@
-// tslint:disable:max-line-length
-import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-// tslint:ensable:max-line-length
+import { browser, Key, element, by, ExpectedConditions as until } from 'protractor';
 import * as fs from 'fs';
 import * as support from '../support';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { Quickstart } from './quickstart';
 
@@ -24,7 +22,6 @@ export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
 export const LONGEST_WAIT = minutes(30);
-
 
 /* Modified test source code */
 export const FILETEXT: string = `package io.openshift.booster;
@@ -78,23 +75,23 @@ public class HttpApplication extends AbstractVerticle {
 export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
   switch (mode) {
-  case BrowserMode.Phone:
-    await window.setSize(430, 667);
-    break;
-  case BrowserMode.Tablet:
-    await window.setSize(768, 1024);
-    break;
-  case BrowserMode.Desktop:
-    await window.setSize(1920, 1080);
-    break;
-  default:
-    throw Error('Unknown mode');
+    case BrowserMode.Phone:
+      await window.setSize(430, 667);
+      break;
+    case BrowserMode.Tablet:
+      await window.setSize(768, 1024);
+      break;
+    case BrowserMode.Desktop:
+      await window.setSize(1920, 1080);
+      break;
+    default:
+      throw Error('Unknown mode');
   }
 }
 
 /* Print text to the Che Terminal window - a 2nd RETURN char is used to make the text easier to read */
 // tslint:disable:max-line-length
-export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePage, textToPrint: string) {
+export async function printTerminal(spaceCheWorkspacePage: SpaceCheWorkspacePage, textToPrint: string) {
   await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(' ').perform();
   await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(textToPrint).perform();
   await browser.driver.actions().mouseDown(spaceCheWorkspacePage.bottomPanelTerminal).click().sendKeys(Key.ENTER).perform();
@@ -105,27 +102,7 @@ export async function printTerminal (spaceCheWorkspacePage: SpaceCheWorkspacePag
 /*
  * Display the contents of the Jenkins build log.
  */
-export async function dumpLog (spacePipelinePage: SpacePipelinePage) {
-  await spacePipelinePage.viewLog.clickWhenReady();
-  let handles = await browser.getAllWindowHandles();
-
-  /* Switch to the build log browser window */
-  await browser.switchTo().window(handles[1]);
-  await spacePipelinePage.loginWithOpenshift.clickWhenReady();
-
-//  handles = await browser.getAllWindowHandles();
-  let theText = await spacePipelinePage.buildLogOutput.getText();
-  await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
-  await console.log (theText);
-  expect (await theText).toContain('Finished: SUCCESS');
-
-  await browser.switchTo().window(handles[0]);
-}
-
-/*
- * Display the contents of the Jenkins build log.
- */
-export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName: string) {
+export async function dumpLog2(spacePipelinePage: SpacePipelinePage, spaceName: string) {
 
   // tslint:disable:max-line-length
 
@@ -133,34 +110,40 @@ export async function dumpLog2 (spacePipelinePage: SpacePipelinePage, spaceName:
   //   https://jenkins-ldimaggi-osiotest1-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/osiotestmachine/job/dec21/job/master/1/console
   //   https://jenkins-ldimaggi-osiotest1-jenkins.1b7d.free-stg.openshiftapps.com/job/osiotestmachine/job/testjan5/job/master/1/console
 
-  let theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+  // tslint:enable:max-line-length
+
+  let theUrl = 'https://jenkins-' + browser.params.login.user +
+    '-jenkins.8a09.starter-us-east-2.openshiftapps.com/job/' + browser.params.github.username +
+    '/job/' + spaceName + '/job/master/1/console';
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    theUrl = 'https://jenkins-' + browser.params.login.user + '-jenkins.1b7d.free-stg.openshiftapps.com/job/' + browser.params.github.username + '/job/' + spaceName + '/job/master/1/console';
+    theUrl = 'https://jenkins-' + browser.params.login.user +
+    '-jenkins.1b7d.free-stg.openshiftapps.com/job/' + browser.params.github.username +
+    '/job/' + spaceName + '/job/master/1/console';
   }
 
   await browser.get(theUrl);
-//  await browser.sleep(30000);
-  await spacePipelinePage.loginWithOpenshift.clickWhenReady(LONGER_WAIT);
+  //  await browser.sleep(30000);
+  let loginWithOpenshift = new Button(element(by.xpath('.//*[contains(text(),\'Login with OpenShift\')]')),
+    'Login with OpenShift');
+  await loginWithOpenshift.clickWhenReady(LONGER_WAIT);
 
   if (browser.params.target.url === 'https://prod-preview.openshift.io') {
-    await spacePipelinePage.keyCloakButton.clickWhenReady(LONGER_WAIT);
+    let keyCloakButton = new Button(element(by.xpath('.//*[@class=\'login-redhat keycloak\']')),
+      'Login with Keycloak button');
+    await keyCloakButton.clickWhenReady(LONGER_WAIT);
   }
 
   await browser.sleep(30000);
-  let theText = await spacePipelinePage.buildLogOutput.getText();
-  await console.log ('\n ============ End of test reached, Jenkins Build Log ============ \n');
-  await console.log (theText);
-//  expect (await theText).toContain('Finished: SUCCESS');
+  let buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
+  let theText = await buildLogOutput.getText();
+  await console.log('\n ============ End of test reached, Jenkins Build Log ============ \n');
+  await console.log(theText);
+  //  expect (await theText).toContain('Finished: SUCCESS');
 
   let handles = await browser.getAllWindowHandles();
   await browser.switchTo().window(handles[0]);
-
-
-
-  // tslint:enable:max-line-length
 }
-
 
 export async function desktopTestSetup() {
   browser.ignoreSynchronization = true;
@@ -170,38 +153,37 @@ export async function desktopTestSetup() {
 /*
  * Joins the arguments as URI paths ensuring there's exactly one '/' between each path entry
  */
-  export function joinURIPath (...args: string[]) {
-    // TODO: improve this method using available modules for uri operations
+export function joinURIPath(...args: string[]) {
+  // TODO: improve this method using available modules for uri operations
 
-    let answer = null;
-    for (let i = 0, j = arguments.length; i < j; i++) {
-      let arg = arguments[i];
-      if (i === 0 || !answer) {
-        answer = arg;
-      } else {
-        if (!answer.endsWith('/')) {
-          answer += '/';
-        }
-        if (arg.startsWith('/')) {
-          arg = arg.substring(1);
-        }
-        answer += arg;
+  let answer = null;
+  for (let i = 0, j = arguments.length; i < j; i++) {
+    let arg = arguments[i];
+    if (i === 0 || !answer) {
+      answer = arg;
+    } else {
+      if (!answer.endsWith('/')) {
+        answer += '/';
       }
+      if (arg.startsWith('/')) {
+        arg = arg.substring(1);
+      }
+      answer += arg;
     }
-    return answer;
   }
-
+  return answer;
+}
 
 export class SpaceName {
   static spaceName: string;
 
   static newSpaceName(): string {
     const d = new Date();
-    const month = ( d.getMonth() < 9 ) ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
-    const day = ( d.getDate() < 10 ) ? `0${d.getDate()}` : `${d.getDate()}`;
-    const hour = ( d.getHours() < 10 ) ? `0${d.getHours()}` : `${d.getHours()}`;
-    const minute = ( d.getMinutes() < 10 ) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
-    const second = ( d.getSeconds() < 10 ) ? `0${d.getSeconds()}` : `${d.getSeconds()}`;
+    const month = (d.getMonth() < 9) ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
+    const day = (d.getDate() < 10) ? `0${d.getDate()}` : `${d.getDate()}`;
+    const hour = (d.getHours() < 10) ? `0${d.getHours()}` : `${d.getHours()}`;
+    const minute = (d.getMinutes() < 10) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
+    const second = (d.getSeconds() < 10) ? `0${d.getSeconds()}` : `${d.getSeconds()}`;
     const spaceName = `e2e-${month}${day}-${hour}${minute}${second}`;
     info('New space name: ', spaceName);
 
@@ -242,7 +224,7 @@ export function currentRepoName(): string {
   let configuredRepoName = browser.params.github.repo;
   if (RepoName.repoName === undefined) {
     if (configuredRepoName !== '') {
-      RepoName.repoName =  configuredRepoName;
+      RepoName.repoName = configuredRepoName;
     } else {
       RepoName.repoName = support.currentSpaceName();
     }
@@ -298,7 +280,7 @@ export async function writeText(filename: string, text: string) {
 
 function timestamp(): string {
   let date = new Date();
-  let time = date.toLocaleTimeString('en-US', {hour12: false});
+  let time = date.toLocaleTimeString('en-US', { hour12: false });
   let ms = (date.getMilliseconds() + 1000).toString().substr(1);
   return `${time}.${ms}`;
 }
@@ -307,14 +289,13 @@ function debugEnabled(...msg: any[]) {
   console.log(`[${timestamp()}]:`, ...msg);
 }
 
-function debugNoop(...msg: any[]) {}
+function debugNoop(...msg: any[]) { }
 
 export function info(...msg: any[]) {
   console.info(`[${timestamp()}]:`, ...msg);
 }
 
 export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
-
 
 /**
  * Returns the entity name of the current user which is used in the URL after, say,
@@ -364,12 +345,12 @@ export function targetPlatform(): string {
   }
 
   // try to guess from the url
-  const url: string|undefined = target.url;
+  const url: string | undefined = target.url;
 
   if (url === 'https://openshift.io' ||
-      url === 'https://openshift.io/' ||
-      url === 'https://prod-preview.openshift.io' ||
-      url === 'https://prod-preview.openshift.io/') {
+    url === 'https://openshift.io/' ||
+    url === 'https://prod-preview.openshift.io' ||
+    url === 'https://prod-preview.openshift.io/') {
     return 'osio';
   }
 
@@ -378,40 +359,20 @@ export function targetPlatform(): string {
   return 'fabric8-openshift';
 }
 
-export function windowCount(count: number) {
-  return function () {
-    return browser.getAllWindowHandles().then(function (handles) {
-      return handles.length === count;
-    });
-  };
-}
-
-/* A new browser window is opened - switch to that new window now */
-export async function switchToWindow (windowTotal: number, windowId: number) {
-  let handles = await browser.getAllWindowHandles();
-  support.debug('Number of browser tabs before = ' + handles.length);
-  await browser.wait(support.windowCount(windowTotal), support.DEFAULT_WAIT);
-  handles = await browser.getAllWindowHandles();
-  support.debug('Number of browser tabs after = ' + handles.length);
-
-  /* Switch to the new browser window */
-  await browser.switchTo().window(handles[windowId]);
-}
-
 /* Open the selected codebases page */
-export async function openCodebasesPage (osioUrl: string, userName: string, spaceName: string) {
+export async function openCodebasesPage(osioUrl: string, userName: string, spaceName: string) {
   let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
   await browser.get(theUrl);
 }
 
 /* Open the selected codebases page */
-export async function openPipelinesPage (osioUrl: string, userName: string, spaceName: string) {
+export async function openPipelinesPage(osioUrl: string, userName: string, spaceName: string) {
   let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create\/pipelines';
   await browser.get(theUrl);
 }
 
 /* Toggle automatic parans and braces in Che editor */
-export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+export async function togglePreferences(spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
 
   await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
   await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
@@ -426,88 +387,157 @@ export async function togglePreferences (spaceCheWorkSpacePage: SpaceCheWorkspac
   await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
 
   // TO DO - verify preferences dialog is closed
-  await browser.wait (until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
+  await browser.wait(until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
 }
 
-  // tslint:disable:max-line-length
+// tslint:disable:max-line-length
 
-  /* Run the booster by means of the Che run menu */
-  export async function runBooster (spaceCheWorkSpacePage: SpaceCheWorkspacePage, expectedString: string) {
+/* Run the booster by means of the Che run menu */
+export async function runBooster(spaceCheWorkSpacePage: SpaceCheWorkspacePage, expectedString: string) {
+  try {
+
+    /* Remote sites (Brno) are experiencing issues where the run button is active before
+       the project os fully downloaded - and run is attempted before the pom file is present */
     try {
-
-        /* Remote sites (Brno) are experiencing issues where the run button is active before
-           the project os fully downloaded - and run is attempted before the pom file is present */
-        try {
-            await spaceCheWorkSpacePage.walkTree(support.currentSpaceName());
-            await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('pom.xml')), support.DEFAULT_WAIT);
-          } catch (e) {
-            support.info('Exception in Che project directory tree = ' + e);
-        }
-
-      await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
-      await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
-      await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
-      await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, expectedString), support.LONGER_WAIT);
-      let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
-      support.info('Output from run = ' + textStr);
-      expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain(
-        new Quickstart(browser.params.quickstart.name).runtime.quickstartStartedTerminal
-      );
+      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName());
+      await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('pom.xml')), support.DEFAULT_WAIT);
     } catch (e) {
-      support.info('Exception running booster = ' + e);
+      support.info('Exception in Che project directory tree = ' + e);
     }
+
+    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
+    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
+    await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, expectedString), support.LONGER_WAIT);
+    let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
+    support.info('Output from run = ' + textStr);
+    expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain(
+      new Quickstart(browser.params.quickstart.name).runtime.quickstartStartedTerminal
+    );
+  } catch (e) {
+    support.info('Exception running booster = ' + e);
+  }
+}
+
+/* Access the deployed app's Che preview endpoint, send text, invoke the app, return the output */
+export async function invokeApp(boosterEndpointPage: BoosterEndpoint, mySpaceCheWorkSpacePage: SpaceCheWorkspacePage, username: string, screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+
+  /// TODO - The link to the deployed app is present before the endpoint is available
+  await browser.sleep(10000);
+  await mySpaceCheWorkSpacePage.previewLink(username).clickWhenReady();
+
+  /* A new browser window is opened when Che opens the app endpoint */
+  let handles = await browser.getAllWindowHandles();
+  await browser.wait(windowManager.windowCountCondition(handles.length), support.DEFAULT_WAIT);
+  handles = await browser.getAllWindowHandles();
+  support.debug('Number of browser tabs after opening Che app window = ' + handles.length);
+
+  /* Switch to the newly opened Che deployed endpoint browser window */
+  await browser.switchTo().window(handles[handles.length - 1]);
+
+  /* Invoke the deployed app */
+  try {
+    await boosterEndpointPage.nameText.clickWhenReady();
+    await boosterEndpointPage.nameText.sendKeys(inputString);
+    support.writeScreenshot('target/screenshots/che_edit_' + screenshotName + '_' + support.currentSpaceName() + '.png');
+    await boosterEndpointPage.invokeButton.clickWhenReady(support.LONGEST_WAIT);
+
+    let expectedOutput = '{"content":"' + expectedString + '"}';
+    await browser.wait(until.textToBePresentInElement(boosterEndpointPage.stageOutput, expectedOutput), support.DEFAULT_WAIT);
+    expect(await boosterEndpointPage.stageOutput.getText()).toBe(expectedOutput);
+  } catch (e) {
+    support.info('Exception invoking staged app = ' + e);
+  }
+}
+
+/* Find the project in the project tree */
+export async function findProjectInTree(spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+
+  support.writeScreenshot('target/screenshots/che_workspace_partb_' + support.currentSpaceName() + '.png');
+  let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
+  await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+  await support.debug(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()).getText());
+  support.writeScreenshot('target/screenshots/che_workspace_partc_' + support.currentSpaceName() + '.png');
+}
+
+/* Open the codebase page, and then open the Che workspace */
+export async function openCodebasePageSwitchWindow(spaceChePage: SpaceChePage) {
+
+  /* Open the codebase page and the workspace in Che */
+  await openCodebasesPage(browser.params.target.url, browser.params.login.user, support.currentSpaceName());
+  //    let spaceChePage = new SpaceChePage();
+  await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
+
+  /* A new browser window is opened when Che opens */
+  await windowManager.switchToWindow(2, 1);
+}
+
+export class ScreenshotManager {
+
+  private testCounter: number = 0;
+
+  private screenshotCounter: number = 1;
+
+  async writeScreenshot(name = 'screenshot', path = 'target/screenshots') {
+    await writeScreenshot(path + '/' + this.getFormattedCounters() + '-' + name + '.png');
+    await writePageSource(path + '/' + this.getFormattedCounters() + '-' + name + '.html');
+    this.screenshotCounter++;
   }
 
-  /* Access the deployed app's Che preview endpoint, send text, invoke the app, return the output */
-  export async function invokeApp (boosterEndpointPage: BoosterEndpoint, mySpaceCheWorkSpacePage: SpaceCheWorkspacePage, username: string, screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
+  nextTest() {
+    this.testCounter++;
+    this.screenshotCounter = 1;
+  }
 
-    /// TODO - The link to the deployed app is present before the endpoint is available
-    await browser.sleep(10000);
-    await mySpaceCheWorkSpacePage.previewLink(username).clickWhenReady();
+  private getFormattedCounters() {
+    return this.formatCounter(this.testCounter) + '-' + this.formatCounter(this.screenshotCounter);
+  }
 
-    /* A new browser window is opened when Che opens the app endpoint */
+  private formatCounter(counter: number) {
+    return counter.toString().padStart(2, '0');
+  }
+}
+
+export let screenshotManager: ScreenshotManager = new ScreenshotManager();
+
+export class WindowManager {
+
+  private windowCount = 1;
+
+  async switchToMainWindow() {
+    await support.debug('Window changing to index 0 (main window)');
     let handles = await browser.getAllWindowHandles();
-    await browser.wait(windowCount(handles.length), support.DEFAULT_WAIT);
-    handles = await browser.getAllWindowHandles();
-    support.debug('Number of browser tabs after opening Che app window = ' + handles.length);
-
-    /* Switch to the newly opened Che deployed endpoint browser window */
-    await browser.switchTo().window(handles[handles.length - 1]);
-
-    /* Invoke the deployed app */
-    try {
-      await boosterEndpointPage.nameText.clickWhenReady();
-      await boosterEndpointPage.nameText.sendKeys(inputString);
-      support.writeScreenshot('target/screenshots/che_edit_' + screenshotName + '_' + support.currentSpaceName() + '.png');
-      await boosterEndpointPage.invokeButton.clickWhenReady(support.LONGEST_WAIT);
-
-      let expectedOutput = '{"content":"' + expectedString + '"}';
-      await browser.wait(until.textToBePresentInElement(boosterEndpointPage.stageOutput, expectedOutput), support.DEFAULT_WAIT);
-      expect(await boosterEndpointPage.stageOutput.getText()).toBe(expectedOutput);
-      } catch (e) {
-        support.info('Exception invoking staged app = ' + e);
-    }
+    await browser.switchTo().window(handles[0]);
+    await support.debug('Window changed to index 0 (main window)');
   }
 
-  /* Find the project in the project tree */
-  export async function findProjectInTree (spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
-
-    support.writeScreenshot('target/screenshots/che_workspace_partb_' + support.currentSpaceName() + '.png');
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()).getText());
-    support.writeScreenshot('target/screenshots/che_workspace_partc_' + support.currentSpaceName() + '.png');
+  async switchToLastWindow() {
+    await this.switchToWindow(this.windowCount, this.windowCount - 1);
   }
 
-  /* Open the codebase page, and then open the Che workspace */
-  export async function openCodebasePageSwitchWindow (spaceChePage: SpaceChePage) {
-
-    /* Open the codebase page and the workspace in Che */
-    await openCodebasesPage (browser.params.target.url, browser.params.login.user, support.currentSpaceName());
-//    let spaceChePage = new SpaceChePage();
-    await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
-
-    /* A new browser window is opened when Che opens */
-    await support.switchToWindow(2, 1);
-
+  async switchToNewWindow() {
+    this.windowCount++;
+    await this.switchToWindow(this.windowCount, this.windowCount - 1);
   }
+
+  async switchToWindow(expectedWindowCount: number, windowIndex: number) {
+    await support.debug('Waiting for the specified number or windows to be present: ' + this.windowCount);
+    await browser.wait(this.windowCountCondition(expectedWindowCount), support.DEFAULT_WAIT);
+
+    await support.debug('Window changing to index ' + windowIndex);
+    let handles = await browser.getAllWindowHandles();
+    await support.debug('Switching to handle: ' + handles[windowIndex]);
+    await browser.switchTo().window(handles[windowIndex]);
+    await support.debug('Window changed to index ' + windowIndex);
+  }
+
+  windowCountCondition(count: number) {
+    return function () {
+      return browser.getAllWindowHandles().then(function (handles) {
+        return handles.length === count;
+      });
+    };
+  }
+}
+
+export let windowManager: WindowManager = new WindowManager();

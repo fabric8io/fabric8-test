@@ -1,23 +1,11 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
-import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { SpaceChePage } from '../page_objects/space_che.page';
-import { CheWorkspace } from '../support';
-import { FeatureLevel } from '../support/feature_level';
 
-import { DeploymentsInteractions, DeploymentsInteractionsFactory } from '../interactions/deployments_interactions';
-import { PipelinesInteractions } from '../interactions/pipelines_interactions';
-import { SpaceDashboardInteractions } from '../interactions/space_dashboard_interactions';
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
 import { PageOpenMode } from '../..';
@@ -32,7 +20,8 @@ describe('Creating new quickstart in OSIO', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -56,7 +45,8 @@ describe('Creating new quickstart in OSIO', () => {
       // Create a QuickStart
       let quickstart = new Quickstart(browser.params.quickstart.name);
       support.info('--- Create quickstart ' + quickstart.name + ' ---');
-      let dashboardInteractions = SpaceDashboardInteractionsFactory.create(sourceSpaceName);
+      let dashboardInteractions =
+        SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, sourceSpaceName);
       await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
       await dashboardInteractions.createQuickstart(quickstart.name, strategy);
 
@@ -76,7 +66,8 @@ describe('Creating new quickstart in OSIO', () => {
 
     // Import a githug repo
     support.info('--- Import a github repo: ' + repoName + ' ---');
-    let spaceDashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let spaceDashboardInteractions =
+      SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await spaceDashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await spaceDashboardInteractions.importRepo(spaceName, repoName, strategy);
 

@@ -9,10 +9,6 @@ export class LauncherRuntime {
   name: string;
   quickstartStartedTerminal: string;
 
-  static runtime(id: string) {
-    return new LauncherRuntime(id);
-  }
-
   constructor(runtime: string) {
     this.id = runtime;
 
@@ -42,5 +38,8 @@ export class LauncherRuntime {
       }
     }
   }
-}
 
+  static runtime(id: string) {
+    return new LauncherRuntime(id);
+  }
+}

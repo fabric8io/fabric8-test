@@ -1,6 +1,5 @@
-import { browser } from 'protractor';
 import * as support from './support';
-import { SpaceDashboardPage, MainDashboardPage } from './page_objects';
+import { MainDashboardPage } from './page_objects';
 
 describe(' new spaces in OSIO', () => {
   let mainDashboard: MainDashboardPage;
@@ -8,9 +7,9 @@ describe(' new spaces in OSIO', () => {
   beforeEach( async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    mainDashboard = await login.run();
+    await login.run();
+    mainDashboard = new MainDashboardPage();
   });
-
 
   it('Create a new quickstart', async () => {
     let spaceName = support.newSpaceName();
@@ -18,17 +17,16 @@ describe(' new spaces in OSIO', () => {
 
     // let spaceDashboard = new SpaceDashboardPage(spaceName)
     // await spaceDashboard.open()
-    let wizard = await spaceDashboard.addToSpace()
+    let wizard = await spaceDashboard.addToSpace();
 
-    support.info("Creating a Vert.x HTTP Booster")
+    support.info('Creating a Vert.x HTTP Booster');
     await wizard.newQuickstartProject({
       project: 'Vert.x HTTP Booster'
-    })
+    });
 
-    await spaceDashboard.ready()
+    await spaceDashboard.ready();
     // TODO: add a verification to check if the quickstart succeeded
 
   }, support.minutes(5));
 
 });
-

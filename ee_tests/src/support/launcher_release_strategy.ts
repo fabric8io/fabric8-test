@@ -7,16 +7,12 @@ export class LauncherReleaseStrategy {
   id: string;
   name: string;
 
-  static runtime(id: string) {
-    return new LauncherReleaseStrategy(id);
-  }
-
   constructor(runtime: string) {
     this.id = runtime;
 
     switch (runtime) {
       case LauncherReleaseStrategy.RELEASE: {
-        this.name = 'Integration Test';
+        this.name = 'Build Release';
         break;
       }
       case LauncherReleaseStrategy.RELEASE_AND_STAGE: {
@@ -29,5 +25,9 @@ export class LauncherReleaseStrategy {
         break;
       }
     }
+  }
+
+  static runtime(id: string) {
+    return new LauncherReleaseStrategy(id);
   }
 }

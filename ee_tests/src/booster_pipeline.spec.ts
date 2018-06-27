@@ -1,13 +1,9 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser, element, by, ElementArrayFinder, ElementFinder } from 'protractor';
 
 import * as support from './support';
-import { Quickstart } from './support/quickstart';
-import { TextInput, Button } from './ui';
+import { Button } from './ui';
 
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
-import { SpacePipelinePage } from './page_objects/space_pipeline.page';
+import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
 let globalSpaceName: string;
@@ -15,13 +11,46 @@ let globalSpacePipelinePage: SpacePipelinePage;
 
 /* Tests to verify the build pipeline */
 
+/* Locate a pipeline by name */
+function allPipelineByName (nameString: string): ElementArrayFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element.all(by.xpath(xpathString));
+}
+
+/* Locate a pipeline by name */
+function pipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element(by.xpath(xpathString));
+}
+
+/* Element - input required button - by pipeline name - in pipeline list */
+function inputRequiredByPipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' +
+    nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
+  return element(by.xpath(xpathString));
+}
+
 describe('Creating new quickstart in OSIO', () => {
   let dashboardPage: MainDashboardPage;
+
+  let stageIcon = new Button (element(by.xpath
+    ('.//div[contains(text(),\'Rollout to Stage\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Stage icon');
+
+  /* Run icon */
+  let runIcon = new Button (element(by.xpath
+      ('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
+
+  /* View the Jenkins Log */
+  let viewLog = new Button (element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
+
+  /* Buttons displayed in the promote dialog */
+  let promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -77,38 +106,37 @@ describe('Creating new quickstart in OSIO', () => {
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
 
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(spaceName), 'Pipeline By Name');
+    let pipeline = new Button(pipelineByName(spaceName), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
-    await pipelineByName.untilPresent(support.LONGER_WAIT);
+    await pipeline.untilPresent(support.LONGER_WAIT);
 
     /* Verify that only (1) new matching pipeline is found */
     support.debug('Verifying that only 1 pipeline is found with a matching name');
-    expect(await spacePipelinePage.allPipelineByName(spaceName).count()).toBe(1);
+    expect(await pipeline.allPipelineByName(spaceName).count()).toBe(1);
 
-    /* Save the pipeline page output to stdout for logging purposes */
-    let pipelineText = await spacePipelinePage.pipelinesPage.getText();
-    support.debug('Pipelines page contents = ' + pipelineText);
+    /* Save the pipeline page output to target directory */
+    await support.writePageSource('target/screenshots/pipeline.html');
 
     /* Find the pipeline name */
-    await pipelineByName.untilClickable(support.LONGER_WAIT);
+    await pipeline.untilClickable(support.LONGER_WAIT);
 
     /* If the build log link is not viewable - the build failed to start */
     support.debug('Verifying that the build has started - check https://github.com/openshiftio/openshift.io/issues/1194');
-    await spacePipelinePage.viewLog.untilClickable(support.LONGEST_WAIT);
-    expect(spacePipelinePage.viewLog.isDisplayed()).toBe(true);
+    await viewLog.untilClickable(support.LONGEST_WAIT);
+    expect(viewLog.isDisplayed()).toBe(true);
 
     /* Promote to both stage and run - build has completed - if inputRequired is not present, build has failed */
     support.debug('Verifying that the promote dialog is opened');
-    let inputRequired = new Button(spacePipelinePage.inputRequiredByPipelineByName(spaceName), 'InputRequired button');
+    let inputRequired = new Button(inputRequiredByPipelineByName(spaceName), 'InputRequired button');
 
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
-    await spacePipelinePage.promoteButton.clickWhenReady(support.LONGER_WAIT);
+    await promoteButton.clickWhenReady(support.LONGER_WAIT);
     support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
 
     /* Verify stage and run icons are present - these will timeout and cause failures if missing */
-    await spacePipelinePage.stageIcon.untilClickable(support.LONGEST_WAIT);
-    await spacePipelinePage.runIcon.untilClickable(support.LONGEST_WAIT);
+    await stageIcon.untilClickable(support.LONGEST_WAIT);
+    await runIcon.untilClickable(support.LONGEST_WAIT);
 
     support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
 

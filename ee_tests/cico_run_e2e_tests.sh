@@ -6,10 +6,6 @@ set +x
 # Do not exit on failure so that artifacts can be archived
 set +e
 
-# Setup password used to rsync/archive test reuslts file
-cp ../artifacts.key ./password_file
-chmod 600 ./password_file
-
 # Source environment variables of the jenkins slave
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
@@ -24,7 +20,8 @@ if [ -e "../jenkins-env" ]; then
 fi
 
 # Assign default values if not defined in Jenkins job
-export CONTAINER_NAME=$JOB_NAME;
+export ARTIFACTS_DIR=e2e/${JOB_NAME}/${BUILD_NUMBER}
+export CONTAINER_NAME=${JOB_NAME};
 export DEBUG="true"
 export FEATURE_LEVEL=${FEATURE_LEVEL:-"released"}
 export GITHUB_REPO=${GITHUB_REPO:-""}
@@ -36,7 +33,7 @@ export RELEASE_STRATEGY=${RELEASE_STRATEGY:-"releaseStageApproveAndPromote"}
 export RESET_ENVIRONMENT=${RESET_ENVIRONMENT:-"true"}
 export TEST_SUITE=${TEST_SUITE:-"smoketest"}
 export ZABBIX_ENABLED=${ZABBIX_ENABLED:-"true"}
-export ZABBIX_HOST=$OSIO_CLUSTER
+export ZABBIX_HOST="qa-starter-$OSIO_CLUSTER"
 export ZABBIX_METRIC_PREFIX=$FEATURE_LEVEL
 export ZABBIX_PORT="9443"
 export ZABBIX_SERVER="zabbix.devshift.net"
@@ -44,8 +41,10 @@ export ZABBIX_SERVER="zabbix.devshift.net"
 # We need to disable selinux for now, XXX
 /usr/sbin/setenforce 0
 
+mkdir -p ${ARTIFACTS_DIR} dist
+
 # Get all the deps in
-yum -y install docker
+time yum -y install docker > ${ARTIFACTS_DIR}/yum_install.log
 service docker start
 
 # Build builder image
@@ -55,9 +54,8 @@ IMAGE="fabric8-test"
 REPOSITORY="fabric8io"
 REGISTRY="registry.devshift.net"
 
-mkdir -p dist
 echo "Pull fabric8-test image"
-docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
+time docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest > ${ARTIFACTS_DIR}/docker_pull.log
 echo "Run test container"
 
 echo "Container name: $CONTAINER_NAME"
@@ -68,12 +66,13 @@ if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
 fi
 
 docker run --shm-size=256m --detach=true --name=$CONTAINER_NAME --cap-add=SYS_ADMIN \
-          -e BUILD_NUMBER -e "CI=true" -e DEBUG -e FEATURE_LEVEL -e GITHUB_REPO -e GITHUB_USERNAME -e JOB_NAME \
+          -e "CI=true" -e DEBUG -e FEATURE_LEVEL -e GITHUB_REPO -e GITHUB_USERNAME \
           -e OSIO_PASSWORD -e OSIO_URL -e OSIO_USERNAME -e OSO_USERNAME \
           -e QUICKSTART_NAME -e RELEASE_STRATEGY -e RESET_ENVIRONMENT -e TEST_SUITE \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
           -e ZABBIX_PORT -e ZABBIX_SERVER \
-          -t -v $(pwd)/dist:/dist:Z -v $PWD/password_file:/opt/fabric8-test/password_file \
+          -t -v $(pwd)/dist:/dist:Z \
+          -v /etc/localtime:/etc/localtime:ro \
           -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
 
 # Start Xvfb
@@ -97,25 +96,24 @@ ret2=$?
 if [ $ret1 -eq 1 -a $ret2 -eq 0 ]; then RTN_CODE=0; else RTN_CODE=1; fi
 ### RTN_CODE=$?
 
-# Archive test results file
-docker exec $CONTAINER_NAME chmod 600 password_file
-docker exec $CONTAINER_NAME chown root password_file
-docker exec $CONTAINER_NAME ls -l password_file
+# Archive test results
 docker exec $CONTAINER_NAME ls -l ./target/screenshots
+docker cp $CONTAINER_NAME:/opt/fabric8-test/target/screenshots/. ${ARTIFACTS_DIR}
 
-docker exec $CONTAINER_NAME mkdir -p ./e2e/${JOB_NAME}/${BUILD_NUMBER}
-docker exec $CONTAINER_NAME bash -c 'cp ./target/screenshots/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
 if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec $CONTAINER_NAME ls -l ./target/zabbix
-    docker exec $CONTAINER_NAME bash -c 'cp ./target/zabbix/* ./e2e/${JOB_NAME}/${BUILD_NUMBER}'
+    docker cp $CONTAINER_NAME:/opt/fabric8-test/target/zabbix/. ${ARTIFACTS_DIR}
 fi
-docker exec $CONTAINER_NAME rsync --password-file=./password_file -PHva --relative ./e2e/${JOB_NAME}/${BUILD_NUMBER}  devtools@artifacts.ci.centos.org::devtools/
+
+chmod 600 ../artifacts.key
+chown root:root ../artifacts.key
+rsync --password-file=../artifacts.key -PHva --relative ./${ARTIFACTS_DIR}  devtools@artifacts.ci.centos.org::devtools/
+echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/${ARTIFACTS_DIR}"
 
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
 fi
-
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then

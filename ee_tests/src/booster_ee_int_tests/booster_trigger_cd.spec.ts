@@ -1,19 +1,14 @@
-import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+// tslint:disable-next-line:max-line-length
+import { browser, Key, protractor, element, by, ExpectedConditions as until, ElementFinder, ElementArrayFinder } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
-import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { info } from '../support';
-import * as ui from '../ui';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -27,7 +22,24 @@ const REDEPLOY_TEXT_2 = 'INFO: Redeploying';
 const REDEPLOY_TEXT_3 = 'INFO: Redeployment done';
 
 // tslint:disable:max-line-length
+/* Locate a pipeline by name */
+function allPipelineByName (nameString: string): ElementArrayFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element.all(by.xpath(xpathString));
+}
 
+/* Locate a pipeline by name */
+function pipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
+  return element(by.xpath(xpathString));
+}
+
+/* Element - input required button - by pipeline name - in pipeline list */
+function inputRequiredByPipelineByName (nameString: string): ElementFinder {
+  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' +
+    nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
+  return element(by.xpath(xpathString));
+}
 /* This test performs these steps:
    - Execute the quickstart/booster through the Che run menu, verify output from the deployed app
    - Update the source of the quickstart/booster
@@ -39,7 +51,8 @@ describe('Triggers the CD Build (Jenkins):', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -99,7 +112,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await spaceCheWorkSpacePage.cheCommitMessage.sendKeys('ABCDEF');
     await spaceCheWorkSpacePage.filenameCheckbox(SRCFILENAME).clickWhenReady();
     await spaceCheWorkSpacePage.cheCommitConfirmButton.clickWhenReady();
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitCommitConsoleLines, 
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitCommitConsoleLines,
       'Committed with revision'), support.LONG_WAIT);
     await spaceCheWorkSpacePage.bottomPanelGitCommitTabCloseButton.clickWhenReady();
 
@@ -108,7 +121,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await spaceCheWorkSpacePage.cheMenuGitRemotes.clickWhenReady();
     await spaceCheWorkSpacePage.cheMenuGitRemotesPush.clickWhenReady();
     await spaceCheWorkSpacePage.cheMenuGitRemotesPushButton.clickWhenReady();
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitPushConsoleLines, 
+    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelGitPushConsoleLines,
       'Successfully pushed'), support.LONG_WAIT);
     await spaceCheWorkSpacePage.bottomPanelGitPushTabCloseButton.clickWhenReady();
 
@@ -116,7 +129,7 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
 
     let spaceDashboardPage = new SpaceDashboardPage(support.currentSpaceName());
     await spaceDashboardPage.openInBrowser();
@@ -125,10 +138,10 @@ describe('Triggers the CD Build (Jenkins):', () => {
 
     let spacePipelinePage = new SpacePipelinePage();
     globalSpacePipelinePage = spacePipelinePage;
-    let pipelineByName = new Button(spacePipelinePage.pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
+    let pipeline = new Button(pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
-    await pipelineByName.untilPresent(support.LONGER_WAIT);
+    await pipeline.untilPresent(support.LONGER_WAIT);
     await spaceDashboardPage.viewPipelineRuns.clickWhenReady();
 
     let build2 = element(by.xpath('.//a[contains(text(),\'Build #2\')]'));

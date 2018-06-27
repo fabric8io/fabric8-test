@@ -1,0 +1,16 @@
+{
+    "data": {
+      "attributes": {
+        "name": "$space_name_var"
+      },
+      "type": "spaces",
+      "relationships": {
+        "space-template": {
+          "data": {
+            "id": "cfff59dc-007a-4fa5-acf7-376d5345aef2",
+            "type": "spacetemplates"
+          }
+        }
+      }
+    }
+  }

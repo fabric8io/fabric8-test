@@ -1,4 +1,5 @@
 osioperf.py
+osioperf.pyc
 *.png
 *.csv
 *.log
@@ -7,5 +8,4 @@ osioperf.py
 *results.md
 *report.html
 common.git
-_zabbix-process-results.sh
-_execute.sh
+users.properties

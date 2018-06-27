@@ -1,19 +1,20 @@
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import * as ui from '../../ui'
-import { Button, TextInput, BaseElement } from '../../ui';
-import * as support from '../../support'
+import { browser, element, by, $, ElementFinder } from 'protractor';
+import {
+  BaseElement, BaseElementArray, Button, Clickable, ModalDialog,
+  MultipleSelectionList, SingleSelectionDropdown, TextInput
+} from '../../ui';
+import * as support from '../../support';
 import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
+export class Wizard extends BaseElement {
 
-export class Wizard extends ui.BaseElement {
+  footer = new BaseElement(this.$('div.modal-footer'));
+  primaryButton = new Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next');
 
-  footer = new ui.BaseElement(this.$('div.modal-footer'));
-  primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next')
-
-  constructor(element: ElementFinder, name: string = '') {
-    super(element, name);
+  constructor(elem: ElementFinder, name: string = '') {
+    super(elem, name);
   }
 
   async ready() {
@@ -30,19 +31,18 @@ export interface ProjectDetail {
   strategy?: string;
 }
 
-
 const PROJECT_CARD = 'div.card-pf';
 
 export class QuickStartWizard extends Wizard {
-  filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter')
+  filterTextInput = new TextInput(this.$('input[type="text"]'), 'filter');
 
   // TODO: may be turn this into a widget
-  projectSelector = new ui.BaseElement(this.$('ob-project-select'))
-  projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD))
+  projectSelector = new BaseElement(this.$('ob-project-select'));
+  projectCards = new BaseElementArray(this.projectSelector.$$(PROJECT_CARD));
 
-  projectInfoStep = new ui.BaseElement(this.$('project-info-step'))
+  projectInfoStep = new BaseElement(this.$('project-info-step'));
   // we worry about proj
-  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'))
+  projectNameInput = new TextInput(this.projectInfoStep.$('#named'));
 
   // tslint:disable:max-line-length
   release = new Button(element(by.xpath('.//*[@value=\'Release\']')));
@@ -52,39 +52,39 @@ export class QuickStartWizard extends Wizard {
 
   async ready() {
     await super.ready();
-    this.debug(' .... wizard ', 'ok')
-    await this.footer.ready()
-    this.debug(' .... footer ', 'ok')
+    this.debug(' .... wizard ', 'ok');
+    await this.footer.ready();
+    this.debug(' .... footer ', 'ok');
 
     await this.filterTextInput.ready();
-    await this.projectSelector.ready()
-    this.debug(' .... selection ', 'ok')
+    await this.projectSelector.ready();
+    this.debug(' .... selection ', 'ok');
     await this.projectCards.ready();
-    this.debug(' .... cards ', 'ok')
+    this.debug(' .... cards ', 'ok');
   }
 
-  async findCard(name: string): Promise<ui.Clickable> {
-    support.debug(' .... finding card', name)
+  async findCard(name: string): Promise<Clickable> {
+    support.debug('.... finding card', name);
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
-    let element = this.projectSelector.element(cardFinder)
-    let card = new ui.Clickable(element, name);
+    let elem = this.projectSelector.element(cardFinder);
+    let card = new Clickable(elem, name);
     await card.ready();
-    support.debug(' .... found card', name)
+    support.debug('.... found card', name);
     return card;
   }
 
   async waitForProjectInfoStep() {
-    await this.projectInfoStep.ready()
-    await this.projectNameInput.ready()
-    await this.primaryButton.ready()
+    await this.projectInfoStep.ready();
+    await this.projectNameInput.ready();
+    await this.primaryButton.ready();
   }
 
   async newProject({ project, name = '', strategy }: ProjectDetail) {
     let card = await this.findCard(project);
-    await card.clickWhenReady()
+    await card.clickWhenReady();
 
     await this.primaryButton.clickWhenReady();
-    await this.waitForProjectInfoStep()
+    await this.waitForProjectInfoStep();
 
     await this.projectNameInput.enterText(name);
     await this.primaryButton.clickWhenReady();
@@ -126,17 +126,17 @@ export class QuickStartWizard extends Wizard {
 }
 
 export interface RepoDetail {
-  org: string
-  repositories: string[]
-};
+  org: string;
+  repositories: string[];
+}
 
 export class ImportCodeWizard extends Wizard {
 
-  githubOrg = new ui.SingleSelectionDropdown(
-    this.$('organisation-step single-selection-dropdown'), 'Github Org')
+  githubOrg = new SingleSelectionDropdown(
+    this.$('organisation-step single-selection-dropdown'), 'Github Org');
 
-  repoList = new ui.MultipleSelectionList(
-    this.$('multiple-selection-list'), 'Repository List')
+  repoList = new MultipleSelectionList(
+    this.$('multiple-selection-list'), 'Repository List');
 
   async ready() {
     await super.ready();
@@ -144,24 +144,23 @@ export class ImportCodeWizard extends Wizard {
 
   async waitForGithubOrg() {
     await this.githubOrg.ready();
-
   }
 
   async importCode({ org, repositories }: RepoDetail) {
-    await this.primaryButton.ready()
-    await this.waitForGithubOrg()
+    await this.primaryButton.ready();
+    await this.waitForGithubOrg();
     await this.githubOrg.select(org);
     await this.primaryButton.clickWhenReady();
 
     await this.repoList.ready();
-    repositories.forEach(async (r) => await this.repoList.select(r))
-    await this.primaryButton.clickWhenReady()
+    repositories.forEach(async (r) => await this.repoList.select(r));
+    await this.primaryButton.clickWhenReady();
     // deployment choose default
-    await this.primaryButton.clickWhenReady()
+    await this.primaryButton.clickWhenReady();
 
     await this.primaryButton.untilTextIsPresent('Finish');
     this.primaryButton.name = 'Finish';
-    await this.primaryButton.clickWhenReady()
+    await this.primaryButton.clickWhenReady();
 
     await this.primaryButton.untilTextIsPresent('Ok');
     this.primaryButton.name = 'Ok';
@@ -170,26 +169,26 @@ export class ImportCodeWizard extends Wizard {
 
 }
 
-export class AddToSpaceDialog extends ui.ModalDialog {
+export class AddToSpaceDialog extends ModalDialog {
 
-  noThanksButton = new ui.Button($('#noThanksButton'), 'No Thanks ...');
-  importExistingCodeButton = new ui.Button(
+  noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
+  importExistingCodeButton = new Button(
     $('#importCodeButton'), 'Import Existing Code');
 
-  newQuickstartButton = new ui.Button(
+  newQuickstartButton = new Button(
     $('#forgeQuickStartButton'), 'New Quickstart Project');
 
   // NOTE: not visible initially
-  quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'))
-  importCodeWizard = new ImportCodeWizard(this.$('import-wizard'))
+  quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'));
+  importCodeWizard = new ImportCodeWizard(this.$('import-wizard'));
 
-  newImportExperienceButton = new ui.Button(
+  newImportExperienceButton = new Button(
     this.element(by.xpath('//*[contains(text(),\'Try our new Getting Started experience\')]')),
     'Try our new Getting Started experience'
   );
 
-  constructor(element: ElementFinder) {
-    super(element, 'Add to Space Wizard');
+  constructor(elem: ElementFinder) {
+    super(elem, 'Add to Space Wizard');
   }
 
   async ready() {
@@ -211,7 +210,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   async importExistingCode(details: RepoDetail) {
     await this.importExistingCodeButton.clickWhenReady();
     await this.importCodeWizard.ready();
-    support.debug("... going to import repo", details.repositories)
+    support.debug('... going to import repo', details.repositories);
     await this.importCodeWizard.importCode(details);
   }
 
@@ -236,12 +235,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectMission(quickstart.mission.name);
     await launcher.selectRuntime(quickstart.runtime.name);
 
-    await support.writeScreenshot('target/screenshots/launcher-runtime-and-mission-' + name + '.png');
     await launcher.missionRuntimeContinueButton.clickWhenReady();
 
     let pipeline = new LauncherReleaseStrategy(strategy);
     await launcher.selectPipeline(pipeline.name);
-    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + name + '.png');
     await launcher.releaseStrategyContinueButton.clickWhenReady();
 
     // BEGIN: Workaround for the Github login
@@ -258,13 +255,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectGithubOrganization(browser.params.github.username);
     await launcher.ghRepositoryText.clear();
     await launcher.ghRepositoryText.sendKeys(name);
-    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + name + '.png');
     await launcher.gitProviderContinueButton.clickWhenReady();
 
     await launcher.summaryMission(quickstart.mission.name).isDisplayed();
     await launcher.summaryRuntime(quickstart.runtime.name).isDisplayed();
-
-    await support.writeScreenshot('target/screenshots/launcher-summary-' + name + '.png');
 
     let setupApplicationPage: LauncherSetupAppPage = await launcher.setUpApplication();
 
@@ -275,8 +269,6 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
-
-    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-created-' + name + '.png');
 
     await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
@@ -293,12 +285,10 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await launcher.selectGithubOrganization(browser.params.github.username);
     await launcher.ghRepositoryText.clickWhenReady();
     await launcher.ghRepositoryText.sendKeys(repoName);
-    await support.writeScreenshot('target/screenshots/launcher-git-provider-' + appName + '.png');
     await launcher.gitProviderImportContinueButton.clickWhenReady();
 
     let pipeline = new LauncherReleaseStrategy(strategy);
     await launcher.selectPipeline(pipeline.name);
-    await support.writeScreenshot('target/screenshots/launcher-pipeline-' + appName + '.png');
     await launcher.releaseStrategyImportContinueButton.clickWhenReady();
 
     let importApplicationPage: LauncherImportAppPage = await launcher.importApplication();
@@ -309,13 +299,11 @@ export class AddToSpaceDialog extends ui.ModalDialog {
     await importApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
 
-    await support.writeScreenshot('target/screenshots/launcher-new-project-booster-imported-' + appName + '.png');
-
     await importApplicationPage.viewNewApplicationButton.clickWhenReady();
   }
 }
 
-export class NewImportExperienceDialog extends ui.BaseElement {
+export class NewImportExperienceDialog extends BaseElement {
 
   projectName = new TextInput($('#projectName'), 'Application Name');
 
@@ -348,7 +336,7 @@ export class NewImportExperienceDialog extends ui.BaseElement {
   async selectCreateNewApplication(): Promise<LauncherSection> {
     await this.createNewApplicationCard.clickWhenReady();
     // https://github.com/fabric8io/fabric8-test/issues/714
-    await browser.sleep(1000);
+    await browser.sleep(5000);
     await this.continueButton.clickWhenReady();
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
@@ -359,4 +347,3 @@ export class NewImportExperienceDialog extends ui.BaseElement {
     return new LauncherSection(element(by.xpath('//f8-app-launcher')));
   }
 }
-

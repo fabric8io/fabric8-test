@@ -18,7 +18,8 @@ export class FeatureLevelUtils {
 
     public static async getRealFeatureLevel(): Promise<FeatureLevel> {
         let dashboardPage = new MainDashboardPage();
-        let userSettingsPage = await dashboardPage.gotoUserSettins();
+        await dashboardPage.open();
+        let userSettingsPage = await dashboardPage.gotoUserSettings();
         let featureTab = await userSettingsPage.gotoFeaturesTab();
         let featureLevel = await featureTab.getFeatureLevel();
         return this.getByString(featureLevel);

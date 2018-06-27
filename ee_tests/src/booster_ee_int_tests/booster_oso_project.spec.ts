@@ -1,17 +1,11 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser, ExpectedConditions as until } from 'protractor';
 
 import * as support from '../support';
-import { Quickstart } from '../support/quickstart';
 import { TextInput, Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
-import { info } from '../support';
-import { OsoDashboardPage } from '../..';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
 let globalSpaceName: string;
@@ -23,7 +17,8 @@ describe('Access project in OSO:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -47,7 +42,7 @@ describe('Access project in OSO:', () => {
 
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);
-    await browser.wait(support.windowCount(2), support.DEFAULT_WAIT);
+    await browser.wait(support.windowManager.windowCountCondition(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
     support.writeScreenshot('target/screenshots/booster_oso_project_openshift_console_' + spaceName + '.png');

@@ -1,19 +1,12 @@
-import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser, Key, protractor, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
-import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { info } from '../support';
-import * as ui from '../ui';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -41,7 +34,8 @@ describe('Modify the project source code in Che:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -60,7 +54,8 @@ describe('Modify the project source code in Che:', () => {
 
     /* Find the project in the project tree */
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),'Project in Che Tree');
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()),
+      'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/che_edit_project_tree_' + support.currentSpaceName() + '.png');
 
@@ -77,11 +72,11 @@ describe('Modify the project source code in Che:', () => {
       await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(SRCFILENAME)), support.DEFAULT_WAIT);
     } catch (e) {
       support.info('Exception in Che project directory tree = ' + e);
-  }
+    }
 
     /* Modify the deployed app source code */
     let theText = await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).getText();
-    support.info ('filename = ' + theText);
+    support.info('filename = ' + theText);
     await spaceCheWorkSpacePage.cheFileName(SRCFILENAME).clickWhenReady();
 
     /* Right click on file name */
@@ -97,7 +92,7 @@ describe('Modify the project source code in Che:', () => {
       await spaceCheWorkSpacePage.cheMenuEdit.clickWhenReady(support.LONG_WAIT);
       await spaceCheWorkSpacePage.cheEditFormat.clickWhenReady(support.LONG_WAIT);
     } catch (e) {
-     support.info('Exception in writing to file in Che = ' + e);
+      support.info('Exception in writing to file in Che = ' + e);
     }
     support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + support.currentSpaceName() + '.png');
 
@@ -116,22 +111,20 @@ describe('Modify the project source code in Che:', () => {
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support.invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
+    await support.invokeApp(boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
       'post_edit', EXPECTED_TEXT_AFTER_SEND, EXPECTED_TEXT_AFTER_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
     await browser.close();
 
     /* Close the Che window */
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToWindow(2, 1);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
-
-
+    await support.windowManager.switchToWindow(1, 0);
   });
 
 });

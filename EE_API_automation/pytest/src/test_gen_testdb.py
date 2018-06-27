@@ -233,15 +233,10 @@ class TestClass_SDD(object):
                 print "Exception creating launch_info_dump.json"
 
             if cleanup:
-                print "\nDeleting Space %s" % dynamic_vars.spacename
+                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
-                if r.status_code is 200:
-                    print "Space %s successfully deleted" % dynamic_vars.spacename
-                else:
-                    print "Error deleting space %s" % dynamic_vars.spacename
-                    print "Bug: https://github.com/openshiftio/openshift.io/issues/3503"
+                assert r.status_code == 200
             
-
 class TestClass_SCRUM(object):
     class TestClass_CreateSpace(object):
         def test_get_user_details(self):
@@ -269,7 +264,7 @@ class TestClass_SCRUM(object):
             #Design the URL
             api = "api/spaces"
             url = launch_detail.create_url(api)
-            space_name = helpers.create_space_name("SCRUM")
+            space_name = helpers.create_space_name("AGILE")
             f = helpers.read_post_data_file('create_space_scrum.json', replace={'$space_name_var':space_name, '$loggedin_user_id':dynamic_vars.userid})
             ##Make the request
             r = req.post(url, headers=request_detail.headers_default, json=f)
@@ -377,10 +372,10 @@ class TestClass_SCRUM(object):
             assert r.status_code == 201
 
     #### Workitem related tests follows::::::::
-    class TestClass_CreateWorkitems(object):  
-        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
-        def test_create_backlog_epics(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeepic)
+    class TestClass_CreateWorkitems(object):
+        @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1, reset_counter = True))
+        def test_create_backlog_themes(self, wi_name):
+            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypetheme)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             ## Add a label to the workitem. If label doen't exist, add one
@@ -391,11 +386,11 @@ class TestClass_SCRUM(object):
                 r.raise_for_status()
 
         @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
-        def test_create_backlog_features(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypefeature1)
+        def test_create_backlog_epics(self, wi_name):
+            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypeepic)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
-            ## Add a label to the workitem
+            ## Add a label to the workitem. If label doen't exist, add one
             try:
                 unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
             except KeyError:
@@ -403,27 +398,33 @@ class TestClass_SCRUM(object):
                 r.raise_for_status()
 
         @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
-        def test_create_backlog_bugs(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypebug1)
+        def test_create_backlog_story(self, wi_name):
+            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypestory)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             ## Add a label to the workitem
             try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_3]
+                used = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
+                if used:
+                    r = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=used)[0]
             except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_3] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_3, label_id=None)
+                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_2] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=None)
+            finally:
                 r.raise_for_status()
 
         @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
-        def test_create_backlog_backlogitems(self, wi_name):
-            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypebacklogitem)
+        def test_create_backlog_defects(self, wi_name):
+            r = helpers.create_workitem_SCRUM(title=wi_name, spaceid=dynamic_vars.spaceid, witype=workitem_constants.witypedefect)
             ## Add a couple of comments to the workitem
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             ## Add a label to the workitem
             try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_4]
+                used = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
+                if used:
+                    r = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=used)[0]
             except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_4] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_4, label_id=None)
+                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_2] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=None)
+            finally:
                 r.raise_for_status()
             
         @pytest.mark.parametrize("wi_name", helpers.generate_entity_names("Workitem_Title", 1))
@@ -433,9 +434,12 @@ class TestClass_SCRUM(object):
             helpers.add_workitem_comment(dynamic_vars.wi_names_to_links[wi_name], workitem_constants.comment_1_text)
             ## Add a label to the workitem
             try:
-                unused = dynamic_vars.labels_names_to_ids[workitem_constants.label_5]
+                used = dynamic_vars.labels_names_to_ids[workitem_constants.label_2]
+                if used:
+                    r = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=used)[0]
             except KeyError:
-                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_5] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_5, label_id=None)
+                r, dynamic_vars.labels_names_to_ids[workitem_constants.label_2] = helpers.add_workitem_label(workitem_link=dynamic_vars.wi_names_to_links[wi_name], label_text=workitem_constants.label_2, label_id=None)
+            finally:
                 r.raise_for_status()
 
     class TestClass_Teardown(object):
@@ -456,13 +460,9 @@ class TestClass_SCRUM(object):
                 print "Exception creating launch_info_dump.json"
             
             if cleanup:
-                print "\nDeleting Space %s" % dynamic_vars.spacename
+                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
-                if r.status_code is 200:
-                    print "Space %s successfully deleted" % dynamic_vars.spacename
-                else:
-                    print "Error deleting space %s" % dynamic_vars.spacename
-                    print "Bug: https://github.com/openshiftio/openshift.io/issues/3503"
+                assert r.status_code == 200
             
             global start_time
             print "\n\nTotal time taken: %s seconds" % int((end_time - start_time))

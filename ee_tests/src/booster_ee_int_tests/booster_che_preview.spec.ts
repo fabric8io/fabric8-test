@@ -1,19 +1,12 @@
-import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { info } from '../support';
-import * as ui from '../ui';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -35,7 +28,8 @@ describe('Verify the Che preview URL for a deployed app:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -66,13 +60,13 @@ describe('Verify the Che preview URL for a deployed app:', () => {
     await browser.close();
 
     /* Close the Che window */
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToWindow(2, 1);
     await spaceCheWorkSpacePage.bottomPanelRunTabCloseButton.clickWhenReady();
     await spaceCheWorkSpacePage.bottomPanelRunTabOKButton.clickWhenReady();
     await browser.close();
 
     /* Switch back to the OSIO window */
-    await support.switchToWindow(1, 0);
+    await support.windowManager.switchToWindow(1, 0);
 
   });
 

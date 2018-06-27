@@ -1,4 +1,5 @@
 osioperf.py
+*.pyc
 *.png
 *.csv
 *.log

@@ -9,10 +9,6 @@ export class LauncherMission {
   id: string;
   name: string;
 
-  static mission(id: string) {
-    return new LauncherMission(id);
-  }
-
   constructor(mission: string) {
     this.id = mission;
 
@@ -39,5 +35,9 @@ export class LauncherMission {
         break;
       }
     }
+  }
+
+  static mission(id: string) {
+    return new LauncherMission(id);
   }
 }

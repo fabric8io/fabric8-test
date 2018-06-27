@@ -1,30 +1,28 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
-import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';
 import { SpaceDashboardPage } from '../..';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
-import { DEFAULT_WAIT } from '../support';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
-    public static create(spaceName: string): SpaceDashboardInteractions {
+    public static create(strategy: string, spaceName: string): SpaceDashboardInteractions {
 
         if (FeatureLevelUtils.isInternal() || FeatureLevelUtils.isExperimental()) {
             // TODO Implement new dashboard
             return <SpaceDashboardInteractions>{
-                openSpaceDashboard(mode: PageOpenMode): void {},
+                openSpaceDashboard(mode: PageOpenMode): void { },
             };
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            return new BetaSpaceDashboardInteractions(spaceName);
+            return new BetaSpaceDashboardInteractions(strategy, spaceName);
         }
 
-        return new ReleasedSpaceDashboardInteractions(spaceName);
+        return new ReleasedSpaceDashboardInteractions(strategy, spaceName);
     }
 }
 
@@ -80,8 +78,11 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     protected spaceDashboardPage: SpaceDashboardPage;
 
-    constructor(spaceName: string) {
+    protected strategy: string;
+
+    constructor(strategy: string, spaceName: string) {
         super(spaceName);
+        this.strategy = strategy;
         this.spaceDashboardPage = new SpaceDashboardPage(spaceName);
     }
 
@@ -102,7 +103,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     }
 
     public async openPipelinesPage(): Promise<void> {
-        await this.spaceDashboardPage.getPipelinesCard().then(async function(card) {
+        await this.spaceDashboardPage.getPipelinesCard().then(async function (card) {
             await card.openPipelinesPage();
         });
     }
@@ -119,9 +120,9 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async verifyCodebases(): Promise<void> {
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
-        browser.wait(async function() {
+        await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
-        }, DEFAULT_WAIT);
+        }, support.DEFAULT_WAIT);
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
         let githubName = browser.params.github.username;
@@ -145,8 +146,20 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
         let applications = await deploymentsCard.getApplications();
         expect(applications.length).toBe(1, 'number of applications');
         expect(await applications[0].getName()).toBe(this.spaceName, 'deployed application name');
-        // expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-        // expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
+
+        if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
+            expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
+            await applications[0].openStageLink();
+            await support.windowManager.switchToNewWindow();
+            await this.verifyLink('stage');
+        }
+
+        if (ReleaseStrategy.RUN === this.strategy) {
+            expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
+            await applications[0].openRunLink();
+            await support.windowManager.switchToLastWindow();
+            await this.verifyLink('run');
+        }
     }
 
     public async verifyAnalytics(): Promise<void> {
@@ -163,9 +176,21 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
 
     public async verifyWorkItems(): Promise<void> {
         // no work items card exptected
-        await element.all(by.id('spacehome-my-workitems-badge')).then(function(items) {
+        await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
             expect(items.length).toBe(0);
         });
+    }
+
+    private async verifyLink(environment: string) {
+        await browser.wait(until.urlContains(environment));
+        await support.screenshotManager.writeScreenshot(environment);
+        expect(await browser.getCurrentUrl()).toContain(environment, `${environment} environment url`);
+
+        await browser.wait(until.presenceOf(element(by.id('_http_booster'))));
+        let text = await element(by.id('_http_booster')).getText();
+        expect(text).toContain('HTTP Booster', `${environment} page contains text`);
+
+        await support.windowManager.switchToMainWindow();
     }
 }
 
@@ -176,4 +201,3 @@ export class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardIntera
         expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
     }
 }
-

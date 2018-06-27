@@ -7,7 +7,7 @@ import { TextInput, Button } from '../ui';
 
 import { LandingPage } from '../page_objects/landing.page';
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline.page';
+import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
@@ -24,7 +24,8 @@ describe('Clean up user environment:', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {

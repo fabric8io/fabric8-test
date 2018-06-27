@@ -1,21 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBrowser } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
-
+import { browser } from 'protractor';
 import * as support from '../support';
-import { BuildStatus } from '../support/build_status';
-import { FeatureLevel, FeatureLevelUtils } from '../support/feature_level';
 import { Quickstart } from '../support/quickstart';
-import { DeploymentsInteractions, DeploymentsInteractionsFactory } from '../interactions/deployments_interactions';
 import { PipelinesInteractions } from '../interactions/pipelines_interactions';
-import { SpaceDashboardInteractions } from '../interactions/space_dashboard_interactions';
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
-import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
-import { SpaceChePage } from '../page_objects/space_che.page';
-import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { Button } from '../ui';
 import { PageOpenMode } from '../..';
-import { DEFAULT_WAIT, LONG_WAIT } from '../support';
 
 describe('Analytic E2E test suite', () => {
 
@@ -35,7 +24,8 @@ describe('Analytic E2E test suite', () => {
   beforeEach(async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
-    dashboardPage = await login.run();
+    await login.run();
+    dashboardPage = new MainDashboardPage();
   });
 
   afterEach(async () => {
@@ -54,7 +44,7 @@ describe('Analytic E2E test suite', () => {
 
   it('Verify dashboard', async () => {
     support.info('--- Verify dashboard ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases();
     await dashboardInteractions.verifyAnalytics();

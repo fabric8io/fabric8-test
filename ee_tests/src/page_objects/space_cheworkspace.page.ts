@@ -2,9 +2,7 @@
   OSIO EE test - Page object model - Che workspace page
 */
 
-// tslint:disable:max-line-length
-import { browser, Key, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-// tslint:ensable:max-line-length
+import { browser, element, by, $, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
 import { TextInput, Button } from '../ui';
 import * as support from '../support';
@@ -29,12 +27,12 @@ export class SpaceCheWorkspacePage extends AppPage {
   bottomPanelGitCommitTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git commit\')]')), 'Che Bottom Panel Git commit Tab');
   bottomPanelGitCommitTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git commit\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Git Commit Tab close button');
   bottomPanelGitCommitConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolePart\']'));
- 
+
   /* Bottom Panel Git push tab */
   bottomPanelGitPushTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git push\')]')), 'Che Bottom Panel Git push Tab');
   bottomPanelGitPushTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'Git push\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Git Push Tab close button');
   bottomPanelGitPushConsoleLines = element(by.xpath('.//*[@id=\'gwt-debug-consolePart\']'));
- 
+
   /* Bottom Panel run tab */
   bottomPanelRunTab = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]')), 'Che Bottom Panel Run Tab');
   bottomPanelRunTabCloseButton = new Button (element(by.xpath('.//*[@id=\'gwt-debug-multiSplitPanel-tabsPanel\']//*[contains(text(),\'run\')]/..//*[contains(@class,\'GEU2T3BBEOC\')]')), 'Che Bottom Panel Run Tab close button');
@@ -85,8 +83,8 @@ export class SpaceCheWorkspacePage extends AppPage {
 
   /* Junit output is displayed here */
   debugInfoPanel = new TextInput (element(by.xpath('.//*[@id=\'gwt-debug-infoPanel\']')));
-  testRunnerResultsButton = new Button(element(by.xpath('.//*[@id=\'gwt-debug-partButton-Test Results\']')),'testRunnerResultsButton');
-  
+  testRunnerResultsButton = new Button(element(by.xpath('.//*[@id=\'gwt-debug-partButton-Test Results\']')), 'testRunnerResultsButton');
+
   /* File context menu */
   cheContextMenuEditFile = new Button (element(by.xpath('.//*[@id=\'contextMenu\/Edit file\']')), 'Edit file');
 

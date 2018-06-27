@@ -1,27 +1,22 @@
-import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBrowser } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 
 import * as support from './support';
-import { BuildStatus } from './support/build_status';
-import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
+import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
-import { SpaceDashboardInteractions } from './interactions/space_dashboard_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
 import { PageOpenMode } from '..';
-import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
 describe('e2e_smoketest', () => {
 
   let quickstart: Quickstart;
   let strategy: string;
   let spaceName: string;
-  let index: number = 1;
 
   beforeAll(async () => {
     support.info('--- Before all ---');
@@ -31,23 +26,24 @@ describe('e2e_smoketest', () => {
     quickstart = new Quickstart(browser.params.quickstart.name);
   });
 
+  beforeEach(async() => {
+    support.screenshotManager.nextTest();
+  });
+
   afterEach(async () => {
     support.info('--- After each ---');
-    await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '.png');
-    await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '.html');
-    index++;
+    await support.screenshotManager.writeScreenshot('afterEach');
   });
 
   afterAll(async () => {
     support.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
       try {
-        support.info('--- Reset environmet ---');
+        support.info('--- Reset environment ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.writeScreenshot('target/screenshots/' + spaceName + '_' + index + '_reset.png');
-        await support.writePageSource('target/screenshots/' + spaceName + '_' + index + '_reset.html');
+        await support.screenshotManager.writeScreenshot('resetEnvironment');
         throw e;
       }
     }
@@ -73,27 +69,21 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.openCodebasesPage();
 
     let spaceChePage = new SpaceChePage();
     await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-
-    await support.switchToWindow(2, 1);
+    await support.windowManager.switchToNewWindow();
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
-
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    // await support.debug (spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText());
-    support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
-
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */
-    await support.switchToWindow(2, 0);
+    await support.windowManager.switchToMainWindow();
   });
 
   it('pipeline', async () => {
@@ -110,13 +100,14 @@ describe('e2e_smoketest', () => {
     support.info('--- Verify deployments ---');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.showDeploymentsScreen();
-    await deploymentsInteractions.verifyApplication();
+    let application = await deploymentsInteractions.verifyApplication();
+    await deploymentsInteractions.verifyEnvironments(application);
     await deploymentsInteractions.verifyResourceUsage();
   });
 
   it('dashboard', async () => {
     support.info('--- Verify dashboard ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(spaceName);
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases();
     await dashboardInteractions.verifyAnalytics();

@@ -1,48 +1,44 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
-import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline.page';
+import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { SpaceDashboardPage, PipelineStage, MainDashboardPage } from '../page_objects';
 import { PageOpenMode } from '../..';
-import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
-import { LONG_WAIT } from '../support';
 
-// TODO - Error conditions to trap (copied from original code)
-// 1) Jenkins build log - find errors if the test fails
-// 2) Jenkins pod log - find errors if the test fails
-// 3) Presence of build errors in UI
-// 4) Follow the stage and run links */
 export abstract class PipelinesInteractions {
+
+    protected strategy: string;
 
     protected spaceName: string;
 
     protected spacePipelinePage: SpacePipelinePage;
 
+    protected constructor(strategy: string, spaceName: string) {
+      this.spaceName = spaceName;
+      this.strategy = strategy;
+      this.spacePipelinePage = new SpacePipelinePage();
+    }
+
     public static create(strategy: string, spaceName: string) {
         if (strategy === ReleaseStrategy.RELEASE) {
-            return new PipelinesInteractionsReleaseStrategy(spaceName);
+            return new PipelinesInteractionsReleaseStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.STAGE) {
-            return new PipelinesInteractionsStageStrategy(spaceName);
+            return new PipelinesInteractionsStageStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.RUN) {
-            return new PipelinesInteractionsRunStrategy(spaceName);
+            return new PipelinesInteractionsRunStrategy(strategy, spaceName);
         }
         throw 'Unknown release strategy: ' + strategy;
     }
 
-    protected constructor(spaceName: string) {
-        this.spaceName = spaceName;
-        this.spacePipelinePage = new SpacePipelinePage();
-    }
-
     public async showPipelinesScreen() {
         support.info('Verifying pipelines page');
-        let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.spaceName);
+        let dashboardInteractions =
+            SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
         await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
         await dashboardInteractions.openPipelinesPage();
 
@@ -67,21 +63,56 @@ export abstract class PipelinesInteractions {
     }
 
     public async waitToFinish(pipeline: PipelineDetails) {
-        support.info('Waiting for pipeline to finish');
+        let waitToFinishInternalError: Error | undefined;
+        let verifyJenkinsLogError: Error | undefined;
+        let ocLogsError: Error | undefined;
 
+        // wait until the pipeline is finished
         try {
+            support.info('Waiting for pipeline to finish');
             await this.waitToFinishInternal(pipeline);
             support.info('Pipeline is finished');
-        } finally {
-            try {
-                // save Jenkins log no matter if pipeline finished
-                support.info('Check the Jenkins log');
-                await this.verifyJenkinsLog(pipeline);
-            } finally {
-                // save OC logs no matter if Jenkins log was retrieved
-                support.info('Save OC Jenkins pod log');
-                await this.saveOCJenkinsLogs();
-            }
+        } catch (e) {
+            support.info('Waiting for pipeline to finish failed with error: ' + e);
+            await support.screenshotManager.writeScreenshot('pipeline-failed');
+            waitToFinishInternalError = e;
+        }
+
+        // save Jenkins log
+        try {
+            support.info('Check the Jenkins log');
+            await this.verifyJenkinsLog(pipeline);
+            support.info('Jenkins log is OK');
+        } catch (e) {
+            await support.screenshotManager.writeScreenshot('jenkins-log-failed');
+            support.info('Check the Jenkins log failed with error: ' + e);
+            verifyJenkinsLogError = e;
+        }
+
+        // save OC logs
+        try {
+            support.info('Save OC Jenkins pod log');
+            await this.saveOCJenkinsLogs();
+        } catch (e) {
+            support.info('Save OC Jenkins pod log failed with error: ' + e);
+            ocLogsError = e;
+        }
+
+        if (waitToFinishInternalError !== undefined) {
+            throw waitToFinishInternalError;
+        }
+
+        if (verifyJenkinsLogError !== undefined) {
+            // if the UI show Jenkins log faile, try navigating to jenkins directly
+            let osioURL: string = browser.params.target.url.replace('https://', '');
+            let jenkinsURL = 'https://jenkins.' + osioURL;
+            await browser.get(jenkinsURL);
+            await support.screenshotManager.writeScreenshot('jenkins-direct-log');
+            throw verifyJenkinsLogError;
+        }
+
+        if (ocLogsError !== undefined) {
+            throw ocLogsError;
         }
     }
 
@@ -103,11 +134,11 @@ export abstract class PipelinesInteractions {
 
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
-        await support.switchToWindow(3, 2);
-        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))), LONG_WAIT);
-        await support.writeScreenshot('target/screenshots/pipelines-log.png');
-        await support.writePageSource('target/screenshots/pipelines-log.html');
-        await support.switchToWindow(3, 0);
+        await support.windowManager.switchToNewWindow();
+        await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
+          support.LONG_WAIT, 'Jenkins log is finished');
+        await support.screenshotManager.writeScreenshot('jenkins-log');
+        await support.windowManager.switchToMainWindow();
     }
 
     protected async saveOCJenkinsLogs(): Promise<void> {
@@ -118,7 +149,7 @@ export abstract class PipelinesInteractions {
 
         exec('./oc-get-jenkins-logs.sh ' +
             browser.params.login.user + ' ' +
-            browser.params.login.password + 
+            browser.params.login.password +
             ' &> ./target/screenshots/oc-logs-output.txt',
             (err: Error, stdout: string | Buffer, stderr: string | Buffer) => {
                 if (err !== null) {
@@ -143,6 +174,7 @@ export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions 
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 return true;
             } else {
+              support.debug('... Current pipeline status: ' + currentStatus);
                 await browser.sleep(5000);
                 return false;
             }
@@ -184,10 +216,12 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
         await browser.wait(async function () {
             let currentStatus = await pipeline.getStatus();
             if (BuildStatusUtils.buildEnded(currentStatus)) {
+                support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
-                if (await pipeline.approvalRequired()) {
-                    await pipeline.approve();
+              support.debug('... Current pipeline status: ' + currentStatus);
+                if (await pipeline.isInputRequired()) {
+                    await pipeline.promote();
                 }
                 await browser.sleep(5000);
                 return false;
