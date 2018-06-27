@@ -214,14 +214,18 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
 
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
+            support.debug('Before get status');
             let currentStatus = await pipeline.getStatus();
+            support.debug('After get status');
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
               support.debug('... Current pipeline status: ' + currentStatus);
                 if (await pipeline.isInputRequired()) {
+                    support.debug('Input is required');
                     await pipeline.promote();
+                    support.debug('Promoted');
                 }
                 await browser.sleep(5000);
                 return false;
