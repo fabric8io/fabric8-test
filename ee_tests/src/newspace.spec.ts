@@ -1,21 +1,16 @@
 import { browser } from 'protractor';
 import * as support from './support';
-import { MainDashboardPage, SpaceDashboardPage } from './page_objects';
 
 describe('Creating new spaces in OSIO', () => {
-  let dashboardPage: MainDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
     let login = new support.LoginInteraction();
     await login.run();
-    dashboardPage = new MainDashboardPage();
   });
 
   it('Create a new space without creating a new quickstart', async () => {
     let spaceName = support.newSpaceName();
-    let spaceDashboardPage = await dashboardPage.createNewSpace(spaceName);
-
     let currentUrl = await browser.getCurrentUrl();
     support.debug ('>>> browser is URL: ' + currentUrl);
 

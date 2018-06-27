@@ -1,6 +1,5 @@
 import {
-  browser, ExpectedConditions as EC,
-  ElementFinder, ElementArrayFinder
+  browser, ElementArrayFinder, ElementFinder, ExpectedConditions as until
 } from 'protractor';
 
 import * as mixins from '../mixins';
@@ -56,28 +55,28 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   async untilClickable(timeout?: number) {
-    await this.waitFor('clickable', EC.elementToBeClickable(this), timeout);
+    await this.waitFor('clickable', until.elementToBeClickable(this), timeout);
   }
 
   async untilPresent(timeout?: number) {
-    await this.waitFor('present', EC.presenceOf(this), timeout);
+    await this.waitFor('present', until.presenceOf(this), timeout);
   }
 
   async untilDisplayed(timeout?: number) {
-    await this.waitFor('visible', EC.visibilityOf(this), timeout);
+    await this.waitFor('visible', until.visibilityOf(this), timeout);
   }
 
   async untilTextIsPresent(text: string, timeout?: number) {
-    let condition = EC.textToBePresentInElement(this, text);
+    let condition = until.textToBePresentInElement(this, text);
     await this.waitFor(`text ${text}`, condition, timeout);
   }
 
   async untilHidden(timeout?: number) {
-    await this.waitFor('hidden', EC.invisibilityOf(this), timeout);
+    await this.waitFor('hidden', until.invisibilityOf(this), timeout);
   }
 
   async untilAbsent(timeout?: number) {
-    await this.waitFor('absence', EC.stalenessOf(this), timeout);
+    await this.waitFor('absence', until.stalenessOf(this), timeout);
   }
 
   async clickWhenReady(timeout?: number) {

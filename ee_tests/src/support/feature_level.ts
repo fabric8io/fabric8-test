@@ -1,6 +1,5 @@
-import { browser, element, by } from 'protractor';
+import { browser } from 'protractor';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import * as support from '../support';
 
 export enum FeatureLevel {
     RELEASED = 'released',

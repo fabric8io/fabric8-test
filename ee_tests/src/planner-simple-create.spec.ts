@@ -1,8 +1,8 @@
 import * as support from './support';
-import { SpaceDashboardPage, SpacePipelinePage, MainDashboardPage } from './page_objects';
+import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
 
 describe('Planner Tab', () => {
-  let spaceDashboard: SpaceDashboardPage;
   let spaceName: string;
 
   beforeEach( async () => {
@@ -12,7 +12,7 @@ describe('Planner Tab', () => {
 
     spaceName = support.newSpaceName();
     let mainDashboard = new MainDashboardPage();
-    spaceDashboard = await mainDashboard.createNewSpace(spaceName);
+    await mainDashboard.createNewSpace(spaceName);
 
     // HACK: use this to reuse an existing space
     // spaceDashboard = new SpaceDashboardPage('foobar');

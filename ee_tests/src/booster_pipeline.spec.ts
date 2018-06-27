@@ -1,21 +1,13 @@
-import { browser, element, by, ElementArrayFinder, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder } from 'protractor';
 
 import * as support from './support';
-import { Button } from './ui';
+import { Button } from './ui/button';
 
 import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
-
-/* Tests to verify the build pipeline */
-
-/* Locate a pipeline by name */
-function allPipelineByName (nameString: string): ElementArrayFinder {
-  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
-  return element.all(by.xpath(xpathString));
-}
 
 /* Locate a pipeline by name */
 function pipelineByName (nameString: string): ElementFinder {

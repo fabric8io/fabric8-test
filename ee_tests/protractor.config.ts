@@ -1,4 +1,4 @@
-import { Config, browser } from 'protractor';
+import { browser, Config } from 'protractor';
 import { SpecReporter } from 'jasmine-spec-reporter';
 import * as failFast from 'protractor-fail-fast';
 import * as VideoReporter from 'protractor-video-reporter';

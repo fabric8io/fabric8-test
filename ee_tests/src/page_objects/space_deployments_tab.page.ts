@@ -1,16 +1,6 @@
-/*
-  OSIO EE test - Page object model - The page hierarchy is:
-  * landing.page.ts - User starts here - User selects "Log In" and is moved to the login page
-  * login.page.ts - At this page the user selects the log in path, enters name/password
-  * main_dashboard.page.ts - Account dashboard page - This is the user's top level page insisde of OSIO
-  * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
-*/
-// tslint:disable:max-line-length
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
-// tslint:ensable:max-line-length
 import { AppPage } from './app.page';
-import { TextInput, Button } from '../ui';
 
 export class SpaceDeploymentsPage extends AppPage {
 
@@ -23,7 +13,7 @@ export class SpaceDeploymentsPage extends AppPage {
     await browser.wait(until.visibilityOf(this.deploymentCardContainerFirstElement), support.LONGER_WAIT);
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
-    support.info ('Total number of apps found = ' + elementFinders.length);
+    support.info('Total number of apps found = ' + elementFinders.length);
 
     let applications = new Array<DeployedApplication>();
     for (let finder of elementFinders) {
@@ -38,7 +28,7 @@ export class SpaceDeploymentsPage extends AppPage {
     await browser.wait(until.visibilityOf(this.resourceUsageDataFirstElement), support.LONGER_WAIT);
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
-    support.info ('Total number of resources found = ' + elementFinders.length);
+    support.info('Total number of resources found = ' + elementFinders.length);
 
     let data = new Array<ResourceUsageData>();
     for (let finder of elementFinders) {
@@ -93,8 +83,10 @@ export class DeployedApplicationEnvironment {
 
   async isReady(): Promise<boolean> {
     try {
-      await browser.wait(until.stalenessOf(this.finder.element(by.className('c3-arc-Empty'))), support.LONGER_WAIT);
-      await browser.wait(until.stalenessOf(this.finder.element(by.className('c3-arcs-Not-Ready'))), support.LONGER_WAIT);
+      await browser.wait(until.stalenessOf(
+        this.finder.element(by.className('c3-arc-Empty'))), support.LONGER_WAIT);
+      await browser.wait(until.stalenessOf(
+        this.finder.element(by.className('c3-arcs-Not-Ready'))), support.LONGER_WAIT);
     } catch {
       return Promise.resolve(false);
     }

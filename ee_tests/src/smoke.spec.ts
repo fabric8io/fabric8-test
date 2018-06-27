@@ -9,7 +9,7 @@ import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboar
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
-import { Button } from './ui';
+import { Button } from './ui/button';
 import { PageOpenMode } from '..';
 
 describe('e2e_smoketest', () => {

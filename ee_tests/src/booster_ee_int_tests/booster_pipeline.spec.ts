@@ -1,14 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, ElementFinder, ElementArrayFinder } from 'protractor';
+import { $, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as until } from 'protractor';
 
 import * as support from '../support';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 
 /* Locate a pipeline by name */
 function allPipelineByName (nameString: string): ElementArrayFinder {
@@ -39,9 +35,6 @@ describe('Verify the completion of the build pipeline:', () => {
   let runIcon = new Button (element(by.xpath
       ('.//div[contains(text(),\'Rollout to Run\')]/*[contains(@class,\'open-service-icon\')]/a')), 'Run icon');
 
-  /* View the Jenkins Log */
-  let viewLog = new Button (element(by.xpath('.//*[contains(text(),\'View Log\')]')), 'View Log');
-
   /* Buttons displayed in the promote dialog */
   let promoteButton = new Button (element(by.xpath('.//button[contains(text(),\'Promote\')]')), 'Promote button');
 
@@ -64,9 +57,6 @@ describe('Verify the completion of the build pipeline:', () => {
     await spaceDashboardPage.openInBrowser();
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
     support.debug('Accessed pipeline page');
-
-    let spacePipelinePage = new SpacePipelinePage();
-    globalSpacePipelinePage = spacePipelinePage;
 
     let pipeline = new Button(pipelineByName(repoName), 'Pipeline By Name');
 
@@ -112,10 +102,9 @@ describe('Verify the completion of the build pipeline:', () => {
     await browser.switchTo().window(handles[1]);
 
     let invokeButton = new Button($('#invoke'), 'Invoke Button');
-    let stageOutput = await element(by.id('greeting-result')).getText();
     await invokeButton.clickWhenReady(support.DEFAULT_WAIT);
 
-    // TODO - Replace thie sleep statement
+    // TODO - Replace the sleep statement
     browser.sleep(3000);
     support.writeScreenshot('target/screenshots/boosterstageSuccessful.png');
 

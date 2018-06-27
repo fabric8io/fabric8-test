@@ -1,5 +1,5 @@
 import * as support from './support';
-import { MainDashboardPage } from './page_objects';
+import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
 describe(' new spaces in OSIO', () => {
   let mainDashboard: MainDashboardPage;

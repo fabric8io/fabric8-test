@@ -1,7 +1,7 @@
-import { browser, $$ } from 'protractor';
+import { $$, browser } from 'protractor';
 import * as support from './support';
 import { LandingPage } from './page_objects/landing.page';
-import { MainDashboardPage } from './page_objects';
+import { MainDashboardPage } from './page_objects/main_dashboard.page';
 
 describe('Landing Page', () => {
 

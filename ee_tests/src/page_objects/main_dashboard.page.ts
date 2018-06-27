@@ -1,4 +1,4 @@
-import { browser, element, by, ExpectedConditions as until } from 'protractor';
+import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { AppPage } from './app.page';
 import { SpaceDashboardPage } from './space_dashboard.page';

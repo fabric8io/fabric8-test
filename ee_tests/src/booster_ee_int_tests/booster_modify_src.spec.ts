@@ -1,15 +1,12 @@
-import { browser, Key, protractor, ExpectedConditions as until } from 'protractor';
+import { browser, ExpectedConditions as until, Key, protractor } from 'protractor';
 import * as support from '../support';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 const SRCFILENAME: string = 'HttpApplication.java';
 
 /* Text used to verify operation of deployed app, before and after the app is modified */
@@ -20,8 +17,6 @@ const EXPECTED_SUCCESS_TEXT = 'Succeeded in deploying verticle';  // TODO - Need
 const REDEPLOY_TEXT_1 = 'Changes detected - recompiling the module';
 const REDEPLOY_TEXT_2 = 'INFO: Redeploying';
 const REDEPLOY_TEXT_3 = 'INFO: Redeployment done';
-
-// tslint:disable:max-line-length
 
 /* This test performs these steps:
    - Execute the quickstart/booster through the Che run menu, verify output from the deployed app
@@ -68,7 +63,8 @@ describe('Modify the project source code in Che:', () => {
 
     /* Locate the file in the project tree */
     try {
-      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(), '\/src', '\/main', '\/java', '\/io', '\/openshift', '\/booster');
+      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName(),
+        '\/src', '\/main', '\/java', '\/io', '\/openshift', '\/booster');
       await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName(SRCFILENAME)), support.DEFAULT_WAIT);
     } catch (e) {
       support.info('Exception in Che project directory tree = ' + e);

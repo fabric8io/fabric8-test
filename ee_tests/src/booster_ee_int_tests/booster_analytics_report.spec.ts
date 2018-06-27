@@ -1,6 +1,5 @@
 import { browser } from 'protractor';
 import * as support from '../support';
-import { Quickstart } from '../support/quickstart';
 import { PipelinesInteractions } from '../interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
@@ -8,15 +7,12 @@ import { PageOpenMode } from '../..';
 
 describe('Analytic E2E test suite', () => {
 
-  let quickstart: Quickstart;
   let strategy: string;
   let spaceName: string;
-  let index: number = 1;
   let dashboardPage: MainDashboardPage;
 
   beforeAll(async () => {
     support.info('--- Before all ---');
-    quickstart = new Quickstart(browser.params.quickstart.name);
     spaceName = support.currentSpaceName();
     strategy = browser.params.release.strategy;
   });

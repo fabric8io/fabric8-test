@@ -1,6 +1,9 @@
-import { browser, by, ExpectedConditions as until, $, element } from 'protractor';
+import { $, browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
-import { BaseElement, Button, ModalDialog, TextInput } from '../ui';
+import { BaseElement } from '../ui/base.element';
+import { Button } from '../ui/button';
+import { ModalDialog } from '../ui/modal_dialog';
+import { TextInput } from '../ui/text_input';
 import { AppPage } from './app.page';
 
 class CleanupConfirmationModal extends ModalDialog {

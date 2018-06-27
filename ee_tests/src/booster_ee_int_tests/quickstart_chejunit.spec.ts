@@ -1,9 +1,7 @@
-import { browser, Key, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
-import { LandingPage } from '../page_objects/landing.page';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
+import { Button } from '../ui/button';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';

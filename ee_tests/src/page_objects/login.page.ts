@@ -1,15 +1,15 @@
-import { browser, element, by, By, ExpectedConditions as until, $ } from 'protractor';
-import * as ui from '../ui';
+import { $, browser, ExpectedConditions as until } from 'protractor';
+import { Button } from '../ui/button';
+import { TextInput } from '../ui/text_input';
 import { BasePage } from './base.page';
-import { MainDashboardPage } from './main_dashboard.page';
 
 export class LoginPage extends BasePage {
 
-  usernameInput = new ui.TextInput($('#username'), 'username');
+  usernameInput = new TextInput($('#username'), 'username');
 
-  passwordInput = new ui.TextInput($('#password'), 'password');
+  passwordInput = new TextInput($('#password'), 'password');
 
-  loginButton = new ui.Button($('#kc-login'), 'Login');
+  loginButton = new Button($('#kc-login'), 'Login');
 
   async ready() {
     await Promise.all([

@@ -1,5 +1,3 @@
-import { browser, ExpectedConditions as until, $, by, element } from 'protractor';
-import * as support from '../support';
 import { AppPage } from './app.page';
 import { SpaceHeader } from './app/spaceHeader';
 

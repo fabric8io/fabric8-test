@@ -1,10 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { AccountHomePage } from '../page_objects/account_home.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import { CleanupUserEnvPage } from '../..';
-import { SpaceDashboardInteractionsFactory, SpaceDashboardInteractions } from './space_dashboard_interactions';
+import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { AppPage } from '../page_objects/app.page';
 
 export abstract class AccountHomeInteractionsFactory {

@@ -1,15 +1,6 @@
-/*
-  OSIO EE test - Page object model - The page hierarchy is:
-  * landing.page.ts - User starts here - User selects "Log In" and is moved to the login page
-  * login.page.ts - At this page the user selects the log in path, enters name/password
-  * main_dashboard.page.ts - Account dashboard page - This is the user's top level page insisde of OSIO
-  * space_dashboard.page.ts - Space dashboard page - From here the user is able to perform tasks inside the space
-*/
-// tslint:disable:max-line-length
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-// tslint:ensable:max-line-length
+import { by, element, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui/button';
 
 export class SpaceChePage extends AppPage {
 
@@ -18,7 +9,6 @@ export class SpaceChePage extends AppPage {
 
   /* 'Open' button for existing codebase */
   codebaseOpenButton (githubUsername: string, spaceName: string): ElementFinder {
-  //  let xpathString = './/codebases-item//*[contains(@class,\'list-pf-title\')]//*[contains(text(),\'' + githubUsername + '\/' + spaceName + '\')]/../../..//button[contains(text(),\'Open\')]';
     let xpathString = './/button[contains(text(),\'Open\')]';
     return new Button (element (by.xpath(xpathString)), 'Open codebase button');
   }

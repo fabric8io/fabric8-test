@@ -1,7 +1,8 @@
-import { browser, element, by, ExpectedConditions as until, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { SpaceTabPage } from './space_tab.page';
-import { Button, BaseElement } from '../ui';
+import { BaseElement } from '../ui/base.element';
+import { Button } from '../ui/button';
 import { OsoDashboardPage } from '.';
 
 export class SpacePipelinePage extends SpaceTabPage {

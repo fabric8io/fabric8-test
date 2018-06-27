@@ -1,32 +1,20 @@
-// tslint:disable-next-line:max-line-length
-import { browser, Key, protractor, element, by, ExpectedConditions as until, ElementFinder, ElementArrayFinder } from 'protractor';
+import {
+  browser, by, element, ElementFinder, ExpectedConditions as until,
+  Key, protractor
+} from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 const SRCFILENAME: string = 'README.adoc';
 
 /* Text used to verify operation of deployed app, before and after the app is modified */
 const EXPECTED_SUCCESS_TEXT = new Quickstart(browser.params.quickstart.name).runtime.quickstartStartedTerminal;
-
-const REDEPLOY_TEXT_1 = 'Changes detected - recompiling the module';
-const REDEPLOY_TEXT_2 = 'INFO: Redeploying';
-const REDEPLOY_TEXT_3 = 'INFO: Redeployment done';
-
-// tslint:disable:max-line-length
-/* Locate a pipeline by name */
-function allPipelineByName (nameString: string): ElementArrayFinder {
-  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' + nameString + '\')]/../../..';
-  return element.all(by.xpath(xpathString));
-}
 
 /* Locate a pipeline by name */
 function pipelineByName (nameString: string): ElementFinder {
@@ -34,12 +22,6 @@ function pipelineByName (nameString: string): ElementFinder {
   return element(by.xpath(xpathString));
 }
 
-/* Element - input required button - by pipeline name - in pipeline list */
-function inputRequiredByPipelineByName (nameString: string): ElementFinder {
-  let xpathString = './/a[contains(@class,\'card-title\') and contains(text(),\'' +
-    nameString + '\')]/../../..//a[contains(text(),\'Input Required\')]';
-  return element(by.xpath(xpathString));
-}
 /* This test performs these steps:
    - Execute the quickstart/booster through the Che run menu, verify output from the deployed app
    - Update the source of the quickstart/booster
@@ -71,7 +53,8 @@ describe('Triggers the CD Build (Jenkins):', () => {
 
     /* Find the project in the project tree */
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
+    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(
+      support.currentSpaceName()), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
     support.writeScreenshot('target/screenshots/booster_trigger_cd_' + support.currentSpaceName() + '.png');
 
@@ -136,8 +119,6 @@ describe('Triggers the CD Build (Jenkins):', () => {
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
     support.debug('Accessed pipeline page');
 
-    let spacePipelinePage = new SpacePipelinePage();
-    globalSpacePipelinePage = spacePipelinePage;
     let pipeline = new Button(pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
