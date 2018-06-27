@@ -40,4 +40,3 @@ export class LoginInteraction {
     await accountHomeInteractions.openAccountHome(PageOpenMode.AlreadyOpened);
   }
 }
-

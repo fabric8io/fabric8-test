@@ -1,19 +1,12 @@
-import { browser, Key, protractor, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { info } from '../support';
-import * as ui from '../ui';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;

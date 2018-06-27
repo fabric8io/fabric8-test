@@ -1,15 +1,17 @@
 import { browser, element, by, $, ElementFinder } from 'protractor';
-import * as ui from '../../ui';
-import { Button, TextInput, BaseElement } from '../../ui';
+import {
+  BaseElement, BaseElementArray, Button, Clickable, ModalDialog,
+  MultipleSelectionList, SingleSelectionDropdown, TextInput
+} from '../../ui';
 import * as support from '../../support';
 import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
-export class Wizard extends ui.BaseElement {
+export class Wizard extends BaseElement {
 
-  footer = new ui.BaseElement(this.$('div.modal-footer'));
-  primaryButton = new ui.Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next');
+  footer = new BaseElement(this.$('div.modal-footer'));
+  primaryButton = new Button(this.footer.$('button.btn.btn-primary.wizard-pf-next'), 'Next');
 
   constructor(elem: ElementFinder, name: string = '') {
     super(elem, name);
@@ -32,15 +34,15 @@ export interface ProjectDetail {
 const PROJECT_CARD = 'div.card-pf';
 
 export class QuickStartWizard extends Wizard {
-  filterTextInput = new ui.TextInput(this.$('input[type="text"]'), 'filter');
+  filterTextInput = new TextInput(this.$('input[type="text"]'), 'filter');
 
   // TODO: may be turn this into a widget
-  projectSelector = new ui.BaseElement(this.$('ob-project-select'));
-  projectCards = new ui.BaseElementArray(this.projectSelector.$$(PROJECT_CARD));
+  projectSelector = new BaseElement(this.$('ob-project-select'));
+  projectCards = new BaseElementArray(this.projectSelector.$$(PROJECT_CARD));
 
-  projectInfoStep = new ui.BaseElement(this.$('project-info-step'));
+  projectInfoStep = new BaseElement(this.$('project-info-step'));
   // we worry about proj
-  projectNameInput = new ui.TextInput(this.projectInfoStep.$('#named'));
+  projectNameInput = new TextInput(this.projectInfoStep.$('#named'));
 
   // tslint:disable:max-line-length
   release = new Button(element(by.xpath('.//*[@value=\'Release\']')));
@@ -61,11 +63,11 @@ export class QuickStartWizard extends Wizard {
     this.debug(' .... cards ', 'ok');
   }
 
-  async findCard(name: string): Promise<ui.Clickable> {
+  async findCard(name: string): Promise<Clickable> {
     support.debug('.... finding card', name);
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
     let elem = this.projectSelector.element(cardFinder);
-    let card = new ui.Clickable(elem, name);
+    let card = new Clickable(elem, name);
     await card.ready();
     support.debug('.... found card', name);
     return card;
@@ -130,10 +132,10 @@ export interface RepoDetail {
 
 export class ImportCodeWizard extends Wizard {
 
-  githubOrg = new ui.SingleSelectionDropdown(
+  githubOrg = new SingleSelectionDropdown(
     this.$('organisation-step single-selection-dropdown'), 'Github Org');
 
-  repoList = new ui.MultipleSelectionList(
+  repoList = new MultipleSelectionList(
     this.$('multiple-selection-list'), 'Repository List');
 
   async ready() {
@@ -142,7 +144,6 @@ export class ImportCodeWizard extends Wizard {
 
   async waitForGithubOrg() {
     await this.githubOrg.ready();
-
   }
 
   async importCode({ org, repositories }: RepoDetail) {
@@ -168,20 +169,20 @@ export class ImportCodeWizard extends Wizard {
 
 }
 
-export class AddToSpaceDialog extends ui.ModalDialog {
+export class AddToSpaceDialog extends ModalDialog {
 
-  noThanksButton = new ui.Button($('#noThanksButton'), 'No Thanks ...');
-  importExistingCodeButton = new ui.Button(
+  noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
+  importExistingCodeButton = new Button(
     $('#importCodeButton'), 'Import Existing Code');
 
-  newQuickstartButton = new ui.Button(
+  newQuickstartButton = new Button(
     $('#forgeQuickStartButton'), 'New Quickstart Project');
 
   // NOTE: not visible initially
   quickStartWizard = new QuickStartWizard(this.$('quickstart-wizard'));
   importCodeWizard = new ImportCodeWizard(this.$('import-wizard'));
 
-  newImportExperienceButton = new ui.Button(
+  newImportExperienceButton = new Button(
     this.element(by.xpath('//*[contains(text(),\'Try our new Getting Started experience\')]')),
     'Try our new Getting Started experience'
   );
@@ -302,7 +303,7 @@ export class AddToSpaceDialog extends ui.ModalDialog {
   }
 }
 
-export class NewImportExperienceDialog extends ui.BaseElement {
+export class NewImportExperienceDialog extends BaseElement {
 
   projectName = new TextInput($('#projectName'), 'Application Name');
 

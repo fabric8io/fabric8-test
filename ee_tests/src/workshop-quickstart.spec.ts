@@ -11,7 +11,6 @@ describe(' new spaces in OSIO', () => {
     mainDashboard = new MainDashboardPage();
   });
 
-
   it('Create a new quickstart', async () => {
     let spaceName = support.newSpaceName();
     let spaceDashboard = await mainDashboard.createNewSpace(spaceName);
@@ -31,4 +30,3 @@ describe(' new spaces in OSIO', () => {
   }, support.minutes(5));
 
 });
-

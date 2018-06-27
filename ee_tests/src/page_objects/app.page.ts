@@ -11,7 +11,6 @@ export class AppPage extends BasePage {
   header = new Header(this.appTag.$('header > alm-app-header > nav'));
   successAlert = element(by.xpath('//*[contains(@class,\'alert-success\')]'));
 
-
   /* Dialog to create new space and project */
   private newSpaceName = new TextInput($('#add-space-overlay-name'), 'Name of Space');
   private createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
@@ -160,4 +159,3 @@ export class AppPage extends BasePage {
 import { UserProfilePage } from './user_profile.page';
 import { UserSettingsPage } from './user_settings.page'; import { SpaceDashboardPage } from './space_dashboard.page';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
-

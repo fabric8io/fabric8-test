@@ -19,7 +19,6 @@ describe('import codebase', function () {
     dashboardPage = new MainDashboardPage();
   });
 
-
   async function resetEnv() {
 
     support.debug('>>> Reset Env');

@@ -1,20 +1,16 @@
-import { browser, element, by, ExpectedConditions as until, $, $$, ProtractorBrowser } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 
 import * as support from './support';
-import { BuildStatus } from './support/build_status';
-import { FeatureLevel, FeatureLevelUtils } from './support/feature_level';
+import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
-import { SpaceDashboardInteractions } from './interactions/space_dashboard_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui';
 import { PageOpenMode } from '..';
-import { DEFAULT_WAIT, LONG_WAIT } from './support';
 
 describe('e2e_smoketest', () => {
 

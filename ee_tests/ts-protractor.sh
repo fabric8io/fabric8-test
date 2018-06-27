@@ -50,6 +50,12 @@ main() {
     log.info "USE_WEBDRIVER is not set or false; using direct connection (faster)"
   fi
 
+  log.info "Running tslint ... "
+  npm run tslint || {
+    log.warn "tslint -> some rules were violated; fix it and rerun $0"
+    exit 1
+  }
+
   log.info "Running tsc ... "
   npm run tsc || {
     log.warn "ts -> js compilation failed; fix it and rerun $0"

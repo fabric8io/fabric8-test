@@ -1,13 +1,8 @@
-// tslint:disable-next-line:max-line-length
-import { browser, element, by, ExpectedConditions as until, $, $$, ElementArrayFinder, ElementFinder } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser, element, by, ElementArrayFinder, ElementFinder } from 'protractor';
 
 import * as support from './support';
-import { Quickstart } from './support/quickstart';
-import { TextInput, Button } from './ui';
+import { Button } from './ui';
 
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 

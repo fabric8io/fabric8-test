@@ -1,17 +1,10 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser } from 'protractor';
 
 import * as support from './support';
 import { Quickstart } from './support/quickstart';
 
-import { TextInput, Button } from './ui';
-
-import { LandingPage } from './page_objects/landing.page';
-import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
-import { AddToSpaceDialog, NewImportExperienceDialog, LauncherSection, LauncherSetupAppPage } from './page_objects';
-import { LauncherReleaseStrategy } from './support/launcher_release_strategy';
-import { sleep } from './support';
+import { AddToSpaceDialog } from './page_objects';
 
 let globalSpaceName: string;
 

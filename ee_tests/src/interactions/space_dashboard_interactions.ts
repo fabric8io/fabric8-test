@@ -1,13 +1,11 @@
-import { browser, element, by, ExpectedConditions as until, $, $$ } from 'protractor';
+import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
-import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';
 import { SpaceDashboardPage } from '../..';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
-import { DEFAULT_WAIT } from '../support';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
@@ -124,7 +122,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
         await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
-        }, DEFAULT_WAIT);
+        }, support.DEFAULT_WAIT);
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
         let githubName = browser.params.github.username;

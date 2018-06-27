@@ -1,9 +1,8 @@
 import { browser, element, by, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
-import { SpacePipelinePage, PipelineDetails } from '../page_objects/space_pipeline_tab.page';
+import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { PipelineStage } from '../page_objects/space_pipeline_tab.page';
 import { PageOpenMode } from '../..';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 
@@ -64,9 +63,9 @@ export abstract class PipelinesInteractions {
     }
 
     public async waitToFinish(pipeline: PipelineDetails) {
-        let waitToFinishInternalError: Error | undefined = undefined;
-        let verifyJenkinsLogError: Error | undefined = undefined;
-        let ocLogsError : Error | undefined = undefined;
+        let waitToFinishInternalError: Error | undefined;
+        let verifyJenkinsLogError: Error | undefined;
+        let ocLogsError: Error | undefined;
 
         // wait until the pipeline is finished
         try {

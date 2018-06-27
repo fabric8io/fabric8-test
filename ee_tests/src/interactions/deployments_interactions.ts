@@ -1,12 +1,11 @@
 import * as support from '../support';
-import { SpaceDeploymentsPage, DeploymentStatus } from '../page_objects/space_deployments_tab.page';
-import { DeployedApplication } from '../page_objects/space_deployments_tab.page';
-import { DeployedApplicationEnvironment } from '../page_objects/space_deployments_tab.page';
-import { Environment, ResourceUsageData } from '../page_objects/space_deployments_tab.page';
+import {
+  DeployedApplication, DeployedApplicationEnvironment, DeploymentStatus,
+  Environment, ResourceUsageData, SpaceDeploymentsPage
+} from '../page_objects/space_deployments_tab.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
-import { element } from 'protractor';
 import { MainDashboardPage } from '../..';
 
 export abstract class DeploymentsInteractionsFactory {

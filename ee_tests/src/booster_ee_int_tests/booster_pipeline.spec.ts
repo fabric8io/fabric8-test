@@ -1,18 +1,11 @@
-// tslint:disable-next-line:max-line-length
-import { browser, element, by, ExpectedConditions as until, $, $$, ElementFinder, ElementArrayFinder } from 'protractor';
-import { WebDriver, error as SE } from 'selenium-webdriver';
+import { browser, element, by, ExpectedConditions as until, $, ElementFinder, ElementArrayFinder } from 'protractor';
 
 import * as support from '../support';
-import { Quickstart } from '../support/quickstart';
-import { TextInput, Button } from '../ui';
-import * as ui from '../ui';
+import { Button } from '../ui';
 
-import { LandingPage } from '../page_objects/landing.page';
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { StageRunPage } from '../page_objects/space_stage_run.page';
-import { info } from '../support';
 
 let globalSpaceName: string;
 let globalSpacePipelinePage: SpacePipelinePage;
@@ -118,7 +111,7 @@ describe('Verify the completion of the build pipeline:', () => {
     /* Switch to the stage deployment page */
     await browser.switchTo().window(handles[1]);
 
-    let invokeButton = new ui.Button($('#invoke'), 'Invoke Button');
+    let invokeButton = new Button($('#invoke'), 'Invoke Button');
     let stageOutput = await element(by.id('greeting-result')).getText();
     await invokeButton.clickWhenReady(support.DEFAULT_WAIT);
 

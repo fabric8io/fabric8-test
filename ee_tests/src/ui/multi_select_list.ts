@@ -26,4 +26,3 @@ export class MultipleSelectionList extends BaseElement {
     await checkbox.clickWhenReady();
   }
 }
-
