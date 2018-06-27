@@ -1,4 +1,4 @@
-import { browser, element, by, ExpectedConditions as until } from 'protractor';
+import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';

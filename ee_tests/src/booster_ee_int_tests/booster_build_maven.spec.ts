@@ -1,14 +1,10 @@
 import { browser, ExpectedConditions as until } from 'protractor';
 
 import * as support from '../support';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 
 describe('Build the project using Maven in the Che terminal window', () => {
   let dashboardPage: MainDashboardPage;
@@ -56,13 +52,5 @@ describe('Build the project using Maven in the Che terminal window', () => {
     await expect(spaceCheWorkSpacePage.bottomPanelTerminal.getText()).toContain('BUILD SUCCESS');
     await expect(spaceCheWorkSpacePage.bottomPanelTerminal.getText()).not.toContain('BUILD FAILURE');
   });
-
-  function windowCount(count: number) {
-    return function () {
-      return browser.getAllWindowHandles().then(function (handles) {
-        return handles.length === count;
-      });
-    };
-  }
 
 });

@@ -1,10 +1,10 @@
-import { browser, Key, element, by, ExpectedConditions as until } from 'protractor';
-import * as fs from 'fs';
+import { browser, by, element, ExpectedConditions as until, Key } from 'protractor';
+import { createWriteStream } from 'fs';
 import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { Quickstart } from './quickstart';
 
@@ -137,8 +137,11 @@ export async function dumpLog2(spacePipelinePage: SpacePipelinePage, spaceName: 
   await browser.sleep(30000);
   let buildLogOutput = element(by.xpath('.//*[contains(@class, \'console-output\')]'));
   let theText = await buildLogOutput.getText();
+  // TODO we should refactor or remove this function
+  // tslint:disable:no-console
   await console.log('\n ============ End of test reached, Jenkins Build Log ============ \n');
   await console.log(theText);
+  // tslint:disable:no-console
   //  expect (await theText).toContain('Finished: SUCCESS');
 
   let handles = await browser.getAllWindowHandles();
@@ -250,7 +253,7 @@ export async function sleep(ms: number) {
  */
 export async function writeScreenshot(filename: string) {
   let png = await browser.takeScreenshot();
-  let stream = fs.createWriteStream(filename);
+  let stream = createWriteStream(filename);
   stream.write(new Buffer(png, 'base64'));
   stream.end();
   info(`Saved screenshot to: ${filename}`);
@@ -261,7 +264,7 @@ export async function writeScreenshot(filename: string) {
  */
 export async function writePageSource(filename: string) {
   let txt = await browser.getPageSource();
-  let stream = fs.createWriteStream(filename);
+  let stream = createWriteStream(filename);
   stream.write(new Buffer(txt));
   stream.end();
   info(`Saved page source to: ${filename}`);
@@ -272,7 +275,7 @@ export async function writePageSource(filename: string) {
  */
 export async function writeText(filename: string, text: string) {
   info(`Saving text to: ${filename}`);
-  let stream = fs.createWriteStream(filename);
+  let stream = createWriteStream(filename);
   stream.write(new Buffer(text));
   stream.end();
   info(`Saved text to: ${filename}`);
@@ -286,12 +289,14 @@ function timestamp(): string {
 }
 
 function debugEnabled(...msg: any[]) {
+  // tslint:disable-next-line:no-console
   console.log(`[${timestamp()}]:`, ...msg);
 }
 
 function debugNoop(...msg: any[]) { }
 
 export function info(...msg: any[]) {
+  // tslint:disable-next-line:no-console
   console.info(`[${timestamp()}]:`, ...msg);
 }
 

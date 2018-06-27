@@ -1,15 +1,12 @@
 import { browser, ExpectedConditions as until } from 'protractor';
 
 import * as support from '../support';
-import { TextInput, Button } from '../ui';
+import { Button } from '../ui/button';
 
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 
 describe('Access project in OSO:', () => {
   let dashboardPage: MainDashboardPage;
@@ -30,8 +27,6 @@ describe('Access project in OSO:', () => {
   it('Login, Open OpenShift Console, Copy Login Command, Open Che Workspace, Run oc commands, logout', async () => {
     // TODO: implement
     let spaceName = support.currentSpaceName();
-    let cheWorkspaceUrl = support.currentCheWorkspaceUrl();
-
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
     await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady();

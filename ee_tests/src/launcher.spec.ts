@@ -4,9 +4,7 @@ import * as support from './support';
 import { Quickstart } from './support/quickstart';
 
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
-import { AddToSpaceDialog } from './page_objects';
-
-let globalSpaceName: string;
+import { AddToSpaceDialog } from './page_objects/space_dashboard/add_to_space_dialog';
 
 /* Tests to verify the build pipeline */
 

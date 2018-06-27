@@ -1,24 +1,21 @@
-import { browser, ExpectedConditions as until, $, by, element, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder } from 'protractor';
 import * as support from '../support';
-import * as ui from '../ui';
-
-import { BasePage } from './base.page';
-import { LandingPage } from './landing.page';
-import { Header } from './app/header';
-import { AppPage } from './app.page';
+import { BaseElement, Clickable } from '../ui/base.element';
+import { Button } from '../ui/button';
 import { SpaceAppPage } from './space_app.page';
+import { TextInput } from '../ui/text_input';
 
 export abstract class SpaceTabPage extends SpaceAppPage {
 
-  deploymentsOption = new ui.Button (
+  deploymentsOption = new Button (
     element(by.xpath('.//a/span[contains(text(),\'Deployments\')]')), 'Deployments option');
 
-  mainNavBar = new ui.BaseElement(
+  mainNavBar = new BaseElement(
     this.header.$('ul.nav.navbar-nav.navbar-primary.persistent-secondary'),
     'Main Navigation Bar'
   );
 
-  planTab = new ui.Clickable(
+  planTab = new Clickable(
     this.mainNavBar.element(by.cssContainingText('li', 'Plan')),
     'Plan'
   );
@@ -52,11 +49,11 @@ interface WorkItem {
   type?: WorkItemType;
 }
 
-class WorkItemQuickAdd extends ui.Clickable {
-  titleTextInput = new ui.TextInput(this.$('input.f8-quickadd-input'), 'Work item Title');
+class WorkItemQuickAdd extends Clickable {
+  titleTextInput = new TextInput(this.$('input.f8-quickadd-input'), 'Work item Title');
   buttonsDiv = this.$('div.f8-quickadd__wiblk-btn.pull-right');
-  acceptButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓');
-  cancelButton = new ui.Button(this.buttonsDiv.$('button.btn.btn-default'), 'x');
+  acceptButton = new Button(this.buttonsDiv.$('button.btn.btn-primary'), '✓');
+  cancelButton = new Button(this.buttonsDiv.$('button.btn.btn-default'), 'x');
 
   constructor(el: ElementFinder, name = 'Work Item Quick Add') {
     super(el, name);
@@ -83,8 +80,8 @@ class WorkItemQuickAdd extends ui.Clickable {
   }
 }
 
-class WorkItemList extends ui.BaseElement {
-  overlay = new ui.BaseElement(this.$('div.lock-overlay-list'));
+class WorkItemList extends BaseElement {
+  overlay = new BaseElement(this.$('div.lock-overlay-list'));
 
   quickAdd = new WorkItemQuickAdd(
     this.$('#workItemList_quickAdd > alm-work-item-quick-add > div'));

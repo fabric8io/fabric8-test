@@ -1,8 +1,9 @@
-import { $, by, ElementFinder, browser, ExpectedConditions as until } from 'protractor';
+import { ElementFinder } from 'protractor';
 import * as support from '../../support';
-import * as ui from '../../ui';
+import { BaseElement } from '../../ui/base.element';
+import { Dropdown } from '../../ui/dropdown';
 
-export class Header extends ui.BaseElement {
+export class Header extends BaseElement {
   profileDropdown = new ProfileDropdown(this.$('.user-dropdown-menu'));
   recentItemsDropdown = new RecentItemsDropdown(this.$('.recent-items-dropdown'));
 
@@ -18,7 +19,7 @@ export class Header extends ui.BaseElement {
   }
 }
 
-export class ProfileDropdown extends ui.Dropdown {
+export class ProfileDropdown extends Dropdown {
 
   constructor(element: ElementFinder) {
     super(element);
@@ -37,7 +38,7 @@ export class ProfileDropdown extends ui.Dropdown {
   }
 }
 
-export class RecentItemsDropdown extends ui.Dropdown {
+export class RecentItemsDropdown extends Dropdown {
 
   constructor(element: ElementFinder) {
     super(element);

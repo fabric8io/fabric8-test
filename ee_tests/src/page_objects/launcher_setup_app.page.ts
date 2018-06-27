@@ -1,7 +1,6 @@
-import { ExpectedConditions as until, ElementFinder, browser, By, by } from 'protractor';
+import { by, ElementFinder } from 'protractor';
 import { BaseElement } from '../ui/base.element';
-import { Quickstart } from '../support/quickstart';
-import { Button, Checkbox, TextInput } from '../ui';
+import { Button } from '../ui/button';
 
 export class LauncherSetupAppPage extends BaseElement {
 

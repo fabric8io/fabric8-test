@@ -3,7 +3,6 @@ import { browser } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
@@ -13,8 +12,6 @@ import { AccountHomeInteractionsFactory } from '../interactions/account_home_int
 import { PageOpenMode } from '../..';
 import { Button } from '../ui/button';
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 let strategy: string = browser.params.release.strategy;
 
 describe('Creating new quickstart in OSIO', () => {

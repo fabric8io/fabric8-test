@@ -1,10 +1,12 @@
-import { browser, element, by, $, ElementFinder } from 'protractor';
-import {
-  BaseElement, BaseElementArray, Button, Clickable, ModalDialog,
-  MultipleSelectionList, SingleSelectionDropdown, TextInput
-} from '../../ui';
-import * as support from '../../support';
-import { LauncherSection, LauncherSetupAppPage, LauncherImportAppPage} from '..';
+import { $, browser, by, element, ElementFinder } from 'protractor';
+import { BaseElement, BaseElementArray, Clickable } from '../../ui/base.element';
+import { Button } from '../../ui/button';
+import { ModalDialog } from '../../ui/modal_dialog';
+import { MultipleSelectionList } from '../../ui/multi_select_list';
+import { SingleSelectionDropdown } from '../../ui/dropdown';
+import { TextInput } from '../../ui/text_input';
+import { debug, info } from '../../support';
+import { LauncherImportAppPage, LauncherSection, LauncherSetupAppPage} from '..';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 
@@ -64,12 +66,12 @@ export class QuickStartWizard extends Wizard {
   }
 
   async findCard(name: string): Promise<Clickable> {
-    support.debug('.... finding card', name);
+    debug('.... finding card', name);
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
     let elem = this.projectSelector.element(cardFinder);
     let card = new Clickable(elem, name);
     await card.ready();
-    support.debug('.... found card', name);
+    debug('.... found card', name);
     return card;
   }
 
@@ -210,7 +212,7 @@ export class AddToSpaceDialog extends ModalDialog {
   async importExistingCode(details: RepoDetail) {
     await this.importExistingCodeButton.clickWhenReady();
     await this.importCodeWizard.ready();
-    support.debug('... going to import repo', details.repositories);
+    debug('... going to import repo', details.repositories);
     await this.importCodeWizard.importCode(details);
   }
 
@@ -219,7 +221,7 @@ export class AddToSpaceDialog extends ModalDialog {
   }
 
   async newQuickstartProjectByLauncher(quickstartId: string, name: string, strategy: string) {
-    support.info('Start create new quickstart');
+    info('Start create new quickstart');
     let dialog: NewImportExperienceDialog = await this.openNewImportExperience();
 
     await dialog.projectName.clear();

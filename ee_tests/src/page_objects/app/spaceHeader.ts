@@ -1,11 +1,11 @@
-import * as support from '../../support';
-import * as ui from '../../ui';
+import { debug } from '../../support';
+import { BaseElement } from '../../ui/base.element';
 
-export class SpaceHeader extends ui.BaseElement {
+export class SpaceHeader extends BaseElement {
 
   async ready() {
-    support.debug(' ... check if Space Header is ready');
-    support.debug(' ... check if Space Header is ready - OK');
+    debug(' ... check if Space Header is ready');
+    debug(' ... check if Space Header is ready - OK');
   }
 
   async selectAnalyze() {

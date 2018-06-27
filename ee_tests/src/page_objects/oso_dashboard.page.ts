@@ -1,6 +1,5 @@
-import { browser, element, by, By, ExpectedConditions as until, $, $$, ElementFinder } from 'protractor';
-import * as support from '../support';
-import { TextInput, Button } from '../ui';
+import { browser, by, element, ExpectedConditions as until } from 'protractor';
+import { Button } from '../ui/button';
 import { BasePage } from '.';
 
 export class OsoDashboardPage extends BasePage {

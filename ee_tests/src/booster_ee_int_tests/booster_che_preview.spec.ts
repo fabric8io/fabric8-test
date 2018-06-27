@@ -2,14 +2,10 @@ import { browser } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 
 /* Text used to verify operation of deployed app, before and after the app is modified */
 const EXPECTED_TEXT_SEND = 'World';
@@ -17,8 +13,6 @@ const EXPECTED_TEXT_RECEIVED = 'Hello, World!';
 const EXPECTED_SUCCESS_TEXT = (
   new Quickstart(browser.params.quickstart.name)
 ).runtime.quickstartStartedTerminal;
-
-// tslint:disable:max-line-length
 
 /* This test executes the quickstart/booster through the Che run menu, verifies output from the deployed app  */
 
@@ -54,7 +48,8 @@ describe('Verify the Che preview URL for a deployed app:', () => {
 
     /* Invoke the deployed app at its endpoint, verify the app's output */
     let boosterEndpointPage = new BoosterEndpoint();
-    await support.invokeApp (boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username, 'pre_edit', EXPECTED_TEXT_SEND, EXPECTED_TEXT_RECEIVED, spaceCheWorkSpacePage);
+    await support.invokeApp(boosterEndpointPage, spaceCheWorkSpacePage, browser.params.oso.username,
+      'pre_edit', EXPECTED_TEXT_SEND, EXPECTED_TEXT_RECEIVED, spaceCheWorkSpacePage);
 
     /* Close the Endpoint window */
     await browser.close();
@@ -67,7 +62,6 @@ describe('Verify the Che preview URL for a deployed app:', () => {
 
     /* Switch back to the OSIO window */
     await support.windowManager.switchToWindow(1, 0);
-
   });
 
 });

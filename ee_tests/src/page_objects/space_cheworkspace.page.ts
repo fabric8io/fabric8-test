@@ -2,10 +2,11 @@
   OSIO EE test - Page object model - Che workspace page
 */
 
-import { browser, element, by, $, ElementFinder } from 'protractor';
+import { $, browser, by, element, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
-import { TextInput, Button } from '../ui';
-import * as support from '../support';
+import { Button } from '../ui/button';
+import { TextInput } from '../ui/text_input';
+import { info } from '../support';
 import { isUndefined } from 'util';
 
 export class SpaceCheWorkspacePage extends AppPage {
@@ -161,7 +162,7 @@ export class SpaceCheWorkspacePage extends AppPage {
 
       await this.chePathElementIcon(xpathString).clickWhenReady();
       let theText = await this.chePathElement(xpathString).getText();
-      support.info ('Opened path = ' + theText);
+      info('Opened path = ' + theText);
       await browser.sleep(5000);
     }
   }

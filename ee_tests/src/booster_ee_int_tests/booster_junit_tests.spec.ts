@@ -3,15 +3,11 @@ import { browser, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
-let globalSpaceName: string;
-let globalSpacePipelinePage: SpacePipelinePage;
 let quickstart: Quickstart;
-let quickstartTestFile: string;
 
 describe('Run the project\'s Junit tests from the Che menu:', () => {
   let dashboardPage: MainDashboardPage;

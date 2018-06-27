@@ -1,7 +1,9 @@
-import { ExpectedConditions as until, ElementFinder, browser, By, by } from 'protractor';
-import { Quickstart } from '../support/quickstart';
-import { BaseElement, Button, Checkbox, TextInput } from '../ui';
-import { LauncherSetupAppPage, LauncherImportAppPage } from '.';
+import { by, By, ElementFinder } from 'protractor';
+import { BaseElement } from '../ui/base.element';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { TextInput } from '../ui/text_input';
+import { LauncherImportAppPage, LauncherSetupAppPage } from '.';
 
 export class LauncherSection extends BaseElement {
   nav = new BaseElement(this.$('.f8launcher-container_nav'));

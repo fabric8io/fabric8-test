@@ -41,7 +41,7 @@
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": true,
-    "no-console": false,
+    "no-console": true,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-imports": true,
@@ -66,13 +66,14 @@
     "no-require-imports": false,
     "no-return-await": false,
     "no-shadowed-variable": true,
+    "no-sparse-arrays": true,
     "no-string-literal": true,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
-    "no-unsafe-finally": false,
+    "no-unsafe-finally": true,
     "no-unused-expression": true,
-    "no-unused-variable": false,
+    "no-unused-variable": true,
     "no-use-before-declare": false,
     "no-var-keyword": true,
     "no-var-requires": true,
@@ -85,6 +86,12 @@
       "check-whitespace"
     ],
     "only-arrow-functions": false,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "any"
+      }
+    ],
     "prefer-conditional-expression": false,
     "prefer-const": false,
     "prefer-for-of": false,
