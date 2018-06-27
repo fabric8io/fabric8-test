@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-directories="../booster_bdd/ ../EE_API_automation/ ../perf_tests/"
+directories=${directories:-"../booster_bdd/ ../EE_API_automation/ ../perf_tests/"}
 pass=0
 fail=0
 
