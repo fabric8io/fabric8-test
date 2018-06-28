@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';
-import { SpaceDashboardPage } from '../..';
+import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';

@@ -10,7 +10,7 @@ import { AccountHomeInteractionsFactory } from './interactions/account_home_inte
 import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui/button';
-import { PageOpenMode } from '..';
+import { PageOpenMode } from './page_objects/base.page';
 
 describe('e2e_smoketest', () => {
 

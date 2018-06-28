@@ -4,7 +4,8 @@ import { Quickstart } from './support/quickstart';
 
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
 import { FeatureLevelUtils } from './support/feature_level';
-import { AddToSpaceDialog, PageOpenMode } from './page_objects';
+import { PageOpenMode } from './page_objects/base.page';
+import { AddToSpaceDialog } from './page_objects/space_dashboard/add_to_space_dialog';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { Button } from './ui';
 

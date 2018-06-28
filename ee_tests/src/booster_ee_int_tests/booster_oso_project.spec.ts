@@ -7,6 +7,7 @@ import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
+import { OsoDashboardPage } from '../page_objects/oso_dashboard.page';
 
 describe('Access project in OSO:', () => {
   let dashboardPage: MainDashboardPage;
@@ -33,7 +34,7 @@ describe('Access project in OSO:', () => {
 
     let spacePipelinePage = new SpacePipelinePage();
 
-    let osoDashboardPage = await spacePipelinePage.openOpenshiftConsole();
+    let osoDashboardPage: OsoDashboardPage = await spacePipelinePage.openOpenshiftConsole();
 
     let handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs before = ' + handles.length);

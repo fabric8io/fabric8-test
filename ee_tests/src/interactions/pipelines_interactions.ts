@@ -3,7 +3,7 @@ import * as support from '../support';
 import { BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
-import { PageOpenMode } from '../..';
+import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 
 export abstract class PipelinesInteractions {
