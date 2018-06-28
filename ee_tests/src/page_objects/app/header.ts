@@ -12,10 +12,10 @@ export class Header extends BaseElement {
   }
 
   async ready() {
-    support.debug(' ... check if Header is ready');
+    support.debug('... check if Header is ready');
     await this.profileDropdown.ready();
     await this.recentItemsDropdown.ready();
-    support.debug(' ... check if Header is ready - OK');
+    support.debug('... check if Header is ready - OK');
   }
 }
 

@@ -2,8 +2,7 @@ import {
   browser, ElementArrayFinder, ElementFinder, ExpectedConditions as until
 } from 'protractor';
 
-import * as mixins from '../mixins';
-import { DEFAULT_WAIT } from '../support';
+import * as support from '../support';
 
 // todo move to a different module
 
@@ -37,10 +36,7 @@ export interface BaseElementInterface {
 
 export class BaseElement extends ElementFinder implements BaseElementInterface {
 
-  // add logging mixin
   name: string = '';
-  log!: (action: string, ...msg: string[]) => void;
-  debug!: (context: string, ...msg: string[]) => void;
 
   /**
    * Extend this class, to describe single custom fragment on your page
@@ -97,6 +93,16 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     this.debug(msg, '- DONE');
   }
 
+  log(action: string, ...msg: string[]) {
+    let className = this.constructor.name;
+    support.info(`${action}: ${className}('${this.name}')`, ...msg);
+  }
+
+  debug(context: string, ...msg: string[]) {
+    let className = this.constructor.name;
+    support.debug(`... ${className}('${this.name}'): ${context}`, ...msg);
+  }
+
   protected string2Number(stringNumber: string, errorMessage: string): number {
     let countString = stringNumber.match(/\d+/g);
     let count: number;
@@ -110,7 +116,7 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   private async waitFor(msg: string, condition: Function, timeout?: number) {
-    let wait: number = timeout || DEFAULT_WAIT;
+    let wait: number = timeout || support.DEFAULT_WAIT;
     this.debug(`waiting for "${msg}"`, `  | timeout: '${wait}'`);
     await browser.wait(condition, wait);
     this.debug(`waiting for "${msg}"`, '  - OK');
@@ -143,6 +149,3 @@ export class Clickable extends BaseElement {
     });
   }
 }
-
-mixins.applyMixins(BaseElement, [mixins.Logging]);
-mixins.applyMixins(BaseElementArray, [mixins.Logging]);
