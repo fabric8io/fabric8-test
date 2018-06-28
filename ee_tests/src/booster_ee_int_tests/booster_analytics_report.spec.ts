@@ -1,5 +1,6 @@
 import { browser } from 'protractor';
 import * as support from '../support';
+import { LoginInteraction } from '../interactions/login_interactions';
 import { PipelinesInteractions } from '../interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
@@ -19,7 +20,7 @@ describe('Analytic E2E test suite', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

@@ -1,13 +1,14 @@
 import * as support from './support';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe('Planner Tab', () => {
   let spaceName: string;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
 
     spaceName = support.newSpaceName();

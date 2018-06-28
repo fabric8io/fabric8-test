@@ -7,6 +7,7 @@ import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
+import { LoginInteraction } from '../interactions/login_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
 
 let strategy: string = browser.params.release.strategy;
@@ -16,7 +17,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

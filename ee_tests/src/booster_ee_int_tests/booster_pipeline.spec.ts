@@ -2,6 +2,7 @@ import { $, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedCon
 
 import * as support from '../support';
 import { Button } from '../ui/button';
+import { LoginInteraction } from '../interactions/login_interactions';
 
 import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
@@ -40,7 +41,7 @@ describe('Verify the completion of the build pipeline:', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

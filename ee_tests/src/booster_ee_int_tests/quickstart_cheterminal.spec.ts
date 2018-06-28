@@ -1,4 +1,5 @@
 import { browser, ExpectedConditions as until } from 'protractor';
+import { LoginInteraction } from '../interactions/login_interactions';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 import { Button } from '../ui/button';
@@ -15,7 +16,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
 

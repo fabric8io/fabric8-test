@@ -1,6 +1,7 @@
 import { browser, ExpectedConditions as until, Key, protractor } from 'protractor';
 import * as support from '../support';
 import { Button } from '../ui/button';
+import { LoginInteraction } from '../interactions/login_interactions';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
@@ -28,7 +29,7 @@ describe('Modify the project source code in Che:', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

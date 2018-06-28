@@ -1,12 +1,13 @@
 import * as support from './support';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe(' new spaces in OSIO', () => {
   let mainDashboard: MainDashboardPage;
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     mainDashboard = new MainDashboardPage();
   });

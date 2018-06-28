@@ -1,13 +1,14 @@
 import * as support from './support';
 import { browser } from 'protractor';
 import { AppPage } from './page_objects/app.page';
+import { LoginInteraction } from './interactions/login_interactions';
 
 /**
  * Simple test for log in and log out.
  */
 describe('e2e_logintest', () => {
 
-  let loginInteractions = new support.LoginInteraction();
+  let loginInteractions = new LoginInteraction();
 
   let page = new AppPage();
 

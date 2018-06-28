@@ -6,9 +6,9 @@ import { MultipleSelectionList } from '../../ui/multi_select_list';
 import { SingleSelectionDropdown } from '../../ui/dropdown';
 import { TextInput } from '../../ui/text_input';
 import { debug, info } from '../../support';
-import { LauncherImportAppPage } from '../../page_objects/launcher_import_app.page';
-import { LauncherSection } from '../../page_objects/launcher_section';
-import { LauncherSetupAppPage} from '../../page_objects/launcher_setup_app.page';
+import { LauncherImportAppPage } from '../launcher_import_app.page';
+import { LauncherSection } from '../launcher_section';
+import { LauncherSetupAppPage} from '../launcher_setup_app.page';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
 

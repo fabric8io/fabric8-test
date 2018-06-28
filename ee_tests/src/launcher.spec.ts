@@ -8,6 +8,7 @@ import { PageOpenMode } from './page_objects/base.page';
 import { AddToSpaceDialog } from './page_objects/space_dashboard/add_to_space_dialog';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { Button } from './ui';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe('Creating a new quickstart in OSIO using ngx launcher', () => {
   let quickstart: Quickstart;
@@ -47,7 +48,7 @@ describe('Creating a new quickstart in OSIO using ngx launcher', () => {
 
   it('login', async () => {
     support.info('--- Login ---');
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
   });
 
