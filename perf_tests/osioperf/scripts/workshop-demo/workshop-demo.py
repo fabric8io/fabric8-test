@@ -343,13 +343,13 @@ class UserScenario(TaskSet):
                     By.XPATH,
                     "//*[contains(@class,'f8launcher-container_close')]//*[contains(@class,'pficon-close')]"
                 )
-                target_element.click()
                 self._wait_for_url(driver, self.newSpaceName)
                 self.spaceUrl = driver.current_url
                 self.userUrl = self.spaceUrl.replace(
                     "/{}".format(self.newSpaceName),
                     ""
                 )
+                driver.get(self.spaceUrl)
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,
