@@ -1,5 +1,5 @@
 import { browser } from 'protractor';
-import * as mixins from '../mixins';
+import * as support from '../support';
 
 export enum PageOpenMode {
   AlreadyOpened,
@@ -8,11 +8,8 @@ export enum PageOpenMode {
 }
 
 export abstract class BasePage {
-  // add logging mixin
 
   name: string = '...';
-  log!: (action: string, ...msg: string[]) => void;
-  debug!: (context: string, ...msg: string[]) => void;
 
   // Use undefined to indicate the url has not been set
   // Will use be in openInBrowser to throw error if the caller forgot
@@ -55,14 +52,22 @@ export abstract class BasePage {
 
     this.log('Opening', this.url);
     let currentUrl = await browser.getCurrentUrl();
-    this.debug('at  :', currentUrl);
+    this.debug('at:', currentUrl);
 
     this.debug(`goto: '${this.url}'`);
     await browser.get(this.url);
 
     let urlNow = await browser.getCurrentUrl();
-    this.debug('now :', urlNow);
+    this.debug('now:', urlNow);
+  }
+
+  log(action: string, ...msg: string[]) {
+    let className = this.constructor.name;
+    support.info(`${action}: ${className}('${this.name}')`, ...msg);
+  }
+
+  debug(context: string, ...msg: string[]) {
+    let className = this.constructor.name;
+    support.debug(`... ${className}('${this.name}'): ${context}`, ...msg);
   }
 }
-
-mixins.applyMixins(BasePage, [mixins.Logging]);
