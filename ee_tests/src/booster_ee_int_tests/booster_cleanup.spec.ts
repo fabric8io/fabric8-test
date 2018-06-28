@@ -1,7 +1,7 @@
 import * as support from '../support';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
-import { PageOpenMode } from '../..';
+import { PageOpenMode } from '../page_objects/base.page';
 
 /* Tests to verify user login/logout */
 

@@ -3,7 +3,7 @@ import * as support from '../support';
 import { SpaceTabPage } from './space_tab.page';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
-import { OsoDashboardPage } from '.';
+import { OsoDashboardPage } from './oso_dashboard.page';
 
 export class SpacePipelinePage extends SpaceTabPage {
 

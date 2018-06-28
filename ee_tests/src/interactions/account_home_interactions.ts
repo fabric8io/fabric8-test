@@ -3,7 +3,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { AccountHomePage } from '../page_objects/account_home.page';
 import { PageOpenMode } from '../page_objects/base.page';
-import { CleanupUserEnvPage } from '../..';
+import { CleanupUserEnvPage } from '../page_objects/user_profile.page';
 import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { AppPage } from '../page_objects/app.page';
 

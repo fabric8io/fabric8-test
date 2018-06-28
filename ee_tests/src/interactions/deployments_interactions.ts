@@ -6,7 +6,7 @@ import {
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
-import { MainDashboardPage } from '../..';
+import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 
 export abstract class DeploymentsInteractionsFactory {
 

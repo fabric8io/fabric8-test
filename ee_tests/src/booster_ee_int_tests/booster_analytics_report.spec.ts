@@ -3,7 +3,7 @@ import * as support from '../support';
 import { PipelinesInteractions } from '../interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { PageOpenMode } from '../..';
+import { PageOpenMode } from '../page_objects/base.page';
 
 describe('Analytic E2E test suite', () => {
 

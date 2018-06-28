@@ -1,6 +1,6 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import { Button } from '../ui/button';
-import { BasePage } from '.';
+import { BasePage } from './base.page';
 
 export class OsoDashboardPage extends BasePage {
 

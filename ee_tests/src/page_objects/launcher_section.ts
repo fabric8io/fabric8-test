@@ -3,7 +3,8 @@ import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { TextInput } from '../ui/text_input';
-import { LauncherImportAppPage, LauncherSetupAppPage } from '.';
+import { LauncherImportAppPage } from './launcher_import_app.page';
+import { LauncherSetupAppPage } from './launcher_setup_app.page';
 
 export class LauncherSection extends BaseElement {
   nav = new BaseElement(this.$('.f8launcher-container_nav'));
