@@ -2,6 +2,7 @@ import { browser, ExpectedConditions as until } from 'protractor';
 
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
+import { LoginInteraction } from '../interactions/login_interactions';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
@@ -19,7 +20,7 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

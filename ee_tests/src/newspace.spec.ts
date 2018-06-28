@@ -1,11 +1,12 @@
 import { browser } from 'protractor';
 import * as support from './support';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe('Creating new spaces in OSIO', () => {
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
   });
 

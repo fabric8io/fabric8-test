@@ -3,7 +3,7 @@ import { SpaceAppPage } from './space_app.page';
 import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
+import { SpacePipelinePage } from './space_pipeline_tab.page';
 import { DEFAULT_WAIT } from '../support';
 import { FeatureLevel } from '../support/feature_level';
 

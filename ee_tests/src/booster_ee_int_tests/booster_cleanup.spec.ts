@@ -1,6 +1,7 @@
 import * as support from '../support';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
+import { LoginInteraction } from '../interactions/login_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
 
 /* Tests to verify user login/logout */
@@ -10,7 +11,7 @@ describe('Clean up user environment:', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

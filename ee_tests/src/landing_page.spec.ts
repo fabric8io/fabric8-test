@@ -2,6 +2,7 @@ import { $$, browser } from 'protractor';
 import * as support from './support';
 import { LandingPage } from './page_objects/landing.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe('Landing Page', () => {
 
@@ -42,14 +43,14 @@ describe('Landing Page', () => {
   });
 
   it('can login using a valid username and password', async () => {
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     let mainDashboard = new MainDashboardPage();
     await mainDashboard.open();
   });
 
   it('can logout afer logging in', async () => {
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     let mainDashboard = new MainDashboardPage();
     await mainDashboard.logout();

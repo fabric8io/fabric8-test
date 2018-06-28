@@ -1,7 +1,7 @@
 import { browser } from 'protractor';
 import { LandingPage } from '../page_objects/landing.page';
 import { PageOpenMode } from '../page_objects/base.page';
-import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
+import { AccountHomeInteractionsFactory } from './account_home_interactions';
 
 export class LoginInteraction {
 

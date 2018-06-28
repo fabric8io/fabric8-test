@@ -1,6 +1,7 @@
 import { browser } from 'protractor';
 import * as support from '../support';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
+import { LoginInteraction } from '../interactions/login_interactions';
 
 /* Tests to verify user login/logout */
 
@@ -9,7 +10,7 @@ describe('Creating new quickstart in OSIO', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
 

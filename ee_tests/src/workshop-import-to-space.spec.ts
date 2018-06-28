@@ -5,6 +5,7 @@ import { CleanupUserEnvPage } from './page_objects/user_profile.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
 import { PageOpenMode } from './page_objects/base.page';
 import { SpaceDashboardPage } from './page_objects/space_dashboard.page';
+import { LoginInteraction } from './interactions/login_interactions';
 
 describe('import codebase', function () {
   let dashboardPage: MainDashboardPage;
@@ -12,7 +13,7 @@ describe('import codebase', function () {
   beforeEach( async () => {
     await support.desktopTestSetup();
 
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });

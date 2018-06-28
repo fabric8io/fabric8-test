@@ -1,6 +1,7 @@
 import { browser } from 'protractor';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
+import { LoginInteraction } from '../interactions/login_interactions';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceChePage } from '../page_objects/space_che.page';
@@ -21,7 +22,7 @@ describe('Verify the Che preview URL for a deployed app:', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new support.LoginInteraction();
+    let login = new LoginInteraction();
     await login.run();
     dashboardPage = new MainDashboardPage();
   });
