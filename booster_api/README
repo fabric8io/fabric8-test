@@ -1,6 +1,0 @@
-Draft README for POC - BDD tests for boosters
-
-To run tests:
-behave @features_list.txt
-
-
