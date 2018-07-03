@@ -1,4 +1,4 @@
-# BDD tests for the OSIO booster APIs
+# BDD tests for the OSIO boosters
 
 ## Pre-requisities
 
