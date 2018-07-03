@@ -21,7 +21,7 @@ class ImportBooster(object):
         spaceId = helpers.getSpaceID()
         authHeader = 'Bearer {}'.format(theToken)
 
-        print 'starting test.....'
+        print 'Starting test.....'
 
         ###############################################
         # Import the booster
@@ -35,10 +35,10 @@ class ImportBooster(object):
                 'pipeline': pipeline,
                 'space': spaceId}
 
-        print 'making request ...'
+        print 'Making request to import...'
         r = requests.post('https://forge.api.openshift.io/api/osio/import',
                           headers=headers, data=data)
-        print 'request results = {}'.format(r.text)
+        # print 'request results = {}'.format(r.text)
 
         result = r.text
         if re.search('uuid', result):

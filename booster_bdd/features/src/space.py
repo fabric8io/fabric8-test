@@ -15,7 +15,7 @@ class Space:
 
         # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         theToken = helpers.get_user_tokens().split(";")[0]
-        print 'starting test.....'
+        print 'Starting test.....'
 
         serverAddress = os.getenv("SERVER_ADDRESS")
 
@@ -37,7 +37,7 @@ class Space:
             }}\
         }}'.format(spaceName)
 
-        print 'making request ...'
+        print 'Making request to create a new space "{}"...'.format(spaceName)
         r = requests.post(
             '{}/api/spaces'.format(serverAddress),
             headers=headers,
