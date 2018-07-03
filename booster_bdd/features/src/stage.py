@@ -40,7 +40,7 @@ class Stage(object):
         # Example staged app endpoint:
         # http://test123-ldimaggi-stage.8a09.starter-us-east-2.openshiftapps.com
 
-        print 'starting test.....'
+        print 'Starting test.....'
 
         r = requests.get(urlString)
         # print 'request results = {}'.format(r.text)
