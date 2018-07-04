@@ -53,6 +53,10 @@ class ResetEnvironment:
                 headers=headers
             )
             assert r.status_code == 200
+
+            if r.status_code != 200:
+                print "ERROR - Request to delete space {} failed - error code = {}".format(spaceID, r.status_code)
+            
         print 'Number of spaces after removing: {}'.format(len(self.getSpaces()))
         print 'Spaces removed!'
 
