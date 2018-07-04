@@ -126,11 +126,12 @@ class Pipeline(object):
             githubRepo
         )
 
-        # print "Promote URL: {}".format(promoteUrl)
+        print "Promote URL: {}".format(promoteUrl)
         print "Making request to promote build from Stage to Run..."
         r = requests.post(promoteUrl, headers=headers)
         # print "Promote response: {}".format(r)
         if r.status_code == 200:
             return False
         else:
+            print "ERROR - Request failed to promote - error code = {}".format(r.status_code)
             return True
