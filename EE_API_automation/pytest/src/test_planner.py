@@ -403,8 +403,12 @@ class TestClass_SDD(object):
                 print "Exception creating launch_info_dump.json"
 
             if cleanup:
-                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
+                if r.status_code == 200:
+                    print "\nSpace deleted : %s" % dynamic_vars.spacename
+                else:
+                    print "\nFailed to delete Space : %s" % dynamic_vars.spacename
+                    print "\nBug https://github.com/openshiftio/openshift.io/issues/3932\n"
                 assert r.status_code == 200
             
 
@@ -754,8 +758,12 @@ class TestClass_SCRUM(object):
                 print "Exception creating launch_info_dump.json"
             
             if cleanup:
-                print "\nSpace deleted : %s" % dynamic_vars.spacename
                 r = helpers.delete_space(dynamic_vars.spaceid)
+                if r.status_code == 200:
+                    print "\nSpace deleted : %s" % dynamic_vars.spacename
+                else:
+                    print "\nFailed to delete Space : %s" % dynamic_vars.spacename
+                    print "\nBug https://github.com/openshiftio/openshift.io/issues/3932\n"
                 assert r.status_code == 200
             
             global start_time
