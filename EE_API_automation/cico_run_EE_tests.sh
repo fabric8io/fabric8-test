@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set +e
+#exit on error
+set -e
 
 # Do not reveal secrets
 set +x
