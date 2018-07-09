@@ -37,7 +37,9 @@
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update --gecko false"
   },
-  "dependencies": {},
+  "dependencies": {
+    "planner-functional-test": "0.0.2"
+  },
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "@types/jasminewd2": "^2.0.3",
