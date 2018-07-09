@@ -144,9 +144,9 @@ class LoginUsersOauth2:
             try:
                 startUrl = '{}/api/authorize?response_type=code&client_id={}&redirect_uri={}&state={}'.format(  # noqa
                     self.baseUrl,
-                    'client_id={}'.format(self.clientId),
-                    'redirect_uri={}'.format(self.redirectUrl),
-                    'state={}'.format(state)
+                    self.clientId,
+                    self.redirectUrl,
+                    state
                 )
                 self.driver.get(startUrl)
                 self.wait_for_clickable_element(By.ID, "kc-login")
@@ -272,7 +272,7 @@ class LoginUsersOauth2:
     def login_users(self):
 
         opts = webdriver.ChromeOptions()
-        opts.add_argument("--headless")
+        # opts.add_argument("--headless")
         opts.add_argument("--window-size=1920,1080")
         opts.add_argument("--window-position=0,0")
 
