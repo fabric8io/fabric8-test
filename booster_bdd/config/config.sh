@@ -33,13 +33,16 @@ if [ $? -gt 0 ]; then
 fi
 
 ## OpenShift Online user's name (remove @ and following chars)
-export OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
+OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
+export OSO_USERNAME
 
 ## OpenShift Online token
-export OSO_TOKEN=$(oc whoami -t)
+OSO_TOKEN=$(oc whoami -t)
+export OSO_TOKEN
 
 ## Github username
-export GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
+GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
+export GITHUB_USERNAME
 
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
