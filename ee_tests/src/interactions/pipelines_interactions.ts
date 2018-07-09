@@ -69,11 +69,11 @@ export abstract class PipelinesInteractions {
 
         // wait until the pipeline is finished
         try {
-            support.info('Waiting for pipeline to finish');
+            support.info('Wait for pipeline to finish');
             await this.waitToFinishInternal(pipeline);
             support.info('Pipeline is finished');
         } catch (e) {
-            support.info('Waiting for pipeline to finish failed with error: ' + e);
+            support.info('Wait for pipeline to finish failed with error: ' + e);
             await support.screenshotManager.writeScreenshot('pipeline-failed');
             waitToFinishInternalError = e;
         }
@@ -84,8 +84,10 @@ export abstract class PipelinesInteractions {
             await this.verifyJenkinsLog(pipeline);
             support.info('Jenkins log is OK');
         } catch (e) {
-            await support.screenshotManager.writeScreenshot('jenkins-log-failed');
             support.info('Check the Jenkins log failed with error: ' + e);
+            await support.screenshotManager.writeScreenshot('jenkins-log-failed');
+            // if the UI show Jenkins log faile, try navigating to jenkins directly
+            this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
         }
 
@@ -103,11 +105,6 @@ export abstract class PipelinesInteractions {
         }
 
         if (verifyJenkinsLogError !== undefined) {
-            // if the UI show Jenkins log faile, try navigating to jenkins directly
-            let osioURL: string = browser.params.target.url.replace('https://', '');
-            let jenkinsURL = 'https://jenkins.' + osioURL;
-            await browser.get(jenkinsURL);
-            await support.screenshotManager.writeScreenshot('jenkins-direct-log');
             throw verifyJenkinsLogError;
         }
 
@@ -122,7 +119,7 @@ export abstract class PipelinesInteractions {
     }
 
     public async verifyBuildStages(pipeline: PipelineDetails) {
-        support.info('Verifying pipeline build stages');
+        support.info('Verify pipeline build stages');
 
         let stages = await pipeline.getStages();
         this.verifyBuildStagesInternal(stages);
@@ -145,7 +142,7 @@ export abstract class PipelinesInteractions {
         let finished: boolean = false;
         const { exec } = require('child_process');
 
-        support.info('Executing shell script to retrieve logs from OpenShift');
+        support.info('Execute shell script to retrieve logs from OpenShift');
 
         exec('./oc-get-jenkins-logs.sh ' +
             browser.params.login.user + ' ' +
@@ -163,6 +160,19 @@ export abstract class PipelinesInteractions {
         );
         await browser.wait(() => finished === true);
         support.info('Script finished');
+    }
+
+    private async showJenkinsLogDirectly() {
+        try {
+            support.info('Navigate to Jenkins log directly by URL');
+            let osioURL: string = browser.params.target.url.replace('https://', '');
+            let jenkinsURL = 'https://jenkins.' + osioURL;
+            await browser.get(jenkinsURL);
+            await support.screenshotManager.writeScreenshot('jenkins-direct-log');
+        } catch (e) {
+            // do not propagate the error because it would shadow previous errors
+            support.info('Navigate to Jenkins log directly by URL failed. ' + e);
+        }
     }
 }
 
@@ -214,6 +224,7 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
 
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
+            let promoted = false;
             support.debug('Before get status');
             let currentStatus = await pipeline.getStatus();
             support.debug('After get status');
@@ -222,9 +233,10 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
                 return true;
             } else {
               support.debug('... Current pipeline status: ' + currentStatus);
-                if (await pipeline.isInputRequired()) {
+                if (!promoted && await pipeline.isInputRequired()) {
                     support.debug('Input is required');
                     await pipeline.promote();
+                    promoted = true;
                     support.debug('Promoted');
                 }
                 await browser.sleep(5000);

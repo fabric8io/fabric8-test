@@ -43,7 +43,9 @@ export class SpacePipelinePage extends SpaceTabPage {
 
 export class PipelineDetails extends BaseElement {
 
-  private inputRequiredBy = by.cssContainingText('a', 'Input Required');
+  private inputRequiredLocator = by.cssContainingText('a', 'Input Required');
+
+  private promoteLocator = by.cssContainingText('button', 'Promote');
 
   constructor(finder: ElementFinder) {
     super(finder, 'Pipeline');
@@ -80,15 +82,19 @@ export class PipelineDetails extends BaseElement {
   }
 
   public async isInputRequired(): Promise<boolean> {
-    return await this.element(this.inputRequiredBy).isPresent() &&
-      await this.element(this.inputRequiredBy).isDisplayed();
+    return await this.element(this.inputRequiredLocator).isPresent() &&
+      await this.element(this.inputRequiredLocator).isDisplayed();
   }
 
   public async promote() {
-    let inputRequired = new Button(element(this.inputRequiredBy), 'Input required');
+    let inputRequired = new Button(element(this.inputRequiredLocator), 'Input required');
     await inputRequired.clickWhenReady();
-    let promoteButton = new Button(element(by.cssContainingText('button', 'Promote')), 'Promote button');
+
+    let promoteButton = new Button(element(this.promoteLocator), 'Promote button');
     await promoteButton.clickWhenReady(support.LONGER_WAIT);
+
+    await browser.wait(until.stalenessOf(element(this.promoteLocator)));
+    await browser.wait(until.stalenessOf(element(this.inputRequiredLocator)));
   }
 }
 
