@@ -5,7 +5,7 @@ from unittest import *
 
 @given(u'I have verified a booster\'s pipeline has completed')
 def step_impl(context):
-    print ('Attempting to use query for running Pipeline...')
+    print('Attempting to use query for running Pipeline...')
     global stage
     stage = Stage()
 
@@ -14,7 +14,7 @@ def step_impl(context):
 def step_impl(context):
     global result
     result = stage.runTest('testing 1234567890')
-    print ('Result = {}'.format(result))
+    print('Result = {}'.format(result))
 
 
 @then(u'I should see the deployed app running on stage')

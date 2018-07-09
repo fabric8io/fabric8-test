@@ -37,7 +37,7 @@ def create_space_name(template="BDD"):
     space = space.replace('@', '-')
     space = space.replace(':', '-')
     space = space.replace('.', '-')
-    print "The spacename is: {}".format(space)
+    print("The spacename is: {}".format(space))
     return space
 
 
@@ -88,7 +88,7 @@ def setInDict(dataDict, mapList, value):
 def read_post_data_file(file_name=None, replace=None, json_dir='planner_jsons'):
     # Default json_dir is set to planner_jsons directory
     if file_name is None:
-        print "No file name provided. No json to read!!"
+        print("No file name provided. No json to read!!")
         return None
     else:
         try:
@@ -100,14 +100,14 @@ def read_post_data_file(file_name=None, replace=None, json_dir='planner_jsons'):
                 json_data = replace_values(json_data, replace)
             return json_data
         except Exception as e:
-            print "Exception reading file for json data "
-            print e
+            print("Exception reading file for json data ")
+            print(e)
             return None
 
 
 def extract_value(extract_path=None, json_response=None):
     if None in [json_response, extract_path]:
-        print "Either Json response or the extractor path are None"
+        print("Either Json response or the extractor path are None")
         return None
     else:
         try:
@@ -119,7 +119,7 @@ def extract_value(extract_path=None, json_response=None):
 
 def extract_header(extract_key=None, json_response=None):
     if None in [json_response, extract_key]:
-        print "Either Json response or the extractor path are None"
+        print("Either Json response or the extractor path are None")
         return None
     else:
         try:
@@ -134,7 +134,7 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
         paths = {}
         for key_rep in strs_to_replace_dict:
             val_to_replace = unicode(key_rep, "utf-8")
-#             print "Key to replace:", val_to_replace
+#             print("Key to replace:"), val_to_replace
             temp_list = []
             temp_dict = {}
             try:
@@ -142,19 +142,19 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
                     temp_list.append(path)
                 temp_dict = {val_to_replace: temp_list}
                 paths.update(temp_dict)
-#                 print "interim paths:", paths
+#                 print("interim paths:"), paths
             except KeyError:
                 print "All paths found"
             except Exception:
                 print "Key not found in json blob"
 
-#         print "final paths:", paths
+#         print("final paths:"), paths
         for path in paths:
             for i in xrange(len(paths[path])):
                 setInDict(orig_dict, paths[path][i], strs_to_replace_dict[path])
         return orig_dict  # Final updated JSON
     else:
-        print "None value supplied for replacements"
+        print("None value supplied for replacements")
 
 
 def generate_entity_names(static_string=None, no_of_names=1, reverse=False, reset_counter=False):
@@ -181,7 +181,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
 
 def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None):
     if None in [title, spaceid, witype]:
-        print "None value supplied for either SpaceID / WI-Title / WI-Type"
+        print("None value supplied for either SpaceID / WI-Title / WI-Type")
         return None
     # Create workitems in Iterations context
     elif iterationid is not None:
@@ -208,7 +208,7 @@ def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None)
 
 def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=None):
     if None in [title, spaceid, witype]:
-        print "None value supplied for either SpaceID / WI-Title / WI-Type"
+        print("None value supplied for either SpaceID / WI-Title / WI-Type")
         return None
     # Create workitems in Iterations context
     elif iterationid is not None:
@@ -246,7 +246,7 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
 
 def add_workitem_comment(workitem_link=None, comment_text=None):
     if None in [workitem_link, comment_text]:
-        print "Please specify a valid Workitem-Link and a CommentText"
+        print("Please specify a valid Workitem-Link and a CommentText")
         return None
     else:
         # Add a comment to the workitem
@@ -257,7 +257,7 @@ def add_workitem_comment(workitem_link=None, comment_text=None):
 
 def create_new_label(label_text=None):
     if label_text is None:
-        print "Please specify a valid LabelText"
+        print("Please specify a valid LabelText")
         return None
     else:
         # Add a Label to the space
@@ -269,7 +269,7 @@ def create_new_label(label_text=None):
 
 def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
     if None in [workitem_link]:
-        print "Please specify a valid Workitem-Link"
+        print("Please specify a valid Workitem-Link")
         return None
     else:
         if label_id is None:
@@ -300,7 +300,7 @@ def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
 
 def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
     if None in [wi_parent_title, wi_child_title]:
-        print "Please specify two valid Workitem Titles"
+        print("Please specify two valid Workitem Titles")
         return None
     else:
         # Design the URL
@@ -319,7 +319,7 @@ def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
 
 def delete_space(spaceid=None):
     if spaceid is None:
-        print "Please specify a valid space ID"
+        print("Please specify a valid space ID")
         return None
     else:
         # Delete a space

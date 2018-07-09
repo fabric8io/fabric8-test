@@ -30,10 +30,10 @@ class ResetEnvironment:
 
         # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         theToken = helpers.get_user_tokens().split(";")[0]
-        print 'Starting removing spaces.....'
+        print('Starting removing spaces.....')
 
         spacesIDs = self.getSpaces()
-        print 'Number of spaces before removing: {}'.format(len(spacesIDs))
+        print('Number of spaces before removing: {}'.format(len(spacesIDs)))
 
         serverAddress = os.getenv("WIT_API")
 
@@ -47,7 +47,7 @@ class ResetEnvironment:
 
         # delete spaces
         for spaceID in spacesIDs:
-            print 'Deleting space {}'.format(spaceID)
+            print('Deleting space {}'.format(spaceID))
             r = requests.delete(
                 '{}/api/spaces/{}'.format(serverAddress, spaceID),
                 headers=headers
@@ -55,16 +55,19 @@ class ResetEnvironment:
             assert r.status_code == 200
 
             if r.status_code != 200:
-                print "ERROR - Request to delete space {} failed - error code = {}".format(spaceID, r.status_code)
-            
-        print 'Number of spaces after removing: {}'.format(len(self.getSpaces()))
-        print 'Spaces removed!'
+                print(
+                    "ERROR - Request to delete space {} failed - error code = {}"
+                    .format(spaceID, r.status_code)
+                )
+
+        print('Number of spaces after removing: {}'.format(len(self.getSpaces())))
+        print('Spaces removed!')
 
     def cleanTenant(self):
         # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         theToken = helpers.get_user_tokens().split(";")[0]
 
-        print 'Starting cleaning tenant.....'
+        print('Starting cleaning tenant.....')
 
         serverAddress = os.getenv("WIT_API")
         authHeader = 'Bearer {}'.format(theToken)
@@ -84,4 +87,4 @@ class ResetEnvironment:
             headers=headers
         )
         assert r.status_code == 200
-        print 'Tenant is cleaned.....'
+        print('Tenant is cleaned.....')

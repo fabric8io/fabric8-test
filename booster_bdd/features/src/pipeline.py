@@ -23,10 +23,11 @@ class Pipeline(object):
         osoUrl = os.environ.get('OSO_CLUSTER_ADDRESS')
         authHeader = 'Bearer {}'.format(osoToken)
 
-        print 'starting test.....'
+        print('starting test.....')
 
         ###############################################
-        # Find the running build pipeline, verify state transitions: New -> Running -> Promote -> Complete
+        # Find the running build pipeline, verify state transitions:
+        #   New -> Running -> Promote -> Complete
 
         headers = {'Authorization': authHeader}
         urlString = '{}/oapi/v1/namespaces/{}/builds'.format(osoUrl, osoUsername)
@@ -57,11 +58,12 @@ class Pipeline(object):
         else:
             return 'Fail'
 
-    def buildStatus(self, urlString, headers, sleepTimer, maxTries, expectedBuildStatus, expectedAnnotation=None):
+    def buildStatus(self, urlString, headers, sleepTimer, maxTries, expectedBuildStatus,
+                    expectedAnnotation=None):
         """
         Function to query builds, wait/retry for expected build status
         """
-        print 'Look for build, expected build status: {}'.format(expectedBuildStatus)
+        print('Look for build, expected build status: {}'.format(expectedBuildStatus))
 
         counter = 0
         requestFailed = True
@@ -70,37 +72,42 @@ class Pipeline(object):
             counter = counter + 1
 
             try:
-                print 'Making request to check for the build status...'
+                print('Making request to check for the build status...')
                 r = requests.get(urlString, headers=headers)
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 
                 expectedAnnotationFound = False
                 if expectedAnnotation is not None:
-                    expectedAnnotationFound = expectedAnnotation in respJson['items'][0]['metadata']['annotations']
+                    expectedAnnotationFound = (
+                        expectedAnnotation in respJson['items'][0]['metadata']['annotations']
+                    )
 
                 if re.search(expectedBuildStatus, actualBuildStatus):
-                    print 'Expected build status {} found'.format(expectedBuildStatus)
+                    print('Expected build status {} found'.format(expectedBuildStatus))
                     if expectedAnnotation is not None:
                         if expectedAnnotationFound:
-                            print 'Expected annotation "{}" found'.format(expectedAnnotation)
+                            print('Expected annotation "{}" found'.format(expectedAnnotation))
                             requestFailed = False
                             break
                         else:
-                            print 'Expected annotation "{}" not found, retrying...'.format(
-                                expectedAnnotation)
+                            print(
+                                'Expected annotation "{}" not found, retrying...'
+                                .format(expectedAnnotation)
+                            )
                             time.sleep(sleepTimer)
                             continue
                     requestFailed = False
                     break
                 else:
-                    print 'Expected build status not found, retrying - expected: "{}" actual: "{}" '.format(
-                        expectedBuildStatus, actualBuildStatus)
+                    print('Expected build status not found, retrying - expected: "{}" actual: "{}" '
+                          .format(expectedBuildStatus, actualBuildStatus)
+                          )
                     time.sleep(sleepTimer)
 
-            except IndexError, e:
-                print 'Unexpected error found: {}'.format(e)
-                print 'attempt {} failed - retrying...'.format(counter)
+            except (IndexError, e):
+                print('Unexpected error found: {}'.format(e))
+                print('attempt {} failed - retrying...'.format(counter))
                 time.sleep(sleepTimer)
 
         # print 'The value of requestFailed = {}'.format(requestFailed)
@@ -119,19 +126,20 @@ class Pipeline(object):
         theToken = helpers.get_user_tokens().split(";")[0]
         headers = {"Authorization": "Bearer {}".format(theToken)}
 
-        promoteUrl = "{}/api/openshift/services/jenkins/{}-jenkins/job/{}/job/{}/job/master/lastBuild/input/Proceed/proceedEmpty".format(
+        promoteUrl = "{}/api/openshift/services/jenkins/{}-jenkins/job/{}/job/{}/job/{}".format(
             forgeApi,
             osoUsername,
             githubUsername,
-            githubRepo
+            githubRepo,
+            "master/lastBuild/input/Proceed/proceedEmpty"
         )
 
-        print "Promote URL: {}".format(promoteUrl)
-        print "Making request to promote build from Stage to Run..."
+        print("Promote URL: {}".format(promoteUrl))
+        print("Making request to promote build from Stage to Run...")
         r = requests.post(promoteUrl, headers=headers)
         # print "Promote response: {}".format(r)
         if r.status_code == 200:
             return False
         else:
-            print "ERROR - Request failed to promote - error code = {}".format(r.status_code)
+            print("ERROR - Request failed to promote - error code = {}".format(r.status_code))
             return True

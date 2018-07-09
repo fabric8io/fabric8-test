@@ -26,7 +26,10 @@ class Stage(object):
         urlString = '{}/oapi/v1/namespaces/{}-stage/routes'.format(clusterAddress, osoUsername)
 
         r = requests.get(urlString, headers=headers)
-        # r = requests.get('https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/ldimaggi-stage/routes', headers=headers)
+        # r = requests.get(
+        #   'https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/ldimaggi-stage/routes',
+        #   headers=headers
+        # )
         # print r.text
 
         respJson = r.json()
