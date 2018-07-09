@@ -144,7 +144,7 @@ class LoginUsersOauth2:
         if not failed:
             self.reset_timer()
             try:
-                startUrl = '{}/api/authorize?response_type=code&client_id={}&redirect_uri={}&state={}'.format(
+                startUrl = '{}/api/authorize?response_type=code&client_id={}&redirect_uri={}&state={}'.format(  # noqa
                     self.baseUrl,
                     self.clientId,
                     self.redirectUrl,
