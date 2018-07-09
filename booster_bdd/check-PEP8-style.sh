@@ -2,5 +2,5 @@
 
 export directories="../${PWD##*/}/"
 
-cd ../self_tests/
+cd ../self_tests/ || exit
 . check-PEP8-style.sh
