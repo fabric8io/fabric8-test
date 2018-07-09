@@ -10,9 +10,9 @@ from unittest import *
 def step_impl(context):
     global spaceID
     spaceID = helpers.getSpaceID()
-    assert spaceID != None
+    assert spaceID is not None
 
-    print ('Attempting to use OSIO booster service intregration POC...')
+    print('Attempting to use OSIO booster service intregration POC...')
     global importBooster
     importBooster = ImportBooster()
 
@@ -21,7 +21,7 @@ def step_impl(context):
 def step_impl(context):
     global result
     result = importBooster.importGithubRepo(os.getenv('GIT_REPO'))
-    print ('Result = {}'.format(result))
+    print('Result = {}'.format(result))
 
 
 @then(u'I should see the booster imported')

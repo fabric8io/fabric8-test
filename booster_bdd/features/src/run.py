@@ -26,7 +26,10 @@ class Run(object):
         urlString = '{}/oapi/v1/namespaces/{}-run/routes'.format(clusterAddress, osoUsername)
 
         r = requests.get(urlString, headers=headers)
-        # r = requests.get('https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/ldimaggi-run/routes', headers=headers)
+        # r = requests.get(
+        #   'https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/ldimaggi-run/routes',
+        #   headers=headers
+        # )
         # print r.text
 
         respJson = r.json()
@@ -40,7 +43,7 @@ class Run(object):
         # Example app endpoint:
         # http://test123-ldimaggi-run.8a09.starter-us-east-2.openshiftapps.com
 
-        print 'Starting test.....'
+        print('Starting test.....')
 
         r = requests.get(urlString)
         # print 'request results = {}'.format(r.text)
