@@ -112,7 +112,7 @@ def extract_value(extract_path=None, json_response=None):
     else:
         try:
             return jmespath.search(extract_path, json_response.json())
-        except:
+        except Exception:
             print "Exception extracting value from the response body"
             return None
 
@@ -124,7 +124,7 @@ def extract_header(extract_key=None, json_response=None):
     else:
         try:
             return json_response.headers[extract_key]
-        except:
+        except Exception:
             print "Exception extracting header value from the response"
             return None
 
@@ -145,7 +145,7 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
 #                 print "interim paths:", paths
             except KeyError:
                 print "All paths found"
-            except:
+            except Exception:
                 print "Key not found in json blob"
 
 #         print "final paths:", paths
@@ -157,9 +157,10 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
         print "None value supplied for replacements"
 
 
-# Returns a list like this if called like: generate_entity_names('Area', 5)
-##['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5']
 def generate_entity_names(static_string=None, no_of_names=1, reverse=False, reset_counter=False):
+    """Returns a list like this if called like: generate_entity_names('Area', 5)
+       ['Area 1', 'Area 2', 'Area 3', 'Area 4', 'Area 5']
+    """
     global count
     if reset_counter:
         count = 1
@@ -173,7 +174,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
     # Updating global counter
     count = total_entities
 
-    if reverse == True:
+    if reverse:
         mylist = list(reversed(mylist))
     return mylist
 
@@ -187,7 +188,8 @@ def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None)
         api = "api/spaces/{}/workitems".format(spaceid)
         url = constants.launch_detail.create_url(api)
         f = read_post_data_file('create_wi_in_iter.json', replace={
-                                '$wi_nos_generated': title, '$witype': witype, '$iteration_id': iterationid})
+                                '$wi_nos_generated': title, '$witype': witype,
+                                '$iteration_id': iterationid})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
@@ -214,10 +216,12 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
         url = constants.launch_detail.create_url(api)
         if witype == constants.workitem_constants.witypetask1:
             f = read_post_data_file('create_wi_in_iter_scrum.json', replace={
-                                    '$wi_nos_generated': title, '$witype': witype, '$state': 'To Do', '$iteration_id': iterationid})
+                                    '$wi_nos_generated': title, '$witype': witype,
+                                    '$state': 'To Do', '$iteration_id': iterationid})
         else:
             f = read_post_data_file('create_wi_in_iter_scrum.json', replace={
-                                    '$wi_nos_generated': title, '$witype': witype, '$state': 'New', '$iteration_id': iterationid})
+                                    '$wi_nos_generated': title, '$witype': witype,
+                                    '$state': 'New', '$iteration_id': iterationid})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
@@ -228,10 +232,12 @@ def create_workitem_SCRUM(title=None, spaceid=None, witype=None, iterationid=Non
         url = constants.launch_detail.create_url(api)
         if witype == constants.workitem_constants.witypetask1:
             f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={
-                                    '$wi_nos_generated': title, '$witype': witype, '$state': 'To Do'})
+                                    '$wi_nos_generated': title, '$witype': witype,
+                                    '$state': 'To Do'})
         else:
             f = read_post_data_file('create_wi_in_backlog_scrum.json', replace={
-                                    '$wi_nos_generated': title, '$witype': witype, '$state': 'New'})
+                                    '$wi_nos_generated': title, '$witype': witype,
+                                    '$state': 'New'})
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         constants.dynamic_vars.wi_names_to_ids[title] = extract_value("data.id", r)
         constants.dynamic_vars.wi_names_to_links[title] = extract_value("data.links.self", r)
@@ -278,12 +284,17 @@ def add_workitem_label(workitem_link=None, label_text=None, label_id=None):
             wi_patch_api = workitem_link
             if type(label_id) == list:
                 f = read_post_data_file('add_wi_labels.json', replace={
-                                        '$wi_id': wi_id, '$wi_link': workitem_link, '$label_1_id': label_id[0], '$label_2_id': label_id[1], '$label_3_id': label_id[2]})
-                r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default, json=f)
+                                        '$wi_id': wi_id, '$wi_link': workitem_link,
+                                        '$label_1_id': label_id[0],
+                                        '$label_2_id': label_id[1], '$label_3_id': label_id[2]})
+                r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default,
+                              json=f)
             else:
                 f = read_post_data_file('add_wi_label.json', replace={
-                                        '$wi_id': wi_id, '$wi_link': workitem_link, '$wi_ver': 0, '$label_id': label_id})
-                r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default, json=f)
+                                        '$wi_id': wi_id, '$wi_link': workitem_link, '$wi_ver': 0,
+                                        '$label_id': label_id})
+                r = req.patch(wi_patch_api, headers=constants.request_detail.headers_default,
+                              json=f)
         return r, label_id
 
 
@@ -295,8 +306,12 @@ def add_workitem_parent_link(wi_parent_title=None, wi_child_title=None):
         # Design the URL
         api = "api/workitemlinks"
         url = constants.launch_detail.create_url(api)
-        f = read_post_data_file('create_wi_hierarchy.json', replace={'$wilinktype_parent': constants.workitem_constants.wilinktype_parent,
-                                                                     '$wi_parent_id': constants.dynamic_vars.wi_names_to_ids[wi_parent_title], '$wi_child_id': constants.dynamic_vars.wi_names_to_ids[wi_child_title]})
+        f = read_post_data_file(
+            'create_wi_hierarchy.json',
+            replace={'$wilinktype_parent': constants.workitem_constants.wilinktype_parent,
+                     '$wi_parent_id': constants.dynamic_vars.wi_names_to_ids[wi_parent_title],
+                     '$wi_child_id': constants.dynamic_vars.wi_names_to_ids[wi_child_title]})
+
         # Make the request
         r = req.post(url, headers=constants.request_detail.headers_default, json=f)
         return r
