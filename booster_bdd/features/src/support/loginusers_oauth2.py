@@ -59,8 +59,10 @@ class LoginUsersOauth2:
         self.redirectUrl = "{}/api/status".format(self.baseUrl)
 
         self.userTokensIncludeUsername = (
-            os.getenv("USER_TOKENS_INCLUDE_USERNAME", "False") == "True"
+            os.getenv("USER_TOKENS_INCLUDE_USERNAME", "false").lower() == "true"
         )
+
+        self.uiHeadless = (os.getenv("UI_HEADLESS", "true").lower() == "true")
 
         if username == "" or password == "":
             usersPropertiesFile = os.getenv(
@@ -272,7 +274,9 @@ class LoginUsersOauth2:
     def login_users(self):
 
         opts = webdriver.ChromeOptions()
-        # opts.add_argument("--headless")
+        if self.uiHeadless:
+            opts.add_argument("--headless")
+
         opts.add_argument("--window-size=1920,1080")
         opts.add_argument("--window-position=0,0")
 

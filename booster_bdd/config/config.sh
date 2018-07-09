@@ -57,6 +57,8 @@ export PROJECT_NAME="${PROJECT_NAME:-test123}"
 ## (See https://github.com/fabric8-services/fabric8-auth/blob/d39e42ac2094b67eeaec9fc69ca7ebadb0458cea/controller/authorize.go#L42)
 export AUTH_CLIENT_ID="${AUTH_CLIENT_ID:-740650a2-9c44-4db5-b067-a3d1b2cd2d01}"
 
-
 ## An output directory where the reports will be stored
 export REPORT_DIR=${REPORT_DIR:-test_output}
+
+## 'true' if the UI parts of the test suite are to be run in headless mode (default value is 'true')
+export UI_HEADLESS=${UI_HEADLESS:-true}
