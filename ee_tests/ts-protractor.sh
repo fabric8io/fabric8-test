@@ -22,6 +22,7 @@ validate_config() {
   export ZABBIX_ENABLED=${ZABBIX_ENABLED:-false}
   export ZABBIX_HOST=${ZABBIX_HOST:-}
   export ZABBIX_METRIC_PREFIX=${ZABBIX_METRIC_PREFIX:-}
+  export CHE_LOCAL_REPOSITORY=${CHE_LOCAL_REPOSITORY:-'../../che-functional-tests'}
   return $ret
 }
 
@@ -86,6 +87,7 @@ main() {
     --params.ngx_launcher.enabled="$NGX_LAUNCHER_ENABLED" \
     --params.reset.environment="$RESET_ENVIRONMENT" \
     --params.feature.level="$FEATURE_LEVEL" \
+    --params.che.local.repo="$CHE_LOCAL_REPOSITORY" \
     --params.zabbix.enabled="$ZABBIX_ENABLED" \
     --params.zabbix.host="$ZABBIX_HOST" \
     --params.zabbix.metric.prefix="$ZABBIX_METRIC_PREFIX"

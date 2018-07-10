@@ -2,7 +2,13 @@ import * as support from '../support';
 import { spawn }  from 'child_process';
 import { browser } from 'protractor';
 
-export async function runScript(baseDir: string, name: string, params: string[], outputFile: string): Promise<void> {
+export async function runScript(
+        baseDir: string,
+        name: string,
+        params: string[],
+        outputFile: string,
+        timeout?: number): Promise<void> {
+
     support.info(`Running script \"${name} | tee ${outputFile}\ from directory ${baseDir}`);
 
     let exitCode: number = 0;
@@ -35,7 +41,7 @@ export async function runScript(baseDir: string, name: string, params: string[],
         finished = true;
     });
 
-    await browser.wait(() => finished === true);
+    await browser.wait(() => finished === true, timeout);
 
     if (exitCode !== 0) {
         support.info(`Script \"${name} | tee ${outputFile}\" exited with code ${exitCode}`);

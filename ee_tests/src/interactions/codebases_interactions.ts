@@ -21,6 +21,8 @@ export interface CodebasesInteractions {
 
     openCodebasesPage(mode: PageOpenMode): void;
 
+    createWorkspace(): void;
+
     createAndOpenWorkspace(): void;
 
     getWorkspaces(): Promise<string[]>;
@@ -39,6 +41,8 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
         this.spaceName = spaceName;
         this.page = new CodebasesPage();
     }
+
+    public async abstract createWorkspace(): Promise<void>;
 
     public async abstract createAndOpenWorkspace(): Promise<void>;
 
@@ -60,8 +64,12 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
 
 class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
-    public async createAndOpenWorkspace(): Promise<void> {
+    public async createWorkspace(): Promise<void> {
         await this.page.createWorkspace();
+    }
+
+    public async createAndOpenWorkspace(): Promise<void> {
+        await this.createWorkspace();
         await this.page.openWorkspace();
         await support.windowManager.switchToNewWindow();
     }

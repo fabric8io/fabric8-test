@@ -68,6 +68,7 @@ let conf: Config = {
   suites: {
 
     smoketest: ['src/smoke.spec.js'],
+    che: ['src/che_integration.spec.js'],
     all: ['src/*.spec.js'],
     local: ['src/local/*.js'],
 
