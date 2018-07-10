@@ -105,12 +105,12 @@ class Pipeline(object):
                           )
                     time.sleep(sleepTimer)
 
-            except (IndexError, e):
+            except IndexError as e:
                 print('Unexpected error found: {}'.format(e))
                 print('attempt {} failed - retrying...'.format(counter))
                 time.sleep(sleepTimer)
 
-        # print 'The value of requestFailed = {}'.format(requestFailed)
+        # print('The value of requestFailed = {}'.format(requestFailed))
 
         return requestFailed
 
