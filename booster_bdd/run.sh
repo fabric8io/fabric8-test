@@ -1,5 +1,9 @@
 #!/bin/bash
-source config/config.sh
+CONFIG=${1:-config}
+CONFIG_FILE="config/$CONFIG.sh"
+
+echo "Reading configuration from: $CONFIG_FILE"
+source "$CONFIG_FILE"
 
 echo "Starting behave testsuite"
 
