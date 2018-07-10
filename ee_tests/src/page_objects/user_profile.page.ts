@@ -118,24 +118,17 @@ export class EditUserProfilePage extends AppPage {
     return page;
   }
 
+  async getToken(): Promise<string> {
+    return element(by.className('token-heading')).getText();
+  }
 }
 
 export class UserProfilePage extends AppPage {
-  // TODO is there a better way to find the button? can we get devs to add an id?
-  updateProfileButton = this.innerElement(
-    Button,
-    'alm-overview button.profile-update-button',
-    'Update Profile'
-  );
-
-  async ready() {
-    await super.ready();
-    await this.updateProfileButton.untilClickable();
-  }
 
   async gotoEditProfile() {
-    this.updateProfileButton.clickWhenReady();
-    support.debug('... showing up Edit User Profile');
+    let editProfileButton = new Button(element(by.cssContainingText('button', 'Edit Profile')), 'Edit Profile');
+    await editProfileButton.clickWhenReady();
+
     let page =  new EditUserProfilePage();
     await page.open();
     return page;

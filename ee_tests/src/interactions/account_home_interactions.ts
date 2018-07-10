@@ -36,6 +36,8 @@ export interface AccountHomeInteractions {
 
     resetEnvironment(): void;
 
+    getToken(): Promise<string>;
+
     openSpaceDashboard(name: string): void;
 }
 
@@ -68,6 +70,12 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         let cleanupEnvPage = new CleanupUserEnvPage();
         cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(browser.params.login.user);
+    }
+
+    public async getToken(): Promise<string> {
+        let userProfile = await this.appPage.gotoUserProfile();
+        let editProfile = await userProfile.gotoEditProfile();
+        return editProfile.getToken();
     }
 }
 
