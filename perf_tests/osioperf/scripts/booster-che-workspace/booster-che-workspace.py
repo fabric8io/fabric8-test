@@ -184,7 +184,7 @@ class UserScenario(TaskSet):
         return failed
 
     def reset_environment(self, driver, failed=False):
-        request_type="setup"
+        request_type = "setup"
 
         metric = "reset-environment"
         if not failed:
@@ -193,17 +193,17 @@ class UserScenario(TaskSet):
                 driver.get(self.locust.host + "/" + self.taskUserName + "/_cleanup")
                 self._wait_for_url(driver, self.locust.host + "/" + self.taskUserName + "/_cleanup")
 
-                target_element= self._wait_for_clickable_element(driver, By.XPATH, "//*[text()='Erase My OpenShift.io Environment']")
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[text()='Erase My OpenShift.io Environment']")
                 target_element.click()
 
-                target_element= self._wait_for_clickable_element(driver, By.NAME, "username")
+                target_element = self._wait_for_clickable_element(driver, By.NAME, "username")
                 target_element.send_keys(self.taskUserName)
 
-                target_element= self._wait_for_clickable_element(driver, By.XPATH, "//*[text()='I understand my actions - erase my environment']")
+                target_element = self._wait_for_clickable_element(driver, By.XPATH, "//*[text()='I understand my actions - erase my environment']")
                 target_element.click()
 
-                self._wait_for_non_clickable_element(driver, By.XPATH,"//*[contains(@class, 'alert')]")
-                self._wait_for_clickable_element(driver, By.XPATH,"//*[contains(@class, 'alert')]")
+                self._wait_for_non_clickable_element(driver, By.XPATH, "//*[contains(@class, 'alert')]")
+                self._wait_for_clickable_element(driver, By.XPATH, "//*[contains(@class, 'alert')]")
 
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
@@ -517,8 +517,8 @@ class UserScenario(TaskSet):
         else:
             self._report_failure(driver, request_type, metric, self._tick_timer(), self.SKIPPED_MSG)
 
-
         metric = "git-provider"
+
         if not failed:
             self._reset_timer()
             try:
