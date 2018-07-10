@@ -144,9 +144,9 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
                 paths.update(temp_dict)
 #                 print("interim paths:"), paths
             except KeyError:
-                print "All paths found"
+                print("All paths found")
             except Exception:
-                print "Key not found in json blob"
+                print("Key not found in json blob")
 
 #         print("final paths:"), paths
         for path in paths:
