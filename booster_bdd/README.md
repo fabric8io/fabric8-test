@@ -26,9 +26,9 @@ This is needed for viewing of the HTML report of the tests' results.
 export PATH=$PATH:$ALLURE_HOME/bin
 ```
 
-## Run the tests locally
+## Run the all the tests locally
 
-Set environmental variables for `OSO_CLUSTER_ADDRESS`, `OSIO_USERNAME` and `OSIO_PASSWORD` or update the `config/config.sh` file and run the `run.sh`.
+Set environmental variables for OSO_CLUSTER_ADDRESS`, `OSIO_USERNAME` and `OSIO_PASSWORD` or update the `config/config.sh` file and run the `run.sh`.
 
 Example:
 
@@ -43,6 +43,17 @@ It is also possible to use an alternative configuration file (e.g. `config/prod-
 ```
 
 The test will run and save the results under `$REPORT_DIR` directory(default name is `./test_output`).
+
+### Run a single test locally
+
+Set additional environmental variable for `SCENARIO` or update the `config/config.sh` file and run the `run.sh`.
+
+Example:
+
+```bash
+SCENARIO='import-repo' OSO_CLUSTER_ADDRESS='https://api.starter-us-east-2a.openshift.com:443' OSIO_USERNAME=... OSIO_PASSWORD=... ./run.sh
+```
+
 
 ## View Allure report
 

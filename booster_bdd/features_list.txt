@@ -1,9 +1,0 @@
-# Order of the features in this file is significant, so shuffle them carefully.
-features/00_loginUser.feature
-features/05_resetEnvironment.feature
-features/10_createSpace.feature
-features/20_importBooster.feature
-features/30_verifyPipeline.feature
-features/40_verifyStage.feature
-features/50_verifyRun.feature
-

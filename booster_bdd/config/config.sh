@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export SCENARIO=${SCENARIO:-}
+
 # Endpoints
 ## Main URI
 export SERVER_ADDRESS="${SERVER_ADDRESS:-https://openshift.io}"
