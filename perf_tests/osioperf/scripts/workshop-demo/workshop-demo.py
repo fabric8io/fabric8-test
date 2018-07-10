@@ -230,7 +230,8 @@ class UserScenario(TaskSet):
                 target_element.send_keys(self.taskUserName)
 
                 target_element = self._wait_for_clickable_element(
-                    driver, By.XPATH, "//*[text()='I understand my actions - erase my environment']")
+                    driver, By.XPATH,
+                    "//*[text()='I understand my actions - erase my environment']")
 
                 self._reset_timer()
                 target_element.click()
