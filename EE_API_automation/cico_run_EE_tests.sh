@@ -18,8 +18,17 @@ echo installing dependency
 sudo yum -y install epel-release
 sudo yum -y install python2
 sudo yum -y install python-pip
+pip install --upgrade pip
 pip install requests pytest jmespath
 
 cd pytest
 chmod +x run_me.sh
 ./run_me.sh 'https://api.openshift.io/' 'rgarg-osiotest1' $EE_TEST_OSIO_TOKEN True
+
+if grep "AssertionError" pytest_cli_logs.log; then
+  echo 'API tests fail.'
+  exit 1
+else
+  echo 'API tests pass.'
+  exit 0
+fi
