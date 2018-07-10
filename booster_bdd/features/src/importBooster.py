@@ -16,12 +16,12 @@ class ImportBooster(object):
         # Note: Pipelines = https://forge.api.openshift.io/api/services/jenkins/pipelines
         # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         theToken = helpers.get_user_tokens().split(";")[0]
-        projectName = os.environ.get('PROJECT_NAME')
-        pipeline = os.environ.get('PIPELINE')
+        projectName = os.getenv('PROJECT_NAME')
+        pipeline = os.getenv('PIPELINE')
         spaceId = helpers.getSpaceID()
         authHeader = 'Bearer {}'.format(theToken)
 
-        print 'Starting test.....'
+        print('Starting test.....')
 
         ###############################################
         # Import the booster
@@ -35,9 +35,14 @@ class ImportBooster(object):
                 'pipeline': pipeline,
                 'space': spaceId}
 
-        print 'Making request to import...'
-        r = requests.post('https://forge.api.openshift.io/api/osio/import',
-                          headers=headers, data=data)
+        forgeApi = os.getenv("FORGE_API")
+
+        print('Making request to import...')
+        r = requests.post(
+            '{}/api/osio/import'.format(forgeApi),
+            headers=headers,
+            data=data
+        )
         # print 'request results = {}'.format(r.text)
 
         result = r.text
