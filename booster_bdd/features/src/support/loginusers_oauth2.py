@@ -276,6 +276,7 @@ class LoginUsersOauth2:
         opts = webdriver.ChromeOptions()
         if self.uiHeadless:
             opts.add_argument("--headless")
+            opts.add_argument("--no-sandbox")
 
         opts.add_argument("--window-size=1920,1080")
         opts.add_argument("--window-position=0,0")
