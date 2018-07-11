@@ -45,7 +45,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='A pytest based test suite that tests APIs provided by OpenShift.io or OSIO',  # Required
+    description='A pytest based test suite that tests APIs provided by OpenShift.io or OSIO',  # Required   # noqa
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
@@ -55,13 +55,13 @@ setup(
     #
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
-    long_description='A test suite that tests APIs provided by OpenShift.io or OSIO using pytest, requests and jmespath',  # Optional
+    long_description='A test suite that tests APIs provided by OpenShift.io or OSIO using pytest, requests and jmespath',  # Optional   # noqa
 
     # This should be a valid link to your project's main homepage.
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/fabric8io/fabric8-test/tree/master/EE_API_automation/pytest',  # Optional
+    url='https://github.com/fabric8io/fabric8-test/tree/master/EE_API_automation/pytest',  # Optional   # noqa
 
     # This should be your name or the name of the organization which owns the
     # project.
@@ -109,9 +109,10 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-#     package_dir={'':'src'},   # tell distutils packages are under src
+
+    # package_dir={'':'src'},   # tell distutils packages are under src
     packages=find_packages(),  # Required
-    
+
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -122,10 +123,10 @@ setup(
     install_requires=['pytest',
                       'requests2',
                       'jmespath'],  # Optional
-    
+
     # Python version requirement
     python_requires='>=2.7, <3',
-    
+
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
     # syntax, for example:
@@ -144,10 +145,11 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-#     package_data={  # Optional
-#         # If any package contains *.json files, include them:
-#         '': ['*.json'],
-#     },
+
+    #     package_data={  # Optional
+    #         # If any package contains *.json files, include them:
+    #         '': ['*.json'],
+    #     },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -163,12 +165,12 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    
+
     scripts=['run_me.sh'],
-    
-#     entry_points={
-#     'console_scripts': [
-#         'sample=sample:main',
-#     ],
-# },
+
+    #     entry_points={
+    #     'console_scripts': [
+    #         'sample=sample:main',
+    #     ],
+    # },
 )

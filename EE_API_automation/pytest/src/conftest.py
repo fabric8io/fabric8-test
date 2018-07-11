@@ -1,5 +1,6 @@
 import pytest
-  
+
+
 def pytest_addoption(parser):
     """Add options to pytest.
     This adds the options for
@@ -9,31 +10,36 @@ def pytest_addoption(parser):
     - '--userid' as the OSIO userid of the primary test user
     """
     parser.addoption("--sut", action="store", default=None,
-        help="sut: the url of the WIT server to connect to")
+                     help="sut: the url of the WIT server to connect to")
     parser.addoption("--forge_sut", action="store", default=None,
-        help="forge_sut: the url of the FORGE server to connect to")
+                     help="forge_sut: the url of the FORGE server to connect to")
     parser.addoption("--offline_token", action="store", default=None,
-        help="offline_token: token to generate an access token")
+                     help="offline_token: token to generate an access token")
     parser.addoption("--userid", action="store", default=None,
-        help="userid: OSIO userid of the primary test user")
+                     help="userid: OSIO userid of the primary test user")
     parser.addoption("--cleanup", action="store", default=False,
-        help="cleanup: OSIO spaces created are deleted if set to 1")
-      
+                     help="cleanup: OSIO spaces created are deleted if set to 1")
+
+
 @pytest.fixture
 def sut(request):
     return request.config.getoption("--sut")
 
+
 @pytest.fixture
 def forge_sut(request):
     return request.config.getoption("--forge_sut")
-  
+
+
 @pytest.fixture
 def offline_token(request):
     return request.config.getoption("--offline_token")
-  
+
+
 @pytest.fixture
 def userid(request):
     return request.config.getoption("--userid")
+
 
 @pytest.fixture
 def cleanup(request):
