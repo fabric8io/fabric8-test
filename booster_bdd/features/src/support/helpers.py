@@ -88,7 +88,7 @@ def setInDict(dataDict, mapList, value):
 def read_post_data_file(file_name=None, replace=None, json_dir='planner_jsons'):
     # Default json_dir is set to planner_jsons directory
     if file_name is None:
-        print("No file name provided. No json to read!!")
+        print("No file name provided. No JSON to read!!")
         return None
     else:
         try:
@@ -100,32 +100,32 @@ def read_post_data_file(file_name=None, replace=None, json_dir='planner_jsons'):
                 json_data = replace_values(json_data, replace)
             return json_data
         except Exception as e:
-            print("Exception reading file for json data ")
+            print("Exception reading file for JSON data")
             print(e)
             return None
 
 
 def extract_value(extract_path=None, json_response=None):
     if None in [json_response, extract_path]:
-        print("Either Json response or the extractor path are None")
+        print("Either JSON response or the extractor path are None")
         return None
     else:
         try:
             return jmespath.search(extract_path, json_response.json())
         except Exception:
-            print "Exception extracting value from the response body"
+            print("Exception extracting value from the response body")
             return None
 
 
 def extract_header(extract_key=None, json_response=None):
     if None in [json_response, extract_key]:
-        print("Either Json response or the extractor path are None")
+        print("Either JSON response or the extractor path are None")
         return None
     else:
         try:
             return json_response.headers[extract_key]
         except Exception:
-            print "Exception extracting header value from the response"
+            print("Exception extracting header value from the response")
             return None
 
 
