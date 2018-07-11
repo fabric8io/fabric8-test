@@ -40,6 +40,9 @@ export OSO_USERNAME
 OSO_TOKEN=$(oc whoami -t)
 export OSO_TOKEN
 
+## Make sure you are on the main project
+oc project $OSO_USERNAME
+
 ## Github username
 GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
 export GITHUB_USERNAME
