@@ -52,7 +52,7 @@ export class Quickstart {
         this.dependencyCount = this.getDependencyCountObj('3', '0', '3');
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
-        this.sourceFileName = 'GreetingProperties.java.java';
+        this.sourceFileName = 'GreetingProperties.java';
         break;
       }
       case 'SpringBootCrud': {
@@ -62,7 +62,7 @@ export class Quickstart {
         this.dependencyCount = this.getDependencyCountObj('4', '0', '4');
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
-        this.sourceFileName = 'GreetingProperties.java.java';
+        this.sourceFileName = 'GreetingProperties.java';
         break;
       }
       case 'SwarmHttp': {
