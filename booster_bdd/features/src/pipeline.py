@@ -13,52 +13,24 @@ start_time = time.time()
 
 class Pipeline(object):
 
-    def runTest(self, theString):
+    def prepare(self):
 
         ###############################################
         # Initialize variables from Environment setting
 
-        osoUsername = os.environ.get('OSO_USERNAME')
-        osoToken = os.environ.get('OSO_TOKEN')
-        osoUrl = os.environ.get('OSO_CLUSTER_ADDRESS')
-        authHeader = 'Bearer {}'.format(osoToken)
-
-        print('starting test.....')
+        self.osoUsername = os.environ.get('OSO_USERNAME')
+        self.osoToken = os.environ.get('OSO_TOKEN')
+        self.osoUrl = os.environ.get('OSO_CLUSTER_ADDRESS')
+        self.authHeader = 'Bearer {}'.format(self.osoToken)
 
         ###############################################
         # Find the running build pipeline, verify state transitions:
         #   New -> Running -> Promote -> Complete
 
-        headers = {'Authorization': authHeader}
-        urlString = '{}/oapi/v1/namespaces/{}/builds'.format(osoUrl, osoUsername)
-        failed = True
+        self.headers = {'Authorization': self.authHeader}
+        self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
 
-        # Verify that the newly created build has a status of 'New'
-        failed = self.buildStatus(urlString, headers, 30, 5, 'New')
-
-        # Then, check for a build status of 'Running'
-        if not failed:
-            failed = self.buildStatus(urlString, headers, 30, 30, 'Running')
-
-        # Then, check for a build status of 'Running' with Promote input action
-        if not failed:
-            failed = self.buildStatus(urlString, headers, 30, 30, 'Running',
-                                      'openshift.io/jenkins-pending-input-actions-json')
-
-        # Then, promote stage to run
-        if not failed:
-            failed = self.promoteBuild()
-
-        # Then, check for a build status of 'Complete'
-        if not failed:
-            failed = self.buildStatus(urlString, headers, 30, 10, 'Complete')
-
-        if not failed:
-            return 'Success'
-        else:
-            return 'Fail'
-
-    def buildStatus(self, urlString, headers, sleepTimer, maxTries, expectedBuildStatus,
+    def buildStatus(self, sleepTimer, maxTries, expectedBuildStatus,
                     expectedAnnotation=None):
         """
         Function to query builds, wait/retry for expected build status
@@ -73,7 +45,7 @@ class Pipeline(object):
 
             try:
                 print('Making request to check for the build status...')
-                r = requests.get(urlString, headers=headers)
+                r = requests.get(self.urlString, headers=self.headers)
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 
@@ -112,7 +84,7 @@ class Pipeline(object):
 
         # print('The value of requestFailed = {}'.format(requestFailed))
 
-        return requestFailed
+        return not requestFailed
 
     def promoteBuild(self):
         """

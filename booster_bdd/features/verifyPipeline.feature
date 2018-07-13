@@ -6,4 +6,7 @@ Feature: Verify an imported Booster's pipeline is created
  
   Scenario: verifyPipeline the Booster's new pipeline
     When I input query a pipeline's ID
-    Then I should see the pipeline status as "Running"
+    Then I should see the newly created build in a "New" state"
+    Then I should see the build in a "Running" state
+    Then I should see the build ready to be promoted to "Run" stage
+    Then I should see the build completed
