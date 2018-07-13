@@ -27,27 +27,35 @@ export OSIO_USERNAME="${OSIO_USERNAME:-}"
 ## Openshift.io user's password
 export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 
-## Login to OSO to get OSO username and token
-oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
-if [ $? -gt 0 ]; then
-	echo "ERROR: Unable to login user $OSIO_USERNAME"
-	exit 1
+if [ -z $OSO_USERNAME ] || [ -z $OSO_TOKEN ] || [ -z $GITHUB_USERNAME ]; then
+	## Login to OSO to get OSO username and token
+	oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
+	if [ $? -gt 0 ]; then
+		echo "ERROR: Unable to login user $OSIO_USERNAME"
+		exit 1
+	fi
+
+	if [ -z $OSO_USERNAME ]; then
+		## OpenShift Online user's name (remove @ and following chars)
+		OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
+		export OSO_USERNAME
+	fi
+
+	if [ -z $OSO_TOKEN ]; then
+		## OpenShift Online token
+		OSO_TOKEN=$(oc whoami -t)
+		export OSO_TOKEN
+	fi
+
+	if [ -z $GITHUB_USERNAME ]; then
+		## Make sure you are on the main project
+		oc project $OSO_USERNAME
+
+		## Github username
+		GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
+		export GITHUB_USERNAME
+	fi
 fi
-
-## OpenShift Online user's name (remove @ and following chars)
-OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
-export OSO_USERNAME
-
-## OpenShift Online token
-OSO_TOKEN=$(oc whoami -t)
-export OSO_TOKEN
-
-## Make sure you are on the main project
-oc project $OSO_USERNAME
-
-## Github username
-GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
-export GITHUB_USERNAME
 
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
@@ -63,7 +71,7 @@ export PROJECT_NAME="${PROJECT_NAME:-test123}"
 export AUTH_CLIENT_ID="${AUTH_CLIENT_ID:-740650a2-9c44-4db5-b067-a3d1b2cd2d01}"
 
 ## An output directory where the reports will be stored
-export REPORT_DIR=${REPORT_DIR:-test_output}
+export REPORT_DIR=${REPORT_DIR:-target}
 
 ## 'true' if the UI parts of the test suite are to be run in headless mode (default value is 'true')
 export UI_HEADLESS=${UI_HEADLESS:-true}
