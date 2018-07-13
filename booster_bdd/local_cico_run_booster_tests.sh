@@ -20,7 +20,8 @@ if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
 fi
 
 # Run and setup Docker image
-docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
+docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
+          -e SCENARIO \
           -e SERVER_ADDRESS \
           -e FORGE_API \
           -e WIT_API \
@@ -37,7 +38,7 @@ docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN
           -e AUTH_CLIENT_ID \
           -e REPORT_DIR \
           -e UI_HEADLESS \
-          -t -v $(pwd)/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-test:latest
+          -t -v $(pwd)/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-test:latest /bin/bash
 
 # Start Xvfb
 docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
