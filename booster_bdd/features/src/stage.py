@@ -1,7 +1,7 @@
 import pytest
 import time
 import requests
-import support.helpers as helpers
+import features.src.support.helpers as helpers
 import sys
 import re
 import os
@@ -43,7 +43,7 @@ class Stage(object):
         # Example staged app endpoint:
         # http://test123-ldimaggi-stage.8a09.starter-us-east-2.openshiftapps.com
 
-        print 'Starting test.....'
+        print('Starting test.....')
 
         r = requests.get(urlString)
         # print 'request results = {}'.format(r.text)

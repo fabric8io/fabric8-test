@@ -1,6 +1,5 @@
 from behave import *
-from src.resetEnv import ResetEnvironment
-from unittest import *
+from features.src.resetEnv import ResetEnvironment
 
 
 @when(u'I reset environment')

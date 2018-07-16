@@ -1,6 +1,13 @@
 #!/bin/bash
+
 CONFIG=${1:-config}
 CONFIG_FILE="config/$CONFIG.sh"
+
+function prepare_venv() {
+	python3 -m venv venv && source venv/bin/activate && python3 `which pip3` install -r requirements.txt
+}
+
+[ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 echo "Reading configuration from: $CONFIG_FILE"
 source "$CONFIG_FILE"
@@ -14,7 +21,7 @@ else
 	export feature_list=test-scenarios/$SCENARIO.test
 fi
 
-behave -v -f allure_behave.formatter:AllureFormatter -o "$REPORT_DIR" --no-capture --no-capture-stderr @$feature_list
+PYTHONDONTWRITEBYTECODE=1 python3 `which behave` -v -f allure_behave.formatter:AllureFormatter -o "$REPORT_DIR" --no-capture --no-capture-stderr @$feature_list
 
 echo "All tests are done!"
 

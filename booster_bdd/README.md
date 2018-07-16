@@ -8,11 +8,7 @@
 yum install chromium chromium-headless chromedriver
 ```
 
-### Install python packages
-
-```bash
-pip install behave allure-behave jmespath pytest requests selenium
-```
+### Install python 3.3+
 
 ### (Optional) Install Allure framework
 
@@ -28,7 +24,7 @@ export PATH=$PATH:$ALLURE_HOME/bin
 
 ## Run the all the tests locally
 
-Set environmental variables for OSO_CLUSTER_ADDRESS`, `OSIO_USERNAME` and `OSIO_PASSWORD` or update the `config/config.sh` file and run the `run.sh`.
+Set environmental variables for `OSO_CLUSTER_ADDRESS`, `OSIO_USERNAME` and `OSIO_PASSWORD` or update the `config/config.sh` file and run the `run.sh`.
 
 Example:
 
@@ -53,7 +49,6 @@ Example:
 ```bash
 SCENARIO='import-repo' OSO_CLUSTER_ADDRESS='https://api.starter-us-east-2a.openshift.com:443' OSIO_USERNAME=... OSIO_PASSWORD=... ./run.sh
 ```
-
 
 ## View Allure report
 

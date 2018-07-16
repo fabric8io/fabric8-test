@@ -4,9 +4,9 @@ import requests as req
 import json
 import jmespath
 import operator
-import constants
+from features.src.support import constants
 
-from loginusers_oauth2 import LoginUsersOauth2, user_tokens
+from features.src.support.loginusers_oauth2 import LoginUsersOauth2, user_tokens
 
 count = 1
 spaceID = ''

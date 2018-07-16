@@ -1,7 +1,7 @@
 import pytest
 import time
 import requests
-import support.helpers as helpers
+import features.src.support.helpers as helpers
 import sys
 import re
 import os
@@ -13,8 +13,7 @@ start_time = time.time()
 
 class Pipeline(object):
 
-    def prepare(self):
-
+    def __init__(self):
         ###############################################
         # Initialize variables from Environment setting
 
@@ -111,7 +110,7 @@ class Pipeline(object):
         r = requests.post(promoteUrl, headers=headers)
         # print "Promote response: {}".format(r)
         if r.status_code == 200:
-            return False
+            return True
         else:
             print("ERROR - Request failed to promote - error code = {}".format(r.status_code))
-            return True
+            return False

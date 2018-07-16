@@ -1,9 +1,8 @@
 import os
 
 from behave import *
-from src.importBooster import ImportBooster
-from src.support import helpers
-from unittest import *
+from features.src.importBooster import *
+from features.src.support import *
 
 
 @given(u'I have a space created')
@@ -28,4 +27,4 @@ def step_impl(context):
 def step_impl(context):
     global expected_result
     expected_result = 'Success'
-    assert (expected_result == result)
+    assert expected_result == result

@@ -1,5 +1,5 @@
 import requests
-import support.helpers as helpers
+import features.src.support.helpers as helpers
 import os
 import json
 
