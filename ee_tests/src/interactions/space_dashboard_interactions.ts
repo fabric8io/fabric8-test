@@ -182,11 +182,16 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     }
 
     private async verifyLink(environment: string) {
-        await browser.wait(until.urlContains(environment));
+        support.debug('Wait until URL contains environment ' + environment);
+        await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT);
+        support.debug('Write screenshot');
         await support.screenshotManager.writeScreenshot(environment);
+        support.debug('Expect browser\'s URL to contain ' + environment);
         expect(await browser.getCurrentUrl()).toContain(environment, `${environment} environment url`);
 
-        await browser.wait(until.presenceOf(element(by.id('_http_booster'))));
+        expect(('Wait until presence of \'http_booster\''));
+        await browser.wait(until.presenceOf(element(by.id('_http_booster'))), support.DEFAULT_WAIT);
+        expect('Get text from \'http_booster\'');
         let text = await element(by.id('_http_booster')).getText();
         expect(text).toContain('HTTP Booster', `${environment} page contains text`);
 
