@@ -25,8 +25,10 @@ function check_files() {
     done
 }
 
-pushd ..
-files=$(find . -path "./venv" -prune -o -name '*.sh' -print)
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+pushd "${SCRIPT_DIR}/.."
+files=$(find . -path "./venv" -prune -o -path "./ee_tests/node_modules" -prune -o -name '*.sh' -print)
 check_files "$files"
 popd
 
