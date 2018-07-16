@@ -1,7 +1,7 @@
 import os
 import sys
-from behave import *
-from src.support import helpers
+import behave
+from features.src.support import helpers
 
 
 @given(u'I am unlogged in to OpenShift.io')
@@ -25,5 +25,4 @@ def login_user(context):
 
 @then(u'I should be logged in to OpenShift.io')
 def then_user_is_logged_in(context):
-    global user_tokens
     assert helpers.is_user_logged_in()

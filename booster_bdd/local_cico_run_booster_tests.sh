@@ -44,7 +44,7 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_A
 docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec booster tests
-docker exec fabric8-test ./run.sh | tee target/test.log
+docker exec fabric8-test ./run.sh 2>&1 | tee target/test.log
 
 # Test results to archive
 docker cp fabric8-test:/opt/fabric8-test/target/. target

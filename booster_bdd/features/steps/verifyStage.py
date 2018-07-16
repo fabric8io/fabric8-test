@@ -1,6 +1,5 @@
 from behave import *
-from src.stage import *
-from unittest import *
+from features.src.stage import *
 
 
 @given(u'I have verified a booster\'s pipeline has completed')
@@ -21,4 +20,4 @@ def step_impl(context):
 def step_impl(context):
     global expected_result
     expected_result = 'Success'
-    assert (expected_result == result)
+    assert expected_result == result

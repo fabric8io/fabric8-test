@@ -6,8 +6,7 @@ import json
 import re
 import traceback
 import uuid
-import urlparse
-import httplib
+import urllib
 import requests
 
 from selenium import webdriver
@@ -183,8 +182,8 @@ class LoginUsersOauth2:
                 passwd.submit()
                 self.wait_for_url(state)
 
-                parsed = urlparse.urlparse(self.driver.current_url)
-                code = urlparse.parse_qs(parsed.query)['code'][0]
+                parsed = urllib.parse.urlparse(self.driver.current_url)
+                code = urllib.parse.parse_qs(parsed.query)['code'][0]
                 rt_get_code = self.tick_timer()
                 self.metrics[metric].append(rt_get_code)
                 self.report_success(

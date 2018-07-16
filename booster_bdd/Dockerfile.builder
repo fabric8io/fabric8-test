@@ -23,8 +23,7 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.9-1.el7.x86_64.rpm
 
 RUN yum install -y --setopt tsflags='nodocs' chromium chromium-headless chromedriver
-RUN yum install -y --setopt tsflags='nodocs' python-pip
-RUN pip install behave allure-behave jmespath pytest requests selenium
+RUN yum install -y --setopt tsflags='nodocs' python34 python34-pip
 
 # the following packages depend on EPEL repository and need to be installed separately
 RUN yum install -y --setopt tsflags='nodocs' jq google-chrome-stable
@@ -56,3 +55,9 @@ RUN npm --unsafe-perm install
 
 # copy all files
 COPY . .
+
+# install python requirements
+RUN python3 -m venv venv && source venv/bin/activate && python3 `which pip3` install -r requirements.txt
+
+# clean after installation
+RUN yum clean all
