@@ -8,10 +8,10 @@ import { LoginInteraction } from './interactions/login_interactions';
 import { PipelinesInteractions } from './interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
-import { SpaceChePage } from './page_objects/space_che.page';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui/button';
 import { PageOpenMode } from './page_objects/base.page';
+import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 
 describe('e2e_smoketest', () => {
 
@@ -74,9 +74,8 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.openCodebasesPage();
 
-    let spaceChePage = new SpaceChePage();
-    await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-    await support.windowManager.switchToNewWindow();
+    let codebasesInteractions = CodebasesInteractionsFactory.create();
+    await codebasesInteractions.createAndOpenWorkspace();
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
