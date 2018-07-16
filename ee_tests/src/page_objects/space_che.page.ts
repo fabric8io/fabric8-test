@@ -7,6 +7,8 @@ export class SpaceChePage extends AppPage {
   /* Link to create workspace */
   createCodebase = new Button (element (by.xpath('.//codebases-item-workspaces')), 'Create Codespace...' );
 
+  openWorkspace = new Button (element (by.cssContainingText('button', 'Open')), 'Open Workspace...' );
+
   /* 'Open' button for existing codebase */
   codebaseOpenButton (githubUsername: string, spaceName: string): ElementFinder {
     let xpathString = './/button[contains(text(),\'Open\')]';
