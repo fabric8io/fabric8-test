@@ -5,7 +5,7 @@ import { Quickstart } from '../support/quickstart';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from '../interactions/account_home_interactions';
@@ -55,8 +55,8 @@ describe('Creating new quickstart in OSIO', () => {
     await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
     await dashboardInteractions.openCodebasesPage();
 
-    let spaceChePage = new SpaceChePage();
-    await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
+    let spaceChePage = new CodebasesPage();
+    await spaceChePage.createWorkspace();
 
     await support.windowManager.switchToWindow(2, 1);
 

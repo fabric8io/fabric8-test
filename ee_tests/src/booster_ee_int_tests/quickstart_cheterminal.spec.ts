@@ -3,7 +3,7 @@ import { LoginInteraction } from '../interactions/login_interactions';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 import { Button } from '../ui/button';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 
@@ -57,8 +57,8 @@ describe('Creating new quickstart in OSIO', () => {
     /* Open Che display page */
     await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
 
-    let spaceChePage = new SpaceChePage();
-    await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
+    let spaceChePage = new CodebasesPage();
+    await spaceChePage.createWorkspace();
 
     /* A new browser window is opened when Che opens - switch to that new window now */
     let handles = await browser.getAllWindowHandles();

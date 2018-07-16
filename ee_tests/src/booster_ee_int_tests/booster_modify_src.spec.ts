@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { LoginInteraction } from '../interactions/login_interactions';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
@@ -45,7 +45,7 @@ describe('Modify the project source code in Che:', () => {
     /* Part 1 - Run the app, verify the deployed app performs as expected */
 
     /* Open and switch to the Che window */
-    let spaceChePage = new SpaceChePage();
+    let spaceChePage = new CodebasesPage();
     await support.openCodebasePageSwitchWindow(spaceChePage);
 
     /* Find the project in the project tree */

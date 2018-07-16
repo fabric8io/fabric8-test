@@ -1,11 +1,11 @@
-import { browser, by, element, ExpectedConditions as until, Key } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until, Key } from 'protractor';
 import { createWriteStream } from 'fs';
 import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { Button } from '../ui/button';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { Quickstart } from './quickstart';
 
 export enum BrowserMode {
@@ -466,15 +466,21 @@ export async function findProjectInTree(spaceCheWorkSpacePage: SpaceCheWorkspace
 }
 
 /* Open the codebase page, and then open the Che workspace */
-export async function openCodebasePageSwitchWindow(spaceChePage: SpaceChePage) {
+export async function openCodebasePageSwitchWindow(spaceChePage: CodebasesPage) {
 
   /* Open the codebase page and the workspace in Che */
   await openCodebasesPage(browser.params.target.url, browser.params.login.user, support.currentSpaceName());
   //    let spaceChePage = new SpaceChePage();
-  await spaceChePage.codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
+  await codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
 
   /* A new browser window is opened when Che opens */
   await windowManager.switchToWindow(2, 1);
+}
+
+/* 'Open' button for existing codebase */
+function codebaseOpenButton(githubUsername: string, spaceName: string): ElementFinder {
+  let xpathString = './/button[contains(text(),\'Open\')]';
+  return new Button(element(by.xpath(xpathString)), 'Open codebase button');
 }
 
 export class ScreenshotManager {
