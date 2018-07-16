@@ -1,5 +1,5 @@
 import * as support from '../support';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { browser } from 'protractor';
 
 export abstract class CodebasesInteractionsFactory {
@@ -18,19 +18,29 @@ export abstract class CodebasesInteractionsFactory {
 export interface CodebasesInteractions {
 
     createAndOpenWorkspace(): void;
+
+    getWorkspaces(): Promise<string[]>;
 }
 
 export abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
 
+    protected page: CodebasesPage;
+
+    constructor() {
+        this.page = new CodebasesPage();
+    }
+
     public async abstract createAndOpenWorkspace(): Promise<void>;
+
+    public async getWorkspaces(): Promise<string[]> {
+        return this.page.getWorkspaces();
+    }
 }
 
 export class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
     public async createAndOpenWorkspace(): Promise<void> {
-        let spaceChePage = new SpaceChePage();
-        await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-
+        await this.page.createWorkspace();
         await support.windowManager.switchToNewWindow();
     }
 }
@@ -38,10 +48,8 @@ export class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 export class ProdPreviewInteractions extends AbstractCodebasesInteractions {
 
     public async createAndOpenWorkspace(): Promise<void> {
-        let spaceChePage = new SpaceChePage();
-        await spaceChePage.createCodebase.clickWhenReady(support.LONGEST_WAIT);
-
-        await spaceChePage.openWorkspace.clickWhenReady(support.LONGEST_WAIT);
+        await this.page.createWorkspace();
+        await this.page.openWorkspace();
         await support.windowManager.switchToNewWindow();
     }
 }

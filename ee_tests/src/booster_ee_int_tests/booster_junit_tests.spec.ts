@@ -5,7 +5,7 @@ import { Quickstart } from '../support/quickstart';
 import { LoginInteraction } from '../interactions/login_interactions';
 
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { SpaceChePage } from '../page_objects/space_che.page';
+import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
 let quickstart: Quickstart;
@@ -36,7 +36,7 @@ describe('Run the project\'s Junit tests from the Che menu:', () => {
     support.info('Test starting now...');
 
     /* Open and switch to the Che window */
-    let spaceChePage = new SpaceChePage();
+    let spaceChePage = new CodebasesPage();
     await support.openCodebasePageSwitchWindow(spaceChePage);
 
     /* Find the project in the Che workspace */
