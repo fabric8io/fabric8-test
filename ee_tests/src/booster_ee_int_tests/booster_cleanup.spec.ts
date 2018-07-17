@@ -26,7 +26,7 @@ describe('Clean up user environment:', () => {
     // Reset Environment
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
     await accountHomeInteractions.resetEnvironment();
-    await accountHomeInteractions.openAccountHome(PageOpenMode.UseMenu);
+    await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
   });
 
 });

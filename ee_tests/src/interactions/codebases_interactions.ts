@@ -1,43 +1,64 @@
 import * as support from '../support';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { browser } from 'protractor';
+import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
+import { PageOpenMode } from '../..';
 
 export abstract class CodebasesInteractionsFactory {
 
-    public static create(): CodebasesInteractions {
+    public static create(strategy: string, spaceName: string): CodebasesInteractions {
         let url: string = browser.params.target.url;
         let isProdPreview = url.includes('prod-preview');
 
         if (isProdPreview) {
-            return new ProdPreviewInteractions();
+            return new ProdPreviewInteractions(strategy, spaceName);
         }
-        return new CodebasesInteractionsImpl();
+        return new CodebasesInteractionsImpl(strategy, spaceName);
     }
 }
 
 export interface CodebasesInteractions {
+
+    openCodebasesPage(mode: PageOpenMode): void;
 
     createAndOpenWorkspace(): void;
 
     getWorkspaces(): Promise<string[]>;
 }
 
-export abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
+abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
+
+    protected strategy: string;
+
+    protected spaceName: string;
 
     protected page: CodebasesPage;
 
-    constructor() {
+    constructor(strategy: string, spaceName: string) {
+        this.strategy = strategy;
+        this.spaceName = spaceName;
         this.page = new CodebasesPage();
     }
 
     public async abstract createAndOpenWorkspace(): Promise<void>;
+
+    public async openCodebasesPage(mode: PageOpenMode): Promise<void> {
+        if (mode === PageOpenMode.UseMenu) {
+            let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
+            await dashboardInteractions.openSpaceDashboardPage(mode);
+            await dashboardInteractions.openCodebasesPage();
+            await this.page.open();
+        } else {
+            await this.page.open(mode);
+        }
+    }
 
     public async getWorkspaces(): Promise<string[]> {
         return this.page.getWorkspaces();
     }
 }
 
-export class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
+class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
     public async createAndOpenWorkspace(): Promise<void> {
         await this.page.createWorkspace();
@@ -45,7 +66,7 @@ export class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
     }
 }
 
-export class ProdPreviewInteractions extends AbstractCodebasesInteractions {
+class ProdPreviewInteractions extends AbstractCodebasesInteractions {
 
     public async createAndOpenWorkspace(): Promise<void> {
         await this.page.createWorkspace();

@@ -14,7 +14,7 @@ export abstract class SpaceDashboardInteractionsFactory {
         if (FeatureLevelUtils.isInternal() || FeatureLevelUtils.isExperimental()) {
             // TODO Implement new dashboard
             return <SpaceDashboardInteractions>{
-                openSpaceDashboard(mode: PageOpenMode): void { },
+                openSpaceDashboardPage(mode: PageOpenMode): void { },
             };
         }
 
@@ -28,7 +28,7 @@ export abstract class SpaceDashboardInteractionsFactory {
 
 export interface SpaceDashboardInteractions {
 
-    openSpaceDashboard(mode: PageOpenMode): void;
+    openSpaceDashboardPage(mode: PageOpenMode): void;
 
     openCodebasesPage(): void;
 
@@ -47,7 +47,7 @@ export interface SpaceDashboardInteractions {
     verifyWorkItems(): void;
 }
 
-export abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInteractions {
+abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInteractions {
 
     protected spaceName: string;
 
@@ -55,7 +55,7 @@ export abstract class AbstractSpaceDashboardInteractions implements SpaceDashboa
         this.spaceName = spaceName;
     }
 
-    public abstract async openSpaceDashboard(mode: PageOpenMode): Promise<void>;
+    public abstract async openSpaceDashboardPage(mode: PageOpenMode): Promise<void>;
 
     public abstract async openCodebasesPage(): Promise<void>;
 
@@ -74,7 +74,7 @@ export abstract class AbstractSpaceDashboardInteractions implements SpaceDashboa
     public abstract async verifyWorkItems(): Promise<void>;
 }
 
-export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteractions {
+class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteractions {
 
     protected spaceDashboardPage: SpaceDashboardPage;
 
@@ -86,10 +86,10 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
         this.spaceDashboardPage = new SpaceDashboardPage(spaceName);
     }
 
-    public async openSpaceDashboard(mode: PageOpenMode): Promise<void> {
+    public async openSpaceDashboardPage(mode: PageOpenMode): Promise<void> {
         if (mode === PageOpenMode.UseMenu) {
             let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-            await accountHomeInteractions.openAccountHome(PageOpenMode.UseMenu);
+            await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
             await accountHomeInteractions.openSpaceDashboard(this.spaceName);
             await this.spaceDashboardPage.open();
         } else {
@@ -197,7 +197,7 @@ export class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardIn
     }
 }
 
-export class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions {
+class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions {
 
     public async verifyWorkItems(): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();

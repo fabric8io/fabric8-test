@@ -5,7 +5,7 @@ import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { LoginInteraction } from './interactions/login_interactions';
-import { PipelinesInteractions } from './interactions/pipelines_interactions';
+import { PipelinesInteractionsFactory } from './interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
@@ -70,11 +70,8 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     support.info('--- Run che workspace ' + quickstart.name + ' ---');
-    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
-    await dashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
-    await dashboardInteractions.openCodebasesPage();
-
-    let codebasesInteractions = CodebasesInteractionsFactory.create();
+    let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
+    await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
     await codebasesInteractions.createAndOpenWorkspace();
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
@@ -90,8 +87,8 @@ describe('e2e_smoketest', () => {
 
   it('pipeline', async () => {
     support.info('--- Run pipeline ---');
-    let pipelineInteractions = PipelinesInteractions.create(strategy, spaceName);
-    await pipelineInteractions.showPipelinesScreen();
+    let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
+    await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
     let pipeline = await pipelineInteractions.verifyBuildInfo();
     await pipelineInteractions.waitToFinish(pipeline);
     await pipelineInteractions.verifyBuildResult(pipeline);
@@ -101,7 +98,7 @@ describe('e2e_smoketest', () => {
   it('deployments', async () => {
     support.info('--- Verify deployments ---');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
-    await deploymentsInteractions.showDeploymentsScreen();
+    await deploymentsInteractions.openDeploymentsPage(PageOpenMode.UseMenu);
     let application = await deploymentsInteractions.verifyApplication();
     await deploymentsInteractions.verifyEnvironments(application);
     await deploymentsInteractions.verifyResourceUsage();
@@ -110,7 +107,7 @@ describe('e2e_smoketest', () => {
   it('dashboard', async () => {
     support.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
-    await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
+    await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases();
     await dashboardInteractions.verifyAnalytics();
     await dashboardInteractions.verifyApplications();
