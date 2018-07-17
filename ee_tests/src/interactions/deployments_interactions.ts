@@ -3,17 +3,18 @@ import {
   DeployedApplication, DeployedApplicationEnvironment, DeploymentStatus,
   Environment, ResourceUsageData, SpaceDeploymentsPage
 } from '../page_objects/space_deployments_tab.page';
-import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
+import { PageOpenMode } from '../..';
+import { PipelinesInteractionsFactory } from './pipelines_interactions';
 
 export abstract class DeploymentsInteractionsFactory {
 
     public static create(strategy: string, spaceName: string): DeploymentsInteractions {
         if (FeatureLevelUtils.isReleased()) {
             return <DeploymentsInteractions>{
-                showDeploymentsScreen(): void {},
+                openDeploymentsPage(): void {},
                 verifyApplication(): Promise<DeployedApplication> {
                     // just return dummy value
                     return Promise.resolve(new DeployedApplication(new MainDashboardPage().header));
@@ -24,15 +25,15 @@ export abstract class DeploymentsInteractionsFactory {
         }
 
         if (strategy === ReleaseStrategy.RELEASE) {
-            return new DeploymentsInteractionsReleaseStrategy(spaceName);
+            return new DeploymentsInteractionsReleaseStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.STAGE) {
-            return new DeploymentsInteractionsStageStrategy(spaceName);
+            return new DeploymentsInteractionsStageStrategy(strategy, spaceName);
         }
 
         if (strategy === ReleaseStrategy.RUN) {
-            return new DeploymentsInteractionsRunStrategy(spaceName);
+            return new DeploymentsInteractionsRunStrategy(strategy, spaceName);
         }
         throw 'Unknown release strategy: ' + strategy;
     }
@@ -40,7 +41,7 @@ export abstract class DeploymentsInteractionsFactory {
 
 export interface DeploymentsInteractions {
 
-    showDeploymentsScreen(): void;
+    openDeploymentsPage(mode: PageOpenMode): void;
 
     verifyApplication(): Promise<DeployedApplication>;
 
@@ -49,25 +50,31 @@ export interface DeploymentsInteractions {
     verifyResourceUsage(): void;
 }
 
-export abstract class AbstractDeploymentsInteractions implements DeploymentsInteractions {
+abstract class AbstractDeploymentsInteractions implements DeploymentsInteractions {
+
+    protected strategy: string;
 
     protected spaceName: string;
 
-    protected spacePipelinePage: SpacePipelinePage;
-
     protected spaceDeploymentsPage: SpaceDeploymentsPage;
 
-    public constructor(spaceName: string) {
+    public constructor(strategy: string, spaceName: string) {
+        this.strategy = strategy;
         this.spaceName = spaceName;
-        this.spacePipelinePage = new SpacePipelinePage();
         this.spaceDeploymentsPage = new SpaceDeploymentsPage();
     }
 
-    public async showDeploymentsScreen() {
+    public async openDeploymentsPage(mode: PageOpenMode) {
         support.info('Verifying deployments page');
-        await this.spacePipelinePage.deploymentsOption.clickWhenReady();
-        this.spaceDeploymentsPage = new SpaceDeploymentsPage();
-        await this.spaceDeploymentsPage.open();
+        if (mode === PageOpenMode.UseMenu) {
+            let pipelinesInteractions =
+                PipelinesInteractionsFactory.create(this.strategy, this.spaceName);
+            await pipelinesInteractions.openPipelinesPage(mode);
+            await pipelinesInteractions.showDeployments();
+            await this.spaceDeploymentsPage.open();
+        } else {
+            await this.spaceDeploymentsPage.open(mode);
+        }
     }
 
     public async verifyApplication(): Promise<DeployedApplication> {
@@ -92,7 +99,7 @@ export abstract class AbstractDeploymentsInteractions implements DeploymentsInte
     protected abstract async verifyResourceUsageInternal(data: ResourceUsageData[]): Promise<void>;
 }
 
-export class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
+class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<void> {
         support.info('Verifying application\'s environments');
@@ -105,7 +112,7 @@ export class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsI
     }
 }
 
-export class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleaseStrategy {
+class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleaseStrategy {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<void> {
         support.info('Verifying application\'s environments');
@@ -148,7 +155,7 @@ export class DeploymentsInteractionsStageStrategy extends DeploymentsInteraction
     }
 }
 
-export class DeploymentsInteractionsRunStrategy extends DeploymentsInteractionsStageStrategy {
+class DeploymentsInteractionsRunStrategy extends DeploymentsInteractionsStageStrategy {
     protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
         await super.testEnvironmentsInternal(environments);
         support.info('Verifying application\'s run environment');

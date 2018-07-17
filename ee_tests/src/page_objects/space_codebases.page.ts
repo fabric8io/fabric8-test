@@ -1,4 +1,4 @@
-import { by, element, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { AppPage } from './app.page';
 import { Button } from '../ui/button';
 import * as support from '../support';
@@ -6,6 +6,10 @@ import * as support from '../support';
 export class CodebasesPage extends AppPage {
 
   private readonly selectWorkspace = 'Select a Workspace';
+
+  public async ready() {
+    await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))));
+  }
 
   public async createWorkspace() {
     let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces')), 'Create Codespace...');

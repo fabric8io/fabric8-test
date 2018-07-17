@@ -38,6 +38,6 @@ export class LoginInteraction {
     await loginPage.login(this.username, this.password);
 
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.openAccountHome(PageOpenMode.AlreadyOpened);
+    await accountHomeInteractions.openAccountHomePage(PageOpenMode.AlreadyOpened);
   }
 }

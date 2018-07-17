@@ -21,7 +21,7 @@ export abstract class AccountHomeInteractionsFactory {
 
 export interface AccountHomeInteractions {
 
-    openAccountHome(mode: PageOpenMode): void;
+    openAccountHomePage(mode: PageOpenMode): void;
 
     createSpace(name: string): void;
 
@@ -32,7 +32,7 @@ export interface AccountHomeInteractions {
     openSpaceDashboard(name: string): void;
 }
 
-export abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteractions {
+abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteractions {
 
     private appPage: AppPage;
 
@@ -40,7 +40,7 @@ export abstract class AbstractSpaceDashboardInteractions implements AccountHomeI
         this.appPage = appPage;
     }
 
-    public async abstract openAccountHome(mode: PageOpenMode): Promise<void>;
+    public async abstract openAccountHomePage(mode: PageOpenMode): Promise<void>;
 
     public async abstract openSpaceDashboard(name: string): Promise<void>;
 
@@ -53,7 +53,7 @@ export abstract class AbstractSpaceDashboardInteractions implements AccountHomeI
 
         let spaceDashboardInteractions: SpaceDashboardInteractions =
             SpaceDashboardInteractionsFactory.create(strategy, spaceName);
-        await spaceDashboardInteractions.openSpaceDashboard(PageOpenMode.AlreadyOpened);
+        await spaceDashboardInteractions.openSpaceDashboardPage(PageOpenMode.AlreadyOpened);
         await spaceDashboardInteractions.verifyCodebases();
     }
 
@@ -64,7 +64,7 @@ export abstract class AbstractSpaceDashboardInteractions implements AccountHomeI
     }
 }
 
-export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
+class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
 
     protected dashboardPage: MainDashboardPage;
 
@@ -73,7 +73,7 @@ export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractio
         this.dashboardPage = page;
     }
 
-    public async openAccountHome(mode: PageOpenMode): Promise<void> {
+    public async openAccountHomePage(mode: PageOpenMode): Promise<void> {
         await this.dashboardPage.open(mode);
     }
 
@@ -82,7 +82,7 @@ export class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractio
     }
 }
 
-export class NewAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
+class NewAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
 
     protected dashboardPage: AccountHomePage;
 
@@ -91,7 +91,7 @@ export class NewAccountHomeInteractions extends AbstractSpaceDashboardInteractio
         this.dashboardPage = page;
     }
 
-    public async openAccountHome(mode: PageOpenMode): Promise<void> {
+    public async openAccountHomePage(mode: PageOpenMode): Promise<void> {
         await this.dashboardPage.open(mode);
     }
 

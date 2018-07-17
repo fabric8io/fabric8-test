@@ -6,21 +6,9 @@ import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 
-export abstract class PipelinesInteractions {
+export abstract class PipelinesInteractionsFactory {
 
-    protected strategy: string;
-
-    protected spaceName: string;
-
-    protected spacePipelinePage: SpacePipelinePage;
-
-    protected constructor(strategy: string, spaceName: string) {
-      this.spaceName = spaceName;
-      this.strategy = strategy;
-      this.spacePipelinePage = new SpacePipelinePage();
-    }
-
-    public static create(strategy: string, spaceName: string) {
+    public static create(strategy: string, spaceName: string): PipelinesInteractions {
         if (strategy === ReleaseStrategy.RELEASE) {
             return new PipelinesInteractionsReleaseStrategy(strategy, spaceName);
         }
@@ -34,16 +22,53 @@ export abstract class PipelinesInteractions {
         }
         throw 'Unknown release strategy: ' + strategy;
     }
+}
 
-    public async showPipelinesScreen() {
-        support.info('Verifying pipelines page');
-        let dashboardInteractions =
-            SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
-        await dashboardInteractions.openSpaceDashboard(PageOpenMode.UseMenu);
-        await dashboardInteractions.openPipelinesPage();
+export interface PipelinesInteractions {
 
+    openPipelinesPage(mode: PageOpenMode): void;
+
+    showDeployments(): void;
+
+    verifyBuildInfo(): Promise<PipelineDetails>;
+
+    waitToFinish(pipeline: PipelineDetails): void;
+
+    verifyBuildResult(pipeline: PipelineDetails): void;
+
+    verifyBuildStages(pipeline: PipelineDetails): void;
+}
+
+abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
+
+    protected strategy: string;
+
+    protected spaceName: string;
+
+    protected spacePipelinePage: SpacePipelinePage;
+
+    public constructor(strategy: string, spaceName: string) {
+        this.spaceName = spaceName;
+        this.strategy = strategy;
         this.spacePipelinePage = new SpacePipelinePage();
-        await this.spacePipelinePage.open();
+    }
+
+    public async openPipelinesPage(mode: PageOpenMode) {
+        support.info('Verifying pipelines page');
+
+        if (mode === PageOpenMode.UseMenu) {
+            let dashboardInteractions =
+                SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
+            await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
+            await dashboardInteractions.openPipelinesPage();
+            await this.spacePipelinePage.open();
+        } else {
+            await this.spacePipelinePage.open(mode);
+        }
+    }
+
+    public async showDeployments(): Promise<void> {
+        await this.spacePipelinePage.deploymentsOption.clickWhenReady();
     }
 
     public async verifyBuildInfo(): Promise<PipelineDetails> {
@@ -133,7 +158,7 @@ export abstract class PipelinesInteractions {
         await pipeline.viewLog();
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
-          support.LONG_WAIT, 'Jenkins log is finished');
+            support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
         await support.windowManager.switchToMainWindow();
     }
@@ -176,7 +201,7 @@ export abstract class PipelinesInteractions {
     }
 }
 
-export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions {
+class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions {
 
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
@@ -184,7 +209,7 @@ export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions 
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 return true;
             } else {
-              support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('... Current pipeline status: ' + currentStatus);
                 await browser.sleep(5000);
                 return false;
             }
@@ -202,7 +227,7 @@ export class PipelinesInteractionsReleaseStrategy extends PipelinesInteractions 
     }
 }
 
-export class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStrategy {
+class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStrategy {
 
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await super.waitToFinishInternal(pipeline);
@@ -220,7 +245,7 @@ export class PipelinesInteractionsStageStrategy extends PipelinesInteractionsRel
     }
 }
 
-export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrategy {
+class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrategy {
 
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
@@ -232,7 +257,7 @@ export class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStage
                 support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
-              support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('... Current pipeline status: ' + currentStatus);
                 if (!promoted && await pipeline.isInputRequired()) {
                     support.debug('Input is required');
                     await pipeline.promote();
