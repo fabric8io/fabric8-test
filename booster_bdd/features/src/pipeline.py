@@ -1,4 +1,3 @@
-import pytest
 import time
 import requests
 import features.src.support.helpers as helpers
