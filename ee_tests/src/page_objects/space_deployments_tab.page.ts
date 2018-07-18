@@ -1,39 +1,23 @@
 import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
 import { AppPage } from './app.page';
+import { BaseElement } from '../ui';
 
 export class SpaceDeploymentsPage extends AppPage {
 
-  deploymentCardContainerFirstElement = element.all(by.xpath('.//deployment-card-container')).first();
-  resourceUsageDataFirstElement = element.all(by.xpath('.//resource-card')).first();
-
   async getDeployedApplications(): Promise<DeployedApplication[]> {
-
-    /* Allow for delays in applications appearing in UI - assume that we always have at least 1 app */
-    await browser.wait(until.visibilityOf(this.deploymentCardContainerFirstElement), support.LONGER_WAIT);
+    await browser.wait(until.visibilityOf(element(by.tagName('deployment-card-container'))), support.LONGER_WAIT);
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
-    support.info('Total number of apps found = ' + elementFinders.length);
-
-    let applications = new Array<DeployedApplication>();
-    for (let finder of elementFinders) {
-      applications.push(new DeployedApplication(finder));
-    }
+    let applications = await elementFinders.map(finder => new DeployedApplication(finder));
     return Promise.resolve(applications);
   }
 
   async getResourceUsageData(): Promise<ResourceUsageData[]> {
-
-    /* Allow for delays in applications appearing in UI - assume that we always have at least 1 app */
-    await browser.wait(until.visibilityOf(this.resourceUsageDataFirstElement), support.LONGER_WAIT);
+    await browser.wait(until.visibilityOf(element(by.tagName('resource-card'))), support.LONGER_WAIT);
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
-    support.info('Total number of resources found = ' + elementFinders.length);
-
-    let data = new Array<ResourceUsageData>();
-    for (let finder of elementFinders) {
-      data.push(new ResourceUsageData(finder));
-    }
+    let data = await elementFinders.map(finder => new ResourceUsageData(finder));
     return Promise.resolve(data);
   }
 }
@@ -43,62 +27,36 @@ export enum Environment {
   RUN = 1
 }
 
-export class DeployedApplication {
+export class DeployedApplication extends BaseElement {
 
-  private finder: ElementFinder;
-
-  constructor(finder: ElementFinder | undefined) {
-    if (finder === undefined) {
-      throw 'Finder is undefined';
-    }
-    this.finder = finder;
+  constructor(finder: ElementFinder) {
+    super(finder, 'Deployments');
   }
 
   async getName(): Promise<string> {
-    let name = await this.finder.element(by.id('deploymentCardApplicationTitle')).getText();
+    let name = await this.element(by.id('deploymentCardApplicationTitle')).getText();
     return Promise.resolve(name.trim());
   }
 
   async getEnvironments(): Promise<DeployedApplicationEnvironment[]> {
-    let elementsFinders: ElementFinder[] = await element.all(by.tagName('deployment-card'));
-
-    let environments = new Array<DeployedApplicationEnvironment>();
-    for (let finder of elementsFinders) {
-      environments.push(new DeployedApplicationEnvironment(finder));
-    }
+    let elementsFinders: ElementFinder[] = await this.all(by.tagName('deployment-card'));
+    let environments = await elementsFinders.map(finder => new DeployedApplicationEnvironment(finder));
     return Promise.resolve(environments);
   }
 }
 
-export class DeployedApplicationEnvironment {
+export class DeployedApplicationEnvironment extends BaseElement {
 
-  private finder: ElementFinder;
-
-  constructor(finder: ElementFinder | undefined) {
-    if (finder === undefined) {
-      throw 'Finder is undefined';
-    }
-    this.finder = finder;
-  }
-
-  async isReady(): Promise<boolean> {
-    try {
-      await browser.wait(until.stalenessOf(
-        this.finder.element(by.className('c3-arc-Empty'))), support.LONGER_WAIT);
-      await browser.wait(until.stalenessOf(
-        this.finder.element(by.className('c3-arcs-Not-Ready'))), support.LONGER_WAIT);
-    } catch {
-      return Promise.resolve(false);
-    }
-    return Promise.resolve(true);
+  constructor(finder: ElementFinder) {
+    super(finder, 'Deployment environments');
   }
 
   async getVersion(): Promise<string> {
-    return this.finder.element(by.id('versionLabel')).getText();
+    return this.element(by.id('versionLabel')).getText();
   }
 
-  async getStatus(): Promise<string> {
-    let status = await this.finder.element(by.css('deployment-status-icon > span')).getAttribute('title');
+  async getDeploymentStatus(): Promise<string> {
+    let status = await this.element(by.css('deployment-status-icon > span')).getAttribute('title');
 
     if (status.trim() === DeploymentStatus.OK) {
       return Promise.resolve(DeploymentStatus.OK);
@@ -108,44 +66,38 @@ export class DeployedApplicationEnvironment {
   }
 
   async getPodsCount(): Promise<number> {
-    let text = await this.finder.element(by.css('.deployments-donut-chart-mini-text')).getText();
+    let text = await this.element(by.css('.deployments-donut-chart-mini-text')).getText();
     let countString = text.match(/\d+/g);
-    let count: number;
 
     if (countString === null || countString.length !== 1) {
       throw 'Unexpected pod count text: ' + text;
-    } else {
-      count = countString.map(Number)[0];
     }
-    return Promise.resolve(count);
+    return Promise.resolve(this.string2Number(countString[0], 'Unexpected pod count text: ' + text));
   }
 
-  async getRunningPodsCount(): Promise<number> {
-    let isDisplayed = await this.finder.element(by.id('pod_status_Running')).$('span').isDisplayed();
+  async hasRunningPod(): Promise<boolean> {
 
-    if (!isDisplayed) {
-      this.displayAdditionalInfo();
-    }
+    await this.displayAdditionalInfo();
 
-    isDisplayed = await this.finder.element(by.id('pod_status_Running')).$('span').isDisplayed();
-    if (!isDisplayed) {
-      throw 'Pod status is not displayed';
-    }
-
-    let text = await this.finder.element(by.id('pod_status_Running')).$('span').getText();
-    let countString = text.match(/\d+/g);
-    let count: number;
-
-    if (countString === null || countString.length !== 1) {
-      throw 'Unexpected running pod count text: ' + text;
-    } else {
-      count = countString.map(Number)[0];
-    }
-    return Promise.resolve(count);
+    let runningPodElement = await this.all(by.id('pod_status_Running'));
+    return runningPodElement.length > 0;
   }
 
   private async displayAdditionalInfo() {
-    await this.finder.element(by.css('deployment-status-icon')).click();
+    let isDisplayed = await this.isAdditionalInfoDisplayed();
+
+    if (!isDisplayed) {
+      await this.element(by.css('deployment-status-icon')).click();
+      await browser.wait(async () => {
+        return await this.isAdditionalInfoDisplayed();
+      }, support.DEFAULT_WAIT, 'Display additional deployment info');
+    }
+  }
+
+  private async isAdditionalInfoDisplayed(): Promise<boolean> {
+    let additionalInfoLocator = by.cssContainingText('div', 'Resource Usage');
+    let elementFinders = await this.all(additionalInfoLocator);
+    return elementFinders.length > 0 && await elementFinders[0].isDisplayed();
   }
 }
 
@@ -153,37 +105,23 @@ export enum DeploymentStatus {
   OK = 'Everything is ok'
 }
 
-export class ResourceUsageData {
+export class ResourceUsageData extends BaseElement {
 
-  private finder: ElementFinder;
-
-  constructor(finder: ElementFinder | undefined) {
-    if (finder === undefined) {
-      throw 'Finder is undefined';
-    }
-    this.finder = finder;
+  constructor(finder: ElementFinder) {
+    super(finder, 'Resource usage');
   }
 
   async getItems(): Promise<ResourceUsageDataItem[]> {
-    let elementsFinders: ElementFinder[] = await this.finder.all(by.tagName('utilization-bar'));
-
-    let items = new Array<ResourceUsageDataItem>();
-    for (let finder of elementsFinders) {
-      items.push(new ResourceUsageDataItem(finder));
-    }
+    let elementsFinders: ElementFinder[] = await this.all(by.tagName('utilization-bar'));
+    let items = await elementsFinders.map(finder => new ResourceUsageDataItem(finder));
     return Promise.resolve(items);
   }
 }
 
-export class ResourceUsageDataItem {
+export class ResourceUsageDataItem extends BaseElement {
 
-  private finder: ElementFinder;
-
-  constructor(finder: ElementFinder | undefined) {
-    if (finder === undefined) {
-      throw 'Finder is undefined';
-    }
-    this.finder = finder;
+  constructor(finder: ElementFinder) {
+    super(finder, 'Resource usage data');
   }
 
   async getActualValue(): Promise<number> {
@@ -195,15 +133,12 @@ export class ResourceUsageDataItem {
   }
 
   private async getValue(index: number): Promise<number> {
-    let text = await this.finder.element(by.id('resourceCardLabel')).getText();
+    let text = await this.element(by.id('resourceCardLabel')).getText();
     let valueString = text.split('of')[index].trim().match(/\d+/g);
-    let value: number;
 
     if (valueString === null || valueString.length !== 1) {
       throw 'Unexpected resource usage value text: ' + text;
-    } else {
-      value = valueString.map(Number)[0];
     }
-    return Promise.resolve(value);
+    return Promise.resolve(valueString.map(Number)[0]);
   }
 }
