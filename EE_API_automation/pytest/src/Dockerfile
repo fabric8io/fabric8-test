@@ -5,18 +5,18 @@ ENV LANG=en_US.utf8
 ENV F8_USER_NAME=ee
 
 # Set up EPEL
-RUN yum install -y epel-release \
+RUN yum install -y --quiet epel-release \
   && yum repolist
 
 # pycurl is part of yum, and so is python, so we don't install
-RUN yum install -y \
+RUN yum install -y --quiet \
   git-core \
   python-pip \
   rpm-build tar \
   && yum clean all
 
 RUN pip install --upgrade pip
-RUN pip install \
+RUN pip install --quiet \
     pytest \
     requests \
     jmespath
