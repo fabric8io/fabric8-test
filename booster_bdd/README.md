@@ -38,6 +38,8 @@ It is also possible to use an alternative configuration file (e.g. `config/prod-
 ./run.sh prod-preview
 ```
 
+Note that the test is intended to support the contributon of new boosters. Accordingly, the test configuration must reference an existing github repo containing a booster that will be imported when the test is run. The default name for this repo is "test123".
+
 The test will run and save the results under `$REPORT_DIR` directory(default name is `./test_output`).
 
 ### Run a single test locally
