@@ -385,8 +385,8 @@ class TestClass_SDD(object):
             assert r.status_code == 200
             assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
-    class TestClass_Teardown(object):
-        def test_teardown(self, cleanup):
+    class TestClass_SDDTeardown(object):
+        def test_sdd_teardown(self, cleanup):
             import os
             import json
             launch_detail.launch_details_dict["space_name"] = dynamic_vars.spacename
@@ -744,8 +744,9 @@ class TestClass_SCRUM(object):
             assert r.status_code == 200
             assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
-    class TestClass_Teardown(object):
-        def test_teardown(self, cleanup):
+    class TestClass_AgileTeardown(object):
+        '''Class that dumps data to a file and deletes the space'''
+        def test_agile_teardown(self, cleanup):
             import json
             import os
             end_time = time.time()
