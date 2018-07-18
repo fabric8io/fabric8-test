@@ -1,6 +1,8 @@
 from behave import *
 from features.src.stage import *
 
+from pyshould import *
+
 
 @given(u'I have verified a booster\'s pipeline has completed')
 def step_impl(context):
@@ -18,6 +20,5 @@ def step_impl(context):
 
 @then(u'I should see the deployed app running on stage')
 def step_impl(context):
-    global expected_result
-    expected_result = 'Success'
-    assert expected_result == result
+    global result
+    result | should.equal('Success').desc("Application is not reachable in the Stage stage.")
