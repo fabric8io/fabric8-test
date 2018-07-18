@@ -8,7 +8,7 @@ VOLUME /dist
 # install dependencies
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN yum --setopt tsflags='nodocs' -y update && \
-    yum install -y --setopt tsflags='nodocs' --quiet \
+    yum install -y --setopt tsflags='nodocs' -d1 \
       epel-release \
       wget \
       gtk3 \
@@ -23,7 +23,7 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.9-1.el7.x86_64.rpm
 
 # the following packages depend on EPEL repository and need to be installed separately
-RUN yum install -y --quiet --setopt tsflags='nodocs' jq google-chrome-stable
+RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 
 # Uncomment it if you want to use firefox
 #RUN  wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz \
