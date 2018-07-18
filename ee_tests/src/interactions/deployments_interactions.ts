@@ -8,6 +8,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../..';
 import { PipelinesInteractionsFactory } from './pipelines_interactions';
+import { browser } from 'protractor';
 
 export abstract class DeploymentsInteractionsFactory {
 
@@ -118,75 +119,61 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
         support.info('Verifying application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(2, 'number of environments');
-        await this.testEnvironmentsInternal(environments);
+        await this.verifyEnvironmentsInternal(environments);
     }
 
-    protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
-        support.info('Verifying application\'s stage environment');
+    protected async verifyEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
+        await this.verifyEnvironmentInternal(environments[Environment.STAGE], 'stage');
+    }
 
-        let environment = environments[Environment.STAGE];
-        expect(environment.isReady()).toBeTruthy('stage environment pod is ready');
-        expect(environment.getStatus()).toBe(DeploymentStatus.OK, 'stage environment status');
-        expect(environment.getVersion()).toBe('1.0.1', 'stage environment version');
-        expect(environment.getPodsCount()).toBe(1, 'number of pods on stage environment');
-        // TODO this does not work correctly at the moment
-        // expect(await environment.getRunningPodsCount()).toBe(1, 'number of running pods on stage environment');
+    protected async verifyEnvironmentInternal(environment: DeployedApplicationEnvironment, environmentName: string) {
+        support.info(`Verifying application\'s ${environmentName} environment`);
+
+        await browser.wait(async () => {
+            return await environment.hasRunningPod();
+        }, support.LONGER_WAIT, `Wait for ${environmentName} to have running pod`);
+
+        expect(await environment.getDeploymentStatus()).toBe(DeploymentStatus.OK,
+            `${environmentName} environment status`);
+        expect(await environment.getVersion()).toBe('1.0.1', `${environmentName} environment version`);
+        expect(await environment.getPodsCount()).toBe(1, `number of pods on ${environmentName} environment`);
     }
 
     protected async verifyResourceUsageInternal(data: ResourceUsageData[]) {
-        await super.verifyResourceUsageInternal(data);
-        support.info('Verifying stage environment resource usage');
+        await this.verifyResourceUsageDataInternal(data[Environment.STAGE], 'stage');
+    }
 
-        let stageData = data[Environment.STAGE];
-        let stageDataItems = await stageData.getItems();
-        expect(stageDataItems.length).toBe(2, 'there should be 2 resource usage data items for stage');
+    protected async verifyResourceUsageDataInternal(data: ResourceUsageData, environmentName: string) {
+        support.info(`Verifying ${environmentName} environment resource usage`);
+
+        let stageDataItems = await data.getItems();
+        expect(stageDataItems.length).toBe(2, `there should be 2 resource usage data items for ${environmentName}`);
 
         let cpu = stageDataItems[0];
         expect(cpu.getActualValue()).
-            toBeGreaterThan(0, 'the cpu usage data should be > 0 for stage');
+            toBeGreaterThan(0, `the cpu usage data should be > 0 for ${environmentName}`);
         expect(cpu.getActualValue()).
-            toBeLessThanOrEqual(cpu.getMaximumValue(), 'the cpu usage data should to be <= to maximum for stage');
+            toBeLessThanOrEqual(cpu.getMaximumValue(),
+            `the cpu usage data should to be <= to maximum for ${environmentName}`);
 
         let memory = stageDataItems[1];
         expect(memory.getActualValue()).
-            toBeGreaterThan(0, 'the memory usage data should be > 0 for stage');
+            toBeGreaterThan(0, `the memory usage data should be > 0 for ${environmentName}`);
         expect(memory.getActualValue()).
-            toBeLessThanOrEqual(memory.getMaximumValue(), 'the memory usage data should to be <= to maximum for stage');
+            toBeLessThanOrEqual(memory.getMaximumValue(),
+            `the memory usage data should to be <= to maximum for ${environmentName}`);
     }
 }
 
 class DeploymentsInteractionsRunStrategy extends DeploymentsInteractionsStageStrategy {
-    protected async testEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
-        await super.testEnvironmentsInternal(environments);
-        support.info('Verifying application\'s run environment');
 
-        let environment = environments[Environment.RUN];
-        expect(environment.isReady()).toBeTruthy('run environment pod is ready');
-        expect(environment.getStatus()).toBe(DeploymentStatus.OK, 'run environment status');
-        expect(environment.getVersion()).toBe('1.0.1', 'run environment version');
-        expect(environment.getPodsCount()).toBe(1, 'number of pods on run environment');
-        // TODO this does not work correctly at the moment
-        // expect(await environment.getRunningPodsCount()).toBe(1, 'number of running pods on run environment');
+    protected async verifyEnvironmentsInternal(environments: DeployedApplicationEnvironment[]) {
+        await this.verifyEnvironmentInternal(environments[Environment.STAGE], 'stage');
+        await this.verifyEnvironmentInternal(environments[Environment.RUN], 'run');
     }
 
     protected async verifyResourceUsageInternal(data: ResourceUsageData[]) {
-        await super.verifyResourceUsageInternal(data);
-        support.info('Verifying run environment resource usage');
-
-        let stageData = data[Environment.RUN];
-        let stageDataItems = await stageData.getItems();
-        expect(stageDataItems.length).toBe(2, 'there should be 2 resource usage data items for run environment');
-
-        let cpu = stageDataItems[0];
-        expect(cpu.getActualValue()).
-            toBeGreaterThan(0, 'the cpu usage data should be > 0 for run');
-        expect(cpu.getActualValue()).
-            toBeLessThanOrEqual(cpu.getMaximumValue(), 'the cpu usage data should to be <= to maximum for run');
-
-        let memory = stageDataItems[1];
-        expect(memory.getActualValue()).
-            toBeGreaterThan(0, 'the memory usage data should be > 0 for run');
-        expect(memory.getActualValue()).
-            toBeLessThanOrEqual(memory.getMaximumValue(), 'the memory usage data should to be <= to maximum for run');
+        await this.verifyResourceUsageDataInternal(data[Environment.STAGE], 'stage');
+        await this.verifyResourceUsageDataInternal(data[Environment.RUN], 'run');
     }
 }
