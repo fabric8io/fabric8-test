@@ -386,6 +386,7 @@ class TestClass_SDD(object):
             assert helpers.extract_header("Content-Encoding", r) == "gzip"
 
     class TestClass_SDDTeardown(object):
+        '''Class that dumps data to a file and deletes the space'''
         def test_sdd_teardown(self, cleanup):
             import os
             import json
