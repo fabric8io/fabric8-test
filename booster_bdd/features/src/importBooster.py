@@ -43,7 +43,7 @@ class ImportBooster(object):
             headers=headers,
             data=data
         )
-        print 'request results = {}'.format(r.text)
+        print ('request results = {}'.format(r.text))
 
         result = r.text
         if re.search('uuid', result):
