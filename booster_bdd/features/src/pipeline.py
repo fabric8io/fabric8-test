@@ -91,7 +91,7 @@ class Pipeline(object):
         forgeApi = os.getenv("FORGE_API")
         osoUsername = os.getenv("OSO_USERNAME")
         githubUsername = os.getenv("GITHUB_USERNAME")
-        githubRepo = os.getenv("GIT_REPO")
+        githubRepo = helpers.getGithubRepo()
 
         theToken = helpers.get_user_tokens().split(";")[0]
         headers = {"Authorization": "Bearer {}".format(theToken)}

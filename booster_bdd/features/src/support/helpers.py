@@ -11,6 +11,7 @@ from features.src.support.loginusers_oauth2 import LoginUsersOauth2, user_tokens
 count = 1
 spaceID = ''
 spaceName = ''
+githubRepo = ''
 
 
 def login_user(username="", password=""):
@@ -62,6 +63,16 @@ def getSpaceName():
 def setSpaceName(theName):
     global spaceName
     spaceName = theName
+
+
+def getGithubRepo():
+    global githubRepo
+    return githubRepo
+
+
+def setGithubRepo(theRepo):
+    global githubRepo
+    githubRepo = theRepo
 
 
 def find_in_obj(obj, condition, path=None):

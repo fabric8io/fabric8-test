@@ -66,6 +66,9 @@ export BOOSTER_MISSION="${BOOSTER_MISSION:-rest-http}"
 ## OpenShift.io booster runtime
 export BOOSTER_RUNTIME="${BOOSTER_RUNTIME:-vert.x}"
 
+## true for the blank booster
+export BLANK_BOOSTER="${BLANK_BOOSTER:-false}"
+
 ## github repo name
 export GIT_REPO="${GIT_REPO:-test123}"
 

@@ -23,8 +23,9 @@ def step_impl(context):
     mission = os.getenv('BOOSTER_MISSION')
     runtime = os.getenv('BOOSTER_RUNTIME')
     pipeline = os.getenv('PIPELINE')
+    blankBooster = os.getenv('BLANK_BOOSTER')
     global result
-    result = launchBooster.launch(projectName, mission, runtime, pipeline)
+    result = launchBooster.launch(projectName, mission, runtime, pipeline, blankBooster)
 
 
 @then(u'I should see the booster created')
