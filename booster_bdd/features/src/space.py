@@ -48,6 +48,7 @@ class Space:
         try:
             respJson = r.json()
             spaceID = respJson["data"]["id"]
+            print('The spaceID is: {}'.format(spaceID))
             return spaceID
         except ValueError:
             return None

@@ -14,4 +14,6 @@ def step_impl(context):
 @then(u'I should see clean environment')
 def step_impl(context):
     global resetEnv
-    len(resetEnv.getSpaces()) | should.equal(1).described_as("Number of spaces after environment reset.")
+    len(resetEnv.getSpaces()) | should.equal(0).described_as(
+        "Number of spaces after environment reset."
+    )

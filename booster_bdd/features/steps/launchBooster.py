@@ -1,24 +1,32 @@
 import os
 
 from behave import *
-from features.src.importBooster import *
+from features.src.launchBooster import *
 from features.src.support import *
+from pyshould import *
+
 
 @given(u'I have a space created from which I can launch a new booster')
 def step_impl(context):
     global spaceID
     spaceID = helpers.getSpaceID()
-    assert spaceID is not None
+    spaceID | should_not.be_none().desc("Space ID")
 
     print('Attempting to use OSIO booster service intregration POC...')
-    global importBooster
-    importBooster = ImportBooster()
+    global launchBooster
+    launchBooster = LaunchBooster()
+
 
 @when(u'I input input the name, mission, runtime, and pipeline of the new booster')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When I input input the name, mission, runtime, and pipeline of the new booster')
+    projectName = os.getenv('PROJECT_NAME')
+    mission = os.getenv('BOOSTER_MISSION')
+    runtime = os.getenv('BOOSTER_RUNTIME')
+    pipeline = os.getenv('PIPELINE')
+    global result
+    result = launchBooster.launch(projectName, mission, runtime, pipeline)
+
 
 @then(u'I should see the booster created')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see the booster created')
-
+    result | should.equal("Success").desc("Booster not created")
