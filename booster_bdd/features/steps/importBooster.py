@@ -20,7 +20,8 @@ def step_impl(context):
 @when(u'I input a name of the GitHub repository with a booster')
 def step_impl(context):
     global result
-    result = importBooster.importGithubRepo(os.getenv('GIT_REPO'))
+    helpers.setGithubRepo(os.getenv('GIT_REPO'))
+    result = importBooster.importGithubRepo(helpers.getGithubRepo())
     print('Result = {}'.format(result))
 
 

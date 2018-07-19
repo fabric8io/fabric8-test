@@ -8,7 +8,7 @@ import os
 
 class LaunchBooster(object):
     def launch(self, projectName, mission="rest-http", runtime="vert.x",
-               pipeline="maven-releasestageapproveandpromote"):
+               pipeline="maven-releasestageapproveandpromote", blankBooster="false"):
 
         ###############################################
         # Environment variables
@@ -17,6 +17,9 @@ class LaunchBooster(object):
         spaceId = helpers.getSpaceID()
         spaceName = helpers.getSpaceName()
         authHeader = 'Bearer {}'.format(theToken)
+
+        gitRepo = '{}-{}'.format(spaceName, projectName)
+        helpers.setGithubRepo(gitRepo)
 
         print('Starting test.....')
 
@@ -27,14 +30,14 @@ class LaunchBooster(object):
                    'X-App': 'osio',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {'emptyGitRepository': 'true',
+        data = {'emptyGitRepository': blankBooster,  # true for blank booster
                 'mission': mission,
                 'runtime': runtime,
                 'runtimeVersion': 'redhat',
                 'pipeline': pipeline,
                 'projectName': projectName,
                 'projectVersion': '1.0.0',
-                'gitRepository': '{}-{}'.format(spaceName, projectName),
+                'gitRepository': gitRepo,
                 'groupId': 'io.openshift.booster',
                 'artifactId': projectName,
                 'spacePath': spaceName,

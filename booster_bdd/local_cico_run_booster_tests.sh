@@ -35,6 +35,7 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_A
           -e PIPELINE \
           -e BOOSTER_MISSION \
           -e BOOSTER_RUNTIME \
+          -e BLANK_BOOSTER \
           -e GIT_REPO \
           -e PROJECT_NAME \
           -e AUTH_CLIENT_ID \
