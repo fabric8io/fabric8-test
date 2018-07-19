@@ -62,15 +62,10 @@ class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
     public async createAndOpenWorkspace(): Promise<void> {
         await this.page.createWorkspace();
+        await this.page.openWorkspace();
         await support.windowManager.switchToNewWindow();
     }
 }
 
-class ProdPreviewInteractions extends AbstractCodebasesInteractions {
-
-    public async createAndOpenWorkspace(): Promise<void> {
-        await this.page.createWorkspace();
-        await this.page.openWorkspace();
-        await support.windowManager.switchToNewWindow();
-    }
+class ProdPreviewInteractions extends CodebasesInteractionsImpl {
 }
