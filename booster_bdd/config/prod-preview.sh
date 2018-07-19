@@ -60,6 +60,12 @@ fi
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
 
+## OpenShift.io booster mission
+export BOOSTER_MISSION="${BOOSTER_MISSION:-rest-http}"
+
+## OpenShift.io booster runtime
+export BOOSTER_RUNTIME="${BOOSTER_RUNTIME:-vert.x}"
+
 ## github repo name
 export GIT_REPO="${GIT_REPO:-test123}"
 

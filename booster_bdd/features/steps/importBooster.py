@@ -3,13 +3,14 @@ import os
 from behave import *
 from features.src.importBooster import *
 from features.src.support import *
+from pyshould import *
 
 
 @given(u'I have a space created')
 def step_impl(context):
     global spaceID
     spaceID = helpers.getSpaceID()
-    assert spaceID is not None
+    spaceID | should_not.be_none().desc("Space ID")
 
     print('Attempting to use OSIO booster service intregration POC...')
     global importBooster
@@ -25,6 +26,5 @@ def step_impl(context):
 
 @then(u'I should see the booster imported')
 def step_impl(context):
-    global expected_result
-    expected_result = 'Success'
-    assert expected_result == result
+    global result
+    result | should.equal('Success').desc("Result of importing a GitHub repository")
