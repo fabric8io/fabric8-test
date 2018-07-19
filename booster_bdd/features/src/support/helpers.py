@@ -10,6 +10,7 @@ from features.src.support.loginusers_oauth2 import LoginUsersOauth2, user_tokens
 
 count = 1
 spaceID = ''
+spaceName = ''
 
 
 def login_user(username="", password=""):
@@ -28,7 +29,7 @@ def get_user_tokens(index=0):
 def create_space_name(template="BDD"):
     var = datetime.datetime.now()
     var = var.isoformat().rsplit('.')[0]
-    space = "{}-{}-space-{}".format(
+    space = "{}-{}-{}".format(
         os.getenv("OSIO_USERNAME"),
         template,
         var
@@ -38,16 +39,29 @@ def create_space_name(template="BDD"):
     space = space.replace(':', '-')
     space = space.replace('.', '-')
     print("The spacename is: {}".format(space))
+    global spaceName
+    spaceName = space
     return space
 
 
 def getSpaceID():
+    global spaceID
     return spaceID
 
 
 def setSpaceID(theID):
     global spaceID
     spaceID = theID
+
+
+def getSpaceName():
+    global spaceName
+    return spaceName
+
+
+def setSpaceName(theName):
+    global spaceName
+    spaceName = theName
 
 
 def find_in_obj(obj, condition, path=None):

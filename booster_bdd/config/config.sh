@@ -57,6 +57,12 @@ if [ -z $OSO_USERNAME ] || [ -z $OSO_TOKEN ] || [ -z $GITHUB_USERNAME ]; then
 	fi
 fi
 
+## OpenShift.io booster mission
+export BOOSTER_MISSION="${BOOSTER_MISSION:-rest-http}"
+
+## OpenShift.io booster runtime
+export BOOSTER_RUNTIME="${BOOSTER_RUNTIME:-vert.x}"
+
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
 
