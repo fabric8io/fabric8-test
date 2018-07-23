@@ -1,3 +1,4 @@
+@osio.regular
 Feature: Verify an imported Booster's pipeline is deployed to run
  
   Background:

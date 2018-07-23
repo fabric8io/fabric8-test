@@ -57,6 +57,17 @@ if [ -z $OSO_USERNAME ] || [ -z $OSO_TOKEN ] || [ -z $GITHUB_USERNAME ]; then
 	fi
 fi
 
+## Enable/disable danger zone - features tagged as @osio.danger-zone (e.g. reset user's environment).
+## (default value is "false")
+export OSIO_DANGER_ZONE="${OSIO_DANGER_ZONE:-false}"
+
+### A behave tag to enable/disable features tagged as @osio.danger-zone (e.g. reset user's environment).
+if [ "$OSIO_DANGER_ZONE" -eq "true" ]; then
+	export BEHAVE_DANGER_TAG="@osio.danger-zone"
+else
+	export BEHAVE_DANGER_TAG="~@osio.danger-zone"
+fi
+
 ## OpenShift.io pipeline release strategy
 export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
 

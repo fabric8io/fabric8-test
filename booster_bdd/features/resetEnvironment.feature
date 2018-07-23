@@ -1,3 +1,4 @@
+@osio.danger-zone
 Feature: Reset user's environment in OpenShift.io
 
   Background:
