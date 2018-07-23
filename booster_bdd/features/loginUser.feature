@@ -1,3 +1,4 @@
+@osio.regular
 Feature: Login user into OpenShift.io to get auth token
 
   Scenario: Login user

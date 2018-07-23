@@ -32,6 +32,7 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_A
           -e OSO_USERNAME \
           -e OSO_TOKEN \
           -e GITHUB_USERNAME \
+          -e OSIO_DANGER_ZONE \
           -e PIPELINE \
           -e BOOSTER_MISSION \
           -e BOOSTER_RUNTIME \

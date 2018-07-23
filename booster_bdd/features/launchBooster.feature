@@ -1,3 +1,4 @@
+@osio.regular
 Feature: Launch a new Booster in OpenShift.io
 
   Background:

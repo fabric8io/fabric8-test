@@ -2,7 +2,7 @@
 
 These tests are intended to provide end-to-end test coverage to support the contribution of new boosters and changes to existing boosters. The tests are implemented in Python, are built with the Behave (https://github.com/behave/behave) test framework, and follow the Behavior Driven Development (BDD) model.
 
-DANGER-ZONE: Running these tests will by default reset your OpenShift.io user environment. This will result in your spaces, projects, etc. being deleted in OpenShift.io - To avoid resetting your user environment, comment out any entries in the test scenario definition files that reference "reset." The test scenario files are contained in the "test-scenario" directory.
+DANGER-ZONE: Running these tests will reset your OpenShift.io user environment if `OSIO_DANGER_ZONE` environmental variable is set to `true`. This will result in your spaces, projects, etc. being deleted in OpenShift.io - To avoid resetting your user environment, make sure the `OSIO_DANGER_ZONE` environmental variable is not set to `true` (default is `false`, see the configuration). The test scenario files are contained in the "test-scenario" directory.
 
 ## Pre-requisities
 
@@ -49,6 +49,7 @@ The full set of configuration/environmental variables used by these tests are:
 * OpenShift.io booster mission: BOOSTER_MISSION
 * OpenShift.io booster runtime: BOOSTER_RUNTIME
 * Boolean to specify blank booster true|false: BLANK_BOOSTER
+* Boolean to enable/disable danger zone (e.g. reset user's environment) true|false: OSIO_DANGER_ZONE
 * OpenShift.io pipeline release strategy: PIPELINE
 * github repo name: GIT_REPO
 * OpenShift.io project name: PROJECT_NAME

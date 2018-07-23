@@ -1,3 +1,4 @@
+@osio.regular
 Feature: Import a new Booster into OpenShift.io
 
   Background:
