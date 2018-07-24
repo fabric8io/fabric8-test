@@ -7,8 +7,8 @@ VOLUME /dist
 
 # install dependencies
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
-RUN yum --setopt tsflags='nodocs' -y update && \
-    yum install -y --setopt tsflags='nodocs' \
+RUN yum --setopt tsflags='nodocs' -y -d1 update && \
+    yum install -y -d1 --setopt tsflags='nodocs' \
       epel-release \
       wget \
       gtk3 \
@@ -22,11 +22,11 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.11.2-1nodesource.x86_64.rpm \
       https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.9-1.el7.x86_64.rpm
 
-RUN yum install -y --setopt tsflags='nodocs' chromium chromium-headless chromedriver
-RUN yum install -y --setopt tsflags='nodocs' python34 python34-pip
+RUN yum install -y -d1 --setopt tsflags='nodocs' chromium chromium-headless chromedriver
+RUN yum install -y -d1 --setopt tsflags='nodocs' python34 python34-pip
 
 # the following packages depend on EPEL repository and need to be installed separately
-RUN yum install -y --setopt tsflags='nodocs' jq google-chrome-stable
+RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 
 # Uncomment it if you want to use firefox
 #RUN  wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz \
@@ -34,15 +34,15 @@ RUN yum install -y --setopt tsflags='nodocs' jq google-chrome-stable
 #  && chmod +x geckodriver \
 #  && rm geckodriver-v0.14.0-linux64.tar.gz \
 #  && mv geckodriver /usr/bin \
-#  && yum install -y firefox \
+#  && yum install -y -d1 firefox \
 #  && npm install -g karma-firefox-launcher
 # FIXME: Firefox complains about a missing machine-id file. So I set a random one
 # echo 8636d9aff3933f48b95ad94891cd1839 > /var/lib/dbus/machine-id
 
 # Install ffmpeg for video capturing
-# RUN yum -y --setopt tsflags='nodocs' localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+# RUN yum -y -d1 --setopt tsflags='nodocs' localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
 # https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm \
-# && yum -y --setopt tsflags='nodocs' install ffmpeg
+# && yum -y  -d1 --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
 RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
@@ -53,11 +53,14 @@ COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called
 RUN npm --unsafe-perm install
 
-# copy all files
-COPY . .
-
-# install python requirements
-RUN python3 -m venv venv && source venv/bin/activate && python3 `which pip3` install -r requirements.txt
-
 # clean after installation
 RUN yum clean all
+
+# copy requirements.txt
+COPY requirements.txt .
+
+# install python requirements
+RUN python3 -m venv venv && source venv/bin/activate && python3 $(which pip3) install -r requirements.txt
+
+# copy rest of files
+COPY . .
