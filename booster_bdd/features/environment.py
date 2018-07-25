@@ -1,9 +1,8 @@
 import os
-from behave import fixture
 from src.support import helpers
 
 
-def before_all(context):
+def before_all(_context):
     if not helpers.is_user_logged_in():
         username = os.getenv("OSIO_USERNAME")
         password = os.getenv("OSIO_PASSWORD")

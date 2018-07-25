@@ -1,13 +1,13 @@
 import os
 
-from behave import *
+from behave import given, when, then
 from features.src.launchBooster import *
 from features.src.support import *
 from pyshould import *
 
 
 @given(u'I have a space created from which I can launch a new booster')
-def step_impl(context):
+def step_impl(_context):
     global spaceID
     spaceID = helpers.getSpaceID()
     spaceID | should_not.be_none().desc("Space ID")
@@ -18,7 +18,7 @@ def step_impl(context):
 
 
 @when(u'I input input the name, mission, runtime, and pipeline of the new booster')
-def step_impl(context):
+def step_impl(_context):
     projectName = os.getenv('PROJECT_NAME')
     mission = os.getenv('BOOSTER_MISSION')
     runtime = os.getenv('BOOSTER_RUNTIME')
@@ -29,5 +29,5 @@ def step_impl(context):
 
 
 @then(u'I should see the booster created')
-def step_impl(context):
+def step_impl(_context):
     result | should.equal("Success").desc("Booster not created")
