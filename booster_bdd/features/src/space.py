@@ -1,9 +1,7 @@
 import time
 import requests
-import features.src.support.helpers as helpers
-import sys
+from features.src.support import helpers
 import os
-import json
 
 start_time = time.time()
 

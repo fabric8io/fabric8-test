@@ -4,8 +4,9 @@ import requests as req
 import json
 import jmespath
 import operator
-from features.src.support import constants
+from functools import reduce
 
+from features.src.support import constants
 from features.src.support.loginusers_oauth2 import LoginUsersOauth2, user_tokens
 
 count = 1
@@ -158,7 +159,7 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
     if None not in [orig_dict, strs_to_replace_dict]:
         paths = {}
         for key_rep in strs_to_replace_dict:
-            val_to_replace = unicode(key_rep, "utf-8")
+            val_to_replace = key_rep.encode("utf-8")
 #             print("Key to replace:"), val_to_replace
             temp_list = []
             temp_dict = {}
@@ -175,7 +176,7 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
 
 #         print("final paths:"), paths
         for path in paths:
-            for i in xrange(len(paths[path])):
+            for i in range(len(paths[path])):
                 setInDict(orig_dict, paths[path][i], strs_to_replace_dict[path])
         return orig_dict  # Final updated JSON
     else:
@@ -191,7 +192,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
         count = 1
     mylist = []
     total_entities = count + no_of_names
-    for i in xrange(count, total_entities):
+    for i in range(count, total_entities):
         if static_string is not None:
             mylist.append("{}_{}".format(static_string, str(i)))
         else:
