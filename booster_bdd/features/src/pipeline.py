@@ -6,6 +6,8 @@ import re
 import os
 import time
 import json
+import behave
+from features.src.space import Space
 
 start_time = time.time()
 
@@ -113,3 +115,45 @@ class Pipeline(object):
         else:
             print("ERROR - Request failed to promote - error code = {}".format(r.status_code))
             return False
+
+
+    def getBuildLog(self):
+        """
+        Promote build from stage to run
+        """
+        
+        username = os.getenv("OSIO_USERNAME")
+        password = os.getenv("OSIO_PASSWORD")
+        assert username != ""
+        assert password != ""
+        print("Loggin user {} in...".format(username))
+        helpers.login_user(username, password)
+
+        spaceName = helpers.getSpaceName()
+        osoUsername = os.getenv("OSO_USERNAME")
+        githubRepo = helpers.getGithubRepo()
+
+        theToken = helpers.get_user_tokens().split(";")[0]
+        headers = {"Authorization": "Bearer {}".format(theToken)}
+
+        print("Spacename = {}".format(spaceName))
+        print("githubRepo = {}".format(githubRepo))
+        print("OSO username = {}".format(osoUsername))
+
+        # logUrl = "https://jenkins.openshift.io/job/{}/job/{}-{}/job/master/1/consoleText".format(osoUsername, spaceName, githubRepo)
+        logUrl = "https://jenkins.openshift.io/job/" + osoUsername + "/job/" + githubRepo + "/job/master/1/consoleText"
+
+        print("Log URL: {}".format(logUrl))
+        print("Making request to get build log...")
+        r = requests.get(logUrl, headers=headers)
+        print("Get log response: {}".format(r))
+        print("Log results: {}".format(r.text))
+        if r.status_code == 200:
+            return True
+        else:
+            print("ERROR - Request failed to get build log - error code = {}".format(r.status_code))
+            return False
+
+
+
+

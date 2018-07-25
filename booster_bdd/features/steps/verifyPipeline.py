@@ -38,6 +38,7 @@ def step_impl(context):
     pipeline.buildStatus(30, 30, 'Running',
                          'openshift.io/jenkins-pending-input-actions-json'
                          ) | should.be_true.desc("Build failed to get ready to be promoted.")
+    pipeline.getBuildLog() | should.be_true.desc("Build failed to get the build log.")
 
 
 @when(u'I promote the build to "Run" stage')
@@ -48,3 +49,18 @@ def step_impl(context):
 @then(u'I should see the build completed')
 def step_impl(context):
     pipeline.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build failed to complete.")
+
+
+@then(u'I should see success in the Jenkins build log')
+def step_impl(context):
+    pipeline.getBuildLog() | should.be_true.desc("Build failed to get the build log.")
+
+
+
+
+
+
+
+
+
+

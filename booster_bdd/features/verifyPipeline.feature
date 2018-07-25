@@ -15,3 +15,5 @@ Feature: Verify the imported Booster's pipeline
     Given The build is ready to be promoted to "Run" stage
     When I promote the build to "Run" stage
     Then I should see the build completed
+    Then I should see success in the Jenkins build log
+
