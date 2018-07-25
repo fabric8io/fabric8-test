@@ -1,16 +1,13 @@
-import pytest
-import time
 import requests
-import features.src.support.helpers as helpers
 import sys
 import re
 import os
-import time
 
 
 class Run(object):
 
     def runTest(self, theString):
+        print(theString)
 
         ###############################################
         # Initialize variables from Environment setting
