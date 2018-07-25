@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-import json
 import traceback
 import uuid
 import urllib
@@ -128,7 +127,6 @@ class LoginUsersOauth2:
 
     def login(self, userIndex=0, _failed=False):
         failed = _failed
-        request_type = "login-users-log"
 
         state = str(uuid.uuid4())
         code = ""

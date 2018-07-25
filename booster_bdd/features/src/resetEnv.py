@@ -1,7 +1,6 @@
 import requests
 import features.src.support.helpers as helpers
 import os
-import json
 
 
 class ResetEnvironment:
