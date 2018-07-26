@@ -12,17 +12,17 @@ class TestClass_SetupPlanner(object):
         print("\n\n==>Planner Test Setup Start....\n")
         if sut is None:
             launch_detail.base_url[launch_detail.base_wit] = r"https://api.openshift.io"
-            print "SUT (WIT Target) not provided!!! Using default production SUT = ", launch_detail.base_url[launch_detail.base_wit]
+            print("SUT (WIT Target) not provided!!! Using default production SUT = ", launch_detail.base_url[launch_detail.base_wit])
         else:
             launch_detail.base_url[launch_detail.base_wit] = sut
-            print "SUT set to = ", sut
+            print("SUT set to = ", sut)
 
         if userid is None:
             launch_detail.userid_primary = launch_detail.userid_prod_primary_default
-            print "USERID not provided! Going ahead with the default USERID = ", launch_detail.userid_prod_primary_default
+            print("USERID not provided! Going ahead with the default USERID = ", launch_detail.userid_prod_primary_default)
         else:
             launch_detail.userid_primary = userid
-            print "USERID set to = ", launch_detail.userid_primary
+            print("USERID set to = ", launch_detail.userid_primary)
 
         if offline_token is None:
             pytest.exit("OFFLINE_TOKEN not provided!!! Terminating the run!!!!!!!!!!!")
@@ -78,7 +78,7 @@ class TestClass_SDD(object):
             spacename = helpers.extract_value("data.attributes.name", r)
             spacelink = helpers.extract_value("data.links.self", r)
             content_type_header = helpers.extract_header("Content-Type", r)
-            print "\nSpace created : ", spacename
+            print("\nSpace created : ", spacename)
             # Save and retain dynamic data for later use
             dynamic_vars.spaceid = spaceid
             dynamic_vars.spacename = spacename
@@ -241,7 +241,7 @@ class TestClass_SDD(object):
                 print("Exception creating launch_info_dump.json")
 
             if cleanup:
-                print "\nSpace deleted : %s" % dynamic_vars.spacename
+                print("\nSpace deleted : %s" % dynamic_vars.spacename)
                 r = helpers.delete_space(dynamic_vars.spaceid)
                 assert r.status_code == 200
 
@@ -285,7 +285,7 @@ class TestClass_SCRUM(object):
             spacename = helpers.extract_value("data.attributes.name", r)
             spacelink = helpers.extract_value("data.links.self", r)
             content_type_header = helpers.extract_header("Content-Type", r)
-            print "\nSpace created : ", spacename
+            print("\nSpace created : ", spacename)
             # Save and retain dynamic data for later use
             dynamic_vars.spaceid = spaceid
             dynamic_vars.spacename = spacename
