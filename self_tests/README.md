@@ -28,6 +28,27 @@ The first script measures cyclomatic complexity of all Python sources found in t
 
 The second script measures maintainability index of all Python sources found in the repository. Please see [the following link](https://radon.readthedocs.io/en/latest/commandline.html#the-mi-command) with explanation of this measurement.
 
+### Dead code detection
+
+The script `detect-dead-code.sh` can be used to detect dead code in all Python sources from this repository. This script can be run w/o any arguments:
+
+```
+./detect-dead-code.sh
+```
+
+Please note that due to Python's dynamic nature, static code analyzers are likely to miss some dead code. Also, code that is only called implicitly may be reported as unused.
+
+Because of this potential problems, only code detected with more than 90% of confidence is reported.
+
+### Common issues detection
+
+The script `detect-common-errors.sh` can be used to detect common errors in all Python sources from this repository. This script can be run w/o any arguments:
+
+```
+./detect-common-errors.sh
+```
+
+Please note that only semantical problems are reported.
 
 ## Scripts written in BASH
 
