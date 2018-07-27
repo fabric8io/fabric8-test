@@ -42,7 +42,7 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_A
           -e AUTH_CLIENT_ID \
           -e REPORT_DIR \
           -e UI_HEADLESS \
-          -t -v $(pwd)/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-test:latest /bin/bash
+          -t -v "$(pwd)"/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-test:latest /bin/bash
 
 # Start Xvfb
 docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
