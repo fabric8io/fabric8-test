@@ -12,6 +12,8 @@ import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
 import { Button } from './ui/button';
 import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
+import { BuildStatus } from './support/build_status';
+import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
 
 describe('e2e_smoketest', () => {
 
@@ -89,9 +91,11 @@ describe('e2e_smoketest', () => {
     support.info('--- Run pipeline ---');
     let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
     await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
-    let pipeline = await pipelineInteractions.verifyBuildInfo();
+    let pipelines = await pipelineInteractions.verifyPipelines(1);
+    let pipeline = pipelines[0];
+    await pipelineInteractions.verifyPipelineInfo(pipeline, spaceName, spaceName, 1);
     await pipelineInteractions.waitToFinish(pipeline);
-    await pipelineInteractions.verifyBuildResult(pipeline);
+    await pipelineInteractions.verifyBuildResult(pipeline, BuildStatus.COMPLETE);
     await pipelineInteractions.verifyBuildStages(pipeline);
   });
 
@@ -99,8 +103,13 @@ describe('e2e_smoketest', () => {
     support.info('--- Verify deployments ---');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.openDeploymentsPage(PageOpenMode.UseMenu);
-    let application = await deploymentsInteractions.verifyApplication();
-    await deploymentsInteractions.verifyEnvironments(application);
+    let applications = await deploymentsInteractions.verifyApplications(1);
+    let application = applications[0];
+    await deploymentsInteractions.verifyApplication(application, spaceName);
+
+    let environments = await deploymentsInteractions.verifyEnvironments(application);
+    await deploymentsInteractions.verifyStageEnvironment(environments, DeploymentStatus.OK, '1.0.1', 1);
+    await deploymentsInteractions.verifyRunEnvironment(environments, DeploymentStatus.OK, '1.0.1', 1);
     await deploymentsInteractions.verifyResourceUsage();
   });
 
@@ -108,9 +117,19 @@ describe('e2e_smoketest', () => {
     support.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
-    await dashboardInteractions.verifyCodebases();
+    await dashboardInteractions.verifyCodebases(spaceName);
     await dashboardInteractions.verifyAnalytics();
-    await dashboardInteractions.verifyApplications();
+
+    let pipelines = await dashboardInteractions.verifyPipelines(1);
+    await dashboardInteractions.verifyPipeline(pipelines[0], spaceName, 1, BuildStatus.COMPLETE);
+
+    let deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
+    let deployedApplication = deployedApplications[0];
+    await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
+    await dashboardInteractions.verifyDeployedApplicationStage(
+      deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
+    await dashboardInteractions.verifyDeployedApplicationRun(
+        deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyWorkItems();
   });
 });

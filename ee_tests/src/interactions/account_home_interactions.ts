@@ -54,7 +54,7 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         let spaceDashboardInteractions: SpaceDashboardInteractions =
             SpaceDashboardInteractionsFactory.create(strategy, spaceName);
         await spaceDashboardInteractions.openSpaceDashboardPage(PageOpenMode.AlreadyOpened);
-        await spaceDashboardInteractions.verifyCodebases();
+        await spaceDashboardInteractions.verifyCodebases(spaceName);
     }
 
     public async resetEnvironment(): Promise<void> {

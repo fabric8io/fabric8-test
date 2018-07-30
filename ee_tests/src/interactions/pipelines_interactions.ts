@@ -30,11 +30,14 @@ export interface PipelinesInteractions {
 
     showDeployments(): void;
 
-    verifyBuildInfo(): Promise<PipelineDetails>;
+    verifyPipelines(count: number): Promise<PipelineDetails[]>;
+
+    verifyPipelineInfo(pipeline: PipelineDetails,
+        applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void>;
 
     waitToFinish(pipeline: PipelineDetails): void;
 
-    verifyBuildResult(pipeline: PipelineDetails): void;
+    verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus): void;
 
     verifyBuildStages(pipeline: PipelineDetails): void;
 }
@@ -71,19 +74,24 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await this.spacePipelinePage.deploymentsOption.clickWhenReady();
     }
 
-    public async verifyBuildInfo(): Promise<PipelineDetails> {
+    public async verifyPipelines(count: number): Promise<PipelineDetails[]> {
+        support.info('Verifying pipelines');
+        let pipelines = await this.spacePipelinePage.getPipelines();
+        expect(pipelines.length).toBe(count, 'number of pipelines');
+
+        return Promise.resolve(pipelines);
+    }
+
+    public async verifyPipelineInfo(pipeline: PipelineDetails,
+            applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
         support.info('Verifying pipeline build info');
 
-        let pipelines = await this.spacePipelinePage.getPipelines();
-        expect(pipelines.length).toBe(1, 'number of pipelines');
-
-        let pipeline = pipelines[0];
-        expect(await pipeline.getApplicationName()).toBe(this.spaceName, 'application name');
-        expect(await pipeline.getBuildNumber()).toBe(1, 'build number');
+        expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
+        expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
 
         let githubName = browser.params.github.username;
         expect(await pipeline.getRepository()).
-            toBe('https://github.com/' + githubName + '/' + this.spaceName + '.git', 'repository');
+            toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
         return Promise.resolve(pipeline);
     }
 
@@ -138,9 +146,9 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         }
     }
 
-    public async verifyBuildResult(pipeline: PipelineDetails) {
+    public async verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus) {
         support.info('Check build status');
-        expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
+        expect(await pipeline.getStatus()).toBe(expectedStatus, 'build status');
     }
 
     public async verifyBuildStages(pipeline: PipelineDetails) {
