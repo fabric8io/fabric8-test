@@ -21,7 +21,7 @@ class launch_details:
     base_forge = "base_forge"
     base_url = {}
 
-    def get_keycloak_token(self):
+    def get_local_token(self):
         # Used only for local token generation. Not used for prod or prod-preview
         url = self.create_url('api/login/generate')
         r = requests.get(url)
@@ -30,6 +30,7 @@ class launch_details:
     def get_access_token_from_refresh(self):
         """Access the WIT endpoint to obtain access token from the refresh token."""
         url = self.create_url("api/login/refresh")
+        print ("URL: %s") % url
         payload = {"refresh_token": self.offref_token_userid_primary}
         r = requests.post(url, headers={'Content-Type': r'application/json'},
                           data=json.dumps(payload))

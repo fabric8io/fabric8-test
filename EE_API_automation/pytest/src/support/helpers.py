@@ -150,7 +150,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
 
 def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None):
     if None in [title, spaceid, witype]:
-        print("None value supplied for either SpaceID / WI-Title / WI-Type")
+        print("\nNone value supplied for either SpaceID / WI-Title / WI-Type")
         return None
     # Create workitems in Iterations context
     elif iterationid is not None:

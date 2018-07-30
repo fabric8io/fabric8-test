@@ -3,7 +3,7 @@
     "id": "$wi_id",
     "attributes": {
       "system.state": "$state",
-      "version": 2
+      "version": 1
     },
     "links": {
       "self": "$wi_link"
