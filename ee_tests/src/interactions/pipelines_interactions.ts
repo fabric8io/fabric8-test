@@ -5,6 +5,7 @@ import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objec
 import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
+import * as runner from  '../support/script_runner';
 
 export abstract class PipelinesInteractionsFactory {
 
@@ -119,7 +120,11 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         // save OC logs
         try {
             support.info('Save OC Jenkins pod log');
-            await this.saveOCJenkinsLogs();
+            await runner.runScript(
+                '.', // working directory
+                './oc-get-jenkins-logs.sh', // script
+                [ browser.params.login.user,  browser.params.login.password], // params
+                './target/screenshots/oc-logs-output.txt'); // output file
         } catch (e) {
             support.info('Save OC Jenkins pod log failed with error: ' + e);
             ocLogsError = e;
@@ -161,30 +166,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
         await support.windowManager.switchToMainWindow();
-    }
-
-    protected async saveOCJenkinsLogs(): Promise<void> {
-        let finished: boolean = false;
-        const { exec } = require('child_process');
-
-        support.info('Execute shell script to retrieve logs from OpenShift');
-
-        exec('./oc-get-jenkins-logs.sh ' +
-            browser.params.login.user + ' ' +
-            browser.params.login.password +
-            ' &> ./target/screenshots/oc-logs-output.txt',
-            (err: Error, stdout: string | Buffer, stderr: string | Buffer) => {
-                if (err !== null) {
-                    support.info('External script failed');
-                    support.info('STDERR:');
-                    support.info(stderr);
-                }
-                finished = true;
-                return;
-            }
-        );
-        await browser.wait(() => finished === true, support.LONGER_WAIT, 'Script is finished');
-        support.info('Script finished');
     }
 
     private async showJenkinsLogDirectly() {
