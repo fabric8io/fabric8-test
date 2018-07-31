@@ -16,7 +16,7 @@ class TestClass_SetupPlanner(object):
             print "SUT (WIT Target) not provided!!! Using default production SUT = ", launch_detail.base_url[launch_detail.base_wit]
         else:
             # Identify if its a local run and set the local_run variable to True
-            if "localhost" in sut or "0.0.0.0" in sut:
+            if "localhost" in sut or "0.0.0.0" in sut or "127.0.0.1" in sut:
                 global local_run
                 local_run = True
             launch_detail.base_url[launch_detail.base_wit] = sut
@@ -33,7 +33,7 @@ class TestClass_SetupPlanner(object):
             if local_run:
                 try:
                     launch_detail.token_userid_primary = launch_detail.get_local_token()
-                    if launch_detail.token_userid_primary is not None:
+                    if launch_detail.token_userid_primary:
                         print "Local ACCESS_TOKEN obtained"
                 except:
                     pytest.exit("Failed to generate local ACCESS_TOKEN!!! Terminating the run!!!!!!!!!!!")
@@ -43,7 +43,7 @@ class TestClass_SetupPlanner(object):
             launch_detail.offref_token_userid_primary = offline_token
             try:
                 launch_detail.token_userid_primary = launch_detail.get_access_token_from_refresh()
-                if launch_detail.token_userid_primary is not None:
+                if launch_detail.token_userid_primary:
                     print "ACCESS_TOKEN set to = A secret in Jenkins ;)"
             except:
                 pytest.exit("Failed to generate ACCESS_TOKEN from OFFLINE_TOKEN!!! Terminating the run!!!!!!!!!!!")

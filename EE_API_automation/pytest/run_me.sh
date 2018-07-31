@@ -1,4 +1,8 @@
 #!/bin/bash
+set -euo pipefail
+# Do not reveal secrets
+set +x
+
 JENKINSLOG=$(pwd)/pytest_junit_logs.xml
 CLILOG=$(pwd)/pytest_cli_logs.log
 echo ""
@@ -29,6 +33,6 @@ else
         echo ""
         cd src/
         pytest test_planner.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 --cleanup=$4 2>&1 | tee $CLILOG
-        echo ""
+        echo $?
     fi
 fi
