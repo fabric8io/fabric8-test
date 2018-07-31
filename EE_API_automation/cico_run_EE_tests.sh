@@ -29,7 +29,7 @@ else
 fi
 
 echo installing dependency
-sudo yum -y install epel-release
+sudo yum -y install epel-release python-devel
 sudo yum -y install python2
 sudo yum -y install python-pip
 pip install --upgrade pip
