@@ -15,6 +15,13 @@ export abstract class AccountHomeInteractionsFactory {
             return new NewAccountHomeInteractions(new AccountHomePage());
         }
 
+        let url: string = browser.params.target.url;
+        let isProdPreview = url.includes('prod-preview');
+
+        if (isProdPreview === true) {
+            return new ProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
+        }
+
         return new OldAccountHomeInteractions(new MainDashboardPage());
     }
 }
@@ -79,6 +86,17 @@ class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
 
     public async openSpaceDashboard(name: string): Promise<void> {
         await this.dashboardPage.openSpace(name);
+    }
+}
+
+class ProdPreviewOldAccountHomeInteractions extends OldAccountHomeInteractions {
+
+    constructor(page: MainDashboardPage) {
+        super(page);
+    }
+
+    public async openSpaceDashboard(name: string): Promise<void> {
+        await this.dashboardPage.openSpaceProdPreview(name);
     }
 }
 

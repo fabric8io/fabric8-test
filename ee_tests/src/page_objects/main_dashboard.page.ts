@@ -27,8 +27,17 @@ export class MainDashboardPage extends AppPage {
   }
 
   async openSpace(spaceName: string): Promise<SpaceDashboardPage> {
-    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))));
+    await browser.wait(until.presenceOf(element(by.className('home-space-list-result'))), support.DEFAULT_WAIT);
     await element(by.className('home-space-list-result')).element(by.cssContainingText('a', spaceName)).click();
+
+    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    await spaceDashboard.open();
+    return Promise.resolve(spaceDashboard);
+  }
+
+  async openSpaceProdPreview(spaceName: string): Promise<SpaceDashboardPage> {
+    await browser.wait(until.presenceOf(element(by.className('f8-home-space-list-result'))), support.DEFAULT_WAIT);
+    await element(by.className('f8-home-space-list-result')).element(by.cssContainingText('a', spaceName)).click();
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();
