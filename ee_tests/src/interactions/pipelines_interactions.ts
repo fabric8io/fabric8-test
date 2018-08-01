@@ -183,7 +183,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 return;
             }
         );
-        await browser.wait(() => finished === true);
+        await browser.wait(() => finished === true, support.LONGER_WAIT, 'Script is finished');
         support.info('Script finished');
     }
 
@@ -213,7 +213,7 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGEST_WAIT);
+        }, support.LONGEST_WAIT, 'Pipeline is finished');
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
@@ -267,7 +267,7 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGEST_WAIT);
+        }, support.LONGEST_WAIT, 'Pipeline is finished');
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {

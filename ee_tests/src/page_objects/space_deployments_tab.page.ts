@@ -6,7 +6,8 @@ import { BaseElement } from '../ui';
 export class SpaceDeploymentsPage extends AppPage {
 
   async getDeployedApplications(): Promise<DeployedApplication[]> {
-    await browser.wait(until.visibilityOf(element(by.tagName('deployment-card-container'))), support.LONGER_WAIT);
+    await browser.wait(until.visibilityOf(element(by.tagName('deployment-card-container'))),
+      support.LONGER_WAIT, 'Element <deployment-card-container> is present');
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
     let applications = await elementFinders.map(finder => new DeployedApplication(finder));
@@ -14,7 +15,8 @@ export class SpaceDeploymentsPage extends AppPage {
   }
 
   async getResourceUsageData(): Promise<ResourceUsageData[]> {
-    await browser.wait(until.visibilityOf(element(by.tagName('resource-card'))), support.LONGER_WAIT);
+    await browser.wait(until.visibilityOf(element(by.tagName('resource-card'))),
+      support.LONGER_WAIT, 'Element <resource-card> is present');
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
     let data = await elementFinders.map(finder => new ResourceUsageData(finder));

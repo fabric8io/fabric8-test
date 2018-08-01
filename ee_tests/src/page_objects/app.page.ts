@@ -39,8 +39,8 @@ export class AppPage extends BasePage {
   }
 
   async ready() {
-    await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT);
-    await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT);
+    await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT, 'App tag is present');
+    await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT, 'Header is present');
     await this.header.ready();
   }
 
@@ -59,8 +59,7 @@ export class AppPage extends BasePage {
 
     support.debug('... waiting for the url to contain spacename: ', spaceName);
 
-    // TODO: make the timeout a config
-    await browser.wait(until.urlContains(spaceName), 10000);
+    await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();
@@ -82,8 +81,7 @@ export class AppPage extends BasePage {
 
     support.debug('... waiting for the url to contain spacename: ', spaceName);
 
-    // TODO: make the timeout a config
-    await browser.wait(until.urlContains(spaceName), 10000);
+    await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();

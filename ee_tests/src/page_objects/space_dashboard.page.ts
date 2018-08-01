@@ -4,8 +4,8 @@ import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { SpacePipelinePage } from './space_pipeline_tab.page';
-import { DEFAULT_WAIT } from '../support';
-import { FeatureLevel } from '../support/feature_level';
+import * as support from '../support';
+import { FeatureLevelUtils } from '../support/feature_level';
 
 // The main page that represents a Space
 export class SpaceDashboardPage extends SpaceAppPage {
@@ -105,12 +105,12 @@ export class SpaceDashboardPage extends SpaceAppPage {
 
   async addToSpace(): Promise<AddToSpaceDialog> {
     switch (browser.params.feature.level) {
-      case FeatureLevel.INTERNAL:
+      case FeatureLevelUtils.isInternal():
         await this.createAnApplicationButton.clickWhenReady();
         break;
-      case FeatureLevel.RELEASED:
-      case FeatureLevel.BETA:
-      case FeatureLevel.EXPERIMENTAL:
+      case FeatureLevelUtils.isExperimental():
+      case FeatureLevelUtils.isBeta():
+      case FeatureLevelUtils.isExperimental():
       default:
         await this.addToSpaceButton.clickWhenReady();
     }
@@ -197,7 +197,8 @@ export class AnalyticsCard extends BaseElement {
 
   async ready() {
     await super.ready();
-    await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))));
+    await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
+      support.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner');
   }
 
   public async getTotalDependenciesCount(): Promise<number> {
@@ -294,8 +295,10 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
   }
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
-    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))), DEFAULT_WAIT);
-    await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))), DEFAULT_WAIT);
+    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))),
+      support.DEFAULT_WAIT, 'Staleness of Loading text');
+    await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))),
+      support.DEFAULT_WAIT, 'Element with id spacehome-environments-list is present');
     let elementsFinders: ElementFinder[] =
       await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));

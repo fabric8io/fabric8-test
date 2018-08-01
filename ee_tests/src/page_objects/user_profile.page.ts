@@ -82,7 +82,8 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
-    await browser.wait(until.presenceOf(this.alertBox), support.LONG_WAIT);
+    await browser.wait(until.presenceOf(this.alertBox),
+      support.LONG_WAIT, 'Alert box is present');
     let alertText = await this.alertBox.getText();
 
     support.info('Alert text: ' + alertText);

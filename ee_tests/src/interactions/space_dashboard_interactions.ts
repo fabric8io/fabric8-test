@@ -122,7 +122,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
         await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
-        }, support.DEFAULT_WAIT);
+        }, support.DEFAULT_WAIT, 'Codebases are loaded');
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
         let githubName = browser.params.github.username;
