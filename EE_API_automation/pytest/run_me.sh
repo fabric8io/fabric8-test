@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -e
 # Do not reveal secrets
 set +x
 
