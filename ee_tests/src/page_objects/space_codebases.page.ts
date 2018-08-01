@@ -8,7 +8,8 @@ export class CodebasesPage extends AppPage {
   private readonly selectWorkspace = 'Select a Workspace';
 
   public async ready() {
-    await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))));
+    await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))),
+      support.DEFAULT_WAIT, 'Tag <codebases-item-workspaces> is present');
   }
 
   public async createWorkspace() {

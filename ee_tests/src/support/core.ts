@@ -533,7 +533,8 @@ export class WindowManager {
 
   async switchToWindow(expectedWindowCount: number, windowIndex: number) {
     await support.debug('Waiting for the specified number or windows to be present: ' + this.windowCount);
-    await browser.wait(this.windowCountCondition(expectedWindowCount), support.DEFAULT_WAIT);
+    await browser.wait(this.windowCountCondition(expectedWindowCount),
+      support.DEFAULT_WAIT, 'Browser has ' + expectedWindowCount + ' windows');
 
     await support.debug('Window changing to index ' + windowIndex);
     let handles = await browser.getAllWindowHandles();
