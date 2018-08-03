@@ -27,7 +27,7 @@
   "scripts": {
     "postinstall": "npm run webdriver:update",
     "image:build": "docker build -t fabric8-test:latest -f Dockerfile.builder .",
-    "image:start": "./local_cico_run_booster_tests.sh",
+    "image:start": "./cico_run_booster_tests.sh",
     "start": ". config/config.sh",
     "tsc": "tsc",
     "tscw": "tsc -w",

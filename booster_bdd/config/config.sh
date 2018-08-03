@@ -29,7 +29,7 @@ export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 
 if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; then
 	## Login to OSO to get OSO username and token
-	oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
+	/usr/bin/oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
 	if [ $? -gt 0 ]; then
 		echo "ERROR: Unable to login user $OSIO_USERNAME"
 		exit 1
@@ -37,22 +37,22 @@ if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; t
 
 	if [ -z "$OSO_USERNAME" ]; then
 		## OpenShift Online user's name (remove @ and following chars)
-		OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
+		OSO_USERNAME=$(/usr/bin/oc whoami | sed -e 's/@[^\@]*$//')
 		export OSO_USERNAME
 	fi
 
 	if [ -z "$OSO_TOKEN" ]; then
 		## OpenShift Online token
-		OSO_TOKEN=$(oc whoami -t)
+		OSO_TOKEN=$(/usr/bin/oc whoami -t)
 		export OSO_TOKEN
 	fi
 
 	if [ -z "$GITHUB_USERNAME" ]; then
 		## Make sure you are on the main project
-		oc project "$OSO_USERNAME"
+		/usr/bin/oc project "$OSO_USERNAME"
 
 		## Github username
-		GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
+		GITHUB_USERNAME=$(/usr/bin/oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
 		export GITHUB_USERNAME
 	fi
 fi
