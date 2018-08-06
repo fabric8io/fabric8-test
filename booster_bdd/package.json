@@ -26,7 +26,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "postinstall": "npm run webdriver:update",
-    "image:build": "docker build -t fabric8-test:latest -f Dockerfile.builder .",
+    "image:build": "docker build -t fabric8-booster-test:latest -f Dockerfile.builder .",
     "image:start": "./cico_run_booster_tests.sh",
     "start": ". config/config.sh",
     "tsc": "tsc",
