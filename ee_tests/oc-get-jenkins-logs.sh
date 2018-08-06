@@ -15,8 +15,5 @@ oc project $(oc projects -q | grep jenkins)
 echo --- List pods ---
 oc get pods 
 
-echo --- Get logs for pod ---
-oc logs -c content-repository-init $(oc get pods | grep -v slave |  awk '/jenkins/ {print $1}')
-
 
 
