@@ -1,7 +1,13 @@
 #!/bin/bash
 echo --- Get cluster for user ---
 
-export OC_CLUSTER_URL=$(curl -X GET --header 'Accept: application/json' "https://api.openshift.io/api/users?filter\[username\]=$1" | jq '.data[0].attributes.cluster')
+if [[ $1 = *"preview"* ]]; then
+  API_SERVER_URL="https://api.prod-preview.openshift.io"
+else
+  API_SERVER_URL="https://api.openshift.io"
+fi
+
+OC_CLUSTER_URL=$(curl -X GET --header 'Accept: application/json' "$API_SERVER_URL/api/users?filter\[username\]=$1" | jq '.data[0].attributes.cluster')
 OC_CLUSTER_URL=$(echo "${OC_CLUSTER_URL//\"/}")
 
 echo --- Using cluster $OC_CLUSTER_URL ---
