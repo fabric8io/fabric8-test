@@ -1,7 +1,7 @@
 #!/bin/bash
 
-##CONFIG=${1:-config}
-##CONFIG_FILE="config/$CONFIG.sh"
+CONFIG=${1:-config}
+CONFIG_FILE="config/$CONFIG.sh"
 
 function prepare_venv() {
 	python3 -m venv venv && source venv/bin/activate && python3 "$(which pip3)" install -r requirements.txt
@@ -9,8 +9,8 @@ function prepare_venv() {
 
 [ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
-##echo "Reading configuration from: $CONFIG_FILE"
-##source "$CONFIG_FILE"
+echo "Reading configuration from: $CONFIG_FILE"
+source "$CONFIG_FILE"
 
 if [ -z "$SCENARIO" ]; then
 	echo "Running all tests ..."
