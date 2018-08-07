@@ -108,8 +108,9 @@ export UI_HEADLESS=${UI_HEADLESS:-true}
 mkdir -p dist target
 rm -rf target/screenshots
 
-# We need to disable selinux for now, XXX
+# We need to disable selinux for now
 /usr/sbin/setenforce 0
+yum -y install docker 
 service docker start
 
 # Shutdown container if running
