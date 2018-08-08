@@ -18,8 +18,8 @@ export class MainDashboardPage extends AppPage {
       support.DEFAULT_WAIT, 'Recent Spaces is present');
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'My Work Items'))),
       support.DEFAULT_WAIT, 'My Work Items title is present');
-    await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Recent Active Pipelines'))),
-      support.DEFAULT_WAIT, 'Recent Active Pipelines title is present');
+    await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Recent Pipelines'))),
+      support.DEFAULT_WAIT, 'Recent Pipelines title is present');
   }
 
   async openUsingMenu() {
