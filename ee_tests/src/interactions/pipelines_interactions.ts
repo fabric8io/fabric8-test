@@ -173,7 +173,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
             support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
-        await support.windowManager.switchToMainWindow();
+        await support.windowManager.closeCurrentWindow();
     }
 
     private async showJenkinsLogDirectly() {

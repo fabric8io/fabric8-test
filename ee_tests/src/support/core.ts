@@ -524,11 +524,21 @@ export class WindowManager {
 
   async switchToLastWindow() {
     await this.switchToWindow(this.windowCount, this.windowCount - 1);
+    await this.checkWindowCount();
   }
 
   async switchToNewWindow() {
     this.windowCount++;
     await this.switchToWindow(this.windowCount, this.windowCount - 1);
+    await this.checkWindowCount();
+  }
+
+  async closeCurrentWindow() {
+    await support.debug('Closing current window');
+    await browser.close();
+    this.windowCount--;
+    await this.switchToMainWindow();
+    await this.checkWindowCount();
   }
 
   async switchToWindow(expectedWindowCount: number, windowIndex: number) {
@@ -541,6 +551,13 @@ export class WindowManager {
     await support.debug('Switching to handle: ' + handles[windowIndex]);
     await browser.switchTo().window(handles[windowIndex]);
     await support.debug('Window changed to index ' + windowIndex);
+  }
+
+  async checkWindowCount() {
+    let handles = await browser.getAllWindowHandles();
+    if (this.windowCount !== handles.length) {
+      throw `Unexpected window count. Expected: ${this.windowCount}, real: ${handles.length}`;
+    }
   }
 
   windowCountCondition(count: number) {
