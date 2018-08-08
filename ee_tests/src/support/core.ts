@@ -188,7 +188,7 @@ export class SpaceName {
     const minute = (d.getMinutes() < 10) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
     const randomNumber = Math.round(Math.random() * 10000);
     const spaceName = `e2e-${month}${day}-${hour}${minute}-${randomNumber}`;
-    info('New space name: ', spaceName);
+    support.info('New space name: ', spaceName);
 
     SpaceName.spaceName = spaceName;
     return SpaceName.spaceName;
@@ -240,7 +240,7 @@ export function updateCurrentRepoName(repoName: string) {
 }
 
 export async function sleep(ms: number) {
-  info('Sleeping for ' + ms + ' ms...');
+  support.info('Sleeping for ' + ms + ' ms...');
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -256,7 +256,7 @@ export async function writeScreenshot(filename: string) {
   let stream = createWriteStream(filename);
   stream.write(new Buffer(png, 'base64'));
   stream.end();
-  info(`Saved screenshot to: ${filename}`);
+  support.debug(`Saved screenshot to: ${filename}`);
 }
 
 /**
@@ -267,40 +267,19 @@ export async function writePageSource(filename: string) {
   let stream = createWriteStream(filename);
   stream.write(new Buffer(txt));
   stream.end();
-  info(`Saved page source to: ${filename}`);
+  support.debug(`Saved page source to: ${filename}`);
 }
 
 /**
  * Store the page source
  */
 export async function writeText(filename: string, text: string) {
-  info(`Saving text to: ${filename}`);
+  support.info(`Saving text to: ${filename}`);
   let stream = createWriteStream(filename);
   stream.write(new Buffer(text));
   stream.end();
-  info(`Saved text to: ${filename}`);
+  support.debug(`Saved text to: ${filename}`);
 }
-
-function timestamp(): string {
-  let date = new Date();
-  let time = date.toLocaleTimeString('en-US', { hour12: false });
-  let ms = (date.getMilliseconds() + 1000).toString().substr(1);
-  return `${time}.${ms}`;
-}
-
-function debugEnabled(...msg: any[]) {
-  // tslint:disable-next-line:no-console
-  console.log(`[${timestamp()}]:`, ...msg);
-}
-
-function debugNoop(...msg: any[]) { }
-
-export function info(...msg: any[]) {
-  // tslint:disable-next-line:no-console
-  console.info(`[${timestamp()}]:`, ...msg);
-}
-
-export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
 
 /**
  * Returns the entity name of the current user which is used in the URL after, say,

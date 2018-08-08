@@ -56,24 +56,24 @@ export class QuickStartWizard extends Wizard {
 
   async ready() {
     await super.ready();
-    this.debug(' .... wizard ', 'ok');
+    this.debug(' .wizard ', 'ok');
     await this.footer.ready();
-    this.debug(' .... footer ', 'ok');
+    this.debug(' .footer ', 'ok');
 
     await this.filterTextInput.ready();
     await this.projectSelector.ready();
-    this.debug(' .... selection ', 'ok');
+    this.debug(' .selection ', 'ok');
     await this.projectCards.ready();
-    this.debug(' .... cards ', 'ok');
+    this.debug(' .cards ', 'ok');
   }
 
   async findCard(name: string): Promise<Clickable> {
-    debug('.... finding card', name);
+    debug('.finding card', name);
     let cardFinder = by.cssContainingText(PROJECT_CARD, name);
     let elem = this.projectSelector.element(cardFinder);
     let card = new Clickable(elem, name);
     await card.ready();
-    debug('.... found card', name);
+    debug('.found card', name);
     return card;
   }
 
@@ -214,7 +214,7 @@ export class AddToSpaceDialog extends ModalDialog {
   async importExistingCode(details: RepoDetail) {
     await this.importExistingCodeButton.clickWhenReady();
     await this.importCodeWizard.ready();
-    debug('... going to import repo', details.repositories);
+    debug('going to import repo', details.repositories);
     await this.importCodeWizard.importCode(details);
   }
 

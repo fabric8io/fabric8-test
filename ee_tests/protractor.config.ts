@@ -139,7 +139,7 @@ let conf: Config = {
 
     let genericWait = browser.wait;
 
-    browser.wait = function (predicate, timeout = support.DEFAULT_WAIT, message) {
+    browser.wait = function (predicate: any, timeout = support.DEFAULT_WAIT, message: string) {
       return genericWait.apply(browser, [predicate, timeout, message]);
     };
   },

@@ -130,7 +130,7 @@ export class LauncherSection extends BaseElement {
 
   async open() {
     await this.ready();
-    this.log('Opened');
+    this.info('Opened');
     return this;
   }
 
@@ -140,7 +140,7 @@ export class LauncherSection extends BaseElement {
       'Select Runtime'
     );
     await selection.clickWhenReady();
-    this.log('Selected runtime: ' + name);
+    this.info('Selected runtime: ' + name);
   }
 
   async selectMission(name: string) {
@@ -149,7 +149,7 @@ export class LauncherSection extends BaseElement {
       'Select Mission'
     );
     await selection.clickWhenReady();
-    this.log('Selected mission: ' + name);
+    this.info('Selected mission: ' + name);
   }
 
   async selectPipeline(name: string) {
@@ -162,13 +162,13 @@ export class LauncherSection extends BaseElement {
       'Select Pipeline'
     );
     await selection.clickWhenReady();
-    this.log('Selected pipeline: ' + name);
+    this.info('Selected pipeline: ' + name);
   }
 
   async selectGithubOrganization(name: string) {
     await this.ghOrgSelect.clickWhenReady();
     await this.ghOrgItem(name).clickWhenReady();
-    this.log('Selected GH Organization: ' + name);
+    this.info('Selected GH Organization: ' + name);
   }
 
   async setUpApplication(): Promise<LauncherSetupAppPage> {

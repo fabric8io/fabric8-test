@@ -55,9 +55,9 @@ export class AppPage extends BasePage {
     await this.noThanksButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
-    support.debug('... current url:', url);
+    support.debug('current url:', url);
 
-    support.debug('... waiting for the url to contain spacename: ', spaceName);
+    support.debug('waiting for the url to contain spacename: ', spaceName);
 
     await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
 
@@ -77,9 +77,9 @@ export class AppPage extends BasePage {
     await this.cancelCreateAppButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
-    support.debug('... current url:', url);
+    support.debug('current url:', url);
 
-    support.debug('... waiting for the url to contain spacename: ', spaceName);
+    support.debug('waiting for the url to contain spacename: ', spaceName);
 
     await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
 
@@ -106,9 +106,9 @@ export class AppPage extends BasePage {
 
   async gotoUserProfile(): Promise<UserProfilePage> {
     await this.ready();
-    support.debug('... Select "Profile" menu item');
+    support.debug('Select "Profile" menu item');
     await this.header.profileDropdown.selectProfile();
-    support.debug('... Select "Profile" menu item - OK');
+    support.debug('Select "Profile" menu item - OK');
 
     let page = new UserProfilePage();
     await page.open();
@@ -117,9 +117,9 @@ export class AppPage extends BasePage {
 
   async gotoUserSettings(): Promise<UserSettingsPage> {
     await this.ready();
-    support.debug('... Select "Settings" menu item');
+    support.debug('Select "Settings" menu item');
     await this.header.profileDropdown.selectSettings();
-    support.debug('... Select "Settings" menu item - OK');
+    support.debug('Select "Settings" menu item - OK');
 
     let page = new UserSettingsPage();
     await page.open();
@@ -129,9 +129,9 @@ export class AppPage extends BasePage {
   async logout() {
     await this.ready();
     await browser.wait(until.invisibilityOf(this.successAlert));
-    support.debug('... Selecting logout');
+    support.debug('Selecting logout');
     await this.header.profileDropdown.selectLogOut();
-    support.debug('... Selecting logout', 'OK');
+    support.debug('Selecting logout', 'OK');
 
     // ensure there is no f8-app tag after logout
     let untilNoAppTag = until.not(until.presenceOf(this.appTag));
@@ -140,14 +140,14 @@ export class AppPage extends BasePage {
     // make sure we are back to the baseUrl
     let baseUrl = browser.baseUrl;
 
-    support.debug('... Wait for base url:', baseUrl);
+    support.debug('Wait for base url:', baseUrl);
     let untilBackToBaseUrl = until.or(
       until.urlIs(baseUrl),
       until.urlIs(`${baseUrl}/`)
     );
 
     await browser.wait(untilBackToBaseUrl, 5000, `Url is not ${baseUrl}`);
-    support.debug('... Wait for base url', 'OK');
+    support.debug('Wait for base url', 'OK');
 
     return new LandingPage().open();
   }

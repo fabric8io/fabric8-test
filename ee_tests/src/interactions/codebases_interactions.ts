@@ -47,6 +47,7 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
     public async abstract createAndOpenWorkspace(): Promise<void>;
 
     public async openCodebasesPage(mode: PageOpenMode): Promise<void> {
+        support.info('Open codebases page');
         if (mode === PageOpenMode.UseMenu) {
             let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
             await dashboardInteractions.openSpaceDashboardPage(mode);
@@ -65,6 +66,7 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
 class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
     public async createWorkspace(): Promise<void> {
+        support.info('Create and open workspace');
         await this.page.createWorkspace();
     }
 

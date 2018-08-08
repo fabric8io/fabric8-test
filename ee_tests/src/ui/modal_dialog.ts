@@ -17,7 +17,7 @@ export class ModalDialog extends BaseElement {
 
   async open() {
     await this.ready();
-    this.log('Opened');
+    this.debug('Opened');
     return this;
   }
 }
