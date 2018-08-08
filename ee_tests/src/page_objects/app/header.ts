@@ -1,5 +1,4 @@
 import { ElementFinder } from 'protractor';
-import * as support from '../../support';
 import { BaseElement } from '../../ui/base.element';
 import { Dropdown } from '../../ui/dropdown';
 
@@ -12,10 +11,8 @@ export class Header extends BaseElement {
   }
 
   async ready() {
-    support.debug('... check if Header is ready');
     await this.profileDropdown.ready();
     await this.recentItemsDropdown.ready();
-    support.debug('... check if Header is ready - OK');
   }
 }
 

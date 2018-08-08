@@ -113,6 +113,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async openSpaceDashboardPage(mode: PageOpenMode): Promise<void> {
+        support.info('Open space dashboard for space ' + this.spaceName);
         if (mode === PageOpenMode.UseMenu) {
             let accountHomeInteractions = AccountHomeInteractionsFactory.create();
             await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
@@ -124,27 +125,32 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async openCodebasesPage(): Promise<void> {
+        support.info('Open codebases page');
         await browser.executeScript('window.scrollTo(0,0);');
         await this.spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
     }
 
     public async openPipelinesPage(): Promise<void> {
+        support.info('Open pipelines page');
         await this.spaceDashboardPage.getPipelinesCard().then(async function (card) {
             await card.openPipelinesPage();
         });
     }
 
     public async createQuickstart(name: string, strategy: string): Promise<void> {
+        support.info(`Create booster ${name} with strategy ${strategy}`);
         let wizard = await this.spaceDashboardPage.addToSpace();
         await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
     }
 
     public async importRepo(appName: string, repoName: string, strategy: string): Promise<void> {
+        support.info(`Import existing repository ${repoName} with strategy ${strategy}`);
         let wizard = await this.spaceDashboardPage.addToSpace();
         await wizard.importProjectByLauncher(appName, repoName, strategy);
     }
 
     public async verifyCodebases(repoName: string): Promise<void> {
+        support.info('Verify codebase ' + repoName);
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
         await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
@@ -158,6 +164,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyPipelines(count: number): Promise<Pipeline[]> {
+        support.info('Verify pipelines');
         let pipelinesCard = await this.spaceDashboardPage.getPipelinesCard();
         expect(await pipelinesCard.getCount()).toBe(count, 'number of pipelines on page');
 
@@ -168,12 +175,14 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
     public async verifyPipeline(pipeline: Pipeline,
         application: string, buildNumber: number, buildStatus: BuildStatus): Promise<void> {
+            support.info('Verify pipeline for application ' + await pipeline.getApplication());
         expect(pipeline.getApplication()).toBe(application, 'application name on pipeline');
         expect(pipeline.getStatus()).toBe(buildStatus, 'build status');
         expect(pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
     }
 
     public async verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]> {
+        support.info('Verify deployed applications');
         let deploymentsCard = await this.spaceDashboardPage.getDeploymentsCard();
 
         let applications = await deploymentsCard.getApplications();
@@ -182,11 +191,13 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyDeployedApplication(application: DeployedApplicationInfo, name: string): Promise<void> {
+        support.info('Verify deployed application ' + await application.getName());
         expect(await application.getName()).toBe(name, 'deployed application name');
     }
 
     public async verifyDeployedApplicationStage(
         application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
+            support.info('Verify deployed application ' + await application.getName() + ' on stage');
             if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
                 expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
                 await application.openStageLink();
@@ -196,6 +207,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
     public async verifyDeployedApplicationRun(
         application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
+        support.info('Verify deployed application ' + await application.getName() + ' on run');
         if (ReleaseStrategy.RUN === this.strategy) {
             expect(await application.getRunVersion()).toBe(version, 'deployed application run version');
             await application.openRunLink();
@@ -204,6 +216,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyAnalytics(): Promise<void> {
+        support.info('Verify stack report');
         let analyticsCard = await this.spaceDashboardPage.getAnalyticsCard();
         let totalCount = await analyticsCard.getTotalDependenciesCount();
         let analyzedCount = await analyticsCard.getAnalyzedDependenciesCount();
@@ -216,6 +229,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyWorkItems(): Promise<void> {
+        support.info('Verify work items');
         // no work items card exptected
         await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
             expect(items.length).toBe(0);
@@ -223,6 +237,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     private async verifyLink(testCallback: () => void, environment: string) {
+        support.info('Verify link on ' + environment + ' environment');
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT, `url contains ${environment}`);
         await support.screenshotManager.writeScreenshot(environment);

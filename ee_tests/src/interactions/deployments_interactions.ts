@@ -85,7 +85,7 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
     }
 
     public async openDeploymentsPage(mode: PageOpenMode) {
-        support.info('Verifying deployments page');
+        support.info('Open deployments page');
         if (mode === PageOpenMode.UseMenu) {
             let pipelinesInteractions =
                 PipelinesInteractionsFactory.create(this.strategy, this.spaceName);
@@ -98,19 +98,19 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
     }
 
     public async verifyApplications(count: number): Promise<DeployedApplication[]> {
-        support.info('Verifying deployed applications');
+        support.info('Verify deployed applications');
         let applications = await this.spaceDeploymentsPage.getDeployedApplications();
         expect(applications.length).toBe(count, 'number of deployed applications');
         return Promise.resolve(applications);
     }
 
     public async verifyApplication(application: DeployedApplication, name: string): Promise<void> {
-        support.info('Verifying deployed application');
+        support.info('Verify deployed application');
         expect(application.getName()).toBe(name, 'application name');
     }
 
     public async verifyResourceUsage() {
-        support.info('Verifying resources usage');
+        support.info('Verify resources usage');
         let data = await this.spaceDeploymentsPage.getResourceUsageData();
         expect(data.length).toBe(2, 'there should be stage and prod environment');
         await this.verifyResourceUsageInternal(data);
@@ -131,7 +131,7 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
 class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<DeployedApplicationEnvironment[]> {
-        support.info('Verifying application\'s environments');
+        support.info('Verify application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(0, 'number of environments');
         return Promise.resolve(environments);
@@ -155,7 +155,7 @@ class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteract
 class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleaseStrategy {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<DeployedApplicationEnvironment[]> {
-        support.info('Verifying application\'s environments');
+        support.info('Verify application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(2, 'number of environments');
         return Promise.resolve(environments);
@@ -175,7 +175,7 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
         status: DeploymentStatus, version: string, podsCount: number): Promise<void> {
         let environmentName = await environment.getEnvironmentName();
 
-        support.info(`Verifying application\'s ${environmentName} environment`);
+        support.info(`Verify application\'s ${environmentName} environment`);
 
         await browser.wait(async () => {
             return await environment.hasRunningPod();
@@ -193,7 +193,7 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
     }
 
     protected async verifyResourceUsageDataInternal(data: ResourceUsageData, environmentName: string) {
-        support.info(`Verifying ${environmentName} environment resource usage`);
+        support.info(`Verify ${environmentName} environment resource usage`);
 
         let stageDataItems = await data.getItems();
         expect(stageDataItems.length).toBe(2, `there should be 2 resource usage data items for ${environmentName}`);

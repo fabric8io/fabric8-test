@@ -58,7 +58,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async openPipelinesPage(mode: PageOpenMode) {
-        support.info('Verifying pipelines page');
+        support.info('Open pipelines page');
 
         if (mode === PageOpenMode.UseMenu) {
             let dashboardInteractions =
@@ -72,11 +72,12 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async showDeployments(): Promise<void> {
+        support.info('Show Deployments page');
         await this.spacePipelinePage.deploymentsOption.clickWhenReady();
     }
 
     public async verifyPipelines(count: number): Promise<PipelineDetails[]> {
-        support.info('Verifying pipelines');
+        support.info('Verify pipelines');
         let pipelines = await this.spacePipelinePage.getPipelines();
         expect(pipelines.length).toBe(count, 'number of pipelines');
 
@@ -85,7 +86,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
     public async verifyPipelineInfo(pipeline: PipelineDetails,
             applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
-        support.info('Verifying pipeline build info');
+        support.info('Verify pipeline build info');
 
         expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
         expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
@@ -152,7 +153,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus) {
-        support.info('Check build status');
+        support.info('Verify build result info');
         expect(await pipeline.getStatus()).toBe(expectedStatus, 'build status');
     }
 
@@ -198,7 +199,7 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 return true;
             } else {
-                support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('Current pipeline status: ' + currentStatus);
                 await browser.sleep(5000);
                 return false;
             }
@@ -239,19 +240,17 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
             let promoted = false;
-            support.debug('Before get status');
             let currentStatus = await pipeline.getStatus();
-            support.debug('After get status');
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
-                support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('Current pipeline status: ' + currentStatus);
                 if (!promoted && await pipeline.isInputRequired()) {
-                    support.debug('Input is required');
+                    support.info('Input is required');
                     await pipeline.promote();
                     promoted = true;
-                    support.debug('Promoted');
+                    support.info('Promoted');
                 }
                 await browser.sleep(5000);
                 return false;

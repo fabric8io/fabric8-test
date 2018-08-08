@@ -12,6 +12,5 @@ export class TextInput extends BaseElement {
       await this.ready();
       await this.sendKeys(text);
     });
-    this.log('Entered Text');
   }
 }

@@ -9,24 +9,18 @@ export enum PageOpenMode {
 
 export abstract class BasePage {
 
-  name: string = '...';
-
-  // Use undefined to indicate the url has not been set
-  // Will use be in openInBrowser to throw error if the caller forgot
-  // to set the url. Need to do this because '' is a valid url and
-  // refers to the baseUrl
-
   protected url: string | undefined;
 
   constructor(url?: string) {
     this.url = url;
-    this.debug(`url: '${url}'`);
   }
 
   async ready() {
   }
 
   async open(mode: PageOpenMode = PageOpenMode.AlreadyOpened): Promise<BasePage> {
+
+    support.debug(`Open page ${this.constructor.name} in ${PageOpenMode[mode]} mode`);
 
     if (mode === PageOpenMode.RefreshBrowser) {
       await this.openInBrowser();
@@ -37,7 +31,8 @@ export abstract class BasePage {
     }
 
     await this.ready();
-    this.log('Opened');
+
+    support.debug(`Page ${this.constructor.name} opened`);
     return this;
   }
 
@@ -50,24 +45,7 @@ export abstract class BasePage {
       throw Error('Trying to open and undefined url');
     }
 
-    this.log('Opening', this.url);
-    let currentUrl = await browser.getCurrentUrl();
-    this.debug('at:', currentUrl);
-
-    this.debug(`goto: '${this.url}'`);
+    support.debug('Page URL: ' + this.url);
     await browser.get(this.url);
-
-    let urlNow = await browser.getCurrentUrl();
-    this.debug('now:', urlNow);
-  }
-
-  log(action: string, ...msg: string[]) {
-    let className = this.constructor.name;
-    support.info(`${action}: ${className}('${this.name}')`, ...msg);
-  }
-
-  debug(context: string, ...msg: string[]) {
-    let className = this.constructor.name;
-    support.debug(`... ${className}('${this.name}'): ${context}`, ...msg);
   }
 }

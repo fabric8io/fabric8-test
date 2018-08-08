@@ -76,7 +76,7 @@ class WorkItemQuickAdd extends Clickable {
     await this.cancelButton.clickWhenReady();
 
     // TODO choose the type of item
-    this.log('New WorkItem', `${title} added`);
+    this.info('New WorkItem', `${title} added`);
   }
 }
 
@@ -112,7 +112,7 @@ class PlannerTab extends SpaceTabPage {
   }
 
   async createWorkItem(item: WorkItem) {
-    this.debug('create item', JSON.stringify(item));
+    support.debug('create item', JSON.stringify(item));
     await this.workItemList.quickAdd.createWorkItem(item);
   }
 }

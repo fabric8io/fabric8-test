@@ -1,6 +1,6 @@
 import { browser, by, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { BaseElement, Clickable } from './base.element';
-import { debug, info } from '../support/core';
+import { debug } from '../support/logging';
 
 export class Dropdown extends BaseElement {
 
@@ -11,7 +11,7 @@ export class Dropdown extends BaseElement {
   }
 
   async select(text: string) {
-    info('Select menu item ' + text);
+    debug('Select menu item ' + text);
     await this.toggle();
     await browser.wait(until.presenceOf(this.menu));
     await this.item(text).select();
@@ -47,7 +47,7 @@ class DropdownItem extends BaseElement {
   }
 
   async select() {
-    debug('Select menu item');
+    debug('Select menu item ');
     await this.clickWhenReady();
   }
 }

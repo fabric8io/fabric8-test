@@ -27,11 +27,11 @@ export async function runScript(
     script.stderr.pipe(tee.stdin);
 
     tee.stdout.on('data', (data: any) => {
-        support.info(data.toString());
+        support.script(data.toString());
     });
 
     tee.stderr.on('data', (data: any) => {
-        support.info(data.toString());
+        support.error(data.toString());
     });
 
     tee.on('exit', function (code: number, signal: any) {

@@ -54,9 +54,9 @@ export class CleanupUserEnvPage extends AppPage {
 
   async ready() {
     await super.ready();
-    support.debug('... checking if erase button is there');
+    support.debug('checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
-    support.debug('... checking if erase button is there - OK');
+    support.debug('checking if erase button is there - OK');
   }
 
   /* An intermittent error is resulting in some user enviroment resets failing
@@ -106,15 +106,15 @@ export class EditUserProfilePage extends AppPage {
 
   async gotoResetEnvironment() {
     await this.ready();
-    support.debug('... going to click', 'Reset Environment');
+    support.debug('going to click', 'Reset Environment');
     await browser.executeScript('arguments[0].scrollIntoView()', this.resetEnvButton.getWebElement());
     await this.resetEnvButton.clickWhenReady();
-    support.debug('... going to click', 'Reset Environment', 'OK');
+    support.debug('going to click', 'Reset Environment', 'OK');
 
     let page = new CleanupUserEnvPage();
-    support.debug('... going to open: CleanupUserEnvPage');
+    support.debug('going to open: CleanupUserEnvPage');
     await page.open();
-    support.debug('... going to open: CleanupUserEnvPage - OK');
+    support.debug('going to open: CleanupUserEnvPage - OK');
     return page;
   }
 
