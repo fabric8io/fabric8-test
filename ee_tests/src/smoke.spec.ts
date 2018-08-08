@@ -82,7 +82,7 @@ describe('e2e_smoketest', () => {
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */
-    await support.windowManager.switchToMainWindow();
+    await support.windowManager.closeCurrentWindow();
     let workspaces = await codebasesInteractions.getWorkspaces();
     expect(workspaces.length).toBe(1);
   });

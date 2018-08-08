@@ -190,7 +190,6 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
             if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
                 expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
                 await application.openStageLink();
-                await support.windowManager.switchToNewWindow();
                 await this.verifyLink(testCallback, 'stage');
             }
         }
@@ -200,7 +199,6 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         if (ReleaseStrategy.RUN === this.strategy) {
             expect(await application.getRunVersion()).toBe(version, 'deployed application run version');
             await application.openRunLink();
-            await support.windowManager.switchToLastWindow();
             await this.verifyLink(testCallback, 'run');
         }
     }
@@ -225,6 +223,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     private async verifyLink(testCallback: () => void, environment: string) {
+        await support.windowManager.switchToNewWindow();
         await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT, `url contains ${environment}`);
         await support.screenshotManager.writeScreenshot(environment);
 
@@ -233,7 +232,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
         await testCallback();
 
-        await support.windowManager.switchToMainWindow();
+        await support.windowManager.closeCurrentWindow();
     }
 }
 
