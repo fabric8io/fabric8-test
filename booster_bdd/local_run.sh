@@ -17,7 +17,7 @@ if [ -z "$SCENARIO" ]; then
 	export feature_list=test-scenarios/feature_list
 	cat test-scenarios/*.test >$feature_list
 else
-	echo "Runnint test: $SCENARIO ..."
+	echo "Running test: $SCENARIO ..."
 	export feature_list=test-scenarios/$SCENARIO.test
 fi
 
