@@ -24,6 +24,7 @@ class Pipeline(object):
 
         self.headers = {'Authorization': self.authHeader}
         self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
+        print ('Pipeline URL = {}'.format(self.urlString))
 
     def buildStatus(self, sleepTimer, maxTries, expectedBuildStatus,
                     expectedAnnotation=None):

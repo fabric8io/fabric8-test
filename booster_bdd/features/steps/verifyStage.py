@@ -6,7 +6,7 @@ from pyshould import should
 
 @given(u'I have verified a booster\'s pipeline has completed')
 def given_pipeline_completed(_context):
-    print('Attempting to use query for running Pipeline...')
+    print('Attempting to use query for running app on Stage...')
     global stage
     stage = Stage()
 
