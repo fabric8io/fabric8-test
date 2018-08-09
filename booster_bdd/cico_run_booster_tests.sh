@@ -25,6 +25,7 @@ if [ -e "../jenkins-env" ]; then
     |WIT_API|\
     |AUTH_API|\
     |OSO_CLUSTER_ADDRESS|\
+    |OSO_USERNAME|\
     |OSIO_USERNAME|\
     |OSIO_PASSWORD|\
     |GITHUB_USERNAME|\
@@ -103,6 +104,9 @@ export REPORT_DIR=${REPORT_DIR:-target}
 
 ## 'true' if the UI parts of the test suite are to be run in headless mode (default value is 'true')
 export UI_HEADLESS=${UI_HEADLESS:-true}
+
+export OSO_USERNAME=$OSIO_USERNAME
+
 
 # If target did exist, remove artifacts from previous run
 mkdir -p dist target
