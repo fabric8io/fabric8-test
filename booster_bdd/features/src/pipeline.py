@@ -42,6 +42,9 @@ class Pipeline(object):
             try:
                 print('Making request to check for the build status...')
                 r = requests.get(self.urlString, headers=self.headers)
+
+                print ('Build status response = {}'.format(r.text))
+
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 
