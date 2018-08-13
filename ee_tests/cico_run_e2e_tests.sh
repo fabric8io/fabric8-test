@@ -107,9 +107,8 @@ fi
 
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
-rsync --password-file=../artifacts.key -PHva --relative ./${ARTIFACTS_DIR}  devtools@artifacts.ci.centos.org::devtools/
+rsync --password-file=../artifacts.key -qPHva --relative ./${ARTIFACTS_DIR} devtools@artifacts.ci.centos.org::devtools/
 echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/${ARTIFACTS_DIR}"
-
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
