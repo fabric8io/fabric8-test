@@ -241,9 +241,10 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT, `url contains ${environment}`);
 
-        await browser.wait(
-            until.stalenessOf(element(by.cssContainingText('h1', 'Application is not available'))),
-            support.LONGER_WAIT);
+        await browser.wait(async () => {
+            await browser.refresh();
+            return ! await element(by.cssContainingText('h1', 'Application is not available')).isPresent();
+        }, support.LONGER_WAIT, 'Application takes more than 10 minutes to start');
 
         await support.screenshotManager.writeScreenshot(environment);
 
