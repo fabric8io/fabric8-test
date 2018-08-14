@@ -1,7 +1,7 @@
 import { browser }  from 'protractor';
 import * as support from './support';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
-import { LoginInteraction } from './interactions/login_interactions';
+import { LoginInteractionsFactory } from './interactions/login_interactions';
 
 describe('openshift.io End-to-End POC test - Scenario - Login user: ', function () {
 
@@ -11,9 +11,9 @@ describe('openshift.io End-to-End POC test - Scenario - Login user: ', function 
 
   it("should perform Burr's demo - setup", async () => {
 
-    let login = new LoginInteraction();
     let dashboardPage: MainDashboardPage;
-    await login.run();
+    let loginInteractions = LoginInteractionsFactory.create();
+    await loginInteractions.login();
     dashboardPage = new MainDashboardPage();
     support.debug('>>> Login & wait for dashboard - OK');
 
