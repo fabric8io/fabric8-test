@@ -240,6 +240,11 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         support.info('Verify link on ' + environment + ' environment');
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT, `url contains ${environment}`);
+
+        await browser.wait(
+            until.stalenessOf(element(by.cssContainingText('h1', 'Application is not available'))),
+            support.LONGER_WAIT);
+
         await support.screenshotManager.writeScreenshot(environment);
 
         let currentURL = await browser.getCurrentUrl();
