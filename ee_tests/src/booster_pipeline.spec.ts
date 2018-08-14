@@ -2,7 +2,7 @@ import { browser, by, element, ElementFinder } from 'protractor';
 
 import * as support from './support';
 import { Button } from './ui/button';
-import { LoginInteraction } from './interactions/login_interactions';
+import { LoginInteractionsFactory } from './interactions/login_interactions';
 
 import { SpacePipelinePage } from './page_objects/space_pipeline_tab.page';
 import { MainDashboardPage } from './page_objects/main_dashboard.page';
@@ -41,8 +41,8 @@ describe('Creating new quickstart in OSIO', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new LoginInteraction();
-    await login.run();
+    let loginInteractions = LoginInteractionsFactory.create();
+    await loginInteractions.login();
     dashboardPage = new MainDashboardPage();
   });
 

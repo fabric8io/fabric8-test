@@ -4,7 +4,7 @@ import * as support from './support';
 import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
-import { LoginInteraction } from './interactions/login_interactions';
+import { LoginInteractionsFactory } from './interactions/login_interactions';
 import { PipelinesInteractionsFactory } from './interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
@@ -52,8 +52,8 @@ describe('e2e_smoketest', () => {
 
   it('login', async () => {
     support.specTitle('Login');
-    let login = new LoginInteraction();
-    await login.run();
+    let loginInteractions = LoginInteractionsFactory.create();
+    await loginInteractions.login();
   });
 
   it('feature_level', async () => {

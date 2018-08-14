@@ -1,5 +1,5 @@
 import { browser, ExpectedConditions as until, Key, protractor } from 'protractor';
-import { LoginInteraction } from '../interactions/login_interactions';
+import { LoginInteractionsFactory } from '../interactions/login_interactions';
 import * as support from '../support';
 import { Quickstart } from '../support/quickstart';
 import { Button } from '../ui/button';
@@ -83,8 +83,8 @@ describe('Creating new Che workspace and edit in OSIO', () => {
 
   beforeEach(async () => {
     await support.desktopTestSetup();
-    let login = new LoginInteraction();
-    await login.run();
+    let loginInteractions = LoginInteractionsFactory.create();
+    await loginInteractions.login();
     dashboardPage = new MainDashboardPage();
 
     let userProfilePage = await dashboardPage.gotoUserProfile();

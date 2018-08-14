@@ -7,6 +7,7 @@ import { CleanupUserEnvPage } from '../page_objects/user_profile.page';
 import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { AppPage } from '../page_objects/app.page';
 import * as support from '../support';
+import { LandingPage } from '../..';
 
 export abstract class AccountHomeInteractionsFactory {
 
@@ -19,11 +20,19 @@ export abstract class AccountHomeInteractionsFactory {
         let url: string = browser.params.target.url;
         let isProdPreview = url.includes('prod-preview');
 
-        if (isProdPreview === true) {
-            return new ProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
+        if (url.includes('localhost')) {
+            if (isProdPreview === true) {
+                return new LocalProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
+            } else {
+                return new LocalOldAccountHomeInteractions(new MainDashboardPage());
+            }
+        } else {
+            if (isProdPreview === true) {
+                return new ProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
+            } else {
+                return new OldAccountHomeInteractions(new MainDashboardPage());
+            }
         }
-
-        return new OldAccountHomeInteractions(new MainDashboardPage());
     }
 }
 
@@ -38,6 +47,8 @@ export interface AccountHomeInteractions {
     resetEnvironment(): void;
 
     getToken(): Promise<string>;
+
+    logout(): Promise<void>;
 
     openSpaceDashboard(name: string): void;
 }
@@ -81,6 +92,12 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         let editProfile = await userProfile.gotoEditProfile();
         return editProfile.getToken();
     }
+
+    public async logout(): Promise<void> {
+        let page = new AppPage();
+        await page.logout();
+        await new LandingPage().open();
+    }
 }
 
 class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
@@ -103,6 +120,13 @@ class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
     }
 }
 
+class LocalOldAccountHomeInteractions extends OldAccountHomeInteractions {
+    public async logout(): Promise<void> {
+        let page = new AppPage();
+        await page.logout();
+    }
+}
+
 class ProdPreviewOldAccountHomeInteractions extends OldAccountHomeInteractions {
 
     constructor(page: MainDashboardPage) {
@@ -112,6 +136,18 @@ class ProdPreviewOldAccountHomeInteractions extends OldAccountHomeInteractions {
     public async openSpaceDashboard(name: string): Promise<void> {
         support.info('Open space dashboard for space ' + name);
         await this.dashboardPage.openSpaceProdPreview(name);
+    }
+}
+
+class LocalProdPreviewOldAccountHomeInteractions extends ProdPreviewOldAccountHomeInteractions {
+
+    constructor(page: MainDashboardPage) {
+        super(page);
+    }
+
+    public async logout(): Promise<void> {
+        let page = new AppPage();
+        await page.logout();
     }
 }
 

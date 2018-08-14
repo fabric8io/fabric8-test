@@ -5,7 +5,6 @@ import { Button } from '../ui/button';
 import { TextInput } from '../ui/text_input';
 
 import { BasePage } from './base.page';
-import { LandingPage } from './landing.page';
 import { Header } from './app/header';
 
 export class AppPage extends BasePage {
@@ -127,31 +126,9 @@ export class AppPage extends BasePage {
   }
 
   async logout() {
-    await this.ready();
-    await browser.wait(until.invisibilityOf(this.successAlert));
-    support.debug('Selecting logout');
     await this.header.profileDropdown.selectLogOut();
-    support.debug('Selecting logout', 'OK');
-
-    // ensure there is no f8-app tag after logout
-    let untilNoAppTag = until.not(until.presenceOf(this.appTag));
-    await browser.wait(untilNoAppTag);
-
-    // make sure we are back to the baseUrl
-    let baseUrl = browser.baseUrl;
-
-    support.debug('Wait for base url:', baseUrl);
-    let untilBackToBaseUrl = until.or(
-      until.urlIs(baseUrl),
-      until.urlIs(`${baseUrl}/`)
-    );
-
-    await browser.wait(untilBackToBaseUrl, 5000, `Url is not ${baseUrl}`);
-    support.debug('Wait for base url', 'OK');
-
-    return new LandingPage().open();
+    await browser.wait(until.stalenessOf(this.header));
   }
-
 }
 
 // NOTE: imported here otherwise AppPage will not be defined when

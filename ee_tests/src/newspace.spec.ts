@@ -1,13 +1,13 @@
 import { browser } from 'protractor';
 import * as support from './support';
-import { LoginInteraction } from './interactions/login_interactions';
+import { LoginInteractionsFactory } from './interactions/login_interactions';
 
 describe('Creating new spaces in OSIO', () => {
 
   beforeEach( async () => {
     await support.desktopTestSetup();
-    let login = new LoginInteraction();
-    await login.run();
+    let loginInteractions = LoginInteractionsFactory.create();
+    await loginInteractions.login();
   });
 
   it('Create a new space without creating a new quickstart', async () => {
