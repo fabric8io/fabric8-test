@@ -1,13 +1,13 @@
-import * as chalk from 'chalk';
+import * as colors from 'colors';
 
 export function error(...msg: any[]) {
     // tslint:disable-next-line:no-console
-    console.error(chalk.red(...msg));
+    console.error(colors.red(...msg));
 }
 
 export function specTitle(...msg: any[]) {
     // tslint:disable-next-line:no-console
-    console.info(chalk.greenBright(' ---------- ') + chalk.greenBright(...msg) + chalk.greenBright(' ---------- '));
+    console.info(colors.green(' ---------- ') + colors.green(...msg) + colors.green(' ---------- '));
 }
 
 export function info(...msg: any[]) {
@@ -18,7 +18,7 @@ export function info(...msg: any[]) {
 export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
 
 export function script(...msg: any[]) {
-    debug(chalk.dim(msg));
+    debug(colors.dim(msg));
 }
 
 function debugEnabled(...msg: any[]) {
