@@ -42,7 +42,7 @@
     "@types/jasmine": "^2.8.6",
     "@types/jasminewd2": "^2.0.3",
     "@types/node": "^8.10.9",
-    "chalk": "^2.4.1",
+    "colors": "^1.3.1",
     "jasmine-protractor-matchers": "^2.0.0",
     "jasmine-spec-reporter": "^4.2.1",
     "protractor": "^5.3.1",
