@@ -21,5 +21,7 @@ oc project $(oc projects -q | grep jenkins)
 echo --- List pods ---
 oc get pods 
 
+echo --- Jenkins version ---
+oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.version deploymentconfigs
 
 
