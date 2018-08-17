@@ -35,7 +35,7 @@ class TestClass_SetupGettingStarted(object):
                     launch_detail.token_userid_primary = launch_detail.get_local_token()
                     if launch_detail.token_userid_primary:
                         print "Local ACCESS_TOKEN obtained"
-                except:
+                except Exception:
                     pytest.exit("Failed to generate local ACCESS_TOKEN!!! Terminating the run!!!!!!!!!!!")
             else:
                 pytest.exit("REFRESH_TOKEN not provided!!! Terminating the run!!!!!!!!!!!")
@@ -45,7 +45,7 @@ class TestClass_SetupGettingStarted(object):
                 launch_detail.token_userid_primary = launch_detail.get_access_token_from_refresh()
                 if launch_detail.token_userid_primary:
                     print("ACCESS_TOKEN set to = A secret in Jenkins ;)")
-            except:
+            except Exception:
                 pytest.exit("Failed to generate ACCESS_TOKEN from OFFLINE_TOKEN!!! Terminating the run!!!!!!!!!!!")
 
         # Define Request Header, that includes Access Token
@@ -69,4 +69,3 @@ class TestClass_SetupGettingStarted(object):
                     json.dump(launch_detail.launch_details_dict, f, sort_keys=True, indent=4)
             except Exception:
                 print("Exception creating launch_info_dump_getting_started.json")
-

@@ -438,7 +438,7 @@ class TestClass_SDD(object):
                     print("\nSpace deleted : %s" % dynamic_vars.spacename)
                 else:
                     print("\nFailed to delete Space : %s" % dynamic_vars.spacename)
-                
+
                 global local_run
                 # Skip asserting space deletion in local runs as it fails
                 if not local_run:
@@ -809,7 +809,7 @@ class TestClass_SCRUM(object):
                     print("\nSpace deleted : %s" % dynamic_vars.spacename)
                 else:
                     print("\nFailed to delete Space : %s" % dynamic_vars.spacename)
-                
+
                 global local_run
                 # Skip asserting space deletion in local runs as it fails
                 if not local_run:
