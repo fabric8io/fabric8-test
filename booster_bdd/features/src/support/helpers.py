@@ -29,12 +29,11 @@ def get_user_tokens(index=0):
 
 
 def create_space_name(template="BDD"):
-    var = datetime.datetime.now()
-    var = var.isoformat().rsplit('.')[0]
+    now = datetime.datetime.now()
     space = "{}-{}-{}".format(
         os.getenv("OSIO_USERNAME"),
         template,
-        var
+        "{:02d}{:02d}-{:02d}{:02d}".format(now.month, now.day, now.hour, now.minute)
     )
 
     space = space.replace('@', '-')
