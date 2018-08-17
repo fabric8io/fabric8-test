@@ -52,13 +52,15 @@ class TestClass_SetupGettingStarted(object):
         request_detail.headers_default = {request_detail.content_type_key_default: request_detail.content_type_default, request_detail.authorization_key_default: request_detail.authorization_carrier_default + launch_detail.token_userid_primary}
         print("\n==Getting started Test Setup Complete....\n")
 
-    class TestClass_SDDTeardown(object):
+    class TestClass_GettingStartedTeardown(object):
         '''Class that dumps data to a file'''
         def test_sdd_teardown(self, cleanup):
             import os
             import json
             launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
             launch_detail.launch_details_dict["offline_token"] = launch_detail.offref_token_userid_primary
+            launch_detail.launch_details_dict["user_id"] = launch_detail.userid_primary
+            launch_detail.launch_details_dict["sut"] = launch_detail.base_url[launch_detail.base_wit]
 
             try:
                 curr_dir = os.path.dirname(__file__)

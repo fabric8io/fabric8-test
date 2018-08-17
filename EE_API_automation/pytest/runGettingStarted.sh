@@ -20,11 +20,10 @@ else
 
     elif [ -z "$4" ] || [ "$4" = "False" ] || [ "$4" = "false" ]
     then
-        echo "==> cleanup=True flag not supplied. ***** SPACES WILL BE PERSISTED!!! *****"
         echo "==> Launching the GettingStarted API tests to generate TestDB..."
         echo ""
         cd src/
-        pytest test_quickStart.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
+        pytest test_getting_started.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
         echo ""
     fi
 fi

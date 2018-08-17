@@ -8,5 +8,4 @@ __pycache__/*
 *.pyc
 *.log
 *.xml
-launch_info_dump.json
-launch_info_dump_getting_started.json
+launch_info_dump*.json
