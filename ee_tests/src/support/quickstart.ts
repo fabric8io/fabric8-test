@@ -1,5 +1,7 @@
 import { LauncherMission } from './launcher_mission';
 import { LauncherRuntime } from './launcher_runtime';
+import { browser, by, element, ExpectedConditions as until } from 'protractor';
+import * as support from '../support';
 
 export class Quickstart {
   id: string;
@@ -10,6 +12,7 @@ export class Quickstart {
   junitTestCount: string;
   testFileName: string;
   sourceFileName: string;
+  deployedPageTestCallback: () => void;
 
   constructor(quickstart: string) {
     this.id = quickstart;
@@ -23,6 +26,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'HttpApplicationTest.java';
         this.sourceFileName = 'HttpApplication.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'vertxConfig': {
@@ -33,6 +37,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'HttpApplicationTest.java';
         this.sourceFileName = 'HttpApplication.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'SpringBootHttp': {
@@ -43,6 +48,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
         this.sourceFileName = 'GreetingProperties.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'SpringBootHealth': {
@@ -53,6 +59,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
         this.sourceFileName = 'GreetingProperties.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'SpringBootCrud': {
@@ -63,6 +70,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
         this.sourceFileName = 'GreetingProperties.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'SwarmHttp': {
@@ -73,6 +81,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'GreetingServiceTest.java';
         this.sourceFileName = 'HttpApplication.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       case 'SwarmHealth': {
@@ -83,6 +92,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'GreetingServiceTest.java';
         this.sourceFileName = 'GreetingEndpoint.java';
+        this.deployedPageTestCallback = dummy;
         break;
       }
       default: {
@@ -94,6 +104,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'HttpApplicationTest.java';
         this.sourceFileName = 'GreetingEndpoint.java';
+        this.deployedPageTestCallback = httpBooster;
         break;
       }
     }
@@ -106,4 +117,15 @@ export class Quickstart {
       'unknown': unknown
     };
   }
+}
+
+async function httpBooster() {
+  browser.wait(until.presenceOf(
+  element(by.id('_http_booster'))), support.DEFAULT_WAIT, '\_http_booster\' is present');
+  let text = await element(by.id('_http_booster')).getText();
+  expect(text).toContain('HTTP Booster', `page contains text`);
+}
+
+async function dummy() {
+  // no specific test for booster page
 }

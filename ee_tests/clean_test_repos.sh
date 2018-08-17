@@ -10,9 +10,9 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-RESPONSE=`curl -X  GET "https://api.github.com/users/$2/repos?affiliation=owner&sort=created&direction=desc" -H "Authorization: token $1" `
+RESPONSE=$(curl -X  GET "https://api.github.com/users/$2/repos?affiliation=owner&sort=created&direction=desc" -H "Authorization: token $1" )
 
-REPOS=`echo $RESPONSE | jq '.[] | .name' | sed 's/\"//g' | grep ${3:-test}`
+REPOS=$(echo $RESPONSE | jq '.[] | .name' | sed 's/\"//g' | grep ${3:-test})
 
 if [[ -z $REPOS ]]; then
   echo "There are no GitHub repositories matching the filter"

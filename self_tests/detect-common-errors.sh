@@ -1,19 +1,19 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-directories=${directories:-"../booster_bdd/ ../EE_API_automation/ ../perf_tests/"}
+directories=${directories:-"../booster_bdd/features/ ../EE_API_automation/ ../perf_tests/"}
 pass=0
 fail=0
 
 function prepare_venv() {
-    python3 -m venv venv && source venv/bin/activate && python3 "$(which pip3)" install pydocstyle
+    python3 -m venv venv && source venv/bin/activate && python3 "$(which pip3)" install pyflakes
 }
 
-# run the pydocstyle for all files that are provided in $1
+# run the pyflakes for all files that are provided in $1
 function check_files() {
     for source in $1
     do
         echo "$source"
-        pydocstyle --count "$source"
+        pyflakes "$source"
         if [ $? -eq 0 ]
         then
             echo "    Pass"
@@ -31,8 +31,8 @@ function check_files() {
 
 
 echo "----------------------------------------------------"
-echo "Checking documentation strings in all sources stored"
-echo "in following directories:"
+echo "Checking source files for common errors in following"
+echo "directories:"
 echo "$directories"
 echo "----------------------------------------------------"
 echo
@@ -53,7 +53,7 @@ then
     echo "All checks passed for $pass source files"
 else
     let total=$pass+$fail
-    echo "Documentation strings should be added and/or fixed in $fail source files out of $total files"
+    echo "$fail source files out of $total files needs to be checked and fixed"
     exit 1
 fi
 

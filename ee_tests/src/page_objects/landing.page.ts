@@ -2,6 +2,7 @@ import { $, browser } from 'protractor';
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from '../ui/button';
+import * as support from '../support';
 
 export class LandingPage extends BasePage {
 
@@ -9,12 +10,8 @@ export class LandingPage extends BasePage {
   loggedInUserButton = new Button($('#loggedInUserName'), 'User Name');
 
   constructor(url: string = '') {
-    // '' is relative to base url so it means baseUrl
     super(url);
-
-    // NOTE: can't call async methods in construtor
-    browser.getProcessedConfig()
-      .then(config => this.name = config.baseUrl);
+    support.info('OSIO url: ' + browser.params.target.url);
   }
 
   async ready() {

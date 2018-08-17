@@ -1,8 +1,5 @@
-import pytest
-import time
 import requests
 import features.src.support.helpers as helpers
-import sys
 import re
 import os
 

@@ -2,7 +2,7 @@
   "data": {
     "id": "$wi_id",
     "attributes": {
-      "version": 1
+      "version": 2
     },
     "links": {
       "self": "$wi_link"

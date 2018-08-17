@@ -5,6 +5,7 @@ import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objec
 import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
+import * as runner from  '../support/script_runner';
 
 export abstract class PipelinesInteractionsFactory {
 
@@ -30,11 +31,14 @@ export interface PipelinesInteractions {
 
     showDeployments(): void;
 
-    verifyBuildInfo(): Promise<PipelineDetails>;
+    verifyPipelines(count: number): Promise<PipelineDetails[]>;
+
+    verifyPipelineInfo(pipeline: PipelineDetails,
+        applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void>;
 
     waitToFinish(pipeline: PipelineDetails): void;
 
-    verifyBuildResult(pipeline: PipelineDetails): void;
+    verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus): void;
 
     verifyBuildStages(pipeline: PipelineDetails): void;
 }
@@ -54,7 +58,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async openPipelinesPage(mode: PageOpenMode) {
-        support.info('Verifying pipelines page');
+        support.info('Open pipelines page');
 
         if (mode === PageOpenMode.UseMenu) {
             let dashboardInteractions =
@@ -68,22 +72,28 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async showDeployments(): Promise<void> {
+        support.info('Show Deployments page');
         await this.spacePipelinePage.deploymentsOption.clickWhenReady();
     }
 
-    public async verifyBuildInfo(): Promise<PipelineDetails> {
-        support.info('Verifying pipeline build info');
-
+    public async verifyPipelines(count: number): Promise<PipelineDetails[]> {
+        support.info('Verify pipelines');
         let pipelines = await this.spacePipelinePage.getPipelines();
-        expect(pipelines.length).toBe(1, 'number of pipelines');
+        expect(pipelines.length).toBe(count, 'number of pipelines');
 
-        let pipeline = pipelines[0];
-        expect(await pipeline.getApplicationName()).toBe(this.spaceName, 'application name');
-        expect(await pipeline.getBuildNumber()).toBe(1, 'build number');
+        return Promise.resolve(pipelines);
+    }
+
+    public async verifyPipelineInfo(pipeline: PipelineDetails,
+            applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
+        support.info('Verify pipeline build info');
+
+        expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
+        expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
 
         let githubName = browser.params.github.username;
         expect(await pipeline.getRepository()).
-            toBe('https://github.com/' + githubName + '/' + this.spaceName + '.git', 'repository');
+            toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
         return Promise.resolve(pipeline);
     }
 
@@ -119,7 +129,11 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         // save OC logs
         try {
             support.info('Save OC Jenkins pod log');
-            await this.saveOCJenkinsLogs();
+            await runner.runScript(
+                '.', // working directory
+                './oc-get-jenkins-logs.sh', // script
+                [ browser.params.login.user,  browser.params.login.password], // params
+                './target/screenshots/oc-logs-output.txt'); // output file
         } catch (e) {
             support.info('Save OC Jenkins pod log failed with error: ' + e);
             ocLogsError = e;
@@ -138,9 +152,9 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         }
     }
 
-    public async verifyBuildResult(pipeline: PipelineDetails) {
-        support.info('Check build status');
-        expect(await pipeline.getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
+    public async verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus) {
+        support.info('Verify build result info');
+        expect(await pipeline.getStatus()).toBe(expectedStatus, 'build status');
     }
 
     public async verifyBuildStages(pipeline: PipelineDetails) {
@@ -160,31 +174,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
             support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
-        await support.windowManager.switchToMainWindow();
-    }
-
-    protected async saveOCJenkinsLogs(): Promise<void> {
-        let finished: boolean = false;
-        const { exec } = require('child_process');
-
-        support.info('Execute shell script to retrieve logs from OpenShift');
-
-        exec('./oc-get-jenkins-logs.sh ' +
-            browser.params.login.user + ' ' +
-            browser.params.login.password +
-            ' &> ./target/screenshots/oc-logs-output.txt',
-            (err: Error, stdout: string | Buffer, stderr: string | Buffer) => {
-                if (err !== null) {
-                    support.info('External script failed');
-                    support.info('STDERR:');
-                    support.info(stderr);
-                }
-                finished = true;
-                return;
-            }
-        );
-        await browser.wait(() => finished === true);
-        support.info('Script finished');
+        await support.windowManager.closeCurrentWindow();
     }
 
     private async showJenkinsLogDirectly() {
@@ -209,11 +199,11 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 return true;
             } else {
-                support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('Current pipeline status: ' + currentStatus);
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGEST_WAIT);
+        }, support.LONGEST_WAIT, 'Pipeline is finished');
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
@@ -250,24 +240,22 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
     protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
         await browser.wait(async function () {
             let promoted = false;
-            support.debug('Before get status');
             let currentStatus = await pipeline.getStatus();
-            support.debug('After get status');
             if (BuildStatusUtils.buildEnded(currentStatus)) {
                 support.info('Pipeline finished with build status ' + currentStatus);
                 return true;
             } else {
-                support.debug('... Current pipeline status: ' + currentStatus);
+                support.debug('Current pipeline status: ' + currentStatus);
                 if (!promoted && await pipeline.isInputRequired()) {
-                    support.debug('Input is required');
+                    support.info('Input is required');
                     await pipeline.promote();
                     promoted = true;
-                    support.debug('Promoted');
+                    support.info('Promoted');
                 }
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGEST_WAIT);
+        }, support.LONGEST_WAIT, 'Pipeline is finished');
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {

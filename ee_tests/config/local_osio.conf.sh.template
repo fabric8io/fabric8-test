@@ -22,3 +22,4 @@ export NGX_LAUNCHER_ENABLED="${NGX_LAUNCHER_ENABLED:-true}"
 export RESET_ENVIRONMENT="${RESET_ENVIRONMENT:-true}"
 # Expected user setting for feature levels - internal, experimental, beta, released
 export FEATURE_LEVEL="${FEATURE_LEVEL:-internal}"
+export CHE_LOCAL_REPOSITORY="${CHE_LOCAL_REPOSITORY:-../../che-functional-tests}"

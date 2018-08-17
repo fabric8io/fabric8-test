@@ -49,9 +49,9 @@ RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/lin
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
 # install all node dependencies
-COPY package.json package-lock.json ./
+# COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called
-RUN npm --unsafe-perm install
+# RUN npm --unsafe-perm install
 
 # clean after installation
 RUN yum clean all

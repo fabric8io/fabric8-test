@@ -186,9 +186,9 @@ export class SpaceName {
     const day = (d.getDate() < 10) ? `0${d.getDate()}` : `${d.getDate()}`;
     const hour = (d.getHours() < 10) ? `0${d.getHours()}` : `${d.getHours()}`;
     const minute = (d.getMinutes() < 10) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
-    const second = (d.getSeconds() < 10) ? `0${d.getSeconds()}` : `${d.getSeconds()}`;
-    const spaceName = `e2e-${month}${day}-${hour}${minute}${second}`;
-    info('New space name: ', spaceName);
+    const randomNumber = Math.round(Math.random() * 10000);
+    const spaceName = `e2e-${month}${day}-${hour}${minute}-${randomNumber}`;
+    support.info('New space name: ', spaceName);
 
     SpaceName.spaceName = spaceName;
     return SpaceName.spaceName;
@@ -240,7 +240,7 @@ export function updateCurrentRepoName(repoName: string) {
 }
 
 export async function sleep(ms: number) {
-  info('Sleeping for ' + ms + ' ms...');
+  support.info('Sleeping for ' + ms + ' ms...');
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -256,7 +256,7 @@ export async function writeScreenshot(filename: string) {
   let stream = createWriteStream(filename);
   stream.write(new Buffer(png, 'base64'));
   stream.end();
-  info(`Saved screenshot to: ${filename}`);
+  support.debug(`Saved screenshot to: ${filename}`);
 }
 
 /**
@@ -267,40 +267,19 @@ export async function writePageSource(filename: string) {
   let stream = createWriteStream(filename);
   stream.write(new Buffer(txt));
   stream.end();
-  info(`Saved page source to: ${filename}`);
+  support.debug(`Saved page source to: ${filename}`);
 }
 
 /**
  * Store the page source
  */
 export async function writeText(filename: string, text: string) {
-  info(`Saving text to: ${filename}`);
+  support.info(`Saving text to: ${filename}`);
   let stream = createWriteStream(filename);
   stream.write(new Buffer(text));
   stream.end();
-  info(`Saved text to: ${filename}`);
+  support.debug(`Saved text to: ${filename}`);
 }
-
-function timestamp(): string {
-  let date = new Date();
-  let time = date.toLocaleTimeString('en-US', { hour12: false });
-  let ms = (date.getMilliseconds() + 1000).toString().substr(1);
-  return `${time}.${ms}`;
-}
-
-function debugEnabled(...msg: any[]) {
-  // tslint:disable-next-line:no-console
-  console.log(`[${timestamp()}]:`, ...msg);
-}
-
-function debugNoop(...msg: any[]) { }
-
-export function info(...msg: any[]) {
-  // tslint:disable-next-line:no-console
-  console.info(`[${timestamp()}]:`, ...msg);
-}
-
-export const debug = process.env.DEBUG ? debugEnabled : debugNoop;
 
 /**
  * Returns the entity name of the current user which is used in the URL after, say,
@@ -524,22 +503,40 @@ export class WindowManager {
 
   async switchToLastWindow() {
     await this.switchToWindow(this.windowCount, this.windowCount - 1);
+    await this.checkWindowCount();
   }
 
   async switchToNewWindow() {
     this.windowCount++;
     await this.switchToWindow(this.windowCount, this.windowCount - 1);
+    await this.checkWindowCount();
+  }
+
+  async closeCurrentWindow() {
+    await support.debug('Closing current window');
+    await browser.close();
+    this.windowCount--;
+    await this.switchToMainWindow();
+    await this.checkWindowCount();
   }
 
   async switchToWindow(expectedWindowCount: number, windowIndex: number) {
     await support.debug('Waiting for the specified number or windows to be present: ' + this.windowCount);
-    await browser.wait(this.windowCountCondition(expectedWindowCount), support.DEFAULT_WAIT);
+    await browser.wait(this.windowCountCondition(expectedWindowCount),
+      support.DEFAULT_WAIT, 'Browser has ' + expectedWindowCount + ' windows');
 
     await support.debug('Window changing to index ' + windowIndex);
     let handles = await browser.getAllWindowHandles();
     await support.debug('Switching to handle: ' + handles[windowIndex]);
     await browser.switchTo().window(handles[windowIndex]);
     await support.debug('Window changed to index ' + windowIndex);
+  }
+
+  async checkWindowCount() {
+    let handles = await browser.getAllWindowHandles();
+    if (this.windowCount !== handles.length) {
+      throw `Unexpected window count. Expected: ${this.windowCount}, real: ${handles.length}`;
+    }
   }
 
   windowCountCondition(count: number) {

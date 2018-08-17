@@ -14,7 +14,8 @@ export class SpacePipelinePage extends SpaceTabPage {
   }
 
   async getPipelines(): Promise<PipelineDetails[]> {
-    await browser.wait(until.presenceOf(element(by.className('pipeline-list'))), support.LONGER_WAIT);
+    await browser.wait(until.presenceOf(element(by.className('pipeline-list'))),
+      support.LONGER_WAIT, 'Element with class name pipeline-list is present');
 
     let elementsFinders: ElementFinder[] = await element.all(by.className('pipeline-list'));
     let pipelines = await elementsFinders.map(finder => new PipelineDetails(finder));
@@ -93,8 +94,10 @@ export class PipelineDetails extends BaseElement {
     let promoteButton = new Button(element(this.promoteLocator), 'Promote button');
     await promoteButton.clickWhenReady(support.LONGER_WAIT);
 
-    await browser.wait(until.stalenessOf(element(this.promoteLocator)));
-    await browser.wait(until.stalenessOf(element(this.inputRequiredLocator)));
+    await browser.wait(until.stalenessOf(element(this.promoteLocator)),
+      support.DEFAULT_WAIT, 'Staleness of promote button');
+    await browser.wait(until.stalenessOf(element(this.inputRequiredLocator)),
+      support.DEFAULT_WAIT, 'Staleness of input required button');
   }
 }
 

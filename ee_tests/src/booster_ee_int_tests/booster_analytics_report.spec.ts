@@ -5,6 +5,7 @@ import { PipelinesInteractionsFactory } from '../interactions/pipelines_interact
 import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../page_objects/base.page';
+import { BuildStatus } from '../support/build_status';
 
 describe('Analytic E2E test suite', () => {
 
@@ -34,7 +35,9 @@ describe('Analytic E2E test suite', () => {
     support.info('--- Run pipeline ---');
     let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
     await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
-    let pipeline = await pipelineInteractions.verifyBuildInfo();
+    let pipelines = await pipelineInteractions.verifyPipelines(1);
+    let pipeline = pipelines[0];
+    await pipelineInteractions.verifyPipelineInfo(pipeline, spaceName, spaceName, 1);
     await pipelineInteractions.waitToFinish(pipeline);
     await pipelineInteractions.verifyBuildStages(pipeline);
   });
@@ -43,9 +46,14 @@ describe('Analytic E2E test suite', () => {
     support.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(browser.params.release.strategy, spaceName);
     await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
-    await dashboardInteractions.verifyCodebases();
+    await dashboardInteractions.verifyCodebases(spaceName);
     await dashboardInteractions.verifyAnalytics();
-    await dashboardInteractions.verifyApplications();
+    let pipelines = await dashboardInteractions.verifyPipelines(1);
+    await dashboardInteractions.verifyPipeline(pipelines[0], spaceName, 1, BuildStatus.COMPLETE);
+
+    let deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
+    let deployedApplication = deployedApplications[0];
+    await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
     await dashboardInteractions.verifyWorkItems();
   });
 });

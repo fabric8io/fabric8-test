@@ -1,13 +1,13 @@
 import os
 
-from behave import *
-from features.src.importBooster import *
-from features.src.support import *
-from pyshould import *
+from behave import given, when, then
+from features.src.importBooster import ImportBooster
+from features.src.support import helpers
+from pyshould import should, should_not
 
 
 @given(u'I have a space created')
-def step_impl(context):
+def given_space_created(_context):
     global spaceID
     spaceID = helpers.getSpaceID()
     spaceID | should_not.be_none().desc("Space ID")
@@ -18,7 +18,7 @@ def step_impl(context):
 
 
 @when(u'I input a name of the GitHub repository with a booster')
-def step_impl(context):
+def when_input_github_repo(_context):
     global result
     helpers.setGithubRepo(os.getenv('GIT_REPO'))
     result = importBooster.importGithubRepo(helpers.getGithubRepo())
@@ -26,6 +26,6 @@ def step_impl(context):
 
 
 @then(u'I should see the booster imported')
-def step_impl(context):
+def then_booster_imported(_context):
     global result
     result | should.equal('Success').desc("Result of importing a GitHub repository")

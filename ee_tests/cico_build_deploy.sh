@@ -8,7 +8,7 @@ set +x
 for var in BUILD_NUMBER BUILD_URL JENKINS_URL GIT_BRANCH GH_TOKEN NPM_TOKEN GIT_COMMIT DEVSHIFT; do
   export $(grep ${var} ../jenkins-env | xargs)
 done
-export BUILD_TIMESTAMP=`date -u +%Y-%m-%dT%H:%M:%S`+00:00
+export BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%S)+00:00
 set -x
 
 if [ -n "${BUILD_NUMBER}" ]; then
@@ -40,7 +40,7 @@ fi
 
 # returns something like "Google Chrome 66.0.3359.117" when using Chrome stable
 # returns something like "Google Chrome 67.0.3396.18 beta" when using Chrome beta
-TMP=`docker run --rm fabric8-test google-chrome --version`
+TMP=$(docker run --rm fabric8-test google-chrome --version)
 # convert to array of words
 TMP=($TMP)
 

@@ -54,9 +54,9 @@ export class CleanupUserEnvPage extends AppPage {
 
   async ready() {
     await super.ready();
-    support.debug('... checking if erase button is there');
+    support.debug('checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
-    support.debug('... checking if erase button is there - OK');
+    support.debug('checking if erase button is there - OK');
   }
 
   /* An intermittent error is resulting in some user enviroment resets failing
@@ -82,7 +82,8 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
-    await browser.wait(until.presenceOf(this.alertBox), support.LONG_WAIT);
+    await browser.wait(until.presenceOf(this.alertBox),
+      support.LONG_WAIT, 'Alert box is present');
     let alertText = await this.alertBox.getText();
 
     support.info('Alert text: ' + alertText);
@@ -105,36 +106,29 @@ export class EditUserProfilePage extends AppPage {
 
   async gotoResetEnvironment() {
     await this.ready();
-    support.debug('... going to click', 'Reset Environment');
+    support.debug('going to click', 'Reset Environment');
     await browser.executeScript('arguments[0].scrollIntoView()', this.resetEnvButton.getWebElement());
     await this.resetEnvButton.clickWhenReady();
-    support.debug('... going to click', 'Reset Environment', 'OK');
+    support.debug('going to click', 'Reset Environment', 'OK');
 
     let page = new CleanupUserEnvPage();
-    support.debug('... going to open: CleanupUserEnvPage');
+    support.debug('going to open: CleanupUserEnvPage');
     await page.open();
-    support.debug('... going to open: CleanupUserEnvPage - OK');
+    support.debug('going to open: CleanupUserEnvPage - OK');
     return page;
   }
 
+  async getToken(): Promise<string> {
+    return element(by.className('token-heading')).getText();
+  }
 }
 
 export class UserProfilePage extends AppPage {
-  // TODO is there a better way to find the button? can we get devs to add an id?
-  updateProfileButton = this.innerElement(
-    Button,
-    'alm-overview button.profile-update-button',
-    'Update Profile'
-  );
-
-  async ready() {
-    await super.ready();
-    await this.updateProfileButton.untilClickable();
-  }
 
   async gotoEditProfile() {
-    this.updateProfileButton.clickWhenReady();
-    support.debug('... showing up Edit User Profile');
+    let editProfileButton = new Button(element(by.cssContainingText('button', 'Edit Profile')), 'Edit Profile');
+    await editProfileButton.clickWhenReady();
+
     let page =  new EditUserProfilePage();
     await page.open();
     return page;

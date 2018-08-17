@@ -1,24 +1,24 @@
-from behave import *
-from features.src.stage import *
+from behave import given, when, then
+from features.src.stage import Stage
 
-from pyshould import *
+from pyshould import should
 
 
 @given(u'I have verified a booster\'s pipeline has completed')
-def step_impl(context):
+def given_pipeline_completed(_context):
     print('Attempting to use query for running Pipeline...')
     global stage
     stage = Stage()
 
 
 @when(u'I query a pipeline\'s stage endpoint')
-def step_impl(context):
+def when_query_pipeline(_context):
     global result
     result = stage.runTest('testing 1234567890')
     print('Result = {}'.format(result))
 
 
 @then(u'I should see the deployed app running on stage')
-def step_impl(context):
+def then_app_running_stage(_context):
     global result
     result | should.equal('Success').desc("Application is not reachable in the Stage stage.")

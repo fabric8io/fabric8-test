@@ -15,12 +15,14 @@ mkdir -p dist target
 rm -rf target/screenshots
 
 # Shutdown container if running
-if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
-    docker rm -f fabric8-test
+if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
+    docker rm -f fabric8-booster-test
 fi
 
 # Run and setup Docker image
-docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN \
+docker build -t fabric8-booster-test:latest -f Dockerfile.builder .
+
+docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-add=SYS_ADMIN \
           -e SCENARIO \
           -e SERVER_ADDRESS \
           -e FORGE_API \
@@ -42,23 +44,19 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_A
           -e AUTH_CLIENT_ID \
           -e REPORT_DIR \
           -e UI_HEADLESS \
-          -t -v $(pwd)/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-test:latest /bin/bash
+          -t -v "$(pwd)"/dist:/dist:Z -v /etc/localtime:/etc/localtime:ro fabric8-booster-test:latest /bin/bash
 
 # Start Xvfb
-docker exec fabric8-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+docker exec fabric8-booster-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec booster tests
-docker exec fabric8-test ./run.sh 2>&1 | tee target/test.log
+docker exec fabric8-booster-test ./local_run.sh 2>&1 | tee target/test.log
 
 # Test results to archive
-docker cp fabric8-test:/opt/fabric8-test/target/. target
+docker cp fabric8-booster-test:/opt/fabric8-test/target/. target
 
 # Shutdown container if running
-if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
-    docker rm -f fabric8-test
+if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
+    docker rm -f fabric8-booster-test
 fi
-
-
-
-
 

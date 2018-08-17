@@ -1,13 +1,8 @@
 import time
 import requests
 import features.src.support.helpers as helpers
-import sys
 import re
 import os
-import time
-import json
-import behave
-from features.src.space import Space
 
 start_time = time.time()
 
@@ -29,6 +24,7 @@ class Pipeline(object):
 
         self.headers = {'Authorization': self.authHeader}
         self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
+        print ('Pipeline URL = {}'.format(self.urlString))
 
     def buildStatus(self, sleepTimer, maxTries, expectedBuildStatus,
                     expectedAnnotation=None):
@@ -46,6 +42,9 @@ class Pipeline(object):
             try:
                 print('Making request to check for the build status...')
                 r = requests.get(self.urlString, headers=self.headers)
+
+                print ('Build status response = {}'.format(r.text))
+
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
 

@@ -2,14 +2,11 @@ import os
 import sys
 import threading
 import time
-import json
-import re
 
 from locust import HttpLocust, TaskSet, task, events
 from locust.exception import LocustError
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchWindowException, TimeoutException
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -670,14 +667,14 @@ class UserScenario(TaskSet):
                 target_element = self._wait_for_clickable_element(
                     driver,
                     By.XPATH,
-                    ".//*[contains(text(),'Create')]"
+                    ".//*[contains(@class,'navbar-collapse')]//*[contains(text(),'Create')]"
                 )
                 self._reset_timer()
                 target_element.click()
                 target_element = self._wait_for_clickable_element(
                     driver,
                     By.XPATH,
-                    ".//codebases-item-workspaces"
+                    ".//codebases-item-workspaces//a"
                 )
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
@@ -692,11 +689,18 @@ class UserScenario(TaskSet):
         if not failed:
             self._reset_timer()
             try:
+                tabs = len(driver.window_handles)
+                target_element.click()
+                target_element = self._wait_for_clickable_element(
+                    driver,
+                    By.XPATH,
+                    ".//codebases-item-workspaces//button"
+                )
                 target_element.click()
                 WebDriverWait(driver, self.timeout).until(
-                    EC.number_of_windows_to_be(2)
+                    EC.number_of_windows_to_be(tabs + 1)
                 )
-                driver.switch_to.window(driver.window_handles[1])
+                driver.switch_to.window(driver.window_handles[tabs])
                 self._report_success(request_type, metric, self._tick_timer())
             except Exception as ex:
                 self._report_failure(driver, request_type,

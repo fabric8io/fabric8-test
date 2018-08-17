@@ -1,10 +1,10 @@
-from behave import *
+from behave import when, then
 from features.src.resetEnv import ResetEnvironment
-from pyshould import *
+from pyshould import should
 
 
 @when(u'I reset environment')
-def step_impl(context):
+def when_reset_environment(_context):
     global resetEnv
     resetEnv = ResetEnvironment()
     resetEnv.removeSpaces()
@@ -12,7 +12,7 @@ def step_impl(context):
 
 
 @then(u'I should see clean environment')
-def step_impl(context):
+def then_clean_environment(_context):
     global resetEnv
     len(resetEnv.getSpaces()) | should.equal(0).described_as(
         "Number of spaces after environment reset."

@@ -78,7 +78,7 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   async clickWhenReady(timeout?: number) {
     await this.untilClickable(timeout);
     await this.click();
-    this.log('Clicked');
+    this.debug('Clicked');
   }
 
   async ready() {
@@ -93,14 +93,14 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
     this.debug(msg, '- DONE');
   }
 
-  log(action: string, ...msg: string[]) {
+  info(action: string, ...msg: string[]) {
     let className = this.constructor.name;
     support.info(`${action}: ${className}('${this.name}')`, ...msg);
   }
 
   debug(context: string, ...msg: string[]) {
     let className = this.constructor.name;
-    support.debug(`... ${className}('${this.name}'): ${context}`, ...msg);
+    support.debug(`   ${className}('${this.name}'): ${context}`, ...msg);
   }
 
   protected string2Number(stringNumber: string, errorMessage: string): number {

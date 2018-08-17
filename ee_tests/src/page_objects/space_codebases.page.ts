@@ -7,17 +7,21 @@ export class CodebasesPage extends AppPage {
 
   private readonly selectWorkspace = 'Select a Workspace';
 
+  private readonly openButtonLocator = by.cssContainingText('button', 'Open');
+
   public async ready() {
-    await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))));
+    await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))),
+      support.DEFAULT_WAIT, 'Tag <codebases-item-workspaces> is present');
   }
 
   public async createWorkspace() {
     let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces')), 'Create Codespace...');
     await createCodebase.clickWhenReady(support.LONGEST_WAIT);
+    await browser.wait(until.presenceOf(element(this.openButtonLocator)));
   }
 
   public async openWorkspace() {
-    let openWorkspace = new Button(element(by.cssContainingText('button', 'Open')), 'Open Workspace...');
+    let openWorkspace = new Button(element(this.openButtonLocator), 'Open Workspace...');
     openWorkspace.clickWhenReady(support.LONGEST_WAIT);
   }
 
@@ -28,8 +32,9 @@ export class CodebasesPage extends AppPage {
     for (let finder of elementsFinders) {
       let workspace = await finder.getText();
       workspace = workspace.trim();
+      support.debug('Found workspace: ' + workspace);
       if (workspace !== this.selectWorkspace) {
-        workspaces.push(await finder.getText());
+        workspaces.push(await workspace);
       }
     }
 

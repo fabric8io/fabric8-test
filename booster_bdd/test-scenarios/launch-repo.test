@@ -1,0 +1,7 @@
+# Import booster github repository and run a pipeline build
+../features/resetEnvironment.feature
+../features/createSpace.feature
+../features/launchBooster.feature
+../features/verifyPipeline.feature
+../features/verifyStage.feature
+../features/verifyRun.feature

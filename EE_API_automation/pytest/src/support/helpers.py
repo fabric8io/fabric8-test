@@ -113,9 +113,9 @@ def replace_values(orig_dict=None, strs_to_replace_dict=None):
                 paths.update(temp_dict)
 #                 print("interim paths:"), paths
             except KeyError:
-                print "All paths found"
+                print("All paths found")
             except Exception:
-                print "Key not found in json blob"
+                print("Key not found in json blob")
 
 #         print("final paths:"), paths
         for path in paths:
@@ -150,7 +150,7 @@ def generate_entity_names(static_string=None, no_of_names=1, reverse=False, rese
 
 def create_workitem_SDD(title=None, spaceid=None, witype=None, iterationid=None):
     if None in [title, spaceid, witype]:
-        print("None value supplied for either SpaceID / WI-Title / WI-Type")
+        print("\nNone value supplied for either SpaceID / WI-Title / WI-Type")
         return None
     # Create workitems in Iterations context
     elif iterationid is not None:

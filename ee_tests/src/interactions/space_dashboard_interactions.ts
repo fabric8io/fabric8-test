@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as support from '../support';
-import { SpaceDashboardPage } from '../page_objects/space_dashboard.page';
+import { DeployedApplicationInfo, Pipeline, SpaceDashboardPage } from '../page_objects/space_dashboard.page';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
@@ -38,9 +38,22 @@ export interface SpaceDashboardInteractions {
 
     importRepo(appName: string, repoName: string, strategy: string): void;
 
-    verifyCodebases(): void;
+    verifyCodebases(repoName: string): void;
 
-    verifyApplications(): void;
+    verifyPipelines(count: number): Promise<Pipeline[]>;
+
+    verifyPipeline(
+        pipeline: Pipeline, application: string, buildNumber: number, buildStatus: BuildStatus): void;
+
+    verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]>;
+
+    verifyDeployedApplication(application: DeployedApplicationInfo, name: string): void;
+
+    verifyDeployedApplicationStage(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): void;
+
+    verifyDeployedApplicationRun(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): void;
 
     verifyAnalytics(): void;
 
@@ -65,9 +78,22 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
 
     public abstract async importRepo(appName: string, repoName: string, strategy: string): Promise<void>;
 
-    public abstract async verifyCodebases(): Promise<void>;
+    public abstract async verifyCodebases(repoName: string): Promise<void>;
 
-    public abstract async verifyApplications(): Promise<void>;
+    public abstract async verifyPipelines(count: number): Promise<Pipeline[]>;
+
+    public abstract async verifyPipeline(
+        pipeline: Pipeline, application: string, buildNumber: number, buildStatus: BuildStatus): Promise<void>;
+
+    public abstract async verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]>;
+
+    public abstract async verifyDeployedApplication(application: DeployedApplicationInfo, name: string): Promise<void>;
+
+    public abstract async verifyDeployedApplicationStage(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void>;
+
+    public abstract async verifyDeployedApplicationRun(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void>;
 
     public abstract async verifyAnalytics(): Promise<void>;
 
@@ -87,6 +113,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async openSpaceDashboardPage(mode: PageOpenMode): Promise<void> {
+        support.info('Open space dashboard for space ' + this.spaceName);
         if (mode === PageOpenMode.UseMenu) {
             let accountHomeInteractions = AccountHomeInteractionsFactory.create();
             await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
@@ -98,71 +125,98 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async openCodebasesPage(): Promise<void> {
+        support.info('Open codebases page');
         await browser.executeScript('window.scrollTo(0,0);');
         await this.spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
     }
 
     public async openPipelinesPage(): Promise<void> {
+        support.info('Open pipelines page');
         await this.spaceDashboardPage.getPipelinesCard().then(async function (card) {
             await card.openPipelinesPage();
         });
     }
 
     public async createQuickstart(name: string, strategy: string): Promise<void> {
+        support.info(`Create booster ${name} with strategy ${strategy}`);
         let wizard = await this.spaceDashboardPage.addToSpace();
         await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
     }
 
     public async importRepo(appName: string, repoName: string, strategy: string): Promise<void> {
+        support.info(`Import existing repository ${repoName} with strategy ${strategy}`);
         let wizard = await this.spaceDashboardPage.addToSpace();
         await wizard.importProjectByLauncher(appName, repoName, strategy);
     }
 
-    public async verifyCodebases(): Promise<void> {
+    public async verifyCodebases(repoName: string): Promise<void> {
+        support.info('Verify codebase ' + repoName);
         let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
         await browser.wait(async function () {
             return (await codebasesCard.getCount()) === 1;
-        }, support.DEFAULT_WAIT);
+        }, support.DEFAULT_WAIT, 'Codebases are loaded');
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
         let githubName = browser.params.github.username;
         let codebases = await codebasesCard.getCodebases();
         expect(codebases.length).toBe(1, 'number of codebases');
-        expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + this.spaceName);
+        expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + repoName);
     }
 
-    public async verifyApplications(): Promise<void> {
+    public async verifyPipelines(count: number): Promise<Pipeline[]> {
+        support.info('Verify pipelines');
         let pipelinesCard = await this.spaceDashboardPage.getPipelinesCard();
-        expect(await pipelinesCard.getCount()).toBe(1, 'number of pipelines on page');
+        expect(await pipelinesCard.getCount()).toBe(count, 'number of pipelines on page');
 
         let pipelines = await pipelinesCard.getPipelines();
-        expect(pipelines.length).toBe(1, 'number of pipelines');
-        expect(pipelines[0].getApplication()).toBe(this.spaceName, 'application name on pipeline');
-        expect(pipelines[0].getStatus()).toBe(BuildStatus.COMPLETE, 'build status');
-        expect(pipelines[0].getBuildNumber()).toBe(1, 'build number');
+        expect(pipelines.length).toBe(count, 'number of pipelines');
+        return Promise.resolve(pipelines);
+    }
 
+    public async verifyPipeline(pipeline: Pipeline,
+        application: string, buildNumber: number, buildStatus: BuildStatus): Promise<void> {
+            support.info('Verify pipeline for application ' + await pipeline.getApplication());
+        expect(pipeline.getApplication()).toBe(application, 'application name on pipeline');
+        expect(pipeline.getStatus()).toBe(buildStatus, 'build status');
+        expect(pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
+    }
+
+    public async verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]> {
+        support.info('Verify deployed applications');
         let deploymentsCard = await this.spaceDashboardPage.getDeploymentsCard();
 
         let applications = await deploymentsCard.getApplications();
-        expect(applications.length).toBe(1, 'number of applications');
-        expect(await applications[0].getName()).toBe(this.spaceName, 'deployed application name');
+        expect(applications.length).toBe(count, 'number of applications');
+        return Promise.resolve(applications);
+    }
 
-        if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
-            expect(await applications[0].getStageVersion()).toBe('1.0.1', 'deployed application stage version');
-            await applications[0].openStageLink();
-            await support.windowManager.switchToNewWindow();
-            await this.verifyLink('stage');
+    public async verifyDeployedApplication(application: DeployedApplicationInfo, name: string): Promise<void> {
+        support.info('Verify deployed application ' + await application.getName());
+        expect(await application.getName()).toBe(name, 'deployed application name');
+    }
+
+    public async verifyDeployedApplicationStage(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
+            support.info('Verify deployed application ' + await application.getName() + ' on stage');
+            if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
+                expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
+                await application.openStageLink();
+                await this.verifyLink(testCallback, 'stage');
+            }
         }
 
+    public async verifyDeployedApplicationRun(
+        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
+        support.info('Verify deployed application ' + await application.getName() + ' on run');
         if (ReleaseStrategy.RUN === this.strategy) {
-            expect(await applications[0].getRunVersion()).toBe('1.0.1', 'deployed application run version');
-            await applications[0].openRunLink();
-            await support.windowManager.switchToLastWindow();
-            await this.verifyLink('run');
+            expect(await application.getRunVersion()).toBe(version, 'deployed application run version');
+            await application.openRunLink();
+            await this.verifyLink(testCallback, 'run');
         }
     }
 
     public async verifyAnalytics(): Promise<void> {
+        support.info('Verify stack report');
         let analyticsCard = await this.spaceDashboardPage.getAnalyticsCard();
         let totalCount = await analyticsCard.getTotalDependenciesCount();
         let analyzedCount = await analyticsCard.getAnalyzedDependenciesCount();
@@ -175,25 +229,31 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyWorkItems(): Promise<void> {
+        support.info('Verify work items');
         // no work items card exptected
         await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
             expect(items.length).toBe(0);
         });
     }
 
-    private async verifyLink(environment: string) {
+    private async verifyLink(testCallback: () => void, environment: string) {
+        support.info('Verify link on ' + environment + ' environment');
+        await support.windowManager.switchToNewWindow();
         await browser.wait(until.urlContains(environment), support.DEFAULT_WAIT, `url contains ${environment}`);
+
+        await browser.wait(async () => {
+            await browser.refresh();
+            return ! await element(by.cssContainingText('h1', 'Application is not available')).isPresent();
+        }, support.LONGER_WAIT, 'Application takes more than 10 minutes to start');
+
         await support.screenshotManager.writeScreenshot(environment);
 
         let currentURL = await browser.getCurrentUrl();
         expect(currentURL).toContain(environment, `${environment} environment url`);
 
-        await browser.wait(until.presenceOf(
-            element(by.id('_http_booster'))), support.DEFAULT_WAIT, '\_http_booster\' is present');
-        let text = await element(by.id('_http_booster')).getText();
-        expect(text).toContain('HTTP Booster', `${environment} page contains text`);
+        await testCallback();
 
-        await support.windowManager.switchToMainWindow();
+        await support.windowManager.closeCurrentWindow();
     }
 }
 

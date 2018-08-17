@@ -1,21 +1,16 @@
 import os
 import sys
-import threading
 import time
-import json
-import re
 import traceback
 import uuid
 import urllib
 import requests
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchWindowException, TimeoutException
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support.ui import WebDriverWait
 
 user_tokens = []
 
@@ -132,7 +127,6 @@ class LoginUsersOauth2:
 
     def login(self, userIndex=0, _failed=False):
         failed = _failed
-        request_type = "login-users-log"
 
         state = str(uuid.uuid4())
         code = ""

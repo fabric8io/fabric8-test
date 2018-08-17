@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Do not display secrets
+set +x
+
 export SCENARIO=${SCENARIO:-}
 
 # Endpoints
@@ -27,7 +30,7 @@ export OSIO_USERNAME="${OSIO_USERNAME:-}"
 ## Openshift.io user's password
 export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 
-if [ -z $OSO_USERNAME ] || [ -z $OSO_TOKEN ] || [ -z $GITHUB_USERNAME ]; then
+if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; then
 	## Login to OSO to get OSO username and token
 	oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
 	if [ $? -gt 0 ]; then
@@ -35,21 +38,21 @@ if [ -z $OSO_USERNAME ] || [ -z $OSO_TOKEN ] || [ -z $GITHUB_USERNAME ]; then
 		exit 1
 	fi
 
-	if [ -z $OSO_USERNAME ]; then
+	if [ -z "$OSO_USERNAME" ]; then
 		## OpenShift Online user's name (remove @ and following chars)
 		OSO_USERNAME=$(oc whoami | sed -e 's/@[^\@]*$//')
 		export OSO_USERNAME
 	fi
 
-	if [ -z $OSO_TOKEN ]; then
+	if [ -z "$OSO_TOKEN" ]; then
 		## OpenShift Online token
 		OSO_TOKEN=$(oc whoami -t)
 		export OSO_TOKEN
 	fi
 
-	if [ -z $GITHUB_USERNAME ]; then
+	if [ -z "$GITHUB_USERNAME" ]; then
 		## Make sure you are on the main project
-		oc project $OSO_USERNAME
+		oc project "$OSO_USERNAME"
 
 		## Github username
 		GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
@@ -62,7 +65,7 @@ fi
 export OSIO_DANGER_ZONE="${OSIO_DANGER_ZONE:-false}"
 
 ### A behave tag to enable/disable features tagged as @osio.danger-zone (e.g. reset user's environment).
-if [ "$OSIO_DANGER_ZONE" -eq "true" ]; then
+if [ "$OSIO_DANGER_ZONE" == "true" ]; then
 	export BEHAVE_DANGER_TAG="@osio.danger-zone"
 else
 	export BEHAVE_DANGER_TAG="~@osio.danger-zone"
