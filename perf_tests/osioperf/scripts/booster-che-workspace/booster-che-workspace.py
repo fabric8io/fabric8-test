@@ -310,7 +310,7 @@ class UserScenario(TaskSet):
         failed = _failed
         request_type = "create_space_ngx"
 
-        self.newSpaceName = spacePrefix + "-" + buildNumber + "-" + str(self.taskUser) + "-" + str(long(time.time() * 1000))
+        self.newSpaceName = spacePrefix + "-" + buildNumber + "-" + str(self.taskUser) + "-" + str(int(time.time() * 1000))
         self.ghRepoName = (self.newSpaceName + "-" + self.taskUserName.replace("@", "_").replace(".", "_")).lower()
 
         metric = "new-button"

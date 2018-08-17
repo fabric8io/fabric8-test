@@ -255,7 +255,7 @@ class UserScenario(TaskSet):
             spacePrefix,
             buildNumber,
             self.taskUser,
-            (long(time.time() * 1000))
+            (int(time.time() * 1000))
         )
         self.ghRepoName = "{}-{}".format(
             self.newSpaceName,
