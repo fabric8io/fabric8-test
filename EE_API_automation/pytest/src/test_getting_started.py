@@ -54,7 +54,7 @@ class TestClass_SetupGettingStarted(object):
 
     class TestClass_GettingStartedTeardown(object):
         '''Class that dumps data to a file'''
-        def test_sdd_teardown(self, cleanup):
+        def test_getting_started_teardown(self, cleanup):
             import os
             import json
             launch_detail.launch_details_dict["token"] = launch_detail.token_userid_primary
