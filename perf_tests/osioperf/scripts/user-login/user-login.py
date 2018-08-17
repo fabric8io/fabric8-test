@@ -1,14 +1,11 @@
 import os
-import sys
 import threading
 import time
 
 from locust import HttpLocust, TaskSet, task, events
 from locust.exception import LocustError
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.wait import TimeoutException
