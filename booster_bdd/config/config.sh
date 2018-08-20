@@ -23,6 +23,10 @@ export AUTH_API="${AUTH_API:-https://auth.openshift.io}"
 # https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/jsmith/builds'
 export OSO_CLUSTER_ADDRESS="${OSO_CLUSTER_ADDRESS:-https://api.starter-us-east-2.openshift.com:443}"
 
+## Temporary - this variable definition can be reverted after this cico pull request is merged:
+## https://github.com/openshiftio/openshiftio-cico-jobs/pull/763
+export OSO_CLUSTER_ADDRESS="https://api.starter-us-east-2a.openshift.com:443"
+
 # Login config
 ## Openshift.io user's name
 export OSIO_USERNAME="${OSIO_USERNAME:-}"
