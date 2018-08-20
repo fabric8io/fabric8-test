@@ -25,7 +25,6 @@ else
         cd src/
         pytest test_getting_started.py -s --junitxml=$JENKINSLOG --sut=$1 --userid=$2 --offline_token=$3 2>&1 | tee $CLILOG
         echo ""
-    fi
 
     elif [ "$4" = "True" ] || [ "$4" = "true" ]
     then
