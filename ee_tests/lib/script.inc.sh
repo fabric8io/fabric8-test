@@ -1,3 +1,5 @@
+#!/bin/bash
+
 debug.print_callstack() {
   # callstack to skip
   local skip=${1:-0}

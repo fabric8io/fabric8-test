@@ -1,3 +1,4 @@
+#!/bin/bash
 # Test config for running e2e tests against remote osio
 export DEBUG="false"
 # openshift.io credentials
