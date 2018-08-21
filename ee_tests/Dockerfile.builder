@@ -19,8 +19,8 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       xorg-x11-utils \
       xorg-x11-fonts-Type1 \
       xorg-x11-fonts-misc \
-      https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.11.2-1nodesource.x86_64.rpm \
-      https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.9-1.el7.x86_64.rpm
+      https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.11.4-1nodesource.x86_64.rpm \
+      https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.20-1.el7.x86_64.rpm
 
 # the following packages depend on EPEL repository and need to be installed separately
 RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
@@ -42,7 +42,7 @@ RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 # && yum -y --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
+RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.28/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
 # install all node dependencies
