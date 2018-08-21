@@ -45,6 +45,7 @@ class Run(object):
         print('run request results = {}'.format(r.text))
 
         result = r.text
+        helpers.printToJson ('Promote to Run response',r)
         if re.search('Using the greeting service', result):
             return 'Success'
         else:

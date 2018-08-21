@@ -49,7 +49,8 @@ class LaunchBooster(object):
             headers=headers,
             data=data
         )
-        print('request results = {}'.format(r.text))
+        # print('request results = {}'.format(r.text))
+        helpers.printToJson ('Launch booster request response',r)
 
         result = r.text
         if re.search('GITHUB_PUSHED', result):
