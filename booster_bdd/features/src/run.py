@@ -42,7 +42,7 @@ class Run(object):
         print('Starting test.....')
 
         r = requests.get(urlString)
-        # print 'request results = {}'.format(r.text)
+        print ('run request results = {}'.format(r.text))
 
         result = r.text
         if re.search('Using the greeting service', result):
