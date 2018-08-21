@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # $1 = GitHub token
 # $2 = GitHub username
 # $3 = filter for name of the repository/repositories
@@ -12,7 +14,7 @@ fi
 
 RESPONSE=$(curl -X  GET "https://api.github.com/users/$2/repos?affiliation=owner&sort=created&direction=desc" -H "Authorization: token $1" )
 
-REPOS=$(echo $RESPONSE | jq '.[] | .name' | sed 's/\"//g' | grep ${3:-test})
+REPOS=$(echo "$RESPONSE" | jq '.[] | .name' | sed 's/\"//g' | grep "${3:-test}")
 
 if [[ -z $REPOS ]]; then
   echo "There are no GitHub repositories matching the filter"
@@ -22,7 +24,7 @@ fi
 echo "************************** WARNING WARNING WARNING ************************** "
 echo "This script will delete these repositories:"
 echo "***************************************************************************** "
-for REPO in $REPOS; do echo $REPO; done
+for REPO in $REPOS; do echo "$REPO"; done
 echo "***************************************************************************** "
 echo " "
 
@@ -32,7 +34,7 @@ echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   for REPO in $REPOS; do
-    echo "deleting repo $REPO"; curl -X DELETE -H "Authorization: token $1" https://api.github.com/repos/$2/$REPO;
+    echo "deleting repo $REPO"; curl -X DELETE -H "Authorization: token $1" "https://api.github.com/repos/$2/$REPO";
   done
 fi
 

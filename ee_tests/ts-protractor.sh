@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e -u -o pipefail
 
-declare -r SCRIPT_PATH=$(readlink -f "$0")
-declare -r SCRIPT_DIR=$(cd $(dirname "$SCRIPT_PATH") && pwd)
+declare -r SCRIPT_PATH="$(readlink -f "$0")"
+declare -r SCRIPT_DIR=$(cd "$(dirname "$SCRIPT_PATH")" && pwd)
 
+# shellcheck source=ee_tests/common.inc.sh
 source "$SCRIPT_DIR/common.inc.sh"
 
 validate_config() {
@@ -63,7 +64,8 @@ main() {
     exit 1
   }
 
-  local protractor="$(npm bin)/protractor"
+  local protractor
+  protractor="$(npm bin)/protractor"
 
   [[ ${NODE_DEBUG:-false} == true ]] && protractor="node --inspect --debug-brk $protractor"
 

@@ -1,7 +1,12 @@
+#!/bin/bash
+
 current_dir=$(readlink -f "${BASH_SOURCE[0]%/*}")
 
+# shellcheck source=ee_tests/lib/core.inc.sh
 source "$current_dir/lib/core.inc.sh"
+# shellcheck source=ee_tests/lib/logger.inc.sh
 source "$current_dir/lib/logger.inc.sh"
+# shellcheck source=ee_tests/lib/script.inc.sh
 source "$current_dir/lib/script.inc.sh"
 unset current_dir
 

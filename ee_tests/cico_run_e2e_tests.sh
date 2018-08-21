@@ -9,13 +9,12 @@ set +e
 # Source environment variables of the jenkins slave
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
-  cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|\
-    |ghprbActualCommit|BUILD_URL|ghprbPullId|RESET_ENVIRONMENT|\
-    |OSIO_CLUSTER|OSIO_USERNAME|OSIO_PASSWORD|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|\
-    |QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" \
-    | sed 's/^/export /g' \
-    > /tmp/jenkins-env
+  grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|\
+  |ghprbActualCommit|BUILD_URL|ghprbPullId|RESET_ENVIRONMENT|\
+  |OSIO_CLUSTER|OSIO_USERNAME|OSIO_PASSWORD|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|\
+  |QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" ../jenkins-env \
+  | sed 's/^/export /g' \
+  > /tmp/jenkins-env
   source /tmp/jenkins-env
 fi
 
@@ -41,10 +40,10 @@ export ZABBIX_SERVER="zabbix.devshift.net"
 # We need to disable selinux for now, XXX
 /usr/sbin/setenforce 0
 
-mkdir -p ${ARTIFACTS_DIR} dist
+mkdir -p "$ARTIFACTS_DIR" dist
 
 # Get all the deps in
-time yum -y install docker > ${ARTIFACTS_DIR}/yum_install.log
+time yum -y install docker > "$ARTIFACTS_DIR/yum_install.log"
 service docker start
 
 # Build builder image
@@ -55,31 +54,31 @@ REPOSITORY="fabric8io"
 REGISTRY="registry.devshift.net"
 
 echo "Pull fabric8-test image"
-time docker pull ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest > ${ARTIFACTS_DIR}/docker_pull.log
+time docker pull "$REGISTRY/$REPOSITORY/$IMAGE:latest" > "$ARTIFACTS_DIR/docker_pull.log"
 echo "Run test container"
 
 echo "Container name: $CONTAINER_NAME"
 
 # Shutdown container if running
-if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-    docker rm -f $CONTAINER_NAME
+if [ -n "$(docker ps -q -f name="$CONTAINER_NAME")" ]; then
+    docker rm -f "$CONTAINER_NAME"
 fi
 
-docker run --shm-size=256m --detach=true --name=$CONTAINER_NAME --cap-add=SYS_ADMIN \
+docker run --shm-size=256m --detach=true --name="$CONTAINER_NAME" --cap-add=SYS_ADMIN \
           -e "CI=true" -e DEBUG -e FEATURE_LEVEL -e GITHUB_REPO -e GITHUB_USERNAME \
           -e OSIO_PASSWORD -e OSIO_URL -e OSIO_USERNAME -e OSO_USERNAME \
           -e QUICKSTART_NAME -e RELEASE_STRATEGY -e RESET_ENVIRONMENT -e TEST_SUITE \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
           -e ZABBIX_PORT -e ZABBIX_SERVER \
-          -t -v $(pwd)/dist:/dist:Z \
+          -t -v "$(pwd)/dist:/dist:Z" \
           -v /etc/localtime:/etc/localtime:ro \
-          -v $PWD/jenkins-env:/opt/fabric8-test/jenkins-env ${REGISTRY}/${REPOSITORY}/${IMAGE}:latest
+          -v "$PWD/jenkins-env:/opt/fabric8-test/jenkins-env" "$REGISTRY/$REPOSITORY/$IMAGE:latest"
 
 # Start Xvfb
-docker exec $CONTAINER_NAME /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+docker exec "$CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec EE tests
-docker exec $CONTAINER_NAME ./ts-protractor.sh $TEST_SUITE | tee theLog.txt
+docker exec "$CONTAINER_NAME" ./ts-protractor.sh "$TEST_SUITE" | tee theLog.txt
 
 # Writing to and the grepping results required as webdriver fails
 # intermittently - which results is failure reported even if tests pass
@@ -93,30 +92,30 @@ ret1=$?
 grep "0 failures" theLog.txt
 ret2=$?
 
-if [ $ret1 -eq 1 -a $ret2 -eq 0 ]; then RTN_CODE=0; else RTN_CODE=1; fi
+if [ $ret1 -eq 1 ] && [ $ret2 -eq 0 ]; then RTN_CODE=0; else RTN_CODE=1; fi
 ### RTN_CODE=$?
 
 # Archive test results
-docker exec $CONTAINER_NAME ls -l ./target/screenshots
-docker cp $CONTAINER_NAME:/opt/fabric8-test/target/screenshots/. ${ARTIFACTS_DIR}
+docker exec "$CONTAINER_NAME" ls -l ./target/screenshots
+docker cp "$CONTAINER_NAME:/opt/fabric8-test/target/screenshots/." "$ARTIFACTS_DIR"
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
-    docker exec $CONTAINER_NAME ls -l ./target/zabbix
-    docker cp $CONTAINER_NAME:/opt/fabric8-test/target/zabbix/. ${ARTIFACTS_DIR}
+    docker exec "$CONTAINER_NAME" ls -l ./target/zabbix
+    docker cp "$CONTAINER_NAME:/opt/fabric8-test/target/zabbix/." "$ARTIFACTS_DIR"
 fi
 
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
-rsync --password-file=../artifacts.key -qPHva --relative ./${ARTIFACTS_DIR} devtools@artifacts.ci.centos.org::devtools/
-echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/${ARTIFACTS_DIR}"
+rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 
 if [ "$ZABBIX_ENABLED" = true ] ; then
-    docker exec $CONTAINER_NAME zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
+    docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i ./target/zabbix/zabbix-report.txt -z $ZABBIX_SERVER
 fi
 
 # Shutdown container if running
-if [ -n "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-    docker rm -f $CONTAINER_NAME
+if [ -n "$(docker ps -q -f name="$CONTAINER_NAME")" ]; then
+    docker rm -f "$CONTAINER_NAME"
 fi
 
 exit $RTN_CODE
