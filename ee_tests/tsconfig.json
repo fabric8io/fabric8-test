@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "target/ts-output",
     "module": "commonjs",
-    "target": "es2017",
+    "noUnusedLocals": true,
+    "outDir": "target/ts-output",
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "target": "es2017"
   },
   "exclude": [
     "./*.js", "target"
