@@ -42,7 +42,7 @@ class Stage(object):
         print('Starting test.....')
 
         r = requests.get(urlString)
-        print ('stage request results = {}'.format(r.text))
+        print('stage request results = {}'.format(r.text))
 
         result = r.text
         if re.search('Using the greeting service', result):

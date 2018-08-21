@@ -24,7 +24,7 @@ class Pipeline(object):
 
         self.headers = {'Authorization': self.authHeader}
         self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
-        print ('Pipeline URL = {}'.format(self.urlString))
+        print('Pipeline URL = {}'.format(self.urlString))
 
     def buildStatus(self, sleepTimer, maxTries, expectedBuildStatus,
                     expectedAnnotation=None):
@@ -43,7 +43,7 @@ class Pipeline(object):
                 print('Making request to check for the build status...')
                 r = requests.get(self.urlString, headers=self.headers)
 
-                print ('Build status response = {}'.format(r.text))
+                print('Build status response = {}'.format(r.text))
 
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
