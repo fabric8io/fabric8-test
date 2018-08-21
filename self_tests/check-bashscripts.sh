@@ -28,7 +28,7 @@ function check_files() {
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 pushd "${SCRIPT_DIR}/.."
-files=$(find . -path "./venv" -prune -o -path "./ee_tests/node_modules" -prune -o -name '*.sh' -print)
+files=$(find . -path "./venv" -prune -o -path "./ee_tests/node_modules" -prune -o -path "./ee_tests/target" -prune -o -name '*.sh' -print)
 check_files "$files"
 popd
 
@@ -37,7 +37,7 @@ then
     echo "All checks passed for $pass source files"
 else
     let total=$pass+$fail
-    echo "BASH-related issues should fixed in $fail source files out of $total files"
+    echo "BASH-related issues should be fixed in $fail source files out of $total files"
     exit 1
 fi
 
