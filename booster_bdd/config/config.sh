@@ -28,7 +28,8 @@ export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
 ## OSO API server
 if [ -z "$OSO_CLUSTER_ADDRESS" ]; then
 	OSO_CLUSTER_ADDRESS=$(curl -X GET --header 'Accept: application/json' "$WIT_API/api/users?filter\\[username\\]=$OSIO_USERNAME" | jq '.data[0].attributes.cluster')
-	OSO_CLUSTER_ADDRESS=$(echo "${OSO_CLUSTER_ADDRESS//\"/}")
+	OSO_CLUSTER_ADDRESS="${OSO_CLUSTER_ADDRESS//\"/}"
+	OSO_CLUSTER_ADDRESS="${OSO_CLUSTER_ADDRESS%/}"
 	export OSO_CLUSTER_ADDRESS
 fi
 
