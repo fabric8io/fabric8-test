@@ -18,21 +18,19 @@ export WIT_API="${WIT_API:-https://api.openshift.io}"
 ## URI of the Openshift.io's Auth server
 export AUTH_API="${AUTH_API:-https://auth.openshift.io}"
 
-## OSO API server
-# Example of OSO API endpoint:
-# https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/jsmith/builds'
-export OSO_CLUSTER_ADDRESS="${OSO_CLUSTER_ADDRESS:-https://api.starter-us-east-2.openshift.com:443}"
-
-## Temporary - this variable definition can be reverted after this cico pull request is merged:
-## https://github.com/openshiftio/openshiftio-cico-jobs/pull/763
-export OSO_CLUSTER_ADDRESS="https://api.starter-us-east-2a.openshift.com:443"
-
 # Login config
 ## Openshift.io user's name
 export OSIO_USERNAME="${OSIO_USERNAME:-}"
 
 ## Openshift.io user's password
 export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
+
+## OSO API server
+if [ -z "$OSO_CLUSTER_ADDRESS" ]; then
+	OSO_CLUSTER_ADDRESS=$(curl -X GET --header 'Accept: application/json' "$WIT_API/api/users?filter\\[username\\]=$OSIO_USERNAME" | jq '.data[0].attributes.cluster')
+	OSO_CLUSTER_ADDRESS=$(echo "${OSO_CLUSTER_ADDRESS//\"/}")
+	export OSO_CLUSTER_ADDRESS
+fi
 
 if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; then
 	## Login to OSO to get OSO username and token
