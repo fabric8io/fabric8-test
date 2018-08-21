@@ -165,4 +165,11 @@ if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
     docker rm -f fabric8-booster-test
 fi
 
+# We do want to see that zero specs have failed
+grep "0 failed" target/test.txt
+export RTN_CODE=$?
+
+exit $RTN_CODE
+
+
 
