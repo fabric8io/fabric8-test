@@ -5,7 +5,7 @@ from pyshould import should
 
 @given(u'I have verified a booster\'s pipeline has had its deployment to stage verified')
 def given(_context):
-    print('Attempting to use query for running Pipeline...')
+    print('Attempting to use query for Pipeline deployed to Run...')
     global run
     run = Run()
 
