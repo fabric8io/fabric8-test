@@ -3,6 +3,11 @@
 # $1 = GitHub token
 # $2 = GitHub username
 # $3 = filter for name of the repository/repositories
+# $4 = filter based on time of last update in YYY-MM-DD format, e.g. <2015-05-20
+
+USER=${2:-"osiotestmachine"}
+NAME=${3:-"e2e"}
+DATE=${4:-"<$(date --date='week ago' +%F)"}
 
 which jq > /dev/null 2>&1
 if [[ $? != 0 ]]; then
@@ -12,20 +17,24 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-RESPONSE=$(curl -X  GET "https://api.github.com/users/$2/repos?affiliation=owner&sort=created&direction=desc" -H "Authorization: token $1" )
+RESPONSE=$(curl -s -X  GET \
+  "https://api.github.com/search/repositories?q=$NAME+user:$USER+in:name+pushed:$DATE&sort=updated&order=asc" \
+  -H "Authorization: token $1" )
 
-REPOS=$(echo "$RESPONSE" | jq '.[] | .name' | sed 's/\"//g' | grep "${3:-test}")
+echo "Total count of repositories: $(echo $RESPONSE | jq '.total_count')"
+
+REPOS=$(echo "$RESPONSE" | jq -r '.items[].name')
 
 if [[ -z $REPOS ]]; then
   echo "There are no GitHub repositories matching the filter"
   exit 2
 fi
 
-echo "************************** WARNING WARNING WARNING ************************** "
-echo "This script will delete these repositories:"
-echo "***************************************************************************** "
+echo "************************** WARNING WARNING WARNING *********************************** "
+echo "This script will delete these $(echo $RESPONSE | jq '.items | length') repositories"
+echo "************************************************************************************** "
 for REPO in $REPOS; do echo "$REPO"; done
-echo "***************************************************************************** "
+echo "*************************************************************************************** "
 echo " "
 
 read -r -n 1 -p "Are you sure? (Yy|Nn)" REPLY
@@ -34,12 +43,7 @@ echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   for REPO in $REPOS; do
-    echo "deleting repo $REPO"; curl -X DELETE -H "Authorization: token $1" "https://api.github.com/repos/$2/$REPO";
+    echo "deleting repo $REPO"
+    curl -X DELETE -H "Authorization: token $1" "https://api.github.com/repos/$USER/$REPO"
   done
 fi
-
-
-
-
-
-
