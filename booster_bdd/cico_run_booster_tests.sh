@@ -24,11 +24,8 @@ if [ -e "../jenkins-env" ]; then
     |FORGE_API|\
     |WIT_API|\
     |AUTH_API|\
-    |OSO_CLUSTER_ADDRESS|\
-    |OSO_USERNAME|\
     |OSIO_USERNAME|\
     |OSIO_PASSWORD|\
-    |GITHUB_USERNAME|\
     |OSIO_DANGER_ZONE|\
     |PIPELINE|\
     |BOOSTER_MISSION|\
@@ -58,13 +55,6 @@ export WIT_API="${WIT_API:-https://api.openshift.io}"
 
 ## URI of the Openshift.io's Auth server
 export AUTH_API="${AUTH_API:-https://auth.openshift.io}"
-
-## OSO API server
-# Example of OSO API endpoint:
-# https://api.starter-us-east-2.openshift.com:443/oapi/v1/namespaces/jsmith/builds'
-export OSO_CLUSTER_ADDRESS="${OSO_CLUSTER_ADDRESS:-https://api.starter-us-east-2.openshift.com:443}"
-
-export GITHUB_USERNAME=${GITHUB_USERNAME:-"osiotestmachine"}
 
 ## Enable/disable danger zone - features tagged as @osio.danger-zone (e.g. reset user's environment).
 ## (default value is "false")
@@ -105,9 +95,6 @@ export REPORT_DIR=${REPORT_DIR:-target}
 ## 'true' if the UI parts of the test suite are to be run in headless mode (default value is 'true')
 export UI_HEADLESS=${UI_HEADLESS:-true}
 
-export OSO_USERNAME=$OSIO_USERNAME
-
-
 # If target did exist, remove artifacts from previous run
 mkdir -p dist target
 rm -rf target/screenshots
@@ -133,12 +120,8 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-a
           -e FORGE_API \
           -e WIT_API \
           -e AUTH_API \
-          -e OSO_CLUSTER_ADDRESS \
           -e OSIO_USERNAME \
           -e OSIO_PASSWORD \
-          -e OSO_USERNAME \
-          -e OSO_TOKEN \
-          -e GITHUB_USERNAME \
           -e OSIO_DANGER_ZONE \
           -e PIPELINE \
           -e BOOSTER_MISSION \

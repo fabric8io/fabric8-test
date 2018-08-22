@@ -21,7 +21,7 @@ else
 	export feature_list=test-scenarios/$SCENARIO.test
 fi
 
-PYTHONDONTWRITEBYTECODE=1 python3 "$(which behave)" -v -f allure_behave.formatter:AllureFormatter -o "$REPORT_DIR" --tags="osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}" --no-capture --no-capture-stderr @$feature_list
+PYTHONDONTWRITEBYTECODE=1 python3 "$(which behave)" -v -f allure_behave.formatter:AllureFormatter -o "$REPORT_DIR" --tags="@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}" --no-capture --no-capture-stderr @$feature_list
 
 echo "All tests are done!"
 

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Export test configuration
-. ./config/config.sh
-
 # Show command before executing
 set -x
 
@@ -28,12 +25,8 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-a
           -e FORGE_API \
           -e WIT_API \
           -e AUTH_API \
-          -e OSO_CLUSTER_ADDRESS \
           -e OSIO_USERNAME \
           -e OSIO_PASSWORD \
-          -e OSO_USERNAME \
-          -e OSO_TOKEN \
-          -e GITHUB_USERNAME \
           -e OSIO_DANGER_ZONE \
           -e PIPELINE \
           -e BOOSTER_MISSION \
