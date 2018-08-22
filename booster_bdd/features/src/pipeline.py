@@ -43,7 +43,7 @@ class Pipeline(object):
                 print('Making request to check for the build status...')
                 r = requests.get(self.urlString, headers=self.headers)
 
-                helpers.printToJson ('Build status response',r)
+                helpers.printToJson('Build status response', r)
 
                 respJson = r.json()
                 actualBuildStatus = respJson['items'][0]['status']['phase']
@@ -108,7 +108,7 @@ class Pipeline(object):
         print("Promote URL: {}".format(promoteUrl))
         print("Making request to promote build from Stage to Run...")
         r = requests.post(promoteUrl, headers=headers)
-        helpers.printToJson ('Promote response',r)
+        helpers.printToJson('Promote response', r)
 
         if r.status_code == 200:
             return True

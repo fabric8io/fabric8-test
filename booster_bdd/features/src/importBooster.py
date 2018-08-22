@@ -41,7 +41,7 @@ class ImportBooster(object):
             data=data
         )
         # print('request results = {}'.format(r.text))
-        helpers.printToJson ('Import booster request response',r)
+        helpers.printToJson('Import booster request response', r)
 
         result = r.text
         if re.search('uuid', result):
