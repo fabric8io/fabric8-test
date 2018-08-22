@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# $1 = GitHub token
-# $2 = GitHub username
-# $3 = filter for name of the repository/repositories
-# $4 = filter based on time of last update in YYY-MM-DD format, e.g. <2015-05-20
+# $1 = GitHub username
+# $2 = filter for name of the repository/repositories
+# $3 = filter based on time of last update in YYY-MM-DD format, e.g. <2015-05-20
 
-USER=${2:-"osiotestmachine"}
-NAME=${3:-"e2e"}
-DATE=${4:-"<$(date --date='week ago' +%F)"}
+USER=${1:-"osiotestmachine"}
+NAME=${2:-"e2e"}
+DATE=${3:-"<$(date --date='week ago' +%F)"}
 
 which jq > /dev/null 2>&1
 if [[ $? != 0 ]]; then
@@ -19,7 +18,7 @@ fi
 
 RESPONSE=$(curl -s -X  GET \
   "https://api.github.com/search/repositories?q=$NAME+user:$USER+in:name+pushed:$DATE&sort=updated&order=asc" \
-  -H "Authorization: token $1" )
+  -H "Authorization: token $GITHUB_TOKEN" )
 
 echo "Total count of repositories: $(echo $RESPONSE | jq '.total_count')"
 
@@ -44,6 +43,6 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   for REPO in $REPOS; do
     echo "deleting repo $REPO"
-    curl -X DELETE -H "Authorization: token $1" "https://api.github.com/repos/$USER/$REPO"
+    curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$USER/$REPO"
   done
 fi
