@@ -5,7 +5,7 @@ set -e
 
 # Export needed vars
 set +x
-for var in BUILD_NUMBER BUILD_URL JENKINS_URL GIT_BRANCH GH_TOKEN NPM_TOKEN GIT_COMMIT DEVSHIFT; do
+for var in BUILD_NUMBER DEVSHIFT; do
   export "$(grep ${var} ../jenkins-env | xargs)"
 done
 set -x
