@@ -22,8 +22,8 @@ oc login -u $1 -p $2 "$OC_CLUSTER_URL"
 echo --- Change to Jenkins project ---
 oc project $(oc projects -q | grep jenkins)
 
-echo --- List pods ---
-oc get pods 
+echo --- List all resources ---
+oc get all
 
 echo --- Jenkins version ---
 oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.version deploymentconfigs
