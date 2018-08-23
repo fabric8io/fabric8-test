@@ -32,7 +32,6 @@ echo "UI_HEADLESS=$UI_HEADLESS"
 
 echo "BEHAVE_DANGER_TAG=$BEHAVE_DANGER_TAG"
 echo "OSO_USERNAME=$OSO_USERNAME"
-#echo "OSO_TOKEN=$OSO_TOKEN"
 echo "GITHUB_USERNAME=$GITHUB_USERNAME"
 
 if [ -z "$SCENARIO" ]; then
@@ -44,7 +43,8 @@ else
 	export feature_list=test-scenarios/$SCENARIO.test
 fi
 
-PYTHONDONTWRITEBYTECODE=1 python3 "$(which behave)" -v -f allure_behave.formatter:AllureFormatter -o "$REPORT_DIR" --tags="@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}" --no-capture --no-capture-stderr @$feature_list
+CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.formatter:AllureFormatter -o \"$REPORT_DIR\" --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
+bash -v -c "$CMD"
 
 echo "All tests are done!"
 
