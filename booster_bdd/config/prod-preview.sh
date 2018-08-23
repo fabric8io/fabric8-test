@@ -68,7 +68,7 @@ fi
 export OSIO_DANGER_ZONE="${OSIO_DANGER_ZONE:-false}"
 
 ### A behave tag to enable/disable features tagged as @osio.danger-zone (e.g. reset user's environment).
-if [ "$OSIO_DANGER_ZONE" == "true" ]; then
+if [ "${OSIO_DANGER_ZONE,,}" == "true" ]; then
 	export BEHAVE_DANGER_TAG="@osio.danger-zone"
 else
 	export BEHAVE_DANGER_TAG="~@osio.danger-zone"
