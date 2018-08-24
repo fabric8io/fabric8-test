@@ -13,7 +13,7 @@ def given(_context):
 @when(u'I query a pipeline\'s run endpoint')
 def when(_context):
     global result
-    result = run.runTest('testing 1234567890')
+    result = run.runTest('testing run endpoint')
     print('Result = {}'.format(result))
 
 
