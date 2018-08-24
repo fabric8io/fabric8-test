@@ -16,9 +16,13 @@ githubRepo = ''
 
 
 def printToJson(titleText, r):
-    print("******************* {} ********************".format(titleText))
-    parsed = json.loads(r.text)
-    print(json.dumps(parsed, indent=4, sort_keys=True))
+    try:
+        print("******************* {} ********************".format(titleText))
+        parsed = json.loads(r.text)
+        print(json.dumps(parsed, indent=4, sort_keys=True))
+    except Exception as e:
+        print('Unexpected printToJson exception found: {}'.format(e))
+        print ('Raw text of request/response: [{}]'.format(r.text))        
 
 
 def login_user(username="", password=""):

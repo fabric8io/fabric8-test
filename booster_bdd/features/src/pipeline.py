@@ -109,8 +109,9 @@ class Pipeline(object):
         print("Making request to promote build from Stage to Run...")
         r = requests.post(promoteUrl, headers=headers)
         helpers.printToJson('Promote response', r)
-
+        
         if r.status_code == 200:
+            print ("SUCCESS - Successful promotion")
             return True
         else:
             print("ERROR - Request failed to promote - error code = {}".format(r.status_code))

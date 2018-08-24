@@ -2,6 +2,7 @@ import requests
 import features.src.support.helpers as helpers
 import re
 import os
+import time
 
 
 class Run(object):
@@ -40,7 +41,10 @@ class Run(object):
         # Example app endpoint:
         # http://test123-ldimaggi-run.8a09.starter-us-east-2.openshiftapps.com
 
-        print('Starting test.....')
+        print('Starting Run test.....')
+
+        # Wait to ensure that deploy to run has time to complete
+        time.sleep(60)
 
         r = requests.get(urlString)
         print('run request results = {}'.format(r.text))

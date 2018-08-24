@@ -14,7 +14,7 @@ def given_pipeline_completed(_context):
 @when(u'I query a pipeline\'s stage endpoint')
 def when_query_pipeline(_context):
     global result
-    result = stage.runTest('testing 1234567890')
+    result = stage.runTest('testing stage endpoint')
     print('Result = {}'.format(result))
 
 
