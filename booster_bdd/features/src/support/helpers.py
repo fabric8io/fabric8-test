@@ -22,7 +22,7 @@ def printToJson(titleText, r):
         print(json.dumps(parsed, indent=4, sort_keys=True))
     except Exception as e:
         print('Unexpected printToJson exception found: {}'.format(e))
-        print ('Raw text of request/response: [{}]'.format(r.text))        
+        print('Raw text of request/response: [{}]'.format(r.text))
 
 
 def login_user(username="", password=""):
