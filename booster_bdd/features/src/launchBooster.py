@@ -7,7 +7,7 @@ boosterLaunched = False
 
 
 class LaunchBooster(object):
-    def launch(self, projectName, mission="rest-http", runtime="vert.x",
+    def launch(self, projectName, mission="rest-http", runtime="vert.x", version="redhat",
                pipeline="maven-releasestageapproveandpromote", blankBooster="false"):
 
         ###############################################
@@ -33,7 +33,7 @@ class LaunchBooster(object):
         data = {'emptyGitRepository': blankBooster,  # true for blank booster
                 'mission': mission,
                 'runtime': runtime,
-                'runtimeVersion': 'redhat',
+                'runtimeVersion': version,
                 'pipeline': pipeline,
                 'projectName': projectName,
                 'projectVersion': '1.0.0',
