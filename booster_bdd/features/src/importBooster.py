@@ -3,6 +3,8 @@ import features.src.support.helpers as helpers
 import re
 import os
 
+boosterImported = False
+
 
 class ImportBooster(object):
     def importGithubRepo(self, gitRepo):
@@ -44,7 +46,10 @@ class ImportBooster(object):
         helpers.printToJson('Import booster request response', r)
 
         result = r.text
+        global boosterImported
         if re.search('uuid', result):
+            boosterImported = True
             return 'Success'
         else:
+            boosterImported = False
             return 'Fail'

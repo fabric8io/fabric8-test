@@ -1,18 +1,23 @@
 from behave import given, when, then
 from features.src.pipeline import Pipeline
+from features.src.pipeline import pipelineVerified
+from features.src import importBooster
+from features.src import launchBooster
 from pyshould import should
 
 
-@given(u'I have imported a booster')
-def given_imported_booster(_context):
-    print('Attempting to use query for running Pipeline...')
-    global pipeline
-    pipeline = Pipeline()
+@given(u'I have imported or launched a booster')
+def given_imported_or_launched_booster(_context):
+    (importBooster.boosterImported or launchBooster.boosterLaunched) | should.be_true.desc(
+        "Booster imported or launched"
+    )
 
 
 @when(u'I check the pipeline')
 def when_check_pipeline(_context):
-    pass
+    print('Attempting to use query for running Pipeline...')
+    global pipeline
+    pipeline = Pipeline()
 
 
 @then(u'I should see the newly created build in a "New" state"')
@@ -48,3 +53,5 @@ def when_promote_to_run(_context):
 @then(u'I should see the build completed')
 def then_build_completed(_context):
     pipeline.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build failed to complete.")
+    global pipelineVerified
+    pipelineVerified = True

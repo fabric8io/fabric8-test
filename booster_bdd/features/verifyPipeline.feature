@@ -3,7 +3,7 @@ Feature: Verify the imported Booster's pipeline
  
   Background:
     Given I am logged in to OpenShift.io
-    And I have imported a booster
+    And I have imported or launched a booster
  
   Scenario: Build the Booster's pipeline
     When I check the pipeline
