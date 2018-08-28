@@ -1,13 +1,12 @@
 from behave import given, when, then
 from features.src.run import Run
-from features.src.stage import stageDeployed
+from features.src import stage
 from pyshould import should
 
 
 @given(u'I have verified a booster\'s pipeline has had its deployment to stage verified')
 def given_stage_deployed(_context):
-    global stageDeployed
-    stageDeployed | should.be_true.desc("Stage deployed and verified.")
+    stage.stageDeployed | should.be_true.desc("Stage deployed and verified.")
     print('Attempting to use query for Pipeline deployed to Run...')
     global run
     run = Run()
