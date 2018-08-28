@@ -22,12 +22,14 @@ def given_space_created(_context):
 def when_input_booster(_context):
     projectName = os.getenv('PROJECT_NAME')
     mission = os.getenv('BOOSTER_MISSION')
-    runtime = os.getenv('BOOSTER_RUNTIME')
+    boosterRuntime = os.getenv('BOOSTER_RUNTIME').split(":", 1)
+    runtime = boosterRuntime[0]
+    version = boosterRuntime[1]
     pipeline = os.getenv('PIPELINE')
     blankBooster = os.getenv('BLANK_BOOSTER')
 
     launchBooster.boosterLaunched | should.be_false.desc("Booster not created, yet.")
-    result = lb.launch(projectName, mission, runtime, pipeline, blankBooster)
+    result = lb.launch(projectName, mission, runtime, version, pipeline, blankBooster)
     print('Result = {}'.format(result))
 
 

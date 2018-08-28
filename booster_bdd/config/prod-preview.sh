@@ -80,8 +80,8 @@ export PIPELINE="${PIPELINE:-maven-releasestageapproveandpromote}"
 ## OpenShift.io booster mission
 export BOOSTER_MISSION="${BOOSTER_MISSION:-rest-http}"
 
-## OpenShift.io booster runtime
-export BOOSTER_RUNTIME="${BOOSTER_RUNTIME:-vert.x}"
+## OpenShift.io booster runtime and version
+export BOOSTER_RUNTIME="${BOOSTER_RUNTIME:-vert.x:redhat}"
 
 ## true for the blank booster
 export BLANK_BOOSTER="${BLANK_BOOSTER:-false}"
