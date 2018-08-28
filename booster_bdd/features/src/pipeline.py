@@ -6,6 +6,8 @@ import os
 
 start_time = time.time()
 
+pipelineVerified = False
+
 
 class Pipeline(object):
 

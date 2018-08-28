@@ -4,6 +4,8 @@ import re
 import os
 import time
 
+stageDeployed = False
+
 
 class Stage(object):
 
@@ -51,7 +53,10 @@ class Stage(object):
 
         result = r.text
         helpers.printToJson('Promote to Stage response', r)
+        global stageDeployed
         if re.search('Using the greeting service', result):
+            stageDeployed = True
             return 'Success'
         else:
+            stageDeployed = False
             return 'Fail'

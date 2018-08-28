@@ -3,6 +3,8 @@ import features.src.support.helpers as helpers
 import re
 import os
 
+boosterLaunched = False
+
 
 class LaunchBooster(object):
     def launch(self, projectName, mission="rest-http", runtime="vert.x",
@@ -53,7 +55,10 @@ class LaunchBooster(object):
         helpers.printToJson('Launch booster request response', r)
 
         result = r.text
+        global boosterLaunched
         if re.search('GITHUB_PUSHED', result):
+            boosterLaunched = True
             return 'Success'
         else:
+            boosterLaunched = False
             return 'Fail'
