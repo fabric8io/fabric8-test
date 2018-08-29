@@ -31,3 +31,5 @@ oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.ver
 echo --- Events in Jenkins project ---
 oc get ev
 
+echo --- Jenkins pod log ---
+oc logs `oc get pods -o name | grep jenkins -m 1`
