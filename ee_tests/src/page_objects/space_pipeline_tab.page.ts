@@ -44,6 +44,8 @@ export class SpacePipelinePage extends SpaceTabPage {
 
 export class PipelineDetails extends BaseElement {
 
+  private viewLogLocator = by.cssContainingText('a', 'View Log');
+
   private inputRequiredLocator = by.cssContainingText('a', 'Input Required');
 
   private promoteLocator = by.cssContainingText('button', 'Promote');
@@ -72,8 +74,12 @@ export class PipelineDetails extends BaseElement {
     return Promise.resolve(this.string2Number(buildNumber, 'Unexpected build number'));
   }
 
+  public async isViewLogPresent(): Promise<boolean> {
+    return this.element(this.viewLogLocator).isPresent();
+  }
+
   public async viewLog(): Promise<void> {
-    await this.element(by.cssContainingText('a', 'View Log')).click();
+    await this.element(this.viewLogLocator).click();
   }
 
   public async getStages(): Promise<PipelineStage[]> {
@@ -112,8 +118,8 @@ export class PipelineStage extends BaseElement {
   }
 
   public async getStatus(): Promise<string> {
-    let text = await this.element(by.css('div[class*="pipeline-stage-name"]')).getAttribute('class');
-    let status = text.replace('pipeline-stage-name', '').trim();
-    return Promise.resolve(status);
+    let text = await this.element(by.className('pipeline-status-bar')).getAttribute('class');
+    text = text.replace('pipeline-status-bar', '').trim();
+    return Promise.resolve(text);
   }
 }

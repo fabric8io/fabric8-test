@@ -1,6 +1,6 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
-import { BuildStatus, BuildStatusUtils } from '../support/build_status';
+import { BuildStageStatus, BuildStageStatusUtils, BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
@@ -104,8 +104,9 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
         // wait until the pipeline is finished
         try {
-            support.info('Wait for pipeline to finish');
-            await this.waitToFinishInternal(pipeline);
+            await this.waitForLogLink(pipeline);
+            await this.waitForStagesToStart(pipeline);
+            await this.waitForStagesToFinish(pipeline);
             support.info('Pipeline is finished');
         } catch (e) {
             support.info('Wait for pipeline to finish failed with error: ' + e);
@@ -165,9 +166,62 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         this.verifyBuildStagesInternal(stages);
     }
 
-    protected abstract async waitToFinishInternal(pipeline: PipelineDetails): Promise<void>;
+    protected abstract async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void>;
 
     protected abstract async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void>;
+
+    protected async waitForLogLink(pipeline: PipelineDetails): Promise<void> {
+        support.info('Wait for View log link');
+        await browser.wait(async function () {
+            let currentStatus = await pipeline.getStatus();
+            if (BuildStatusUtils.buildEnded(currentStatus)) {
+                return true;
+            } else if (await pipeline.isViewLogPresent()) {
+                return true;
+            } else {
+                await browser.sleep(5000);
+                return false;
+            }
+        }, support.LONGER_WAIT, 'View log link is present (meaning Jenkins job started))');
+    }
+
+    protected async waitForStagesToStart(pipeline: PipelineDetails): Promise<void> {
+        support.info('Wait for stages to start');
+        await browser.wait(async function () {
+            return (await pipeline.getStages()).length > 0;
+        }, support.LONGER_WAIT, 'Stages have started');
+    }
+
+    protected async waitForStageToFinish(
+        pipeline: PipelineDetails,
+        name: string,
+        index: number,
+        hook: Function = async (p: PipelineDetails) => {}): Promise<void> {
+
+        await browser.wait(async function() {
+            return ( await pipeline.getStages()).length > index;
+        }, support.DEFAULT_WAIT, `Pipeline contain stage with index ${index} (${name})`);
+
+        support.info(`Wait for ${name} to finish`);
+        await browser.wait(async function () {
+            let currentStatus = await pipeline.getStatus();
+            if (BuildStatusUtils.buildEnded(currentStatus)) {
+                support.info('Pipeline finished with status ' + currentStatus);
+                return true;
+            }
+
+            let stageStatus = await (await pipeline.getStages())[index].getStatus();
+            support.debug(`${name} status: ${stageStatus}`);
+
+            if (BuildStageStatusUtils.buildEnded(stageStatus)) {
+                return true;
+            } else {
+                hook();
+                await browser.sleep(5000);
+                return false;
+            }
+        }, support.LONGER_WAIT, `${name} is finished`);
+    }
 
     protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
@@ -194,17 +248,8 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
 class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions {
 
-    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
-        await browser.wait(async function () {
-            let currentStatus = await pipeline.getStatus();
-            if (BuildStatusUtils.buildEnded(currentStatus)) {
-                return true;
-            } else {
-                support.debug('Current pipeline status: ' + currentStatus);
-                await browser.sleep(5000);
-                return false;
-            }
-        }, support.LONGEST_WAIT, 'Pipeline is finished');
+    protected async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void> {
+        await this.waitForStageToFinish(pipeline, 'Release stage', 0);
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
@@ -213,15 +258,20 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
     }
 
     protected async verifyBuildReleaseStage(stages: PipelineStage[]) {
-        expect(await stages[0].getName()).toBe('Build Release', 'stage name');
-        expect(await stages[0].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
+        await this.verifyBuildStage(stages, 0, 'Build Release');
+    }
+
+    protected async verifyBuildStage(stages: PipelineStage[], index: number, name: string) {
+        expect(await stages[index].getName()).toBe(name, 'stage name');
+        expect(await stages[index].getStatus()).toBe(BuildStageStatus.SUCCESS, 'stage status');
     }
 }
 
 class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStrategy {
 
-    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
-        await super.waitToFinishInternal(pipeline);
+    protected async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void> {
+        await super.waitForStagesToFinish(pipeline);
+        await super.waitForStageToFinish(pipeline, 'Rollout to Stage', 1);
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
@@ -231,43 +281,29 @@ class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStr
     }
 
     protected async verifyRolloutStage(stages: PipelineStage[]) {
-        expect(await stages[1].getName()).toBe('Rollout to Stage', 'stage name');
-        expect(await stages[1].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
+        await super.verifyBuildStage(stages, 1, 'Rollout to Stage');
     }
 }
 
 class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrategy {
 
-    protected async waitToFinishInternal(pipeline: PipelineDetails): Promise<void> {
-        await browser.wait(async function () {
-            let promoted = false;
-            let currentStatus = await pipeline.getStatus();
-            if (BuildStatusUtils.buildEnded(currentStatus)) {
-                support.info('Pipeline finished with build status ' + currentStatus);
-                return true;
-            } else {
-                support.debug('Current pipeline status: ' + currentStatus);
-                if (!promoted && await pipeline.isInputRequired()) {
-                    support.info('Input is required');
-                    await pipeline.promote();
-                    promoted = true;
-                    support.info('Promoted');
-                }
-                await browser.sleep(5000);
-                return false;
+    protected async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void> {
+        await super.waitForStagesToFinish(pipeline);
+        await super.waitForStageToFinish(pipeline, 'Approve', 2, async (p: PipelineDetails) => {
+            if (await pipeline.isInputRequired()) {
+                support.info('Input is required');
+                await pipeline.promote();
+                support.info('Promoted');
             }
-        }, support.LONGEST_WAIT, 'Pipeline is finished');
+        });
+        await super.waitForStageToFinish(pipeline, 'Rollout to Run', 3);
     }
 
     protected async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void> {
         expect(stages.length).toBe(4, 'number of stages for release&stage&promote strategy');
         await this.verifyBuildReleaseStage(stages);
         await this.verifyRolloutStage(stages);
-
-        expect(await stages[2].getName()).toBe('Approve', 'stage name');
-        expect(await stages[2].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
-
-        expect(await stages[3].getName()).toBe('Rollout to Run', 'stage name');
-        expect(await stages[3].getStatus()).toBe(BuildStatus.COMPLETE, 'stage status');
+        await this.verifyBuildStage(stages, 2, 'Approve');
+        await this.verifyBuildStage(stages, 3, 'Rollout to Run');
     }
 }
