@@ -45,6 +45,7 @@ export class CheInteractionsImpl extends AbstractCheInteractions {
             script,
             [osio, username, password, workspace, token],
             outputDir,
+            true,
             support.LONGEST_WAIT);
     }
 
