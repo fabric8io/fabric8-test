@@ -1,20 +1,21 @@
 import * as support from '../support';
-import { spawn }  from 'child_process';
+import { spawn } from 'child_process';
 import { browser } from 'protractor';
 
 export async function runScript(
-        baseDir: string,
-        name: string,
-        params: string[],
-        outputFile: string,
-        timeout?: number): Promise<void> {
+    baseDir: string,
+    name: string,
+    params: string[],
+    outputFile: string,
+    outputToConsole: boolean = true,
+    timeout?: number): Promise<void> {
 
     support.info(`Running script \"${name} | tee ${outputFile}\ from directory ${baseDir}`);
 
     let exitCode: number = 0;
     let finished: boolean = false;
 
-    const script = spawn(name, params, { cwd: baseDir});
+    const script = spawn(name, params, { cwd: baseDir });
     const tee = spawn('tee', [outputFile]);
 
     script.on('exit', function (code: number, signal: any) {
@@ -26,9 +27,11 @@ export async function runScript(
     script.stdout.pipe(tee.stdin);
     script.stderr.pipe(tee.stdin);
 
-    tee.stdout.on('data', (data: any) => {
-        support.script(data.toString());
-    });
+    if (outputToConsole) {
+        tee.stdout.on('data', (data: any) => {
+            support.script(data.toString());
+        });
+    }
 
     tee.stderr.on('data', (data: any) => {
         support.error(data.toString());
