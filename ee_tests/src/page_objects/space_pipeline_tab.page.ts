@@ -118,8 +118,32 @@ export class PipelineStage extends BaseElement {
   }
 
   public async getStatus(): Promise<string> {
-    let text = await this.element(by.className('pipeline-status-bar')).getAttribute('class');
+    let text = await this.getStatusWithRetry(3);
     text = text.replace('pipeline-status-bar', '').trim();
     return Promise.resolve(text);
+  }
+
+  /*
+    For unknown reason the normal getStatus method was failing on Jenkins
+    with stale element reference error. The retry should prevent that.
+  */
+  private async getStatusWithRetry(retryCount: number): Promise<string> {
+
+    if (retryCount === 0) {
+      throw 'Cannot get the build stage status after retry';
+    }
+
+    let statusBarFinder = await this.element(by.className('pipeline-status-bar'));
+
+    let text;
+    try {
+      text = await statusBarFinder.getAttribute('class');
+    } catch (e) {
+      support.debug('Could not get the stage status, retrying');
+      await browser.sleep(1000);
+      text = await this.getStatusWithRetry(retryCount - 1);
+    }
+
+    return text;
   }
 }
