@@ -6,10 +6,12 @@ set -e
 yum install -y epel-release
 yum install -y jq
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+
 # Export needed vars
 set +x
 for var in GITHUB_TOKEN; do
-  export "$(grep ${var} ../jenkins-env | xargs)"
+  export "$(grep ${var} $DIR/../jenkins-env | xargs)"
 done
 
 if [ -z "$GITHUB_TOKEN" ]; then
@@ -17,7 +19,5 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit 1
 fi
 set -x
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 yes | $DIR/local_clean_test_repos.sh
