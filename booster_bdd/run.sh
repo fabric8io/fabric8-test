@@ -10,6 +10,7 @@ function prepare_venv() {
 [ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 echo "Reading configuration from: $CONFIG_FILE"
+# shellcheck source=config/config.sh
 source "$CONFIG_FILE"
 
 echo "SCENARIO=$SCENARIO"
@@ -39,14 +40,17 @@ else
 fi
 
 #If you want the output in Allure format
-#CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.formatter:AllureFormatter -o \"$REPORT_DIR\" --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
+CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.formatter:AllureFormatter -o \"$REPORT_DIR\" --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
 
 #####If you want the output in default format
-CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
+#CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
 
 bash -v -c "$CMD"
 
 echo "All tests are done!"
+
+echo "Generating allure HTML report"
+allure generate --clean -o "$REPORT_DIR/allure-report" "$REPORT_DIR"
 
 if [ -z "$SCENARIO" ]; then
 	rm -rvf "$feature_list"
