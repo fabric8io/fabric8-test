@@ -6,9 +6,13 @@ set -x
 # Stop on error
 set -e
 
-# If target did exist, remove artifacts from previous run
-rm -rf target
-mkdir -p target
+# Assign default values if not defined in the environment
+## An output directory where the reports will be stored
+export REPORT_DIR=${REPORT_DIR:-target}
+
+# If report dir did exist, remove artifacts from previous run
+rm -rf $REPORT_DIR
+mkdir -p $REPORT_DIR
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
@@ -42,10 +46,10 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-a
 docker exec fabric8-booster-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec booster tests
-docker exec fabric8-booster-test ./local_run.sh 2>&1 | tee target/test.log
+docker exec fabric8-booster-test ./local_run.sh 2>&1 | tee $REPORT_DIR/test.log
 
 # Test results to archive
-docker cp fabric8-booster-test:/opt/fabric8-test/target/. target
+docker cp fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/. $REPORT_DIR
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
@@ -53,7 +57,7 @@ if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
 fi
 
 # We do want to see that zero specs have failed
-grep "0 failed" target/test.log
+grep "0 failed" $REPORT_DIR/test.log
 export RTN_CODE=$?
 
 exit $RTN_CODE
