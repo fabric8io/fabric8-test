@@ -9,8 +9,7 @@ set +e
 # Source environment variables of the jenkins slave
 # that might interest this worker.
 if [ -e "../jenkins-env" ]; then
-  cat ../jenkins-env \
-    | grep -E "(JENKINS_URL|\
+  grep -E "(JENKINS_URL|\
     |GIT_BRANCH|\
     |GIT_COMMIT|\
     |JOB_NAME|\
@@ -35,7 +34,7 @@ if [ -e "../jenkins-env" ]; then
     |PROJECT_NAME|\
     |AUTH_CLIENT_ID|\
     |REPORT_DIR|\
-    |UI_HEADLESS)=" \
+    |UI_HEADLESS)=" ../jenkins-env \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
@@ -98,8 +97,8 @@ export REPORT_DIR=${REPORT_DIR:-target}
 export UI_HEADLESS=${UI_HEADLESS:-true}
 
 # If report dir did exist, remove artifacts from previous run
-rm -rf $REPORT_DIR
-mkdir -p $REPORT_DIR
+rm -rf "$REPORT_DIR"
+mkdir -p "$REPORT_DIR"
 
 # We need to disable selinux for now
 /usr/sbin/setenforce 0
@@ -140,15 +139,15 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-a
 docker exec fabric8-booster-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec booster tests
-docker exec fabric8-booster-test ./run.sh 2>&1 | tee $REPORT_DIR/test.log
+docker exec fabric8-booster-test ./run.sh 2>&1 | tee "$REPORT_DIR/test.log"
 
 # Test results to archive
-docker cp fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/. $REPORT_DIR
+docker cp "fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/." "$REPORT_DIR"
 
 # Archive the test results
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
-rsync --password-file=../artifacts.key -qPHva --relative "./$REPORT_DIR" devtools@artifacts.ci.centos.org::devtools/$ARTIFACTS_DIR
+rsync --password-file=../artifacts.key -qPHva --relative "./$REPORT_DIR" "devtools@artifacts.ci.centos.org::devtools/$ARTIFACTS_DIR"
 echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 
 # Shutdown container if running
@@ -157,7 +156,7 @@ if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
 fi
 
 # We do want to see that zero specs have failed
-grep "0 failed" $REPORT_DIR/test.log
+grep "0 failed" "$REPORT_DIR/test.log"
 export RTN_CODE=$?
 
 exit $RTN_CODE

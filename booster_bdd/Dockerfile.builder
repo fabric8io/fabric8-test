@@ -48,6 +48,14 @@ RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
+# Install allure
+RUN yum install -y -d1 --setopt tsflags='nodocs' java-1.8.0-openjdk-headless
+RUN wget -O allure.tgz https://bintray.com/qameta/generic/download_file?file_path=io%2Fqameta%2Fallure%2Fallure%2F2.7.0%2Fallure-2.7.0.tgz \
+    && tar -xf allure.tgz \
+    && rm -f allure.tgz \
+    && ln -s $(readlink -f $(find | grep 'bin/allure$')) /usr/local/bin/allure \
+    && allure --version
+
 # install all node dependencies
 # COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called

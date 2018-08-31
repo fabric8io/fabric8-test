@@ -10,6 +10,7 @@ function prepare_venv() {
 [ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 echo "Reading configuration from: $CONFIG_FILE"
+# shellcheck source=config/config.sh
 source "$CONFIG_FILE"
 
 echo "SCENARIO=$SCENARIO"
@@ -52,6 +53,9 @@ CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.f
 bash -v -c "$CMD"
 
 echo "All tests are done!"
+
+echo "Generating allure HTML report"
+allure generate --clean -o "$REPORT_DIR/allure-report" "$REPORT_DIR"
 
 if [ -z "$SCENARIO" ]; then
 	rm -rvf "$feature_list"
