@@ -139,16 +139,21 @@ docker run -it --shm-size=256m --detach=true --name=fabric8-booster-test --cap-a
 docker exec fabric8-booster-test /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec booster tests
-docker exec fabric8-booster-test ./run.sh 2>&1 | tee "$REPORT_DIR/test.log"
+mkdir -p "$ARTIFACTS_DIR"
+docker exec fabric8-booster-test ./run.sh 2>&1 | tee "$ARTIFACTS_DIR/test.log"
 
 # Test results to archive
-docker cp "fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/." "$REPORT_DIR"
+docker cp "fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR"
 
 # Archive the test results
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
-rsync --password-file=../artifacts.key -qPHva --relative "./$REPORT_DIR" "devtools@artifacts.ci.centos.org::devtools/$ARTIFACTS_DIR"
-echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+if [ $? -eq 0 ]; then
+  echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+else
+  echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+fi
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
