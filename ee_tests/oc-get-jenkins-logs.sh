@@ -31,5 +31,8 @@ oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.ver
 echo --- Events in Jenkins project ---
 oc get ev
 
+echo --- Jenkins deployment config ---
+oc get -o yaml dc/jenkins
+
 echo --- Jenkins project pod logs ---
 oc get pods -o name | xargs -L1 oc logs || true
