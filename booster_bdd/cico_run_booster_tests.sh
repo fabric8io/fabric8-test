@@ -161,7 +161,7 @@ if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
 fi
 
 # We do want to see that zero specs have failed
-grep "0 failed" "$REPORT_DIR/test.log"
+grep "0 failed" "$ARTIFACTS_DIR/test.log"
 export RTN_CODE=$?
 
 exit $RTN_CODE
