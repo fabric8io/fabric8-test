@@ -21,7 +21,7 @@ export const DEFAULT_WAIT_PAGE_LOAD = seconds(10);
 export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
-export const LONGEST_WAIT = minutes(30);
+export const LONGEST_WAIT = minutes(20);
 
 /* Modified test source code */
 export const FILETEXT: string = `package io.openshift.booster;
