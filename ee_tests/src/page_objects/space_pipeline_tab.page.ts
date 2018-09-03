@@ -74,6 +74,10 @@ export class PipelineDetails extends BaseElement {
     return Promise.resolve(this.string2Number(buildNumber, 'Unexpected build number'));
   }
 
+  public async viewBuildInOS(): Promise<void> {
+    return this.element(by.cssContainingText('a', 'Build #')).click();
+  }
+
   public async isViewLogPresent(): Promise<boolean> {
     return this.element(this.viewLogLocator).isPresent();
   }

@@ -100,6 +100,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     public async waitToFinish(pipeline: PipelineDetails) {
         let waitToFinishInternalError: Error | undefined;
         let verifyJenkinsLogError: Error | undefined;
+        let osoPipelineError: Error | undefined;
         let ocLogsError: Error | undefined;
 
         // wait until the pipeline is finished
@@ -127,6 +128,17 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             verifyJenkinsLogError = e;
         }
 
+        // check OSO pipeline
+        try {
+            support.info('Check the OpenShift pipeline');
+            await this.checkOSPipeline(pipeline);
+            support.info('OpenShift pipeline is OK');
+        } catch (e) {
+            support.info('Check the OpenShift pipeline failed with error: ' + e);
+            await support.screenshotManager.writeScreenshot('os-pipeline-failed');
+            osoPipelineError = e;
+        }
+
         // save OC logs
         try {
             support.info('Save OC Jenkins pod log');
@@ -147,6 +159,10 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
         if (verifyJenkinsLogError !== undefined) {
             throw verifyJenkinsLogError;
+        }
+
+        if (osoPipelineError !== undefined) {
+            throw osoPipelineError;
         }
 
         if (ocLogsError !== undefined) {
@@ -223,7 +239,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         }, support.LONGER_WAIT, `${name} is finished`);
     }
 
-    protected async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
+    private async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
@@ -243,6 +259,18 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             // do not propagate the error because it would shadow previous errors
             support.info('Navigate to Jenkins log directly by URL failed. ' + e);
         }
+    }
+
+    private async checkOSPipeline(pipeline: PipelineDetails): Promise<void> {
+        await pipeline.viewBuildInOS();
+        await support.windowManager.switchToNewWindow();
+
+        await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))));
+        let status = await element(by.xpath('//h3[text()="Status"]/../dl/dd/span')).getText();
+        expect(status).toBe('Complete');
+
+        await support.screenshotManager.writeScreenshot('os-pipeline');
+        await support.windowManager.closeCurrentWindow();
     }
 }
 
