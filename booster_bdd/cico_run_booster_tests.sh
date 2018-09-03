@@ -149,11 +149,15 @@ docker cp "fabric8-booster-test:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
 rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+
+echo "\n\n\n"
 if [ $? -eq 0 ]; then
   echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+  echo "Test results (Allure report) can be found at http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR/allure-report"
 else
   echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 fi
+echo "\n\n\n"
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-booster-test)" ]; then
