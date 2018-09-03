@@ -182,10 +182,10 @@ export class SpaceName {
 
   static newSpaceName(): string {
     const d = new Date();
-    const month = (d.getMonth() < 9) ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
-    const day = (d.getDate() < 10) ? `0${d.getDate()}` : `${d.getDate()}`;
-    const hour = (d.getHours() < 10) ? `0${d.getHours()}` : `${d.getHours()}`;
-    const minute = (d.getMinutes() < 10) ? `0${d.getMinutes()}` : `${d.getMinutes()}`;
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    const hour = d.getHours().toString().padStart(2, '0');
+    const minute = d.getMinutes().toString().padStart(2, '0');
     const randomNumber = Math.round(Math.random() * 10000);
     const spaceName = `e2e-${month}${day}-${hour}${minute}-${randomNumber}`;
     support.info('New space name: ', spaceName);
