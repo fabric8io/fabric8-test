@@ -65,7 +65,7 @@ if [ -n "$(docker ps -q -f name="$CONTAINER_NAME")" ]; then
 fi
 
 docker run --shm-size=256m --detach=true --name="$CONTAINER_NAME" --cap-add=SYS_ADMIN \
-          -e "CI=true" -e DEBUG -e FEATURE_LEVEL -e GITHUB_REPO -e GITHUB_USERNAME \
+          -e "CI=true" -e DEBUG -e FEATURE_LEVEL -e "FORCE_COLOR=1" -e GITHUB_REPO -e GITHUB_USERNAME \
           -e OSIO_PASSWORD -e OSIO_URL -e OSIO_USERNAME -e OSO_USERNAME \
           -e QUICKSTART_NAME -e RELEASE_STRATEGY -e RESET_ENVIRONMENT -e TEST_SUITE \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \

@@ -24,6 +24,7 @@ docker run --shm-size=256m --detach=true --name=fabric8-test --cap-add=SYS_ADMIN
           -e OSIO_USERNAME -e OSIO_PASSWORD -e OSIO_URL  \
           -e OSO_USERNAME -e GITHUB_USERNAME -e GITHUB_REPO -e TEST_SUITE -e QUICKSTART_NAME -e RELEASE_STRATEGY \
           -e FEATURE_LEVEL -e RESET_ENVIRONMENT -e DEBUG \
+          -e "FORCE_COLOR=1" \
           -t -v "$(pwd)/dist:/dist:Z" -v /etc/localtime:/etc/localtime:ro fabric8-test:latest
 
 # Start Xvfb

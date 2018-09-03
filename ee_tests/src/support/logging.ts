@@ -7,7 +7,7 @@ export function error(...msg: any[]) {
 
 export function specTitle(...msg: any[]) {
     // tslint:disable-next-line:no-console
-    console.info(chalk.greenBright(' ---------- ') + chalk.greenBright(...msg) + chalk.greenBright(' ---------- '));
+    console.info(chalk.green(' ---------- ') + chalk.green(...msg) + chalk.green(' ---------- '));
 }
 
 export function info(...msg: any[]) {
