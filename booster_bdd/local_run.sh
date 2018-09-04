@@ -35,6 +35,11 @@ echo "BEHAVE_DANGER_TAG=$BEHAVE_DANGER_TAG"
 echo "OSO_USERNAME=$OSO_USERNAME"
 echo "GITHUB_USERNAME=$GITHUB_USERNAME"
 
+echo "ZABBIX_ENABLED=$ZABBIX_ENABLED"
+echo "ZABBIX_SERVER=$ZABBIX_SERVER"
+echo "ZABBIX_HOST=$ZABBIX_HOST"
+echo "ZABBIX_METRIC_PREFIX=$ZABBIX_METRIC_PREFIX"
+
 if [ -z "$SCENARIO" ]; then
 	echo "Running all tests ..."
 	export feature_list=test-scenarios/feature_list
@@ -50,12 +55,18 @@ CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.f
 #If you want the output in default format
 #CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
 
+export ZABBIX_TIMESTAMP="$(date +%s)"
+
 bash -v -c "$CMD"
 
 echo "All tests are done!"
 
 echo "Generating allure HTML report"
 allure generate --clean -o "$REPORT_DIR/allure-report" "$REPORT_DIR"
+./allure-to-zabbix.sh "$REPORT_DIR/allure-report" > "$REPORT_DIR/zabbix-report.txt"
+
+echo "Zabbix report:"
+cat "$REPORT_DIR/zabbix-report.txt"
 
 if [ -z "$SCENARIO" ]; then
 	rm -rvf "$feature_list"

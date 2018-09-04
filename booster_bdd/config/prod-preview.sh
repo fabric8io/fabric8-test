@@ -97,7 +97,15 @@ export PROJECT_NAME="${PROJECT_NAME:-test123}"
 export AUTH_CLIENT_ID="${AUTH_CLIENT_ID:-740650a2-9c44-4db5-b067-a3d1b2cd2d01}"
 
 ## An output directory where the reports will be stored
-export REPORT_DIR=${REPORT_DIR:-target}
+export REPORT_DIR="${REPORT_DIR:-target}"
 
 ## 'true' if the UI parts of the test suite are to be run in headless mode (default value is 'true')
-export UI_HEADLESS=${UI_HEADLESS:-true}
+export UI_HEADLESS="${UI_HEADLESS:-true}"
+
+export ZABBIX_ENABLED="${ZABBIX_ENABLED:-false}"
+
+export ZABBIX_SERVER="${ZABBIX_SERVER:-zabbix.devshift.net}"
+
+export ZABBIX_HOST="${ZABBIX_HOST:-qa_prod-preview.openshift.io}"
+
+export ZABBIX_METRIC_PREFIX="${ZABBIX_METRIC_PREFIX:-booster-bdd.$SCENARIO}"
