@@ -139,7 +139,8 @@ export class PipelineStage extends BaseElement {
     try {
       text = await statusBarFinder.getAttribute('class');
     } catch (e) {
-      support.debug('Could not get the stage status, retrying');
+      support.debug('Could not get the stage status: ' + e);
+      support.debug('Retrying to get the stage status');
       await browser.sleep(1000);
       text = await this.getStatusWithRetry(retryCount - 1);
     }
