@@ -93,7 +93,7 @@ describe('Creating new quickstart in OSIO', () => {
     // tslint:disable:max-line-length
 
     /* Open the pipeline page, select the pipeline by name */
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    await (await spaceDashboardPage.getPipelinesCard()).openPipelinesPage();
     support.debug('Accessed pipeline page');
 
     let spacePipelinePage = new SpacePipelinePage();

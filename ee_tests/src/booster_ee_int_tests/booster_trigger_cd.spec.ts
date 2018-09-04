@@ -117,18 +117,21 @@ describe('Triggers the CD Build (Jenkins):', () => {
 
     let spaceDashboardPage = new SpaceDashboardPage(support.currentSpaceName());
     await spaceDashboardPage.openInBrowser();
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    await (await spaceDashboardPage.getPipelinesCard()).openPipelinesPage();
     support.debug('Accessed pipeline page');
 
     let pipeline = new Button(pipelineByName(support.currentSpaceName()), 'Pipeline By Name');
 
     support.debug('Looking for the pipeline name');
     await pipeline.untilPresent(support.LONGER_WAIT);
-    await spaceDashboardPage.viewPipelineRuns.clickWhenReady();
+    let viewPipelineRuns = new Button(element(by.xpath('.//*[contains(text(), \'View Pipeline Runs\')]')),
+    'View Pipeline Runs');
+    await viewPipelineRuns.clickWhenReady();
 
     let build2 = element(by.xpath('.//a[contains(text(),\'Build #2\')]'));
     await browser.wait(until.visibilityOf(build2), support.LONGEST_WAIT);
-    await expect (spaceDashboardPage.pipelineList.count()).toBe(2);
+    let pipelineList = element.all(by.xpath('.//*[contains(@class,\'build-pipeline\')]'));
+    await expect (pipelineList.count()).toBe(2);
 
   });
 

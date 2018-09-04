@@ -31,7 +31,7 @@ describe('Access project in OSO:', () => {
     let spaceName = support.currentSpaceName();
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady();
+    await (await spaceDashboardPage.getPipelinesCard()).openPipelinesPage();
 
     let spacePipelinePage = new SpacePipelinePage();
 

@@ -77,7 +77,8 @@ describe('Creating a new quickstart in OSIO using ngx launcher', () => {
       await createAnApplicationButton.clickWhenReady();
     } else {
       support.info('Using [Add to Space] button');
-      await spaceDashboardPage.addToSpaceButton.clickWhenReady();
+      let addToSpaceButton = new Button(element('#spacehome-pipelines-add-button'), 'Add to Space');
+      await addToSpaceButton.clickWhenReady();
     }
     support.info('Creating application from new codebase');
     let wizard = new AddToSpaceDialog(element(by.xpath('//f8-add-app-overlay')));
