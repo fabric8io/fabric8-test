@@ -127,7 +127,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     public async openCodebasesPage(): Promise<void> {
         support.info('Open codebases page');
         await browser.executeScript('window.scrollTo(0,0);');
-        await this.spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
+        await (await this.spaceDashboardPage.getCodebaseCard()).openCodebasesPage();
     }
 
     public async openPipelinesPage(): Promise<void> {

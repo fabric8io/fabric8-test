@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
+import { SpaceDashboardInteractionsFactory } from '../interactions/space_dashboard_interactions';
 
 let globalSpaceName: string;
 
@@ -54,7 +55,7 @@ describe('Creating new quickstart in OSIO', () => {
     await spaceDashboardPage.ready();
 
     /* Open Che display page */
-    await spaceDashboardPage.codebasesSectionTitle.clickWhenReady();
+    SpaceDashboardInteractionsFactory.create('', spaceName).openCodebasesPage();
 
     let spaceChePage = new CodebasesPage();
     await spaceChePage.createWorkspace();

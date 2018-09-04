@@ -56,7 +56,7 @@ describe('Verify the completion of the build pipeline:', () => {
     let repoName = support.currentRepoName();
     let spaceDashboardPage = new SpaceDashboardPage(spaceName);
     await spaceDashboardPage.openInBrowser();
-    await spaceDashboardPage.pipelinesSectionTitle.clickWhenReady(support.LONGER_WAIT);
+    await (await spaceDashboardPage.getPipelinesCard()).openPipelinesPage();
     support.debug('Accessed pipeline page');
 
     let pipeline = new Button(pipelineByName(repoName), 'Pipeline By Name');

@@ -5,116 +5,18 @@ import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { SpacePipelinePage } from './space_pipeline_tab.page';
 import * as support from '../support';
-import { FeatureLevelUtils } from '../support/feature_level';
 
-// The main page that represents a Space
 export class SpaceDashboardPage extends SpaceAppPage {
-
-  /* Analyze/Plan/Create - Navigation bar elements unique to space home display */
-  headerAnalyze = element(by.xpath('.//*[contains(text(),\'Analyze\')]'));
-  headerPlan = element(by.xpath('.//*[contains(text(),\'Plan\')]'));
-
-  /* Dialog to create new project/add to space */
-  // tslint:disable:max-line-length
-  wizardStepTitle = element(by.xpath('.//*[contains(@class,\'wizard-step-title\') and contains(text(),\'Quickstart\')]'));
-  // tslint:enable:max-line-length
-  closeButton = $('#pficon.pficon-close');
-  cancelButton = this.wizardStepTitle.element(by.buttonText('Cancel'));
-
-  /* Associate github repo in code base */
-  gitHubRepo = $('#gitHubRepo');
-
-  /* UI Page Section: Analyze Overview (main body of page Bar */
-
-  /* UI Page Section: Codebases */
-  codebases = $('#spacehome-codebases-card');
-
-  /* Codebases section title/link */
-  //  codebasesSectionTitle = $('#spacehome-codebases-title');
-  codebasesSectionTitle = new Button($('#spacehome-codebases-title'), 'Codebases Section Title');
-
-  /* Codebases create code base link */
-  // tslint:disable:max-line-length
-  codebasesCreateLink = element(by.xpath('.//*[contains(@class,\'card-pf-title\')]/..//*[contains(text(), \'Create Codebase\')]'));
-  addCodebaseButton = this.codebases.element(by.buttonText('Add Codebase'));
-
-  /* UI Page Section: Analytics/Stack Reports */
-  stackReports = $('#spacehome-analytical-report-card');
-
-  /* Stack/Analytical Reports */
-  stackReportsSectionTitle = $('#spacehome-analytical-report-title');
-  stackReportsButton = new Button(element(by.xpath('.//*[contains(@class,\'stack-reports-btn\')]')), 'Stack Report ...');
-  analyticsCloseButton = new Button(element(by.xpath('.//*[contains(text(),\'Stack report for\')]/../button')), 'Analytics Close Button ...');
-  stackReportDependencyCard = $('analytics-report-summary .analytics-summary-report').$$('analytics-summary-card').get(3).$('analytics-summary-content').$$('ana-summary-info');
-  stackReportDependencyCardTotalCount = this.stackReportDependencyCard.get(0).$('.info-value');
-  stackReportDependencyCardAnalyzedCount = this.stackReportDependencyCard.get(1).$('.info-value');
-  stackReportDependencyCardUnknownCount = this.stackReportDependencyCard.get(2).$('.info-value');
-
-  /* UI Page Section: My Workitems */
-  workitems = $('#spacehome-my-workitems-card');
-
-  /* My Workitems section title/link */
-  workitemsSectionTitle = $('#spacehome-my-workitems-title');
-  createWorkitemButton = $('#spacehome-my-workitems-create-button');
-
-  /* UI Page Section: Pipelines */
-  pipelines = $('#spacehome-pipelines-card');
-
-  /* Pipeline Runs */
-  viewPipelineRuns = new Button(element(by.xpath('.//*[contains(text(), \'View Pipeline Runs\')]')), 'View Pipeline Runs');
-  pipelineList = element.all(by.xpath('.//*[contains(@class,\'build-pipeline\')]'));
-
-  /* Pipelines section title/link */
-  pipelinesSectionTitle = new Button($('#spacehome-pipelines-title'), 'Pipeline Section Title');
-
-  addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
-
-  createAnApplicationButton = this.innerElement(
-    Button, '#analyze-overview-dashboard-add-to-space-button', 'Create an Application');
-
-  /* UI Page Section: Environments */
-  environments = $('spacehome-environments-card');
-
-  /* Environments section title/link */
-  environmentsSectionTitle = $('#spacehome-environments-title');
-
-  /* The "Create" subpage of the space home page */
-  headerCreate = element(by.xpath('.//*[contains(text(),\'Create\')]'));
-  headerCodebases = element(by.xpath('.//*[contains(text(),\'Codebases\')]'));
-
-  /* Pipelines tab under Create */
-  headerPipelines = element(by.xpath('.//span[contains(text(),\'Pipelines\')]'));
-
-  /* Workspaces tab under Create */
-  createWorkspace = element(by.xpath('.//codebases-item-workspaces[1]'));
-
-  /* Fade-in background for when the add to space dialog is present */
-  fadeIn = element(by.xpath('.//*[contains(@class,\'modal-backdrop fade in\')]'));
-  modalFade = element(by.xpath('.//*[contains(@class,\'modal fade\')]'));
-  wizardSidebar = element(by.xpath('.//*[contains(@class,\'wizard-pf-sidebar\')]'));
 
   constructor(spaceName: string) {
     super();
-    // TODO: create a better way to access globals like username
     this.url = `${browser.params.login.user}/${spaceName}`;
   }
 
-  async ready() {
-    await super.ready();
-  }
-
   async addToSpace(): Promise<AddToSpaceDialog> {
-    switch (browser.params.feature.level) {
-      case FeatureLevelUtils.isInternal():
-        await this.createAnApplicationButton.clickWhenReady();
-        break;
-      case FeatureLevelUtils.isExperimental():
-      case FeatureLevelUtils.isBeta():
-      case FeatureLevelUtils.isExperimental():
-      default:
-        await this.addToSpaceButton.clickWhenReady();
-    }
-    // NOTE: outside the dialog is outside of $(this)
+    let addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
+    await addToSpaceButton.clickWhenReady();
+
     let wizard = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
     return wizard;
   }
@@ -186,6 +88,11 @@ export class CodebaseCard extends SpaceDashboardPageCard {
     let elementsFinders: ElementFinder[] = await this.all(by.className('f8-card-codebase-url'));
     let codeBases = await elementsFinders.map(async (finder) => await finder.getText());
     return Promise.all(codeBases);
+  }
+
+  public async openCodebasesPage(): Promise<void> {
+    let codebasesSectionTitle = new Button($('#spacehome-codebases-title'), 'Codebases Section Title');
+    return codebasesSectionTitle.clickWhenReady();
   }
 }
 
