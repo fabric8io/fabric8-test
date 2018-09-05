@@ -8,22 +8,20 @@ ZABBIX_TIMESTAMP="${ZABBIX_TIMESTAMP:-$(date +%s)}"
 
 ALLURE_REPORT="${1:-$REPORT_DIR/allure-report}"
 if [ -d "$ALLURE_REPORT" ]; then
-    DATA_DIR="$ALLURE_REPORT/data"
+    DATA_DIR="$ALLURE_REPORT/data/test-cases"
 
-    NAME=($(jq '.["children"][] | .name' $DATA_DIR/suites.json | tr -d '"' | sed -e 's,[ \\],_,g' | sed -e "s,['],-,g"))
-    STATUS=($(jq '.["children"][] | .status' $DATA_DIR/suites.json | tr -d '"'))
-    DURATION=($(jq '.["children"][] | .time.duration' $DATA_DIR/suites.json | tr -d '"'))
-
-    N=$(expr ${#NAME[@]} - 1)
-
-    for i in $(seq 0 $N); do
-        SUITE_STATUS=-1 # assume failed, unless...
-        if [ "${STATUS[$i]}" == "passed" ]; then
-            SUITE_STATUS=1
-        elif [ "${STATUS[$i]}" == "skipped" ]; then
-            SUITE_STATUS=0
+    for tc in $(find $DATA_DIR -name '*.json'); do
+        ZABBIX_METRIC=$(jq '.labels[] | select(.name == "tag") | select(.value | contains ("osio.zabbix-metric")) | .value' $tc | tr -d '"')
+        ZABBIX_METRIC=${ZABBIX_METRIC#$"osio.zabbix-metric."}
+        SCENARIO_STATUS=$(jq '.status' $tc | tr -d '"')
+        DURATION=$(jq '.time.duration' $tc | tr -d '"')
+        STATUS=-1 # assume failed, unless...
+        if [ "$SCENARIO_STATUS" == "passed" ]; then
+            STATUS=1
+        elif [ "$SCENARIO_STATUS" == "skipped" ]; then
+            STATUS=0
         fi
-        echo "$ZABBIX_HOST $ZABBIX_METRIC_PREFIX.${NAME[$i]}.status $ZABBIX_TIMESTAMP $SUITE_STATUS"
-        echo "$ZABBIX_HOST $ZABBIX_METRIC_PREFIX.${NAME[$i]}.duration $ZABBIX_TIMESTAMP ${DURATION[$i]}"
+        echo "$ZABBIX_HOST $ZABBIX_METRIC_PREFIX.$ZABBIX_METRIC.status $ZABBIX_TIMESTAMP $STATUS"
+        echo "$ZABBIX_HOST $ZABBIX_METRIC_PREFIX.$ZABBIX_METRIC.duration $ZABBIX_TIMESTAMP $DURATION"
     done
 fi
