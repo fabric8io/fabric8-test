@@ -5,6 +5,7 @@ Feature: Launch a new Booster in OpenShift.io
     Given I am logged in to OpenShift.io
     And I have a space created from which I can launch a new booster
 
+  @osio.zabbix-metric.launch-booster
   Scenario: Launch new booster in OpenShift.io
     When I input input the name, mission, runtime, and pipeline of the new booster
     Then I should see the booster created
