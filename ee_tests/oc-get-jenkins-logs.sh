@@ -36,3 +36,5 @@ oc get -o yaml dc/jenkins
 
 echo --- Jenkins project pod logs ---
 oc get pods -o name | xargs -L1 oc logs || true
+
+echo --- Script finished ---

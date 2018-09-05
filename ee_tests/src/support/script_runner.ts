@@ -44,7 +44,8 @@ export async function runScript(
         finished = true;
     });
 
-    await browser.wait(() => finished === true, timeout);
+    await browser.wait(() => finished === true, timeout,
+        `Script \"${name} | tee ${outputFile}\" did not finish`);
 
     if (exitCode !== 0) {
         support.info(`Script \"${name} | tee ${outputFile}\" exited with code ${exitCode}`);
