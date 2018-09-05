@@ -317,11 +317,14 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
 
     protected async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void> {
         await super.waitForStagesToFinish(pipeline);
+
+        let promoted = false;
         await super.waitForStageToFinish(pipeline, 'Approve', 2, async (p: PipelineDetails) => {
-            if (await pipeline.isInputRequired()) {
+            if (!promoted && await pipeline.isInputRequired()) {
                 support.info('Input is required');
                 await pipeline.promote();
                 support.info('Promoted');
+                promoted = true;
             }
         });
         await super.waitForStageToFinish(pipeline, 'Rollout to Run', 3);
