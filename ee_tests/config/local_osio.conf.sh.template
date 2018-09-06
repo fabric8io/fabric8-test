@@ -18,7 +18,7 @@ export GITHUB_PASSWORD="${GITHUB_PASSWORD:-}"
 # see protractor.config.ts for valid test suites
 export TEST_SUITE="${TEST_SUITE:-smoketest}"
 export RELEASE_STRATEGY="${RELEASE_STRATEGY:-releaseStageApproveAndPromote}"
-export QUICKSTART_NAME="${QUICKSTART_NAME:-'vertxHttp'}"
+export QUICKSTART_NAME="${QUICKSTART_NAME:-'SpringBootHttp'}"
 export NGX_LAUNCHER_ENABLED="${NGX_LAUNCHER_ENABLED:-true}"
 export RESET_ENVIRONMENT="${RESET_ENVIRONMENT:-true}"
 # Expected user setting for feature levels - internal, experimental, beta, released
