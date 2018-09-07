@@ -147,7 +147,9 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 './oc-get-jenkins-logs.sh', // script
                 [ browser.params.login.user,  browser.params.login.password], // params
                 './target/screenshots/oc-logs-output.txt',  // output file
-                false);
+                false,
+                support.LONGER_WAIT
+            );
         } catch (e) {
             support.info('Save OC Jenkins pod log failed with error: ' + e);
             ocLogsError = e;
