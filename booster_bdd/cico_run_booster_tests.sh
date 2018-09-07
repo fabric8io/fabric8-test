@@ -186,7 +186,7 @@ if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
 fi
 
 # We do want to see that zero specs have failed
-grep "0 failed" "$ARTIFACTS_DIR/test.log"
+grep " features passed, 0 failed," "$ARTIFACTS_DIR/test.log"
 export RTN_CODE=$?
 
 exit $RTN_CODE
