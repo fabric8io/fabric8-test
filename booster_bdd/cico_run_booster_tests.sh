@@ -34,7 +34,11 @@ if [ -e "../jenkins-env" ]; then
     |PROJECT_NAME|\
     |AUTH_CLIENT_ID|\
     |REPORT_DIR|\
-    |UI_HEADLESS)=" ../jenkins-env \
+    |UI_HEADLESS|\
+    |ZABBIX_ENABLED|\
+    |ZABBIX_SERVER|\
+    |ZABBIX_HOST|\
+    |ZABBIX_METRIC_PREFIX)=" ../jenkins-env \
     | sed 's/^/export /g' \
     > /tmp/jenkins-env
   source /tmp/jenkins-env
