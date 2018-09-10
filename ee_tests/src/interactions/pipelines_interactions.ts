@@ -124,7 +124,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.info('Check the Jenkins log failed with error: ' + e);
             await support.screenshotManager.writeScreenshot('jenkins-log-failed');
             // if the UI show Jenkins log faile, try navigating to jenkins directly
-            this.showJenkinsLogDirectly();
+            await this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
         }
 
