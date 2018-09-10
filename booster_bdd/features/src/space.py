@@ -49,7 +49,7 @@ class Space:
                 return spaceID
             except ValueError:
                 return None
-        
+
         except Exception as e:
             print('Unexpected space creation exception found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
