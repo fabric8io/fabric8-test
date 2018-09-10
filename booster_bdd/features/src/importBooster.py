@@ -37,19 +37,25 @@ class ImportBooster(object):
         forgeApi = os.getenv("FORGE_API")
 
         print('Making request to import...')
-        r = requests.post(
-            '{}/api/osio/import'.format(forgeApi),
-            headers=headers,
-            data=data
-        )
-        # print('request results = {}'.format(r.text))
-        helpers.printToJson('Import booster request response', r)
 
-        result = r.text
-        global boosterImported
-        if re.search('uuid', result):
-            boosterImported = True
-            return 'Success'
-        else:
-            boosterImported = False
-            return 'Fail'
+        try:
+            r = requests.post(
+                '{}/api/osio/import'.format(forgeApi),
+                headers=headers,
+                data=data
+            )
+            # print('request results = {}'.format(r.text))
+            helpers.printToJson('Import booster request response', r)
+
+            result = r.text
+            global boosterImported
+            if re.search('uuid', result):
+                boosterImported = True
+                return 'Success'
+            else:
+                boosterImported = False
+                return 'Fail'
+        
+        except Exception as e:
+            print('Unexpected booster import exception found: {}'.format(e))
+            print('Raw text of request/response: [{}]'.format(r.text))

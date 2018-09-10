@@ -46,19 +46,25 @@ class LaunchBooster(object):
         forgeApi = os.getenv("FORGE_API")
 
         print('Making request to launch...')
-        r = requests.post(
-            '{}/api/osio/launch'.format(forgeApi),
-            headers=headers,
-            data=data
-        )
-        # print('request results = {}'.format(r.text))
-        helpers.printToJson('Launch booster request response', r)
 
-        result = r.text
-        global boosterLaunched
-        if re.search('GITHUB_PUSHED', result):
-            boosterLaunched = True
-            return 'Success'
-        else:
-            boosterLaunched = False
-            return 'Fail'
+        try:
+            r = requests.post(
+                '{}/api/osio/launch'.format(forgeApi),
+                headers=headers,
+                data=data
+            )
+            # print('request results = {}'.format(r.text))
+            helpers.printToJson('Launch booster request response', r)
+
+            result = r.text
+            global boosterLaunched
+            if re.search('GITHUB_PUSHED', result):
+                boosterLaunched = True
+                return 'Success'
+            else:
+                boosterLaunched = False
+                return 'Fail'
+
+        except Exception as e:
+            print('Unexpected booster launch exception found: {}'.format(e))
+            print('Raw text of request/response: [{}]'.format(r.text))

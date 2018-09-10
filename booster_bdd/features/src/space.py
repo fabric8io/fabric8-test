@@ -34,17 +34,22 @@ class Space:
         }}'.format(spaceName)
 
         print('Making request to create a new space "{}"...'.format(spaceName))
-        r = requests.post(
-            '{}/api/spaces'.format(serverAddress),
-            headers=headers,
-            data=data
-        )
-        # print 'request results = {}'.format(r.content)
 
         try:
-            respJson = r.json()
-            spaceID = respJson["data"]["id"]
-            print('The spaceID is: {}'.format(spaceID))
-            return spaceID
-        except ValueError:
-            return None
+            r = requests.post(
+                '{}/api/spaces'.format(serverAddress),
+                headers=headers,
+                data=data
+            )
+            # print 'request results = {}'.format(r.content)
+            try:
+                respJson = r.json()
+                spaceID = respJson["data"]["id"]
+                print('The spaceID is: {}'.format(spaceID))
+                return spaceID
+            except ValueError:
+                return None
+        
+        except Exception as e:
+            print('Unexpected space creation exception found: {}'.format(e))
+            print('Raw text of request/response: [{}]'.format(r.text))
