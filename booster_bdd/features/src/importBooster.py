@@ -55,7 +55,7 @@ class ImportBooster(object):
             else:
                 boosterImported = False
                 return 'Fail'
-        
+
         except Exception as e:
             print('Unexpected booster import exception found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
