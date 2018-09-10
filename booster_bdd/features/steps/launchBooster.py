@@ -13,7 +13,6 @@ def given_space_created(_context):
     spaceID = helpers.getSpaceID()
     spaceID | should_not.be_none().desc("Space ID")
 
-    print('Attempting to use OSIO booster service intregration POC...')
     global lb
     lb = LaunchBooster()
 
