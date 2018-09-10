@@ -8,4 +8,4 @@ Feature: Import a new Booster into OpenShift.io
   @osio.zabbix-metric.import-github-repo
   Scenario: Import booster from a GitHub repository
     When I input a name of the GitHub repository with a booster
-    Then I should see the booster imported
+    Then I should see the booster imported within 10 seconds

@@ -8,4 +8,4 @@ Feature: Launch a new Booster in OpenShift.io
   @osio.zabbix-metric.launch-booster
   Scenario: Launch new booster in OpenShift.io
     When I input input the name, mission, runtime, and pipeline of the new booster
-    Then I should see the booster created
+    Then I should see the booster created within 10 seconds

@@ -2,6 +2,7 @@ import requests
 import features.src.support.helpers as helpers
 import re
 import os
+import time
 
 boosterImported = False
 
@@ -48,14 +49,42 @@ class ImportBooster(object):
             helpers.printToJson('Import booster request response', r)
 
             result = r.text
-            global boosterImported
             if re.search('uuid', result):
-                boosterImported = True
                 return 'Success'
             else:
-                boosterImported = False
                 return 'Fail'
 
         except Exception as e:
             print('Unexpected booster import exception found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
+
+    def checkCodebases(self, maxAttempts=10):
+        serverUrl = os.getenv("SERVER_ADDRESS")
+        spaceId = helpers.getSpaceID()
+        codebasesUrl = '{}/api/spaces/{}/codebases'.format(serverUrl, spaceId)
+
+        theToken = helpers.get_user_tokens().split(";")[0]
+        authHeader = 'Bearer {}'.format(theToken)
+        headers = {'Accept': 'application/json',
+                   'Authorization': authHeader,
+                   'X-App': 'osio',
+                   'X-Git-Provider': 'GitHub',
+                   'Content-Type': 'application/x-www-form-urlencoded'}
+
+        global boosterImported
+        for i in range(1, int(maxAttempts) + 1):
+            r = requests.get(
+                codebasesUrl,
+                headers=headers
+            )
+            helpers.printToJson('Attempt to get codebases #{}:'.format(i), r)
+            responseJson = r.json()
+            data = responseJson['data']
+            cbCount = len(data)
+            print('Codebases found: {}'.format(cbCount))
+            if cbCount > 0:
+                boosterImported = True
+                return True
+            time.sleep(1)
+        boosterImported = False
+        return False
