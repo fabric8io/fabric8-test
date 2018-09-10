@@ -20,7 +20,7 @@ def when_check_pipeline(_context):
     pl = Pipeline()
 
 
-@then(u'I should see the newly created build in a "New" state"')
+@then(u'I should see the newly created build in a "New" state')
 def then_new_state(_context):
     pl.buildStatus(30, 5, 'New') | should.be_true.desc("Build failed to get to New state")
 

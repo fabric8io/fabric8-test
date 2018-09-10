@@ -8,7 +8,7 @@ Feature: Verify the imported Booster's pipeline
   @osio.zabbix-metric.build-pipeline
   Scenario: Build the Booster's pipeline
     When I check the pipeline
-    Then I should see the newly created build in a "New" state"
+    Then I should see the newly created build in a "New" state
     Then I should see the build in a "Running" state
     Then I should see the build ready to be promoted to "Run" stage
  
