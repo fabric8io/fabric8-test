@@ -79,26 +79,6 @@ let conf: Config = {
     boosterTest: ['src/booster_pipeline.spec.js'],
     importTest: ['src/workshop-import-to-space.spec.js'],
 
-    boosterimport: [
-      'src/booster_ee_int_tests/booster_import_to_space.spec.js',
-      'src/booster_ee_int_tests/booster_pipeline.spec.js',
-      'src/booster_ee_int_tests/booster_cleanup.spec.js'
-    ],
-
-    boostersuite: [
-      'src/booster_ee_int_tests/booster_setup.spec.js',
-      'src/booster_ee_int_tests/booster_oso_project.spec.js',
-      'src/booster_ee_int_tests/booster_pipeline.spec.js',
-      'src/booster_ee_int_tests/booster_trigger_cd.spec.js',
-      'src/booster_ee_int_tests/booster_analytics_report.spec.js',
-      'src/booster_ee_int_tests/booster_build_maven.spec.js',
-      'src/booster_ee_int_tests/booster_debug_project.spec.js',
-      'src/booster_ee_int_tests/booster_junit_tests.spec.js',
-      'src/booster_ee_int_tests/booster_che_preview.spec.js',
-      'src/booster_ee_int_tests/booster_modify_src.spec.js',
-      'src/booster_ee_int_tests/booster_cleanup.spec.js'
-    ],
-
     boosterterminaltest: ['src/booster_ee_int_tests/quickstart_cheterminal.spec.js'],
     boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
     boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
