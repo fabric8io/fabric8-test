@@ -104,6 +104,8 @@ export class AnalyticsCard extends BaseElement {
 
   async ready() {
     await super.ready();
+    await browser.wait(until.stalenessOf(this.element(by.cssContainingText('h3', 'No results found'))),
+      support.DEFAULT_WAIT, 'Staleness of element with text "No results found"');
     await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
       support.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner');
   }
