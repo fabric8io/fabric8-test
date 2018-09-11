@@ -14,6 +14,11 @@ def given_logged(_context):
     helpers.is_user_logged_in() | should.be_true.desc("User should be logged in.")
 
 
+@given(u'I have GitHub account linked')
+def given_github_linked(_context):
+    helpers.is_github_linked() | should.be_true.desc("User should have GitHub account linked.")
+
+
 @when(u'I login to Openshift.io with username and password')
 def when_login_user(_context):
     username = os.getenv("OSIO_USERNAME")

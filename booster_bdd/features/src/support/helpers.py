@@ -38,6 +38,27 @@ def get_user_tokens(index=0):
     return user_tokens[index]
 
 
+def is_github_linked():
+    if(is_user_logged_in):
+        authUrl = os.getenv("AUTH_API")
+        authToken = get_user_tokens().split(";")[0]
+        authHeader = 'Bearer {}'.format(authToken)
+        getTokenUrl = '{}/api/token?force_pull=true&for=https://github.com'.format(authUrl)
+        headers = {'Accept': 'application/json',
+                   'Authorization': authHeader,
+                   'X-App': 'osio',
+                   'X-Git-Provider': 'GitHub'}
+        r = req.get(
+            getTokenUrl,
+            headers=headers
+        )
+        if r.status_code == 200:
+            return True
+        else:
+            printToJson("GitHub token response", r)
+    return False
+
+
 def create_space_name(template="BDD"):
     now = datetime.datetime.now()
     space = "{}-{}-{}".format(

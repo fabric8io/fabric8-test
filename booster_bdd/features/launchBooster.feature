@@ -4,6 +4,7 @@ Feature: Launch a new Booster in OpenShift.io
   Background:
     Given I am logged in to OpenShift.io
     And I have a space created from which I can launch a new booster
+    And I have GitHub account linked
 
   @osio.zabbix-metric.launch-booster
   Scenario: Launch new booster in OpenShift.io
