@@ -126,6 +126,10 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             // if the UI show Jenkins log faile, try navigating to jenkins directly
             await this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
+        } finally {
+            if (support.windowManager.getWindowCount() > 1) {
+                await support.windowManager.closeCurrentWindow();
+            }
         }
 
         // check OSO pipeline
@@ -137,6 +141,10 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.info('Check the OpenShift pipeline failed with error: ' + e);
             await support.screenshotManager.writeScreenshot('os-pipeline-failed');
             osoPipelineError = e;
+        } finally {
+            if (support.windowManager.getWindowCount() > 1) {
+                await support.windowManager.closeCurrentWindow();
+            }
         }
 
         // save OC logs
@@ -247,7 +255,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
             support.LONG_WAIT, 'Jenkins log is finished');
         await support.screenshotManager.writeScreenshot('jenkins-log');
-        await support.windowManager.closeCurrentWindow();
     }
 
     private async showJenkinsLogDirectly() {
@@ -272,7 +279,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         expect(status).toBe('Complete');
 
         await support.screenshotManager.writeScreenshot('os-pipeline');
-        await support.windowManager.closeCurrentWindow();
     }
 }
 
