@@ -546,6 +546,10 @@ export class WindowManager {
       });
     };
   }
+
+  getWindowCount() {
+    return this.windowCount;
+  }
 }
 
 export let windowManager: WindowManager = new WindowManager();
