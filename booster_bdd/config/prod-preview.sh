@@ -18,6 +18,12 @@ export WIT_API="${WIT_API:-https://api.prod-preview.openshift.io}"
 ## URI of the Openshift.io's Auth server
 export AUTH_API="${AUTH_API:-https://auth.prod-preview.openshift.io}"
 
+## URI of the Openshift.io's Che server
+export CHE_API="${CHE_API:-https://che.openshift.io}"
+
+## github repo URL (for use in creating Che workspace)
+export GIT_REPO_URL="${GIT_REPO:-https://github.com/che-samples/console-java-simple.git}"
+
 # Login config
 ## Openshift.io user's name
 export OSIO_USERNAME="${OSIO_USERNAME:-}"

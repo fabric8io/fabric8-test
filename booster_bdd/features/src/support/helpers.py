@@ -65,6 +65,16 @@ def setSpaceID(theID):
     spaceID = theID
 
 
+def getWorkspaceID():
+    global workspaceID
+    return workspaceID
+
+
+def setWorkspaceID(theSpaceID):
+    global workspaceID
+    workspaceID = theSpaceID
+
+
 def getSpaceName():
     global spaceName
     return spaceName
