@@ -101,7 +101,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         let waitToFinishInternalError: Error | undefined;
         let verifyJenkinsLogError: Error | undefined;
         let osoPipelineError: Error | undefined;
-        let ocLogsError: Error | undefined;
 
         // wait until the pipeline is finished
         try {
@@ -160,7 +159,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             );
         } catch (e) {
             support.info('Save OC Jenkins pod log failed with error: ' + e);
-            ocLogsError = e;
         }
 
         if (waitToFinishInternalError !== undefined) {
@@ -173,10 +171,6 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
         if (osoPipelineError !== undefined) {
             throw osoPipelineError;
-        }
-
-        if (ocLogsError !== undefined) {
-            throw ocLogsError;
         }
     }
 
