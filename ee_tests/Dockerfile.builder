@@ -42,7 +42,7 @@ RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 # && yum -y --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.28/linux/oc.tar.gz &&\
+RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.47/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
 # install all node dependencies
