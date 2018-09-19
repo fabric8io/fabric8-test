@@ -35,6 +35,6 @@ echo --- Jenkins deployment config ---
 oc get -o yaml dc/jenkins
 
 echo --- Jenkins project pod logs ---
-oc get pods -o name | xargs -L1 oc logs || true
+oc get pods -o name | xargs -L1 oc logs --tail=500 || true
 
 echo --- Script finished ---
