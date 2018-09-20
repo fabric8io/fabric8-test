@@ -113,6 +113,9 @@ let conf: Config = {
         // '--headless', '--disable-gpu',
         '--no-sandbox', 'disable-popup-blocking=true'
       ]
+    },
+    'loggingPrefs': {
+      browser: 'ALL'
     }
   },
 
