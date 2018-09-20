@@ -1,4 +1,4 @@
-import { browser, by, element, ElementFinder, ExpectedConditions as until, Key } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until, Key, logging } from 'protractor';
 import { createWriteStream } from 'fs';
 import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
@@ -270,6 +270,22 @@ export async function writePageSource(filename: string) {
   support.debug(`Saved page source to: ${filename}`);
 }
 
+export async function writeBrowserLog(filename: string) {
+  let logs: logging.Entry[] = await browser.manage().logs().get('browser');
+  let stream = createWriteStream(filename);
+
+  logs.forEach((entry) => {
+    const template = `[${support.formatTimestamp(entry.timestamp)}] ${entry.level.name} ${entry.message}`;
+    if (entry.level.value >= logging.Level.WARNING.value) {
+      console.log(template);
+    }
+    stream.write(template + '\n');
+  });
+
+  stream.end();
+  support.debug(`Saved browser logs to: ${filename}`);
+}
+
 /**
  * Store the page source
  */
@@ -471,6 +487,7 @@ export class ScreenshotManager {
   async writeScreenshot(name = 'screenshot', path = 'target/screenshots') {
     await writeScreenshot(path + '/' + this.getFormattedCounters() + '-' + name + '.png');
     await writePageSource(path + '/' + this.getFormattedCounters() + '-' + name + '.html');
+    await writeBrowserLog(path + '/' + this.getFormattedCounters() + '-' + name + '.log');
     this.screenshotCounter++;
   }
 
