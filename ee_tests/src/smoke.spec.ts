@@ -76,7 +76,7 @@ describe('e2e_smoketest', () => {
 
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGEST_WAIT);
+    await projectInCheTree.untilPresent(support.LONGER_WAIT);
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     /* Switch back to the OSIO browser window */

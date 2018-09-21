@@ -16,13 +16,13 @@ export class CodebasesPage extends AppPage {
 
   public async createWorkspace() {
     let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces')), 'Create Codespace...');
-    await createCodebase.clickWhenReady(support.LONGEST_WAIT);
+    await createCodebase.clickWhenReady(support.LONGER_WAIT);
     await browser.wait(until.presenceOf(element(this.openButtonLocator)));
   }
 
   public async openWorkspace() {
     let openWorkspace = new Button(element(this.openButtonLocator), 'Open Workspace...');
-    openWorkspace.clickWhenReady(support.LONGEST_WAIT);
+    openWorkspace.clickWhenReady(support.LONGER_WAIT);
   }
 
   public async getWorkspaces(): Promise<string[]> {
