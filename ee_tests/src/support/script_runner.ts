@@ -1,6 +1,7 @@
 import * as support from '../support';
 import { spawn } from 'child_process';
 import { browser } from 'protractor';
+import { createWriteStream } from 'fs';
 
 export async function runScript(
     baseDir: string,
@@ -10,46 +11,41 @@ export async function runScript(
     outputToConsole: boolean = true,
     timeout?: number): Promise<void> {
 
-    support.info(`Running script \"${name} | tee ${outputFile}\ from directory ${baseDir}`);
+    support.info(`Running script \"${name} > ${outputFile}\" from directory ${baseDir}`);
 
     let exitCode: number = 0;
     let finished: boolean = false;
 
     const script = spawn(name, params, { cwd: baseDir });
-    const tee = spawn('tee', [outputFile]);
+    const stream = createWriteStream(outputFile);
 
     script.on('exit', function (code: number, signal: any) {
-        if (code !== 0) {
-            exitCode = code;
-        }
-    });
-
-    script.stdout.pipe(tee.stdin);
-    script.stderr.pipe(tee.stdin);
-
-    if (outputToConsole) {
-        tee.stdout.on('data', (data: any) => {
-            support.script(data.toString());
-        });
-    }
-
-    tee.stderr.on('data', (data: any) => {
-        support.error(data.toString());
-    });
-
-    tee.on('exit', function (code: number, signal: any) {
-        if (code !== 0 && exitCode === 0) {
-            exitCode = code;
-        }
+        stream.end();
+        exitCode = code;
         finished = true;
     });
 
+    script.stdout.on('data', (data: any) => {
+        if (outputToConsole) {
+            support.script(data);
+        }
+        stream.write(new Buffer(data));
+    });
+
+    script.stderr.on('data', (data: any) => {
+        // check if data contains some non-whitespace characters
+        if (/\S/.test(data)) {
+            support.error(data);
+            stream.write(new Buffer(data));
+        }
+    });
+
     await browser.wait(() => finished === true, timeout,
-        `Script \"${name} | tee ${outputFile}\" did not finish`);
+        `Script \"${name} > ${outputFile}\" did not finish`);
 
     if (exitCode !== 0) {
-        support.info(`Script \"${name} | tee ${outputFile}\" exited with code ${exitCode}`);
-        throw new Error(`Script \"${name} | tee ${outputFile}\ exited with non zero value ${exitCode}`);
+        support.info(`Script \"${name} > ${outputFile}\" exited with code ${exitCode}`);
+        throw new Error(`Script \"${name} > ${outputFile}\" exited with non zero value ${exitCode}`);
     } else {
         support.info('Script finished');
     }
