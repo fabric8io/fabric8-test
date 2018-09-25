@@ -9,10 +9,9 @@ set -x
 # Stop on error
 set -e
 
+# Remove artefacts from previous run
+rm -rf target
 mkdir -p dist target
-
-# If target did exist, remove artifacts from previous run
-rm -rf target/screenshots
 
 # Shutdown container if running
 if [ -n "$(docker ps -q -f name=fabric8-test)" ]; then
