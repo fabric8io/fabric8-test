@@ -94,6 +94,8 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         let githubName = browser.params.github.username;
         expect(await pipeline.getRepository()).
             toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
+
+        await support.screenshotManager.writeScreenshot('pipeline-info');
         return Promise.resolve(pipeline);
     }
 
@@ -108,6 +110,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await this.waitForStagesToStart(pipeline);
             await this.waitForStagesToFinish(pipeline);
             support.info('Pipeline is finished');
+            await support.screenshotManager.writeScreenshot(`pipeline-finished`);
         } catch (e) {
             support.info('Wait for pipeline to finish failed with error: ' + e);
             await support.screenshotManager.writeScreenshot('pipeline-failed');
@@ -234,6 +237,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.debug(`${name} status: ${stageStatus}`);
 
             if (BuildStageStatusUtils.buildEnded(stageStatus)) {
+                await support.screenshotManager.writeScreenshot(`stage-${index}-finished`);
                 return true;
             } else {
                 hook();
