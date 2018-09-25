@@ -7,6 +7,7 @@ import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { Button } from '../ui/button';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { Quickstart } from './quickstart';
+import * as mkdirp from 'mkdirp';
 
 export enum BrowserMode {
   Phone,
@@ -484,10 +485,17 @@ export class ScreenshotManager {
 
   private screenshotCounter: number = 1;
 
-  async writeScreenshot(name = 'screenshot', path = 'target/screenshots') {
-    await writeScreenshot(path + '/' + this.getFormattedCounters() + '-' + name + '.png');
-    await writePageSource(path + '/' + this.getFormattedCounters() + '-' + name + '.html');
-    await writeBrowserLog(path + '/' + this.getFormattedCounters() + '-' + name + '.log');
+  private path: string;
+
+  constructor(path = 'target/screenshots') {
+    this.path = path;
+    mkdirp.sync(path);
+  }
+
+  async writeScreenshot(name = 'screenshot') {
+    await writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
+    await writePageSource(this.path + '/' + this.getFormattedCounters() + '-' + name + '.html');
+    await writeBrowserLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.log');
     this.screenshotCounter++;
   }
 

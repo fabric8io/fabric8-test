@@ -8,15 +8,6 @@ import * as support from './src/support';
 // NOTE: weird import as documented in
 // https://github.com/Xotabu4/jasmine-protractor-matchers
 import ProtractorMatchers = require('jasmine-protractor-matchers');
-import HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
-
-let screenshotReporter = new HtmlScreenshotReporter({
-  dest: 'target/screenshots',
-  filename: 'f8-test-report.html',
-  reportOnlyFailedSpecs: false,
-  captureOnlyFailedSpecs: false,
-  inlineImages: true
-});
 
 let consoleReporter = new SpecReporter({
   spec: {
@@ -99,14 +90,8 @@ let conf: Config = {
     }
   },
 
-  // Setup the report before any tests start
-  beforeLaunch: function () {
-    return new Promise(resolve => screenshotReporter.beforeLaunch(resolve));
-  },
-
   // Assign the test reporter to each running instance
   onPrepare: function () {
-    jasmine.getEnv().addReporter(screenshotReporter);
     jasmine.getEnv().addReporter(consoleReporter);
     if (useVideoReporter) {
       jasmine.getEnv().addReporter(videoReporter);
@@ -126,11 +111,6 @@ let conf: Config = {
       return genericWait.apply(browser, [predicate, timeout, message]);
     };
   },
-
-  // Close the report after all tests finish
-  afterLaunch: function (exitCode) {
-    return new Promise(resolve => screenshotReporter.afterLaunch(resolve(exitCode)));
-  }
 };
 
 exports.config = conf;
