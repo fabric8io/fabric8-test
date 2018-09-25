@@ -26,7 +26,8 @@ export class CodebasesPage extends AppPage {
   }
 
   public async getWorkspaces(): Promise<string[]> {
-    let elementsFinders: ElementFinder[] = await element.all(by.css('codebases-item-workspaces > select > option'));
+    let elementsFinders: ElementFinder[] = await element(by.tagName('codebases-item-workspaces')).
+      all(by.css('select > option'));
 
     let workspaces = new Array<string>();
     for (let finder of elementsFinders) {
