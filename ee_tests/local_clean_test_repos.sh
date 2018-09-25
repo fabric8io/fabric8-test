@@ -26,7 +26,7 @@ REPOS=$(echo "$RESPONSE" | jq -r '.items[].name')
 
 if [[ -z $REPOS ]]; then
   echo "There are no GitHub repositories matching the filter"
-  exit 2
+  exit 0
 fi
 
 echo "************************** WARNING WARNING WARNING *********************************** "
