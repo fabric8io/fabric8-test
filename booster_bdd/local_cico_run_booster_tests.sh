@@ -61,7 +61,7 @@ docker exec "$CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 # Exec booster tests
 docker exec "$CONTAINER_NAME" ./local_run.sh 2>&1 | tee "$REPORT_DIR/test.log"
 
-if [ "$ZABBIX_ENABLED" = true ] ; then
+if [ "${ZABBIX_ENABLED,,}" = true ] ; then
     docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
 fi
 

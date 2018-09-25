@@ -159,7 +159,7 @@ docker exec "$CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 mkdir -p "$ARTIFACTS_DIR"
 docker exec "$CONTAINER_NAME" ./run.sh 2>&1 | tee "$ARTIFACTS_DIR/test.log"
 
-if [ "$ZABBIX_ENABLED" = true ] ; then
+if [ "${ZABBIX_ENABLED,,}" = true ] ; then
     docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
 fi
 
