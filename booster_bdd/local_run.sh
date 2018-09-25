@@ -55,7 +55,8 @@ CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v -f allure_behave.f
 #If you want the output in default format
 #CMD="PYTHONDONTWRITEBYTECODE=1 python3 \"$(which behave)\" -v --tags=\"@osio.regular,${BEHAVE_DANGER_TAG:-~@osio.danger-zone}\" --no-capture --no-capture-stderr @$feature_list"
 
-export ZABBIX_TIMESTAMP="$(date +%s)"
+ZABBIX_TIMESTAMP="$(date +%s)"
+export ZABBIX_TIMESTAMP
 
 bash -v -c "$CMD"
 

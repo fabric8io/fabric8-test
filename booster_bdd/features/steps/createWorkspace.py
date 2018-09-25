@@ -41,4 +41,4 @@ def then_workspace_deleted(context):
     workspace = Workspace()
     workspace.workspaceDelete(workspaceID)
     workspaceDeleteStatus = workspace.workspaceDeleteStatus(workspaceID)
-    workspaceDeleteStatus | should.be_true().desc("Deleted workspace")    
+    workspaceDeleteStatus | should.be_true().desc("Deleted workspace")
