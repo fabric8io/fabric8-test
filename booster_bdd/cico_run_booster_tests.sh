@@ -171,14 +171,17 @@ chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
 rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
 
-echo "\n\n\n"
+echo "-----------------------------------------------------------------------------------------------------------------------"
+echo "-----------------------------------------------------------------------------------------------------------------------"
+
 if [ $? -eq 0 ]; then
   echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
   echo "Test results (Allure report) can be found at http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR/allure-report"
 else
   echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 fi
-echo "\n\n\n"
+echo "-----------------------------------------------------------------------------------------------------------------------"
+echo "-----------------------------------------------------------------------------------------------------------------------"
 
 # Shutdown container if running
 if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then

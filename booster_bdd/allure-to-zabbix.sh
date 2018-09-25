@@ -11,10 +11,10 @@ if [ -d "$ALLURE_REPORT" ]; then
     DATA_DIR="$ALLURE_REPORT/data/test-cases"
 
     for tc in $(find $DATA_DIR -name '*.json'); do
-        ZABBIX_METRIC=$(jq '.labels[] | select(.name == "tag") | select(.value | contains ("osio.zabbix-metric")) | .value' $tc | tr -d '"')
+        ZABBIX_METRIC=$(jq '.labels[] | select(.name == "tag") | select(.value | contains ("osio.zabbix-metric")) | .value' "$tc" | tr -d '"')
         ZABBIX_METRIC=${ZABBIX_METRIC#$"osio.zabbix-metric."}
-        SCENARIO_STATUS=$(jq '.status' $tc | tr -d '"')
-        DURATION=$(jq '.time.duration' $tc | tr -d '"')
+        SCENARIO_STATUS=$(jq '.status' "$tc" | tr -d '"')
+        DURATION=$(jq '.time.duration' "$tc" | tr -d '"')
         STATUS=-1 # assume failed, unless...
         if [ "$SCENARIO_STATUS" == "passed" ]; then
             STATUS=1

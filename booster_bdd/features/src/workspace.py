@@ -10,8 +10,9 @@ start_time = time.time()
 cheApiAddress = os.getenv("CHE_API")
 githubRepoUrl = os.getenv("GIT_REPO_URL")
 
+
 class Workspace:
-    
+
     # Query the deleted workspace - should not be found
     def workspaceDeleteStatus(self, workspaceId):
         print('Starting check for deleted workspace status.....')
@@ -25,30 +26,30 @@ class Workspace:
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
-        try:                
+        try:
             r = requests.get(
                '{}/api/workspace/{}'.format(cheApiAddress, workspaceId),
                headers=headers
-            )   
+            )
             respJson = r.json()
             # print (respJson)
             exceptionMessage = respJson["message"]
-            print('The deleted workspace exception messsage is {}'.format(exceptionMessage))  
+            print('The deleted workspace exception messsage is {}'.format(exceptionMessage))
 
             testString = "Workspace with id '" + workspaceId + "' doesn't exist"
             if testString in exceptionMessage:
-              return True
+                return True
             else:
-              return False
+                return False
 
         except Exception as e:
             print('Unexpected workspace get status found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
-        
+
         return False
 
-
     # Query the selected workspace - wait until the expected status is seen
+
     def workspaceStatus(self, workspaceId, maxAttempts, expectedStatus):
         print('Starting check for workspace status.....')
 
@@ -60,34 +61,35 @@ class Workspace:
                    'X-App': 'osio',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
-        
-        for i in range(1, int(maxAttempts) + 1):  
+
+        for i in range(1, int(maxAttempts) + 1):
             time.sleep(10)
 
-            try:                
+            try:
                 r = requests.get(
                    '{}/api/workspace/{}'.format(cheApiAddress, workspaceId),
                    headers=headers
-                )   
+                )
                 respJson = r.json()
                 # print (respJson)
                 # Commented out as this displays the machine token:
                 # helpers.printToJson('Query the Che workspace status request response', r)
 
                 workspaceStatus = respJson["status"]
-                print('The new workspace status is: {}, looking for {}'.format(workspaceStatus, expectedStatus))
+                print('The new workspace status is: {}, looking for {}'.format(
+                    workspaceStatus, expectedStatus))
                 if workspaceStatus == expectedStatus:
-                  
-                  return True
+
+                    return True
 
             except Exception as e:
                 print('Unexpected workspace get status found: {}'.format(e))
                 print('Raw text of request/response: [{}]'.format(r.text))
-        
+
         return False
 
+    # Stop the selected workspace
 
-    # Stop the selected workspace 
     def workspaceStop(self, workspaceId):
         print('Stopping workspace.....')
 
@@ -99,11 +101,11 @@ class Workspace:
                    'X-App': 'osio',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
-        try:                
+        try:
             r = requests.delete(
                '{}/api/workspace/{}/runtime'.format(cheApiAddress, workspaceId),
                headers=headers
-            )   
+            )
             respJson = r.json()
             # print (respJson)
             helpers.printToJson('Stop the Che workspace request response', r)
@@ -112,9 +114,8 @@ class Workspace:
             print('Unexpected workspace stop status found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
 
+    # Stop the selected workspace
 
-   
-    # Stop the selected workspace 
     def workspaceDelete(self, workspaceId):
         print('Deleting workspace.....')
 
@@ -126,19 +127,18 @@ class Workspace:
                    'X-App': 'osio',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
-        try:                
+        try:
             r = requests.delete(
                '{}/api/workspace/{}'.format(cheApiAddress, workspaceId),
                headers=headers
-            )   
+            )
             respJson = r.json()
             # print (respJson)
             helpers.printToJson('Delete the Che workspace request response', r)
 
         except Exception as e:
             print('Unexpected workspace delete status found: {}'.format(e))
-            print('Raw text of request/response: [{}]'.format(r.text))         
-
+            print('Raw text of request/response: [{}]'.format(r.text))
 
     def createWorkspace(self, workspaceName):
 
@@ -156,7 +156,6 @@ class Workspace:
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
-        
         # Extended JSON from Ilya expressed as string
         payloadString2 = '{\
               "projects": [\
@@ -302,9 +301,9 @@ class Workspace:
             # print 'request results = {}'.format(r.content)
             try:
                 respJson = r.json()
-                #print (respJson)
+                # print(respJson)
                 helpers.printToJson('Create the Che workspace request response', r)
-                
+
                 workspaceUrl = respJson["links"]["ide"]
                 print('The new workspace name is: {}'.format(workspaceUrl))
 
@@ -318,5 +317,3 @@ class Workspace:
         except Exception as e:
             print('Unexpected workspace creation exception found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
-
-
