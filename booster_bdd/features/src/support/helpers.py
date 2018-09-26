@@ -96,6 +96,16 @@ def setWorkspaceID(theSpaceID):
     workspaceID = theSpaceID
 
 
+def getStackReportKey():
+    global stackReportKey
+    return stackReportKey
+
+
+def setStackReportKey(theKey):
+    global stackReportKey
+    stackReportKey = theKey    
+
+
 def getSpaceName():
     global spaceName
     return spaceName

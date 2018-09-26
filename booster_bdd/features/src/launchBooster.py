@@ -67,6 +67,7 @@ class LaunchBooster(object):
             print('Unexpected booster launch exception found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
 
+
     def checkCodebases(self, maxAttempts=10):
         serverUrl = os.getenv("SERVER_ADDRESS")
         spaceId = helpers.getSpaceID()
@@ -89,11 +90,20 @@ class LaunchBooster(object):
             helpers.printToJson('Attempt to get codebases #{}:'.format(i), r)
             responseJson = r.json()
             data = responseJson['data']
+
+            try:
+                data2 = responseJson['data'][0]['attributes']['url']
+                print ('data2=' + str(data2))
+            except Exception as e:
+                print('Unexpected exception found: {}'.format(e))
+
+
             cbCount = len(data)
             print('Codebases found: {}'.format(cbCount))
             if cbCount > 0:
                 boosterLaunched = True
                 return True
-            time.sleep(1)
+            time.sleep(5)
         boosterLaunched = False
         return False
+
