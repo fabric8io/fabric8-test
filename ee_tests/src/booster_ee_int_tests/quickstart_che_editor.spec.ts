@@ -100,7 +100,7 @@ describe('Creating new Che workspace and edit in OSIO', () => {
   });
 
   afterEach( async () => {
-    support.writeScreenshot('target/screenshots/che_final_' + globalSpaceName + '.png');
+    await support.screenshotManager.saveUnformatted('che_final_' + globalSpaceName);
     support.info('\n ============ End of test reached ============ \n');
     await dashboardPage.logout();
   });
@@ -132,17 +132,17 @@ describe('Creating new Che workspace and edit in OSIO', () => {
     await browser.wait(windowCount(2), support.DEFAULT_WAIT);
     handles = await browser.getAllWindowHandles();
     support.debug('Number of browser tabs after = ' + handles.length);
-    support.writeScreenshot('target/screenshots/che_workspace_parta_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('che_workspace_parta_' + spaceName);
 
     /* Switch to the Che browser window */
     await browser.switchTo().window(handles[1]);
     let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    support.writeScreenshot('target/screenshots/che_workspace_partb_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('che_workspace_partb_' + spaceName);
 
     /* Find the project */
     let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
     await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-    support.writeScreenshot('target/screenshots/che_workspace_partc_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('che_workspace_partc_' + spaceName);
     expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
     // **********************************************************************
@@ -182,7 +182,7 @@ describe('Creating new Che workspace and edit in OSIO', () => {
      support.info('Exception in writing to file in Che = ' + e);
     }
 
-    support.writeScreenshot('target/screenshots/che_workspace_part_edit_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('che_workspace_part_edit_' + spaceName);
 
     /* Switch back to the OSIO browser window */
     await browser.switchTo().window(handles[0]);

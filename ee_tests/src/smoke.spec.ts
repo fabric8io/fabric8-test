@@ -34,7 +34,7 @@ describe('e2e_smoketest', () => {
   });
 
   afterEach(async () => {
-    await support.screenshotManager.writeScreenshot('afterEach');
+    await support.screenshotManager.save('afterEach');
   });
 
   afterAll(async () => {
@@ -44,7 +44,7 @@ describe('e2e_smoketest', () => {
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.screenshotManager.writeScreenshot('resetEnvironment');
+        await support.screenshotManager.save('resetEnvironment');
         throw e;
       }
     }

@@ -49,7 +49,7 @@ describe('Creating new quickstart in OSIO', () => {
   afterEach(async () => {
     await browser.sleep(support.DEFAULT_WAIT);
     await support.dumpLog2(globalSpacePipelinePage, globalSpaceName);
-    support.writeScreenshot('target/screenshots/pipeline_final_' + globalSpaceName + '.png');
+    await support.screenshotManager.saveUnformatted('pipeline_final_' + globalSpaceName);
     support.info('\n ============ End of test reached, logging out ============ \n');
     // await dashboardPage.logout();
   });
@@ -109,7 +109,7 @@ describe('Creating new quickstart in OSIO', () => {
     expect(await pipeline.allPipelineByName(spaceName).count()).toBe(1);
 
     /* Save the pipeline page output to target directory */
-    await support.writePageSource('target/screenshots/pipeline.html');
+    await support.screenshotManager.saveUnformatted('pipeline');
 
     /* Find the pipeline name */
     await pipeline.untilClickable(support.LONGER_WAIT);
@@ -125,13 +125,13 @@ describe('Creating new quickstart in OSIO', () => {
 
     await inputRequired.clickWhenReady(support.LONGEST_WAIT);
     await promoteButton.clickWhenReady(support.LONGER_WAIT);
-    support.writeScreenshot('target/screenshots/pipeline_promote_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('pipeline_promote_' + spaceName);
 
     /* Verify stage and run icons are present - these will timeout and cause failures if missing */
     await stageIcon.untilClickable(support.LONGEST_WAIT);
     await runIcon.untilClickable(support.LONGEST_WAIT);
 
-    support.writeScreenshot('target/screenshots/pipeline_icons_' + spaceName + '.png');
+    await support.screenshotManager.saveUnformatted('pipeline_icons_' + spaceName);
 
     // TODO - Error conditions to trap
     // 1) Jenkins build log - find errors if the test fails
