@@ -29,7 +29,7 @@ describe('Creating a new quickstart in OSIO using ngx launcher', () => {
 
   afterEach(async () => {
     support.info('--- After each ---');
-    await support.screenshotManager.writeScreenshot('afterEach');
+    await support.screenshotManager.save('afterEach');
   });
 
   afterAll(async () => {
@@ -40,7 +40,7 @@ describe('Creating a new quickstart in OSIO using ngx launcher', () => {
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.screenshotManager.writeScreenshot('resetEnvironment');
+        await support.screenshotManager.save('resetEnvironment');
         throw e;
       }
     }

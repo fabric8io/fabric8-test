@@ -95,7 +95,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         expect(await pipeline.getRepository()).
             toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
 
-        await support.screenshotManager.writeScreenshot('pipeline-info');
+        await support.screenshotManager.save('pipeline-info');
         return Promise.resolve(pipeline);
     }
 
@@ -110,10 +110,10 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await this.waitForStagesToStart(pipeline);
             await this.waitForStagesToFinish(pipeline);
             support.info('Pipeline is finished');
-            await support.screenshotManager.writeScreenshot(`pipeline-finished`);
+            await support.screenshotManager.save(`pipeline-finished`);
         } catch (e) {
             support.info('Wait for pipeline to finish failed with error: ' + e);
-            await support.screenshotManager.writeScreenshot('pipeline-failed');
+            await support.screenshotManager.save('pipeline-failed');
             waitToFinishInternalError = e;
         }
 
@@ -124,7 +124,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.info('Jenkins log is OK');
         } catch (e) {
             support.info('Check the Jenkins log failed with error: ' + e);
-            await support.screenshotManager.writeScreenshot('jenkins-log-failed');
+            await support.screenshotManager.save('jenkins-log-failed');
             // if the UI show Jenkins log faile, try navigating to jenkins directly
             await this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
@@ -141,7 +141,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.info('OpenShift pipeline is OK');
         } catch (e) {
             support.info('Check the OpenShift pipeline failed with error: ' + e);
-            await support.screenshotManager.writeScreenshot('os-pipeline-failed');
+            await support.screenshotManager.save('os-pipeline-failed');
             osoPipelineError = e;
         } finally {
             if (support.windowManager.getWindowCount() > 1) {
@@ -237,7 +237,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             support.debug(`${name} status: ${stageStatus}`);
 
             if (BuildStageStatusUtils.buildEnded(stageStatus)) {
-                await support.screenshotManager.writeScreenshot(`stage-${index}-finished`);
+                await support.screenshotManager.save(`stage-${index}-finished`);
                 return true;
             } else {
                 hook();
@@ -252,7 +252,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
             support.LONG_WAIT, 'Jenkins log is finished');
-        await support.screenshotManager.writeScreenshot('jenkins-log');
+        await support.screenshotManager.save('jenkins-log');
     }
 
     private async showJenkinsLogDirectly() {
@@ -261,7 +261,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             let osioURL: string = browser.params.target.url.replace('https://', '');
             let jenkinsURL = 'https://jenkins.' + osioURL;
             await browser.get(jenkinsURL);
-            await support.screenshotManager.writeScreenshot('jenkins-direct-log');
+            await support.screenshotManager.save('jenkins-direct-log');
         } catch (e) {
             // do not propagate the error because it would shadow previous errors
             support.info('Navigate to Jenkins log directly by URL failed. ' + e);
@@ -276,7 +276,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         let status = await element(by.xpath('//h3[text()="Status"]/../dl[1]/dd[1]/span[1]')).getText();
         expect(status).toBe('Complete');
 
-        await support.screenshotManager.writeScreenshot('os-pipeline');
+        await support.screenshotManager.save('os-pipeline');
     }
 }
 

@@ -22,7 +22,7 @@ describe('e2e_logintest', () => {
 
   afterEach(async () => {
     support.info('--- After each ---');
-    await support.screenshotManager.writeScreenshot('afterEach');
+    await support.screenshotManager.save('afterEach');
   });
 
   it('login', async () => {
