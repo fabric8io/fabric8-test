@@ -1,6 +1,8 @@
 import * as support from '../support';
 import { spawn } from 'child_process';
 import { createWriteStream } from 'fs';
+import { sync as mkdirp } from 'mkdirp';
+import { dirname } from 'path';
 
 export async function runScript(
     baseDir: string,
@@ -13,6 +15,8 @@ export async function runScript(
     let runScriptPromise = new Promise<void>((resolve, reject) => {
 
         support.info(`Running script \"${name} > ${outputFile}\" from directory ${baseDir}`);
+
+        mkdirp(dirname(outputFile));
 
         const script = spawn(name, params, { cwd: baseDir });
         const stream = createWriteStream(outputFile);

@@ -2,7 +2,8 @@ import CustomReporter = jasmine.CustomReporter;
 import CustomReporterResult = jasmine.CustomReporterResult;
 import SuiteInfo = jasmine.SuiteInfo;
 import RunDetails = jasmine.RunDetails;
-import * as fs from 'fs';
+import { createWriteStream } from 'fs';
+import { sync as mkdirp } from 'mkdirp';
 import { browser } from 'protractor';
 
 /**
@@ -61,11 +62,9 @@ export class ZabbixReporter implements CustomReporter {
     }
 
     public suiteDone(result: CustomReporterResult) {
-        if (!fs.existsSync(this.OUTPUT_DIRECTORY)) {
-            fs.mkdirSync(this.OUTPUT_DIRECTORY);
-        }
+        mkdirp(this.OUTPUT_DIRECTORY);
 
-        let stream = fs.createWriteStream(this.OUTPUT_DIRECTORY + 'zabbix-report.txt');
+        let stream = createWriteStream(this.OUTPUT_DIRECTORY + 'zabbix-report.txt');
         for (let record of this.records) {
             stream.write(new Buffer(record));
         }
