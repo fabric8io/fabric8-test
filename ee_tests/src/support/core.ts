@@ -1,12 +1,9 @@
-import { browser, by, element, ElementFinder, ExpectedConditions as until, Key, logging } from 'protractor';
+import { browser, by, element, Key, logging } from 'protractor';
 import { createWriteStream } from 'fs';
 import * as support from '../support';
 import { SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
-import { BoosterEndpoint } from '../page_objects/booster_endpoint.page';
 import { Button } from '../ui/button';
-import { CodebasesPage } from '../page_objects/space_codebases.page';
-import { Quickstart } from './quickstart';
 import * as mkdirp from 'mkdirp';
 
 export enum BrowserMode {
@@ -23,55 +20,6 @@ export const DEFAULT_WAIT = seconds(60);
 export const LONG_WAIT = minutes(1);
 export const LONGER_WAIT = minutes(10);
 export const LONGEST_WAIT = minutes(30);
-
-/* Modified test source code */
-export const FILETEXT: string = `package io.openshift.booster;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.StaticHandler;
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
-
-public class HttpApplication extends AbstractVerticle {
-  static final String template = "Howdee, %s!";
-
-  @Override
-  public void start(Future<Void> future) {
-    // Create a router object.
-    Router router = Router.router(vertx);
-
-    router.get("/api/greeting").handler(this::greeting);
-    router.get("/*").handler(StaticHandler.create());
-
-    // Create the HTTP server and pass the "accept" method to the request handler.
-    vertx
-        .createHttpServer()
-        .requestHandler(router::accept)
-        .listen(
-            // Retrieve the port from the configuration, default to 8080.
-            config().getInteger("http.port", 8080), ar -> {
-              if (ar.succeeded()) {
-                System.out.println("Server started on port " + ar.result().actualPort());
-              }
-              future.handle(ar.mapEmpty());
-            });
-  }
-
-  private void greeting(RoutingContext rc) {
-    String name = rc.request().getParam("name");
-    if (name == null) {
-      name = "World";
-    }
-    JsonObject response = new JsonObject()
-        .put("content", String.format(template, name));
-    rc.response()
-        .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
-        .end(response.encodePrettily());
-  }
-}
-`;
 
 export async function setBrowserMode(mode: BrowserMode) {
   let window = browser.driver.manage().window();
@@ -240,11 +188,6 @@ export function updateCurrentRepoName(repoName: string) {
   RepoName.repoName = repoName;
 }
 
-export async function sleep(ms: number) {
-  support.info('Sleeping for ' + ms + ' ms...');
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 /**
  * Write screenshot to file
  * Example usage:
@@ -260,9 +203,6 @@ export async function writeScreenshot(filename: string) {
   support.debug(`Saved screenshot to: ${filename}`);
 }
 
-/**
- * Store the page source
- */
 export async function writePageSource(filename: string) {
   let txt = await browser.getPageSource();
   let stream = createWriteStream(filename);
@@ -285,198 +225,6 @@ export async function writeBrowserLog(filename: string) {
 
   stream.end();
   support.debug(`Saved browser logs to: ${filename}`);
-}
-
-/**
- * Store the page source
- */
-export async function writeText(filename: string, text: string) {
-  support.info(`Saving text to: ${filename}`);
-  let stream = createWriteStream(filename);
-  stream.write(new Buffer(text));
-  stream.end();
-  support.debug(`Saved text to: ${filename}`);
-}
-
-/**
- * Returns the entity name of the current user which is used in the URL after, say,
- * https:///openshift.io/{userEntityName}/{spaceName}
- *
- * This name may not be the same as the user name due to special characters (e.g. email addresses or underscores).
- *
- * When using fabric8 on MiniShift then this is typically 'developer' for the `oc whoami` rather than
- * the user name used to login into GitHub
- */
-export function userEntityName(username?: string) {
-
-  // lets try use the $OSO_USERNAME for the openshift `whoami` name first
-  let osoUsername = browser.params.oso.username;
-  if (osoUsername) {
-    return osoUsername;
-  }
-
-  let platform = targetPlatform();
-  if (platform === 'fabric8-openshift') {
-    return browser.params.login.openshiftUser || 'developer';
-  }
-
-  return username ? username : browser.params.login.user;
-}
-
-/**
- * Returns the platform name which is either
- * * "osio" for testing on https://openshift.io/
- * * "fabric8-openshift" for testing
- * * "fabric8-kubernetes" for testing fabric8 on a kubernetes cluster
- */
-// TODO: convert this to return a TargetClass that encapsulates data
-// about the target platform
-export function targetPlatform(): string {
-  const target: any = browser.params.target;
-
-  // in the absense of a target, the testTarget is osio
-  if (!target) {
-    return 'osio';
-  }
-
-  // if platform is set explicitly then it takes precedence
-  const platform: any = target.platform;
-  if (platform) {
-    return platform;
-  }
-
-  // try to guess from the url
-  const url: string | undefined = target.url;
-
-  if (url === 'https://openshift.io' ||
-    url === 'https://openshift.io/' ||
-    url === 'https://prod-preview.openshift.io' ||
-    url === 'https://prod-preview.openshift.io/') {
-    return 'osio';
-  }
-
-  // lets assume fabric8 on openshift as its better
-  // than assuming OSIO when not using OSIO :)
-  return 'fabric8-openshift';
-}
-
-/* Open the selected codebases page */
-export async function openCodebasesPage(osioUrl: string, userName: string, spaceName: string) {
-  let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create';
-  await browser.get(theUrl);
-}
-
-/* Open the selected codebases page */
-export async function openPipelinesPage(osioUrl: string, userName: string, spaceName: string) {
-  let theUrl: string = osioUrl + '\/' + userName + '\/' + spaceName + '\/create\/pipelines';
-  await browser.get(theUrl);
-}
-
-/* Toggle automatic parans and braces in Che editor */
-export async function togglePreferences(spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
-
-  await spaceCheWorkSpacePage.cheProfileGroup.clickWhenReady();
-  await spaceCheWorkSpacePage.chePreferences.clickWhenReady();
-  await spaceCheWorkSpacePage.chePreferencesEditor.clickWhenReady();
-  await spaceCheWorkSpacePage.chePreferencesAutopairParen.untilPresent(support.LONGEST_WAIT);
-  await spaceCheWorkSpacePage.chePreferencesAutoBraces.untilPresent(support.LONGEST_WAIT);
-
-  await spaceCheWorkSpacePage.chePreferencesAutopairParen.clickWhenReady();
-  await spaceCheWorkSpacePage.chePreferencesAutoBraces.clickWhenReady();
-  await spaceCheWorkSpacePage.chePreferencesStoreChanges.clickWhenReady();
-
-  await spaceCheWorkSpacePage.chePreferencesClose.clickWhenReady();
-
-  // TO DO - verify preferences dialog is closed
-  await browser.wait(until.not(until.presenceOf(spaceCheWorkSpacePage.chePreferencesClose)));
-}
-
-// tslint:disable:max-line-length
-
-/* Run the booster by means of the Che run menu */
-export async function runBooster(spaceCheWorkSpacePage: SpaceCheWorkspacePage, expectedString: string) {
-  try {
-
-    /* Remote sites (Brno) are experiencing issues where the run button is active before
-       the project os fully downloaded - and run is attempted before the pom file is present */
-    try {
-      await spaceCheWorkSpacePage.walkTree(support.currentSpaceName());
-      await browser.wait(until.visibilityOf(spaceCheWorkSpacePage.cheFileName('pom.xml')), support.DEFAULT_WAIT);
-    } catch (e) {
-      support.info('Exception in Che project directory tree = ' + e);
-    }
-
-    await spaceCheWorkSpacePage.mainMenuRunButton.clickWhenReady(support.LONGEST_WAIT);
-    await spaceCheWorkSpacePage.mainMenuRunButtonRunSelection.clickWhenReady(support.LONGEST_WAIT);
-    await spaceCheWorkSpacePage.bottomPanelRunTab.clickWhenReady(support.LONGEST_WAIT);
-    await browser.wait(until.textToBePresentInElement(spaceCheWorkSpacePage.bottomPanelCommandConsoleLines, expectedString), support.LONGER_WAIT);
-    let textStr = await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText();
-    support.info('Output from run = ' + textStr);
-    expect(await spaceCheWorkSpacePage.bottomPanelCommandConsoleLines.getText()).toContain(
-      new Quickstart(browser.params.quickstart.name).runtime.quickstartStartedTerminal
-    );
-  } catch (e) {
-    support.info('Exception running booster = ' + e);
-  }
-}
-
-/* Access the deployed app's Che preview endpoint, send text, invoke the app, return the output */
-export async function invokeApp(boosterEndpointPage: BoosterEndpoint, mySpaceCheWorkSpacePage: SpaceCheWorkspacePage, username: string, screenshotName: string, inputString: string, expectedString: string, spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
-
-  /// TODO - The link to the deployed app is present before the endpoint is available
-  await browser.sleep(10000);
-  await mySpaceCheWorkSpacePage.previewLink(username).clickWhenReady();
-
-  /* A new browser window is opened when Che opens the app endpoint */
-  let handles = await browser.getAllWindowHandles();
-  await browser.wait(windowManager.windowCountCondition(handles.length), support.DEFAULT_WAIT);
-  handles = await browser.getAllWindowHandles();
-  support.debug('Number of browser tabs after opening Che app window = ' + handles.length);
-
-  /* Switch to the newly opened Che deployed endpoint browser window */
-  await browser.switchTo().window(handles[handles.length - 1]);
-
-  /* Invoke the deployed app */
-  try {
-    await boosterEndpointPage.nameText.clickWhenReady();
-    await boosterEndpointPage.nameText.sendKeys(inputString);
-    support.writeScreenshot('target/screenshots/che_edit_' + screenshotName + '_' + support.currentSpaceName() + '.png');
-    await boosterEndpointPage.invokeButton.clickWhenReady(support.LONGEST_WAIT);
-
-    let expectedOutput = '{"content":"' + expectedString + '"}';
-    await browser.wait(until.textToBePresentInElement(boosterEndpointPage.stageOutput, expectedOutput), support.DEFAULT_WAIT);
-    expect(await boosterEndpointPage.stageOutput.getText()).toBe(expectedOutput);
-  } catch (e) {
-    support.info('Exception invoking staged app = ' + e);
-  }
-}
-
-/* Find the project in the project tree */
-export async function findProjectInTree(spaceCheWorkSpacePage: SpaceCheWorkspacePage) {
-
-  support.writeScreenshot('target/screenshots/che_workspace_partb_' + support.currentSpaceName() + '.png');
-  let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()), 'Project in Che Tree');
-  await projectInCheTree.untilPresent(support.LONGEST_WAIT);
-  await support.debug(spaceCheWorkSpacePage.recentProjectRootByName(support.currentSpaceName()).getText());
-  support.writeScreenshot('target/screenshots/che_workspace_partc_' + support.currentSpaceName() + '.png');
-}
-
-/* Open the codebase page, and then open the Che workspace */
-export async function openCodebasePageSwitchWindow(spaceChePage: CodebasesPage) {
-
-  /* Open the codebase page and the workspace in Che */
-  await openCodebasesPage(browser.params.target.url, browser.params.login.user, support.currentSpaceName());
-  //    let spaceChePage = new SpaceChePage();
-  await codebaseOpenButton(browser.params.login.user, support.currentSpaceName()).clickWhenReady();
-
-  /* A new browser window is opened when Che opens */
-  await windowManager.switchToWindow(2, 1);
-}
-
-/* 'Open' button for existing codebase */
-function codebaseOpenButton(githubUsername: string, spaceName: string): ElementFinder {
-  let xpathString = './/button[contains(text(),\'Open\')]';
-  return new Button(element(by.xpath(xpathString)), 'Open codebase button');
 }
 
 export class ScreenshotManager {
