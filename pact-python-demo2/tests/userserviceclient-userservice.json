@@ -1,0 +1,50 @@
+{
+  "consumer": {
+    "name": "UserServiceClient"
+  },
+  "provider": {
+    "name": "UserService"
+  },
+  "interactions": [
+    {
+      "description": "a request for status",
+      "providerState": "status exists",
+      "request": {
+        "method": "get",
+        "path": "/status"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "commit": "164762f67a3a7634fa4ee1e8bb55c458281803c7-dirty",
+          "buildTime": "2018-09-10T11:08:26Z",
+          "startTime": "2018-09-10T11:08:26Z"
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          },
+          "$.body.commit": {
+            "match": "regex",
+            "regex": "^[a-f0-9]+-dirty"
+          },
+          "$.body.buildTime": {
+            "match": "regex",
+            "regex": "\\d+-\\d+-\\d+T\\d+:\\d+:\\d+Z"
+          },
+          "$.body.startTime": {
+            "match": "regex",
+            "regex": "\\d+-\\d+-\\d+T\\d+:\\d+:\\d+Z"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
