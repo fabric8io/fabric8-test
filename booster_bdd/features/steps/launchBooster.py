@@ -32,7 +32,7 @@ def when_input_booster(_context):
     print('Result = {}'.format(result))
 
 
-@then(u'I should see the booster created within {_seconds} seconds')
-def then_booster_created(_context, _seconds):
-    lb.checkCodebases(_seconds)
+@then(u'I should see the booster created within {seconds} seconds')
+def then_booster_created(_context, seconds):
+    lb.checkCodebases(seconds)
     launchBooster.boosterLaunched | should.be_true.desc("Booster created.")
