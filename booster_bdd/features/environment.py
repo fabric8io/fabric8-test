@@ -8,6 +8,8 @@ def before_all(_context):
     if not helpers.is_user_logged_in():
         username = os.getenv("OSIO_USERNAME")
         password = os.getenv("OSIO_PASSWORD")
+        assert username is not None
+        assert password is not None
         assert username != ""
         assert password != ""
         print("Loggin user {} in...".format(username))
