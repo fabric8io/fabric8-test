@@ -1,0 +1,47 @@
+{
+  "consumer": {
+    "name": "OsioStatusConsumer"
+  },
+  "provider": {
+    "name": "OsioStatusProvider"
+  },
+  "interactions": [
+    {
+      "description": "A request to get status",
+      "request": {
+        "method": "GET",
+        "path": "/api/status",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/vnd.status+json"
+        },
+        "body": {
+          "buildTime": "2018-09-10T11:08:26Z",
+          "commit": "164762f67a3a7634fa4ee1e8bb55c458281803c7-dirty",
+          "startTime": "2018-09-29T16:08:15Z"
+        },
+        "matchingRules": {
+          "$.body.buildTime": {
+            "match": "type"
+          },
+          "$.body.commit": {
+            "match": "type"
+          },
+          "$.body.startTime": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
