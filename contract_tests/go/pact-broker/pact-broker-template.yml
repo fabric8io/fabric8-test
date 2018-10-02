@@ -1,0 +1,323 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: pact-broker
+objects:
+# IMAGE STREAM
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: pact-broker
+    name: pact-broker
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: pact-broker:latest
+      generation: null
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+# BUILD CONFIG
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: pact-broker
+    name: pact-broker
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: pact-broker:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: /pact_broker
+      git:
+        ref: master
+        uri: https://github.com/DiUS/pact_broker-docker.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: ruby:2.4
+          namespace: openshift
+      type: Source
+    triggers:
+    - generic:
+        secret: 521d59e0275bef66
+      type: Generic
+    - github:
+        secret: e5f2f556f5e438a1
+      type: GitHub
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+# DEPLOYMENT CONFIG
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: pact-broker
+    name: pact-broker
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: pact-broker
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: pact-broker
+          deploymentconfig: pact-broker
+      spec:
+        containers:
+        - env:
+          - name: PACT_BROKER_DATABASE_USERNAME
+            value: pact_broker
+          - name: PACT_BROKER_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-pact-broker-secret
+          - name: PACT_BROKER_DATABASE_HOST
+            value: postgresql-pact-broker
+          - name: PACT_BROKER_DATABASE_NAME
+            value: pact_broker
+          image: pact-broker:latest
+          imagePullPolicy: Always
+          name: pact-broker
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - pact-broker
+        from:
+          kind: ImageStreamTag
+          name: pact-broker:latest
+      type: ImageChange
+    - type: ConfigChange
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+# SERVICE
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: pact-broker
+    name: pact-broker
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: pact-broker
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: pact-broker
+    name: pact-broker
+  spec:
+    #host: pact-broker.<domain name>.com
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: pact-broker
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2018-03-13T21:39:49Z
+        status: "True"
+        type: Admitted
+      #host: pact-broker.<domain name>.com
+      routerName: router
+      wildcardPolicy: None
+# PERSISTENCE VOLUME CLAIM
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: "postgresql-pact-broker-data"
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    resources:
+      requests:
+        storage: "1Gi"
+# SERVICE CONFIG - POSTGRES
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: postgresql-pact-broker
+    labels:
+      app: pact-broker
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: pact-broker
+      deploymentconfig: postgresql-pact-broker
+    sessionAffinity: None
+    type: ClusterIP
+# DEPLOYMENT CONFIG - POSTGRES
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: pact-broker
+      deploymentconfig: postgresql-pact-broker
+    name: postgresql-pact-broker
+  spec:
+    replicas: 1
+    selector:
+      app: pact-broker
+      deploymentconfig: postgresql-pact-broker
+    strategy:
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: pact-broker
+          deploymentconfig: postgresql-pact-broker
+      spec:
+        containers:
+        - env:
+          - name: POSTGRESQL_USER
+            value: pact_broker
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-pact-broker-secret
+          - name: POSTGRESQL_DATABASE
+            value: pact_broker
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 1
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 256Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: postgresql-pact-broker-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgresql-pact-broker-data
+#          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: postgresql-pact-broker-data
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - postgresql
+        from:
+          kind: ImageStreamTag
+          name: postgresql:9.5
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+# SECRETS
+- apiVersion: v1
+  metadata:
+    name: postgresql-pact-broker-secret
+    labels:
+      app: pact-broker
+  stringData:
+    password: ${POSTGRESQL_PASSWORD}
+  kind: Secret
+# PARAMETERS
+parameters:
+  - description: Password for the PostgreSQL connection user.
+    displayName: PostgreSQL Connection Password
+    from: '[a-zA-Z0-9]{16}'
+    generate: expression
+    name: POSTGRESQL_PASSWORD
+    required: true
