@@ -5,7 +5,7 @@ from pyshould import should_not, should
 
 
 @when(u'I create the workspace')
-def when_create_workspace(context):
+def when_create_workspace(_context):
     spaceName = helpers.getSpaceName()
     workspace = Workspace()
     workspaceID = workspace.createWorkspace(spaceName)
@@ -13,13 +13,13 @@ def when_create_workspace(context):
 
 
 @then(u'I should see the newly created workspace')
-def then_workspace_created(context):
+def then_workspace_created(_context):
     workspaceID = helpers.getWorkspaceID()
     workspaceID | should_not.be_none().desc("Created workspace ID")
 
 
 @then(u'I should see the workspace started')
-def then_workspace_started(context):
+def then_workspace_started(_context):
     workspaceID = helpers.getWorkspaceID()
     workspace = Workspace()
     workspaceStatus = workspace.workspaceStatus(workspaceID, 10, "RUNNING")
@@ -27,7 +27,7 @@ def then_workspace_started(context):
 
 
 @then(u'I should see the workspace stopped')
-def then_workspace_stopped(context):
+def then_workspace_stopped(_context):
     workspaceID = helpers.getWorkspaceID()
     workspace = Workspace()
     workspace.workspaceStop(workspaceID)
@@ -36,7 +36,7 @@ def then_workspace_stopped(context):
 
 
 @then(u'I should see the workspace deleted')
-def then_workspace_deleted(context):
+def then_workspace_deleted(_context):
     workspaceID = helpers.getWorkspaceID()
     workspace = Workspace()
     workspace.workspaceDelete(workspaceID)
