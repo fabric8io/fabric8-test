@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Add the current directory to Go path.
+GOPATH="$GOPATH:$(pwd)"
+export GOPATH
+
+# A directory to store pact files
+export PACT_DIR="${PACT_DIR:-$(pwd)/pacts}"
+
+# A contract version.
+export PACT_VERSION="${PACT_VERSION:-1.0.0}"
+
+# A Pact broker to store and share pact files.
+export PACT_BROKER_URL="${PACT_BROKER_URL:-http://pact-broker-pact-broker.193b.starter-ca-central-1.openshiftapps.com}"
+
+export PACT_BROKER_USERNAME="${PACT_BROKER_USERNAME:-pact_broker}"
+if [ -z "$PACT_BROKER_PASSWORD" ]; then
+    if [ -f .pact-broker-password ]; then
+        export PACT_BROKER_PASSWORD="$(cat .pact-broker-password)"
+    fi
+fi
+
+# A provider base url (default `https://openshift.io`)
+export PACT_PROVIDER_BASE_URL="${PACT_PROVIDER_BASE_URL:-https://auth.openshift.io}"
+
+# Pact Consumer
+export PACT_CONSUMER="${PACT_CONSUMER:-Fabric8AuthConsumer}"
+
+# Pact Provider
+export PACT_PROVIDER="${PACT_PROVIDER:-Fabric8AuthService}"
+
+# OSIO username
+export OSIO_USERNAME="${OSIO_USERNAME:-}"
+
+# OSIO user ID
+export OSIO_USER_ID="${OSIO_USER_ID:-}"
+
+# OSIO user auth token
+export OSIO_USER_AUTH_TOKEN="${OSIO_USER_AUTH_TOKEN:-}"
