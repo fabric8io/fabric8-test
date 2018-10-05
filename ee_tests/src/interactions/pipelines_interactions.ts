@@ -292,14 +292,7 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
     }
 
     protected async verifyBuildReleaseStage(stages: PipelineStage[]) {
-        let url: string = browser.params.target.url;
-        let isProdPreview = url.includes('prod-preview');
-
-        if (isProdPreview === true) {
-            await this.verifyBuildStage(stages, 0, 'Build Image');
-        } else {
-            await this.verifyBuildStage(stages, 0, 'Build Release');
-        }
+        await this.verifyBuildStage(stages, 0, 'Build Image');
     }
 
     protected async verifyBuildStage(stages: PipelineStage[], index: number, name: string) {

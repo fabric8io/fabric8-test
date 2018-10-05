@@ -1,5 +1,3 @@
-import { browser } from 'protractor';
-
 export class LauncherReleaseStrategy {
 
   static RELEASE = 'release';
@@ -14,14 +12,7 @@ export class LauncherReleaseStrategy {
 
     switch (runtime) {
       case LauncherReleaseStrategy.RELEASE: {
-        let url: string = browser.params.target.url;
-        let isProdPreview = url.includes('prod-preview');
-
-        if (isProdPreview === true) {
-          this.name = 'Build Image';
-        } else {
-          this.name = 'Build Release';
-        }
+        this.name = 'Build Image';
         break;
       }
       case LauncherReleaseStrategy.RELEASE_AND_STAGE: {
