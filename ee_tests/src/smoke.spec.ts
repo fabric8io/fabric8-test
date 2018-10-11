@@ -29,20 +29,7 @@ describe('e2e_smoketest', () => {
     strategy = browser.params.release.strategy;
     quickstart = new Quickstart(browser.params.quickstart.name);
 
-    // save OC logs
-    try {
-      support.info('Save OC Jenkins pod log');
-      await runner.runScript(
-          '.', // working directory
-          './oc-get-jenkins-logs.sh', // script
-          [ browser.params.login.user,  browser.params.login.password], // params
-          './target/screenshots/oc-logs-output-before-all.txt',  // output file
-          false,
-          support.LONGER_WAIT
-      );
-  } catch (e) {
-      support.info('Save OC Jenkins pod log failed with error: ' + e);
-  }
+    await runOCScript('jenkins', 'oc-jenkins-logs-before-all');
   });
 
   beforeEach(async() => {
@@ -86,19 +73,24 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     support.specTitle('Run che workspace ' + quickstart.name);
-    let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
-    await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
-    await codebasesInteractions.createAndOpenWorkspace();
+    try {
+      let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
+      await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
+      await codebasesInteractions.createAndOpenWorkspace();
 
-    let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-    let projectInCheTree = new Button(spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
-    await projectInCheTree.untilPresent(support.LONGER_WAIT);
-    expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
+      let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
+      let projectInCheTree = new Button(
+        spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
+      await projectInCheTree.untilPresent(support.LONGER_WAIT);
+      expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
-    /* Switch back to the OSIO browser window */
-    await support.windowManager.closeCurrentWindow();
-    let workspaces = await codebasesInteractions.getWorkspaces();
-    expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
+      /* Switch back to the OSIO browser window */
+      await support.windowManager.closeCurrentWindow();
+      let workspaces = await codebasesInteractions.getWorkspaces();
+      expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
+    } finally {
+      await runOCScript('che', 'oc-che-logs');
+    }
   });
 
   it('pipeline', async () => {
@@ -147,3 +139,19 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.verifyWorkItems();
   });
 });
+
+async function runOCScript(project: string, outputFile: string) {
+  try {
+    support.info(`Save OC ${project} pod log`);
+    await runner.runScript(
+      '.', // working directory
+      './oc-get-project-logs.sh', // script
+      [browser.params.login.user, browser.params.login.password, project], // params
+      `./target/screenshots/${outputFile}.txt`,  // output file
+      false,
+      support.LONGER_WAIT
+    );
+  } catch (e) {
+    support.info('Save OC Jenkins pod log failed with error: ' + e);
+  }
+}
