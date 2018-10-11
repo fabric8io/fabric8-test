@@ -14,6 +14,7 @@ import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 import { BuildStatus } from './support/build_status';
 import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
+import * as runner from  './support/script_runner';
 
 describe('e2e_smoketest', () => {
 
@@ -27,6 +28,21 @@ describe('e2e_smoketest', () => {
     spaceName = support.newSpaceName();
     strategy = browser.params.release.strategy;
     quickstart = new Quickstart(browser.params.quickstart.name);
+
+    // save OC logs
+    try {
+      support.info('Save OC Jenkins pod log');
+      await runner.runScript(
+          '.', // working directory
+          './oc-get-jenkins-logs.sh', // script
+          [ browser.params.login.user,  browser.params.login.password], // params
+          './target/screenshots/oc-logs-output-before-all.txt',  // output file
+          false,
+          support.LONGER_WAIT
+      );
+  } catch (e) {
+      support.info('Save OC Jenkins pod log failed with error: ' + e);
+  }
   });
 
   beforeEach(async() => {
