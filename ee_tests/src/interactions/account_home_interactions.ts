@@ -18,20 +18,11 @@ export abstract class AccountHomeInteractionsFactory {
         }
 
         let url: string = browser.params.target.url;
-        let isProdPreview = url.includes('prod-preview');
 
         if (url.includes('localhost')) {
-            if (isProdPreview === true) {
-                return new LocalProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
-            } else {
-                return new LocalOldAccountHomeInteractions(new MainDashboardPage());
-            }
+            return new LocalOldAccountHomeInteractions(new MainDashboardPage());
         } else {
-            if (isProdPreview === true) {
-                return new ProdPreviewOldAccountHomeInteractions(new MainDashboardPage());
-            } else {
-                return new OldAccountHomeInteractions(new MainDashboardPage());
-            }
+            return new OldAccountHomeInteractions(new MainDashboardPage());
         }
     }
 }
@@ -121,30 +112,6 @@ class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
 }
 
 class LocalOldAccountHomeInteractions extends OldAccountHomeInteractions {
-    public async logout(): Promise<void> {
-        let page = new AppPage();
-        await page.logout();
-    }
-}
-
-class ProdPreviewOldAccountHomeInteractions extends OldAccountHomeInteractions {
-
-    constructor(page: MainDashboardPage) {
-        super(page);
-    }
-
-    public async openSpaceDashboard(name: string): Promise<void> {
-        support.info('Open space dashboard for space ' + name);
-        await this.dashboardPage.openSpaceProdPreview(name);
-    }
-}
-
-class LocalProdPreviewOldAccountHomeInteractions extends ProdPreviewOldAccountHomeInteractions {
-
-    constructor(page: MainDashboardPage) {
-        super(page);
-    }
-
     public async logout(): Promise<void> {
         let page = new AppPage();
         await page.logout();
