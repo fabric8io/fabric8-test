@@ -35,8 +35,4 @@ export class MainDashboardPage extends AppPage {
     await spaceDashboard.open();
     return Promise.resolve(spaceDashboard);
   }
-
-  async openSpaceProdPreview(spaceName: string): Promise<SpaceDashboardPage> {
-    return this.openSpace(spaceName);
-  }
 }

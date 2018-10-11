@@ -1,18 +1,11 @@
 import * as support from '../support';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
-import { browser } from 'protractor';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { PageOpenMode } from '../..';
 
 export abstract class CodebasesInteractionsFactory {
 
     public static create(strategy: string, spaceName: string): CodebasesInteractions {
-        let url: string = browser.params.target.url;
-        let isProdPreview = url.includes('prod-preview');
-
-        if (isProdPreview) {
-            return new ProdPreviewInteractions(strategy, spaceName);
-        }
         return new CodebasesInteractionsImpl(strategy, spaceName);
     }
 }
@@ -75,7 +68,4 @@ class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
         await this.page.openWorkspace();
         await support.windowManager.switchToNewWindow();
     }
-}
-
-class ProdPreviewInteractions extends CodebasesInteractionsImpl {
 }
