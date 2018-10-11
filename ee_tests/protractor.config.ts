@@ -2,6 +2,7 @@ import { browser, Config } from 'protractor';
 import { SpecReporter } from 'jasmine-spec-reporter';
 import * as failFast from 'protractor-fail-fast';
 import * as VideoReporter from 'protractor-video-reporter';
+import { FailuresReporter } from './src/support/failures_reporter';
 import { ZabbixReporter } from './src/support/zabbix_reporter';
 import * as support from './src/support';
 
@@ -96,6 +97,8 @@ let conf: Config = {
     if (useVideoReporter) {
       jasmine.getEnv().addReporter(videoReporter);
     }
+
+    jasmine.getEnv().addReporter(new FailuresReporter());
 
     if (browser.params.zabbix.enabled === 'true') {
       jasmine.getEnv().addReporter(new ZabbixReporter());
