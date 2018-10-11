@@ -98,7 +98,7 @@ describe('e2e_smoketest', () => {
     /* Switch back to the OSIO browser window */
     await support.windowManager.closeCurrentWindow();
     let workspaces = await codebasesInteractions.getWorkspaces();
-    expect(workspaces.length).toBe(1);
+    expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
   });
 
   it('pipeline', async () => {

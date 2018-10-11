@@ -5,7 +5,7 @@ import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objec
 import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
-import * as runner from  '../support/script_runner';
+import * as runner from '../support/script_runner';
 
 export abstract class PipelinesInteractionsFactory {
 
@@ -85,11 +85,13 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async verifyPipelineInfo(pipeline: PipelineDetails,
-            applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
+        applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
         support.info('Verify pipeline build info');
 
         expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
-        expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
+        expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number ' +
+            '(could be caused by https://github.com/openshiftio/openshift.io/issues/3742, ' +
+            'check screenshots pipeline-info.png and os-pipeline.png, build numbers should be the same)');
 
         let githubName = browser.params.github.username;
         expect(await pipeline.getRepository()).
@@ -155,7 +157,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await runner.runScript(
                 '.', // working directory
                 './oc-get-jenkins-logs.sh', // script
-                [ browser.params.login.user,  browser.params.login.password], // params
+                [browser.params.login.user, browser.params.login.password], // params
                 './target/screenshots/oc-logs-output.txt',  // output file
                 false,
                 support.LONGER_WAIT
@@ -205,24 +207,27 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGER_WAIT, 'View log link is present (meaning Jenkins job started))');
+        }, support.LONGER_WAIT, 'View log link is not present (e.g when Jenkins was not unidled, could be ' +
+            'caused by https://github.com/openshiftio/openshift.io/issues/4215, check jenkins-direct-log.png)');
     }
 
     protected async waitForStagesToStart(pipeline: PipelineDetails): Promise<void> {
         support.info('Wait for stages to start');
         await browser.wait(async function () {
             return (await pipeline.getStages()).length > 0;
-        }, support.LONGER_WAIT, 'Stages have started');
+        }, support.LONGER_WAIT, 'Stages did not start (meaning that Jenkins was probably unidled but the job ' +
+        'did not start, could be caused by https://github.com/openshiftio/openshift.io/issues/4020, ' +
+            'check pipeline-failed.png and jenkins-log-failed.png)');
     }
 
     protected async waitForStageToFinish(
         pipeline: PipelineDetails,
         name: string,
         index: number,
-        hook: Function = async (p: PipelineDetails) => {}): Promise<void> {
+        hook: Function = async (p: PipelineDetails) => { }): Promise<void> {
 
-        await browser.wait(async function() {
-            return ( await pipeline.getStages()).length > index;
+        await browser.wait(async function () {
+            return (await pipeline.getStages()).length > index;
         }, support.DEFAULT_WAIT, `Pipeline contain stage with index ${index} (${name})`);
 
         support.info(`Wait for ${name} to finish`);
@@ -244,14 +249,19 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGER_WAIT, `${name} is finished`);
+        }, support.LONGER_WAIT,
+            name + ' is finished (could be caused by ' +
+            'https://github.com/openshiftio/openshift.io/issues/3935, check screnshots ' +
+            'pipeline-failed.png and jenkins-log-failed.png)');
     }
 
     private async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
         await support.windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
-            support.LONG_WAIT, 'Jenkins log is finished');
+            support.LONG_WAIT, 'Jenkins log does not indicate finished job (could be caused by ' +
+            'https://github.com/openshiftio/openshift.io/issues/4180, ' +
+            'check screnshot jenkins-log-failed.png)');
         await support.screenshotManager.save('jenkins-log');
     }
 

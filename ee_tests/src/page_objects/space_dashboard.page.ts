@@ -105,9 +105,13 @@ export class AnalyticsCard extends BaseElement {
   async ready() {
     await super.ready();
     await browser.wait(until.stalenessOf(this.element(by.cssContainingText('h3', 'No results found'))),
-      support.DEFAULT_WAIT, 'Staleness of element with text "No results found"');
+      support.DEFAULT_WAIT, 'Staleness of element with text "No results found" (meaning that the analytics report ' +
+      'on space dashboard was not generated, could be caused by ' +
+      'https://github.com/openshiftio/openshift.io/issues/4399 or ' +
+      'https://github.com/openshiftio/openshift.io/issues/3744)');
     await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
-      support.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner');
+      support.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner (meaning that the ' +
+      'analytics report on space dashboard is still loading)');
   }
 
   public async getTotalDependenciesCount(): Promise<number> {
