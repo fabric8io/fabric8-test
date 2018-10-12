@@ -25,8 +25,11 @@ class StackAnalyses(object):
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
-        # Remove the ".git" suffix from the URL
         # print ('the target URL is:' + codebaseUrl)
+
+        # Remove the ".git" suffix from the URL
+        shortenedUrl = codebaseUrl
+
         if shortenedUrl.endswith(".git"):
             shortenedUrl = codebaseUrl[:-4]
         # print ('the shortened URL is:' + shortenedUrl)
