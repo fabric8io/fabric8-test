@@ -3,7 +3,6 @@ import requests
 from features.src.support import helpers
 import os
 import json
-import subprocess
 
 start_time = time.time()
 
@@ -106,7 +105,7 @@ class Workspace:
                '{}/api/workspace/{}/runtime'.format(cheApiAddress, workspaceId),
                headers=headers
             )
-            respJson = r.json()
+            # respJson = r.json()
             # print (respJson)
             helpers.printToJson('Stop the Che workspace request response', r)
 
@@ -132,7 +131,7 @@ class Workspace:
                '{}/api/workspace/{}'.format(cheApiAddress, workspaceId),
                headers=headers
             )
-            respJson = r.json()
+            # respJson = r.json()
             # print (respJson)
             helpers.printToJson('Delete the Che workspace request response', r)
 
