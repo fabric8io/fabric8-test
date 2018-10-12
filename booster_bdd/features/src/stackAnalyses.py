@@ -1,9 +1,8 @@
 import requests
 import features.src.support.helpers as helpers
-import re
 import os
 import time
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin
 
 boosterLaunched = False
 
