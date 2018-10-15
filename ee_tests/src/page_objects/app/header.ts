@@ -1,4 +1,4 @@
-import { browser, ElementFinder } from 'protractor';
+import { ElementFinder } from 'protractor';
 import { BaseElement } from '../../ui/base.element';
 import { Dropdown } from '../../ui/dropdown';
 
@@ -37,23 +37,12 @@ export class ProfileDropdown extends Dropdown {
 
 export class RecentItemsDropdown extends Dropdown {
 
-  private isProd: boolean = true;
-
   constructor(element: ElementFinder) {
     super(element);
-    let url: string = browser.params.target.url;
-
-    if (url.includes('localhost') || url.includes('preview')) {
-      this.isProd = false;
-    }
   }
 
   async selectAccountHome() {
-    if (this.isProd) {
-      super.select('Account home');
-    } else {
-      super.select('Home');
-    }
+    super.select('Home');
   }
 
   async selectCreateSpace() {
