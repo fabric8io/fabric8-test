@@ -1,6 +1,6 @@
-import { $, browser, by, element, ExpectedConditions as until } from 'protractor';
+import { $, browser, by,  element, ExpectedConditions as until } from 'protractor';
 import * as support from '../support';
-import { BaseElement } from '../ui/base.element';
+import { BaseElement, Clickable } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { ModalDialog } from '../ui/modal_dialog';
 import { TextInput } from '../ui/text_input';
@@ -132,6 +132,16 @@ export class UserProfilePage extends AppPage {
     let page =  new EditUserProfilePage();
     await page.open();
     return page;
+  }
+}
+
+export class WorkItemCard extends AppPage {
+  workItemsCard = new BaseElement($('alm-work-items'), 'work item card');
+
+  async clickWorkItemTitle(title: string) {
+    let workitem = new Clickable(element(by.xpath(
+        "//span[contains(@class,'work-item-title')]//a[text()=' " + title + " ']")));
+  await workitem.clickWhenReady();
   }
 
 }

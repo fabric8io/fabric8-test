@@ -36,8 +36,10 @@
     "typedoc": "typedoc",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update --gecko false"
+    },
+  "dependencies": {
+    "planner-functional-test": "0.0.3"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
     "@types/jasminewd2": "^2.0.3",
