@@ -36,20 +36,20 @@
     "typedoc": "typedoc",
     "webdriver:start": "webdriver-manager start",
     "webdriver:update": "webdriver-manager update --gecko false"
-    },
+  },
   "dependencies": {
     "planner-functional-test": "0.0.3"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.8.6",
-    "@types/jasminewd2": "^2.0.3",
+    "@types/jasmine": "^2.8.9",
+    "@types/jasminewd2": "^2.0.5",
     "@types/mkdirp": "^0.5.2",
-    "@types/node": "^8.10.26",
+    "@types/node": "^8.10.36",
     "chalk": "^2.4.1",
     "jasmine-protractor-matchers": "^2.0.0",
     "jasmine-spec-reporter": "^4.2.1",
     "mkdirp": "^0.5.1",
-    "protractor": "^5.3.1",
+    "protractor": "^5.4.1",
     "protractor-fail-fast": "^3.1.0",
     "protractor-video-reporter": "^0.3.0",
     "tslint": "^5.10.0",
