@@ -2,6 +2,7 @@ import requests
 import features.src.support.helpers as helpers
 import os
 import time
+import subprocess
 from urllib.parse import urlparse, urljoin
 
 boosterLaunched = False
@@ -34,9 +35,20 @@ class StackAnalyses(object):
             shortenedUrl = codebaseUrl[:-4]
         print ('the shortened URL is:' + shortenedUrl)
 
+        testOutput = subprocess.check_output(['pwd'])
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+        print ('Output = {}'.format(testOutput))
+
+
+
         try:
             spaceName = helpers.getSpaceName()
-            testOutput = subprocess.check_output(['test.sh', spaceName])
+            testOutput = subprocess.check_output(['/home/ldimaggi/local/redhat_git/go_path/src/github.com/almighty/fabric8-test/booster_bdd/test.sh', spaceName])
             print ('Output = {}'.format(testOutput))
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
