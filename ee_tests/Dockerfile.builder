@@ -42,13 +42,13 @@ RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 # && yum -y --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.47/linux/oc.tar.gz &&\
+RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.57/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
 # install all node dependencies
 COPY package.json package-lock.json ./
 # note that --unsafe-perm is there so that the postinstall script is called
-RUN npm --unsafe-perm install
+RUN npm --unsafe-perm ci
 
 # copy all files
 COPY . .
