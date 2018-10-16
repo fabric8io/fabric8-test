@@ -1,8 +1,10 @@
 #! /bin/bash
 
+set -x 
+
 mkdir tempDir
 cd tempDir
-git clone git@github.com:ldimaggi/{$1}.git
+git clone git@github.com:ldimaggi/$1.git
 cd $1
 
 mvn help:effective-pom -Doutput=effective-pom.xml
