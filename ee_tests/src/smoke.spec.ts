@@ -15,6 +15,7 @@ import { CodebasesInteractionsFactory } from './interactions/codebases_interacti
 import { BuildStatus } from './support/build_status';
 import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
 import * as runner from  './support/script_runner';
+import { PlannerInteractionsFactory } from './interactions/planner_interactions';
 
 describe('e2e_smoketest', () => {
 
@@ -137,6 +138,17 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.verifyDeployedApplicationRun(
         deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyWorkItems();
+  });
+
+  it('my_workitems', async () => {
+    support.specTitle('Verify my work items');
+    let plannerInteractions = PlannerInteractionsFactory.create(strategy, spaceName);
+    await plannerInteractions.openPlannerPage();
+    await plannerInteractions.createAndAssignWorkItem({title: 'my-work-item'}, 'me');
+
+    let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
+    await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
+    await dashboardInteractions.verifyWorkItems('my-work-item');
   });
 });
 
