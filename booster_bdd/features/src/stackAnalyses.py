@@ -2,7 +2,7 @@ import requests
 import features.src.support.helpers as helpers
 import os
 import time
-from urllib.parse import urljoin
+from urllib.parse import urlparse, urljoin
 
 boosterLaunched = False
 
@@ -32,6 +32,14 @@ class StackAnalyses(object):
 
         if shortenedUrl.endswith(".git"):
             shortenedUrl = codebaseUrl[:-4]
+        print ('the shortened URL is:' + shortenedUrl)
+
+        try:
+            spaceName = helpers.getSpaceName()
+            testOutput = subprocess.check_output(['test.sh', spaceName])
+            print ('Output = {}'.format(testOutput))
+        except Exception as e:
+            print('Unexpected subprocess exception: {}'.format(e))
         # print ('the shortened URL is:' + shortenedUrl)
 
         # TODO - The call is failing to all repos other than booster repos
