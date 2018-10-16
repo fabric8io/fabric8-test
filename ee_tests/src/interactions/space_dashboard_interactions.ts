@@ -34,6 +34,8 @@ export interface SpaceDashboardInteractions {
 
     openPipelinesPage(): void;
 
+    openPlannerPage(): void;
+
     createQuickstart(name: string, strategy: string): void;
 
     importRepo(appName: string, repoName: string, strategy: string): void;
@@ -57,7 +59,7 @@ export interface SpaceDashboardInteractions {
 
     verifyAnalytics(): void;
 
-    verifyWorkItems(): void;
+    verifyWorkItems(...items: string[]): void;
 }
 
 abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInteractions {
@@ -73,6 +75,8 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
     public abstract async openCodebasesPage(): Promise<void>;
 
     public abstract async openPipelinesPage(): Promise<void>;
+
+    public abstract async openPlannerPage(): Promise<void>;
 
     public abstract async createQuickstart(name: string, strategy: string): Promise<void>;
 
@@ -97,7 +101,7 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
 
     public abstract async verifyAnalytics(): Promise<void>;
 
-    public abstract async verifyWorkItems(): Promise<void>;
+    public abstract async verifyWorkItems(...items: string[]): Promise<void>;
 }
 
 class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteractions {
@@ -135,6 +139,10 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         await this.spaceDashboardPage.getPipelinesCard().then(async function (card) {
             await card.openPipelinesPage();
         });
+    }
+
+    public async openPlannerPage(): Promise<void> {
+        // planner is not yet released
     }
 
     public async createQuickstart(name: string, strategy: string): Promise<void> {
@@ -228,11 +236,11 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         expect(totalCount).toBe(analyzedCount + unknownCount, 'total = analyzed + unknown');
     }
 
-    public async verifyWorkItems(): Promise<void> {
+    public async verifyWorkItems(...items: string[]): Promise<void> {
         support.info('Verify work items');
         // no work items card exptected
-        await element.all(by.id('spacehome-my-workitems-badge')).then(function (items) {
-            expect(items.length).toBe(0);
+        await element.all(by.id('spacehome-my-workitems-badge')).then(function (i) {
+            expect(i.length).toBe(0);
         });
     }
 
@@ -259,8 +267,21 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
 class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions {
 
-    public async verifyWorkItems(): Promise<void> {
+    public async verifyWorkItems(...items: string[]): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
-        expect(await workItemsCard.getCount()).toBe(0, 'number of workitems on page');
+        expect(await workItemsCard.getCount()).toBe(items.length, 'Number of workitems on card');
+
+        let workItems = await workItemsCard.getWorkItems();
+        expect(workItems.length).toBe(items.length, 'Number of work items');
+        for (let i = 0; i < items.length; i++) {
+            expect(workItems[i]).toBe(items[i], 'Work item name');
+        }
+    }
+
+    public async openPlannerPage(): Promise<void> {
+        support.info('Open planner page');
+        await this.spaceDashboardPage.getWorkItemsCard().then(async function (card) {
+            await card.openPlanner();
+        });
     }
 }

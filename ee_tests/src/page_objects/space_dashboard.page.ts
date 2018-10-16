@@ -144,8 +144,17 @@ export class WorkItemsCard extends SpaceDashboardPageCard {
     return this.getCountByID('spacehome-my-workitems-badge', 'workitems');
   }
 
-  public async openPlanner(): Promise<number> {
-    throw 'Not yet implemented';
+  public async getWorkItems(): Promise<string[]> {
+    let items = await this.element(by.id('spacehome-my-workitems-list')).all(by.className('f8-list-group-item-link'));
+    let itemNames: string[] = [];
+    for (let item of items) {
+      itemNames.push(await item.getText());
+    }
+    return Promise.resolve(itemNames);
+  }
+
+  public async openPlanner(): Promise<void> {
+    await this.element(by.cssContainingText('a', 'My Work Items')).click();
   }
 }
 
