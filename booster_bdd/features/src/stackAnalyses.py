@@ -48,7 +48,7 @@ class StackAnalyses(object):
 
         try:
             spaceName = helpers.getSpaceName()
-            testOutput = subprocess.check_output(['/home/ldimaggi/local/redhat_git/go_path/src/github.com/almighty/fabric8-test/booster_bdd/test.sh', spaceName])
+            testOutput = subprocess.check_output(['./test.sh', spaceName])
             print ('Output = {}'.format(testOutput))
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
