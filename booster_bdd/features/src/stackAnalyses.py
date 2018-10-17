@@ -13,6 +13,9 @@ class StackAnalyses(object):
     def getReportKey (self, codebaseUrl):
         print('Getting Stack Analyses report ID.....')
 
+        githubUsername = os.getenv("GITHUB_USERNAME")
+        githubPassword = os.getenv("OSIO_PASSWORD")
+
         theToken = helpers.get_user_tokens().split(";")[0]
         authHeader = 'Bearer {}'.format(theToken)
 
@@ -33,36 +36,46 @@ class StackAnalyses(object):
 
         if shortenedUrl.endswith(".git"):
             shortenedUrl = codebaseUrl[:-4]
-        print ('the shortened URL is:' + shortenedUrl)
+        print ('the shortened URL is: {}'.format(shortenedUrl))
 
         spaceName = helpers.getSpaceName()
         projectName = os.getenv("PROJECT_NAME")
         gitRepo = spaceName + "-" + projectName
-        print ('the gitRepo name is: ' + gitRepo)
+        print ('the gitRepo name is: {}'.format(gitRepo))
 
+        cloneUrl = codebaseUrl.replace('https://github.com/', 'git@github.com:')
+        print ('the cloneUrl = {}'.format(cloneUrl))
+
+        # Invoke shell script to create and upload to master effective pom
         try:
-            testOutput = subprocess.check_output(['./test.sh', codebaseUrl, gitRepo])
+            testOutput = subprocess.check_output(['./test.sh', cloneUrl, gitRepo, githubUsername, githubPassword])
             print ('Output = {}'.format(testOutput))
-            time.sleep(60)
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
 
-        print ('the shortened URL is:' + shortenedUrl)
+        print ('the shortened URL is: {}'.format(shortenedUrl))
 
         # TODO - The call is failing to all repos other than booster repos
         #shortenedUrl = 'https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-rest-http'
 
+        #payload = {
+        #    'github_url': shortenedUrl,
+        #    'source': 'osio',
+        #    'github_ref': 13
+        #}
+        filePath = './tempDir/' + gitRepo
         payload = {
-            'github_url': shortenedUrl,
-            'source': 'osio',
-            'github_ref': 13
+            #'filePath': filePathList,
+            #'manifest': manifestList
+            'filePath[]' : filePathList,
+            'manifest[]' : 'pom.xml'
         }
 
         try:
             r = requests.post(urljoin(_url, _endpoint),
                         headers=headers, data=payload)
 
-            print ('response text = ' + r.text)
+            print ('response text = {}'.format(r.text))
             respJson = r.json()
             helpers.printToJson('Obtain the stack analyses key', r)
             theID = respJson["id"]
