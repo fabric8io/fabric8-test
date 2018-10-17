@@ -145,6 +145,9 @@ export class WorkItemsCard extends SpaceDashboardPageCard {
   }
 
   public async getWorkItems(): Promise<string[]> {
+    if (! await this.element(by.id('spacehome-my-workitems-list')).isPresent()) {
+      return Promise.resolve([]);
+    }
     let items = await this.element(by.id('spacehome-my-workitems-list')).all(by.className('f8-list-group-item-link'));
     let itemNames: string[] = [];
     for (let item of items) {
