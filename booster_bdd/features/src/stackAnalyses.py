@@ -35,12 +35,13 @@ class StackAnalyses(object):
             shortenedUrl = codebaseUrl[:-4]
         print ('the shortened URL is:' + shortenedUrl)
 
-        #spaceName = helpers.getSpaceName()
-        #projectName = os.getenv("PROJECT_NAME")
-        #gitRepo = spaceName + "-" + projectName
+        spaceName = helpers.getSpaceName()
+        projectName = os.getenv("PROJECT_NAME")
+        gitRepo = spaceName + "-" + projectName
+        print ('the gitRepo name is: ' + gitRepo)
 
         try:
-            testOutput = subprocess.check_output(['./test.sh', codebaseUrl])
+            testOutput = subprocess.check_output(['./test.sh', codebaseUrl, gitRepo])
             print ('Output = {}'.format(testOutput))
             time.sleep(60)
         except Exception as e:
