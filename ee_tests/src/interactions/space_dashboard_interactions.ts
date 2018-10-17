@@ -19,7 +19,13 @@ export abstract class SpaceDashboardInteractionsFactory {
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            return new BetaSpaceDashboardInteractions(strategy, spaceName);
+            let url: string = browser.params.target.url;
+
+            if (url.includes('prod-preview')) {
+                return new BetaSpaceDashboardInteractions(strategy, spaceName);
+            } else {
+                return new ProdBetaSpaceDashboardInteractions(strategy, spaceName);
+            }
         }
 
         return new ReleasedSpaceDashboardInteractions(strategy, spaceName);
@@ -183,7 +189,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
     public async verifyPipeline(pipeline: Pipeline,
         application: string, buildNumber: number, buildStatus: BuildStatus): Promise<void> {
-            support.info('Verify pipeline for application ' + await pipeline.getApplication());
+        support.info('Verify pipeline for application ' + await pipeline.getApplication());
         expect(pipeline.getApplication()).toBe(application, 'application name on pipeline');
         expect(pipeline.getStatus()).toBe(buildStatus, 'build status');
         expect(pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
@@ -205,13 +211,13 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
 
     public async verifyDeployedApplicationStage(
         application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
-            support.info('Verify deployed application ' + await application.getName() + ' on stage');
-            if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
-                expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
-                await application.openStageLink();
-                await this.verifyLink(testCallback, 'stage');
-            }
+        support.info('Verify deployed application ' + await application.getName() + ' on stage');
+        if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
+            expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
+            await application.openStageLink();
+            await this.verifyLink(testCallback, 'stage');
         }
+    }
 
     public async verifyDeployedApplicationRun(
         application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
@@ -283,5 +289,16 @@ class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions 
         await this.spaceDashboardPage.getWorkItemsCard().then(async function (card) {
             await card.openPlanner();
         });
+    }
+}
+
+class ProdBetaSpaceDashboardInteractions extends BetaSpaceDashboardInteractions {
+
+    public async verifyWorkItems(...items: string[]): Promise<void> {
+        let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
+        expect(await workItemsCard.getCount()).toBe(0, 'Number of workitems on card');
+
+        let workItems = await workItemsCard.getWorkItems();
+        expect(workItems.length).toBe(0, 'Number of work items');
     }
 }
