@@ -58,24 +58,12 @@ let conf: Config = {
   ],
 
   suites: {
-
-    smoketest: ['src/smoke.spec.js'],
-    che: ['src/che_integration.spec.js'],
     all: ['src/*.spec.js'],
+    che: ['src/che_integration.spec.js'],
     local: ['src/local/*.js'],
-
-    launchertest: ['src/launcher.spec.js'],
     logintest: ['src/login.spec.js'],
-
-    // TODO https://github.com/fabric8io/fabric8-test/issues/578
-    boosterTest: ['src/booster_pipeline.spec.js'],
-    importTest: ['src/workshop-import-to-space.spec.js'],
-
-    boosterterminaltest: ['src/booster_ee_int_tests/quickstart_cheterminal.spec.js'],
-    boosterjunittest: ['src/booster_ee_int_tests/quickstart_chejunit.spec.js'],
-    boostereditortest: ['src/booster_ee_int_tests/quickstart_che_editor.spec.js'],
-
-    planner : ['src/planner.spec.js']
+    planner : ['src/planner.spec.js'],
+    smoketest: ['src/smoke.spec.js']
   },
 
   // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
