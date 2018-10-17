@@ -26,7 +26,7 @@ class StackAnalyses(object):
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
-        # print ('the target URL is:' + codebaseUrl)
+        print ('the target URL is:' + codebaseUrl)
 
         # Remove the ".git" suffix from the URL
         shortenedUrl = codebaseUrl
@@ -35,24 +35,17 @@ class StackAnalyses(object):
             shortenedUrl = codebaseUrl[:-4]
         print ('the shortened URL is:' + shortenedUrl)
 
-        testOutput = subprocess.check_output(['pwd'])
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-        print ('Output = {}'.format(testOutput))
-
-
+        #spaceName = helpers.getSpaceName()
+        #projectName = os.getenv("PROJECT_NAME")
+        #gitRepo = spaceName + "-" + projectName
 
         try:
-            spaceName = helpers.getSpaceName()
-            testOutput = subprocess.check_output(['./test.sh', spaceName])
+            testOutput = subprocess.check_output(['./test.sh', codebaseUrl])
             print ('Output = {}'.format(testOutput))
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
-        # print ('the shortened URL is:' + shortenedUrl)
+
+        print ('the shortened URL is:' + shortenedUrl)
 
         # TODO - The call is failing to all repos other than booster repos
         #shortenedUrl = 'https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-rest-http'
@@ -67,7 +60,7 @@ class StackAnalyses(object):
             r = requests.post(urljoin(_url, _endpoint),
                         headers=headers, data=payload)
 
-            # print (r.text)
+            print ('response text = ' + r.text)
             respJson = r.json()
             helpers.printToJson('Obtain the stack analyses key', r)
             theID = respJson["id"]
