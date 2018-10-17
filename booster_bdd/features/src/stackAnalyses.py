@@ -42,6 +42,7 @@ class StackAnalyses(object):
         try:
             testOutput = subprocess.check_output(['./test.sh', codebaseUrl])
             print ('Output = {}'.format(testOutput))
+            time.sleep(60)
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
 
