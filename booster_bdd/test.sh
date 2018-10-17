@@ -12,7 +12,7 @@ echo "clone the github repo"
 git clone git@github.com:ldimaggi/$1.git
 
 echo "cd to the cloned github repo"
-cd $1
+cd $2
 
 echo "create the effective pom"
 mvn help:effective-pom -Doutput=effective-pom.xml
