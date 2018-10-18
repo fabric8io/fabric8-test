@@ -46,10 +46,6 @@ export class RecentItemsDropdown extends Dropdown {
   }
 
   async selectCreateSpace() {
-    if (this.isProd) {
-      super.select('Create space');
-    } else {
-      super.select('Create Space');
-    }
+    super.select('Create Space');
   }
 }
