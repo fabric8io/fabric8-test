@@ -2,7 +2,8 @@ import {
   browser, ElementArrayFinder, ElementFinder, ExpectedConditions as until
 } from 'protractor';
 
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 
 // todo move to a different module
 
@@ -95,12 +96,12 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
 
   info(action: string, ...msg: string[]) {
     let className = this.constructor.name;
-    support.info(`${action}: ${className}('${this.name}')`, ...msg);
+    logger.info(`${action}: ${className}('${this.name}')`, ...msg);
   }
 
   debug(context: string, ...msg: string[]) {
     let className = this.constructor.name;
-    support.debug(`   ${className}('${this.name}'): ${context}`, ...msg);
+    logger.debug(`   ${className}('${this.name}'): ${context}`, ...msg);
   }
 
   protected string2Number(stringNumber: string, errorMessage: string): number {
@@ -116,7 +117,7 @@ export class BaseElement extends ElementFinder implements BaseElementInterface {
   }
 
   private async waitFor(msg: string, condition: Function, timeout?: number) {
-    let wait: number = timeout || support.DEFAULT_WAIT;
+    let wait: number = timeout || timeouts.DEFAULT_WAIT;
     this.debug(`waiting for "${msg}"`, `  | timeout: '${wait}'`);
     await browser.wait(condition, wait);
     this.debug(`waiting for "${msg}"`, '  - OK');

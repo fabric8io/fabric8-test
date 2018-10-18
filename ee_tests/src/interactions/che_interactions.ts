@@ -1,5 +1,6 @@
 import { browser } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import * as runner from  '../support/script_runner';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
@@ -26,7 +27,7 @@ export class CheInteractionsImpl extends AbstractCheInteractions {
 
     public async changeCodebase(workspace: string): Promise<void> {
         await this.runCheTests(workspace);
-        support.info('Script finished');
+        logger.info('Script finished');
     }
 
     private async runCheTests(workspace: string): Promise<void> {
@@ -46,7 +47,7 @@ export class CheInteractionsImpl extends AbstractCheInteractions {
             [osio, username, password, workspace, token],
             outputDir,
             true,
-            support.LONGEST_WAIT);
+            timeouts.LONGEST_WAIT);
     }
 
     private async getToken(): Promise<string> {

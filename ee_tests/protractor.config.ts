@@ -4,7 +4,7 @@ import * as failFast from 'protractor-fail-fast';
 import * as VideoReporter from 'protractor-video-reporter';
 import { FailuresReporter } from './src/support/failures_reporter';
 import { ZabbixReporter } from './src/support/zabbix_reporter';
-import * as support from './src/support';
+import * as timeouts from './src/support/timeouts';
 
 // NOTE: weird import as documented in
 // https://github.com/Xotabu4/jasmine-protractor-matchers
@@ -99,7 +99,7 @@ let conf: Config = {
 
     let genericWait = browser.wait;
 
-    browser.wait = function (predicate: any, timeout = support.DEFAULT_WAIT, message: string) {
+    browser.wait = function (predicate: any, timeout = timeouts.DEFAULT_WAIT, message: string) {
       return genericWait.apply(browser, [predicate, timeout, message]);
     };
   },

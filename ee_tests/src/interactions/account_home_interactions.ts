@@ -6,7 +6,7 @@ import { PageOpenMode } from '../page_objects/base.page';
 import { CleanupUserEnvPage } from '../page_objects/user_profile.page';
 import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { AppPage } from '../page_objects/app.page';
-import * as support from '../support';
+import * as logger from '../support/logging';
 import { LandingPage } from '../..';
 
 export abstract class AccountHomeInteractionsFactory {
@@ -57,12 +57,12 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
     public async abstract openSpaceDashboard(name: string): Promise<void>;
 
     public async createSpace(name: string): Promise<void> {
-        support.info('Create space ' + name);
+        logger.info('Create space ' + name);
         await this.appPage.createNewSpaceByLauncher(name);
     }
 
     public async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void> {
-        support.info(`Create space ${spaceName} from booster ${templateName} with release strategy ${strategy}`);
+        logger.info(`Create space ${spaceName} from booster ${templateName} with release strategy ${strategy}`);
         await this.appPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
 
         let spaceDashboardInteractions: SpaceDashboardInteractions =
@@ -72,7 +72,7 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
     }
 
     public async resetEnvironment(): Promise<void> {
-        support.info('Reset environment');
+        logger.info('Reset environment');
         let cleanupEnvPage = new CleanupUserEnvPage();
         cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(browser.params.login.user);
@@ -101,12 +101,12 @@ class OldAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
     }
 
     public async openAccountHomePage(mode: PageOpenMode): Promise<void> {
-        support.info('Open account home page');
+        logger.info('Open account home page');
         await this.dashboardPage.open(mode);
     }
 
     public async openSpaceDashboard(name: string): Promise<void> {
-        support.info('Open space dashboard for space ' + name);
+        logger.info('Open space dashboard for space ' + name);
         await this.dashboardPage.openSpace(name);
     }
 }
@@ -128,7 +128,7 @@ class NewAccountHomeInteractions extends AbstractSpaceDashboardInteractions {
     }
 
     public async openAccountHomePage(mode: PageOpenMode): Promise<void> {
-        support.info('Open account home page');
+        logger.info('Open account home page');
         await this.dashboardPage.open(mode);
     }
 

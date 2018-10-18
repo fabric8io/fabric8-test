@@ -1,5 +1,8 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
+import { windowManager } from '../support/window_manager';
+import { screenshotManager } from '../support/screenshot_manager';
 import { BuildStageStatus, BuildStageStatusUtils, BuildStatus, BuildStatusUtils } from '../support/build_status';
 import { PipelineDetails, PipelineStage, SpacePipelinePage } from '../page_objects/space_pipeline_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
@@ -58,7 +61,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async openPipelinesPage(mode: PageOpenMode) {
-        support.info('Open pipelines page');
+        logger.info('Open pipelines page');
 
         if (mode === PageOpenMode.UseMenu) {
             let dashboardInteractions =
@@ -72,12 +75,12 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async showDeployments(): Promise<void> {
-        support.info('Show Deployments page');
+        logger.info('Show Deployments page');
         await this.spacePipelinePage.deploymentsOption.clickWhenReady();
     }
 
     public async verifyPipelines(count: number): Promise<PipelineDetails[]> {
-        support.info('Verify pipelines');
+        logger.info('Verify pipelines');
         let pipelines = await this.spacePipelinePage.getPipelines();
         expect(pipelines.length).toBe(count, 'number of pipelines');
 
@@ -86,7 +89,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
     public async verifyPipelineInfo(pipeline: PipelineDetails,
         applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
-        support.info('Verify pipeline build info');
+            logger.info('Verify pipeline build info');
 
         expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
         expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number ' +
@@ -97,7 +100,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         expect(await pipeline.getRepository()).
             toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
 
-        await support.screenshotManager.save('pipeline-info');
+        await screenshotManager.save('pipeline-info');
         return Promise.resolve(pipeline);
     }
 
@@ -111,59 +114,59 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await this.waitForLogLink(pipeline);
             await this.waitForStagesToStart(pipeline);
             await this.waitForStagesToFinish(pipeline);
-            support.info('Pipeline is finished');
-            await support.screenshotManager.save(`pipeline-finished`);
+            logger.info('Pipeline is finished');
+            await screenshotManager.save(`pipeline-finished`);
         } catch (e) {
-            support.info('Wait for pipeline to finish failed with error: ' + e);
-            await support.screenshotManager.save('pipeline-failed');
+            logger.info('Wait for pipeline to finish failed with error: ' + e);
+            await screenshotManager.save('pipeline-failed');
             waitToFinishInternalError = e;
         }
 
         // save Jenkins log
         try {
-            support.info('Check the Jenkins log');
+            logger.info('Check the Jenkins log');
             await this.verifyJenkinsLog(pipeline);
-            support.info('Jenkins log is OK');
+            logger.info('Jenkins log is OK');
         } catch (e) {
-            support.info('Check the Jenkins log failed with error: ' + e);
-            await support.screenshotManager.save('jenkins-log-failed');
+            logger.info('Check the Jenkins log failed with error: ' + e);
+            await screenshotManager.save('jenkins-log-failed');
             // if the UI show Jenkins log faile, try navigating to jenkins directly
             await this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
         } finally {
-            if (support.windowManager.getWindowCount() > 1) {
-                await support.windowManager.closeCurrentWindow();
+            if (windowManager.getWindowCount() > 1) {
+                await windowManager.closeCurrentWindow();
             }
         }
 
         // check OSO pipeline
         try {
-            support.info('Check the OpenShift pipeline');
+            logger.info('Check the OpenShift pipeline');
             await this.checkOSPipeline(pipeline);
-            support.info('OpenShift pipeline is OK');
+            logger.info('OpenShift pipeline is OK');
         } catch (e) {
-            support.info('Check the OpenShift pipeline failed with error: ' + e);
-            await support.screenshotManager.save('os-pipeline-failed');
+            logger.info('Check the OpenShift pipeline failed with error: ' + e);
+            await screenshotManager.save('os-pipeline-failed');
             osoPipelineError = e;
         } finally {
-            if (support.windowManager.getWindowCount() > 1) {
-                await support.windowManager.closeCurrentWindow();
+            if (windowManager.getWindowCount() > 1) {
+                await windowManager.closeCurrentWindow();
             }
         }
 
         // save OC logs
         try {
-            support.info('Save OC Jenkins pod log');
+            logger.info('Save OC Jenkins pod log');
             await runner.runScript(
                 '.', // working directory
                 './oc-get-project-logs.sh', // script
                 [browser.params.login.user, browser.params.login.password, 'jenkins'], // params
                 './target/screenshots/oc-jenkins-logs.txt',  // output file
                 false,
-                support.LONGER_WAIT
+                timeouts.LONGER_WAIT
             );
         } catch (e) {
-            support.info('Save OC Jenkins pod log failed with error: ' + e);
+            logger.info('Save OC Jenkins pod log failed with error: ' + e);
         }
 
         if (waitToFinishInternalError !== undefined) {
@@ -180,12 +183,12 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     public async verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus) {
-        support.info('Verify build result info');
+        logger.info('Verify build result info');
         expect(await pipeline.getStatus()).toBe(expectedStatus, 'build status');
     }
 
     public async verifyBuildStages(pipeline: PipelineDetails) {
-        support.info('Verify pipeline build stages');
+        logger.info('Verify pipeline build stages');
 
         let stages = await pipeline.getStages();
         this.verifyBuildStagesInternal(stages);
@@ -196,7 +199,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     protected abstract async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void>;
 
     protected async waitForLogLink(pipeline: PipelineDetails): Promise<void> {
-        support.info('Wait for View log link');
+        logger.info('Wait for View log link');
         await browser.wait(async function () {
             let currentStatus = await pipeline.getStatus();
             if (BuildStatusUtils.buildEnded(currentStatus)) {
@@ -207,15 +210,15 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGER_WAIT, 'View log link is not present (e.g when Jenkins was not unidled, could be ' +
+        }, timeouts.LONGER_WAIT, 'View log link is not present (e.g when Jenkins was not unidled, could be ' +
             'caused by https://github.com/openshiftio/openshift.io/issues/4215, check jenkins-direct-log.png)');
     }
 
     protected async waitForStagesToStart(pipeline: PipelineDetails): Promise<void> {
-        support.info('Wait for stages to start');
+        logger.info('Wait for stages to start');
         await browser.wait(async function () {
             return (await pipeline.getStages()).length > 0;
-        }, support.LONGER_WAIT, 'Stages did not start (meaning that Jenkins was probably unidled but the job ' +
+        }, timeouts.LONGER_WAIT, 'Stages did not start (meaning that Jenkins was probably unidled but the job ' +
         'did not start, could be caused by https://github.com/openshiftio/openshift.io/issues/4020, ' +
             'check pipeline-failed.png and jenkins-log-failed.png)');
     }
@@ -228,28 +231,28 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
         await browser.wait(async function () {
             return (await pipeline.getStages()).length > index;
-        }, support.DEFAULT_WAIT, `Pipeline contain stage with index ${index} (${name})`);
+        }, timeouts.DEFAULT_WAIT, `Pipeline contain stage with index ${index} (${name})`);
 
-        support.info(`Wait for ${name} to finish`);
+        logger.info(`Wait for ${name} to finish`);
         await browser.wait(async function () {
             let currentStatus = await pipeline.getStatus();
             if (BuildStatusUtils.buildEnded(currentStatus)) {
-                support.info('Pipeline finished with status ' + currentStatus);
+                logger.info('Pipeline finished with status ' + currentStatus);
                 return true;
             }
 
             let stageStatus = await (await pipeline.getStages())[index].getStatus();
-            support.debug(`${name} status: ${stageStatus}`);
+            logger.debug(`${name} status: ${stageStatus}`);
 
             if (BuildStageStatusUtils.buildEnded(stageStatus)) {
-                await support.screenshotManager.save(`stage-${index}-finished`);
+                await screenshotManager.save(`stage-${index}-finished`);
                 return true;
             } else {
                 await hook();
                 await browser.sleep(5000);
                 return false;
             }
-        }, support.LONGER_WAIT,
+        }, timeouts.LONGER_WAIT,
             name + ' is finished (could be caused by ' +
             'https://github.com/openshiftio/openshift.io/issues/3935, check screnshots ' +
             'pipeline-failed.png and jenkins-log-failed.png)');
@@ -257,36 +260,36 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
     private async verifyJenkinsLog(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewLog();
-        await support.windowManager.switchToNewWindow();
+        await windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
-            support.LONG_WAIT, 'Jenkins log does not indicate finished job (could be caused by ' +
+            timeouts.LONG_WAIT, 'Jenkins log does not indicate finished job (could be caused by ' +
             'https://github.com/openshiftio/openshift.io/issues/4180, ' +
             'check screnshot jenkins-log-failed.png)');
-        await support.screenshotManager.save('jenkins-log');
+        await screenshotManager.save('jenkins-log');
     }
 
     private async showJenkinsLogDirectly() {
         try {
-            support.info('Navigate to Jenkins log directly by URL');
+            logger.info('Navigate to Jenkins log directly by URL');
             let osioURL: string = browser.params.target.url.replace('https://', '');
             let jenkinsURL = 'https://jenkins.' + osioURL;
             await browser.get(jenkinsURL);
-            await support.screenshotManager.save('jenkins-direct-log');
+            await screenshotManager.save('jenkins-direct-log');
         } catch (e) {
             // do not propagate the error because it would shadow previous errors
-            support.info('Navigate to Jenkins log directly by URL failed. ' + e);
+            logger.info('Navigate to Jenkins log directly by URL failed. ' + e);
         }
     }
 
     private async checkOSPipeline(pipeline: PipelineDetails): Promise<void> {
         await pipeline.viewBuildInOS();
-        await support.windowManager.switchToNewWindow();
+        await windowManager.switchToNewWindow();
 
         await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))));
         let status = await element(by.xpath('//h3[text()="Status"]/../dl[1]/dd[1]/span[1]')).getText();
         expect(status).toBe('Complete');
 
-        await support.screenshotManager.save('os-pipeline');
+        await screenshotManager.save('os-pipeline');
     }
 }
 
@@ -337,9 +340,9 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
         let promoted = false;
         await super.waitForStageToFinish(pipeline, 'Approve', 2, async (p: PipelineDetails) => {
             if (!promoted && await pipeline.isInputRequired()) {
-                support.info('Input is required');
+                logger.info('Input is required');
                 await pipeline.promote();
-                support.info('Promoted');
+                logger.info('Promoted');
                 promoted = true;
             }
         });

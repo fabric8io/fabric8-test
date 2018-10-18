@@ -1,4 +1,5 @@
-import * as support from '../support';
+import * as logger from '../support/logging';
+import { windowManager } from '../support/window_manager';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { PageOpenMode } from '../..';
@@ -40,7 +41,7 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
     public async abstract createAndOpenWorkspace(): Promise<void>;
 
     public async openCodebasesPage(mode: PageOpenMode): Promise<void> {
-        support.info('Open codebases page');
+        logger.info('Open codebases page');
         if (mode === PageOpenMode.UseMenu) {
             let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
             await dashboardInteractions.openSpaceDashboardPage(mode);
@@ -59,13 +60,13 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
 class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
     public async createWorkspace(): Promise<void> {
-        support.info('Create and open workspace');
+        logger.info('Create and open workspace');
         await this.page.createWorkspace();
     }
 
     public async createAndOpenWorkspace(): Promise<void> {
         await this.createWorkspace();
         await this.page.openWorkspace();
-        await support.windowManager.switchToNewWindow();
+        await windowManager.switchToNewWindow();
     }
 }

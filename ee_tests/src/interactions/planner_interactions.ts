@@ -1,7 +1,7 @@
 import { browser } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
-import * as support from '../support';
+import * as logger from '../support/logging';
 import { PlannerPage } from 'planner-functional-test';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { WorkItem } from 'planner-functional-test/dist/ui/planner';
@@ -40,7 +40,7 @@ class PlannerInteractionsImpl implements PlannerInteractions {
     }
 
     async openPlannerPage(): Promise<void> {
-        support.info('Open planner');
+        logger.info('Open planner');
         let dashboardInteractions = SpaceDashboardInteractionsFactory.create(this.strategy, this.spaceName);
         await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
         await dashboardInteractions.openPlannerPage();

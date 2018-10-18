@@ -5,7 +5,7 @@ import { ModalDialog } from '../../ui/modal_dialog';
 import { MultipleSelectionList } from '../../ui/multi_select_list';
 import { SingleSelectionDropdown } from '../../ui/dropdown';
 import { TextInput } from '../../ui/text_input';
-import { debug, info } from '../../support';
+import { debug, info } from '../../support/logging';
 import { LauncherImportAppPage } from '../launcher_import_app.page';
 import { LauncherSection } from '../launcher_section';
 import { LauncherSetupAppPage} from '../launcher_setup_app.page';

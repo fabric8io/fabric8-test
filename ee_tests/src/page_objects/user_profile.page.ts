@@ -1,5 +1,6 @@
 import { $, browser, by,  element, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import { BaseElement, Clickable } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { ModalDialog } from '../ui/modal_dialog';
@@ -54,9 +55,9 @@ export class CleanupUserEnvPage extends AppPage {
 
   async ready() {
     await super.ready();
-    support.debug('checking if erase button is there');
+    logger.debug('checking if erase button is there');
     await this.eraseEnvButton.untilClickable();
-    support.debug('checking if erase button is there - OK');
+    logger.debug('checking if erase button is there - OK');
   }
 
   /* An intermittent error is resulting in some user enviroment resets failing
@@ -67,8 +68,8 @@ export class CleanupUserEnvPage extends AppPage {
     try {
       await this.cleanupSupport(username);
     } catch (e) {
-      await browser.sleep(support.LONG_WAIT);
-      support.info('Retrying reset');
+      await browser.sleep(timeouts.LONG_WAIT);
+      logger.info('Retrying reset');
       await this.cleanupSupport(username);
     }
   }
@@ -83,14 +84,14 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
     await browser.wait(until.presenceOf(this.alertBox),
-      support.LONG_WAIT, 'Alert box is present');
+    timeouts.LONG_WAIT, 'Alert box is present');
     let alertText = await this.alertBox.getText();
 
-    support.info('Alert text: ' + alertText);
+    logger.info('Alert text: ' + alertText);
     if (alertText.includes(this.CLEANUP_SUCCESSFUL_MESSAGE)) {
-      support.info('Reset successfull');
+      logger.info('Reset successfull');
     } else {
-      support.info('Reset failed');
+      logger.info('Reset failed');
       throw 'Reset of the environment failed';
     }
   }
@@ -106,15 +107,15 @@ export class EditUserProfilePage extends AppPage {
 
   async gotoResetEnvironment() {
     await this.ready();
-    support.debug('going to click', 'Reset Environment');
+    logger.debug('going to click', 'Reset Environment');
     await browser.executeScript('arguments[0].scrollIntoView()', this.resetEnvButton.getWebElement());
     await this.resetEnvButton.clickWhenReady();
-    support.debug('going to click', 'Reset Environment', 'OK');
+    logger.debug('going to click', 'Reset Environment', 'OK');
 
     let page = new CleanupUserEnvPage();
-    support.debug('going to open: CleanupUserEnvPage');
+    logger.debug('going to open: CleanupUserEnvPage');
     await page.open();
-    support.debug('going to open: CleanupUserEnvPage - OK');
+    logger.debug('going to open: CleanupUserEnvPage - OK');
     return page;
   }
 

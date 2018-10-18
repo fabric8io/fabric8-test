@@ -4,7 +4,7 @@ import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { SpacePipelinePage } from './space_pipeline_tab.page';
-import * as support from '../support';
+import * as timeouts from '../support/timeouts';
 
 export class SpaceDashboardPage extends SpaceAppPage {
 
@@ -105,12 +105,12 @@ export class AnalyticsCard extends BaseElement {
   async ready() {
     await super.ready();
     await browser.wait(until.stalenessOf(this.element(by.cssContainingText('h3', 'No results found'))),
-      support.DEFAULT_WAIT, 'Staleness of element with text "No results found" (meaning that the analytics report ' +
+      timeouts.DEFAULT_WAIT, 'Staleness of element with text "No results found" (meaning that the analytics report ' +
       'on space dashboard was not generated, could be caused by ' +
       'https://github.com/openshiftio/openshift.io/issues/4399 or ' +
       'https://github.com/openshiftio/openshift.io/issues/3744)');
     await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
-      support.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner (meaning that the ' +
+      timeouts.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner (meaning that the ' +
       'analytics report on space dashboard is still loading)');
   }
 
@@ -221,9 +221,9 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
     await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))),
-      support.DEFAULT_WAIT, 'Staleness of Loading text');
+      timeouts.DEFAULT_WAIT, 'Staleness of Loading text');
     await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))),
-      support.DEFAULT_WAIT, 'Element with id spacehome-environments-list is present');
+      timeouts.DEFAULT_WAIT, 'Element with id spacehome-environments-list is present');
     let elementsFinders: ElementFinder[] =
       await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
     let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));

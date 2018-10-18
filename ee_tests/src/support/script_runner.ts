@@ -1,4 +1,5 @@
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import { spawn } from 'child_process';
 import { createWriteStream } from 'fs';
 import { sync as mkdirp } from 'mkdirp';
@@ -10,11 +11,11 @@ export async function runScript(
     params: string[],
     outputFile: string,
     outputToConsole: boolean = true,
-    timeout: number = support.DEFAULT_WAIT): Promise<void> {
+    timeout: number = timeouts.DEFAULT_WAIT): Promise<void> {
 
     let runScriptPromise = new Promise<void>((resolve, reject) => {
 
-        support.info(`Running script \"${name} > ${outputFile}\" from directory ${baseDir}`);
+        logger.info(`Running script \"${name} > ${outputFile}\" from directory ${baseDir}`);
 
         mkdirp(dirname(outputFile));
 
@@ -24,17 +25,17 @@ export async function runScript(
         script.on('exit', function (code: number) {
             stream.end();
             if (code !== 0) {
-                support.info(`Script \"${name} > ${outputFile}\" exited with code ${code}`);
+                logger.info(`Script \"${name} > ${outputFile}\" exited with code ${code}`);
                 reject(`Script \"${name} > ${outputFile}\" exited with non zero value ${code}`);
             } else {
-                support.info('Script finished');
+                logger.info('Script finished');
                 resolve();
             }
         });
 
         script.stdout.on('data', (data: any) => {
             if (outputToConsole) {
-                support.script(data);
+                logger.script(data);
             }
             stream.write(new Buffer(data));
         });
@@ -42,7 +43,7 @@ export async function runScript(
         script.stderr.on('data', (data: any) => {
             // check if data contains some non-whitespace characters
             if (/\S/.test(data)) {
-                support.error(data);
+                logger.error(data);
                 stream.write(new Buffer(data));
             }
         });
