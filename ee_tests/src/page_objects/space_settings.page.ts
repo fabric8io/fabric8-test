@@ -1,6 +1,6 @@
 import { BaseElement, BaseElementArray, Button, Clickable, TextInput } from '../ui';
 import { $, $$, by, element, Key } from 'protractor';
-import * as support from '.././support';
+import * as logger from '../support/logging';
 import { AppPage } from '../page_objects/app.page';
 
 export class SpaceSettings extends AppPage {
@@ -33,28 +33,28 @@ export class SpaceSettings extends AppPage {
   userInfo = new BaseElement($('.user-dropdown__username'), 'user name');
 
   async clickSettings() {
-    support.info('click settings button');
+    logger.info('click settings button');
     await this.settings.clickWhenReady();
   }
 
    /* Areas page*/
   async clickAreasTab() {
-    support.info('click Areas Tab');
+    logger.info('click Areas Tab');
     await this.areasTab.clickWhenReady();
     await this.addAreasButton.untilDisplayed();
-    support.info('clicked Areas Tab');
+    logger.info('clicked Areas Tab');
   }
 
   async clickShowAreas() {
-    support.info('click show Areas');
+    logger.info('click show Areas');
     await this.showAreasChildren.ready();
     await this.showAreasChildren.untilClickable();
     await this.showAreasChildren.clickWhenReady();
-    support.info('done - click show Areas');
+    logger.info('done - click show Areas');
   }
 
    async addAreas(areaName: string) {
-    support.info('Add areas');
+    logger.info('Add areas');
     await this.addAreasButton.clickWhenReady();
     await this.createAreaDialog.untilDisplayed();
     await this.areaInputField.enterText(areaName);
@@ -62,19 +62,19 @@ export class SpaceSettings extends AppPage {
     await this.createButton.untilTextIsPresent('Create');
     await this.createAreaDialog.untilHidden();
     await this.modalFade.untilHidden();
-    support.info('done - add areas');
+    logger.info('done - add areas');
   }
 
    /* Collaborators page*/
   async clickCollaboratorsTab() {
-    support.info('click Collaborator Tab');
+    logger.info('click Collaborator Tab');
     await this.collaboratorsTab.clickWhenReady();
     await this.addCollaboratorsButton.untilDisplayed();
-    support.info('done - clicked Collaborators Tab');
+    logger.info('done - clicked Collaborators Tab');
   }
 
    async addCollaborators(userName: string) {
-    support.info('add collaborator');
+    logger.info('add collaborator');
     await this.addCollaboratorsButton.clickWhenReady();
     await this.collaboratorDialog.untilDisplayed();
     await this.searchCollaborator.untilClickable();
@@ -85,7 +85,7 @@ export class SpaceSettings extends AppPage {
     await this.addButton.clickWhenReady();
     await this.addButton.untilHidden();
     await this.modal.untilHidden();
-    support.info('done - add collaborators');
+    logger.info('done - add collaborators');
   }
 
    async getCollaboratorList(): Promise<String> {

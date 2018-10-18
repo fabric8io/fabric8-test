@@ -1,5 +1,5 @@
 import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as timeouts from '../support/timeouts';
 import { AppPage } from './app.page';
 import { BaseElement } from '../ui';
 
@@ -7,7 +7,7 @@ export class SpaceDeploymentsPage extends AppPage {
 
   async getDeployedApplications(): Promise<DeployedApplication[]> {
     await browser.wait(until.visibilityOf(element(by.tagName('deployment-card-container'))),
-      support.LONGER_WAIT, 'Element <deployment-card-container> is present');
+      timeouts.LONGER_WAIT, 'Element <deployment-card-container> is present');
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('deployment-card-container'));
     let applications = await elementFinders.map(finder => new DeployedApplication(finder));
@@ -16,7 +16,7 @@ export class SpaceDeploymentsPage extends AppPage {
 
   async getResourceUsageData(): Promise<ResourceUsageData[]> {
     await browser.wait(until.visibilityOf(element(by.tagName('resource-card'))),
-      support.LONGER_WAIT, 'Element <resource-card> is present');
+      timeouts.LONGER_WAIT, 'Element <resource-card> is present');
 
     let elementFinders: ElementFinder[] = await element.all(by.tagName('resource-card'));
     let data = await elementFinders.map(finder => new ResourceUsageData(finder));
@@ -109,7 +109,7 @@ export class DeployedApplicationEnvironment extends BaseElement {
       await this.element(by.css('deployment-status-icon')).click();
       await browser.wait(async () => {
         return await this.isAdditionalInfoDisplayed();
-      }, support.DEFAULT_WAIT, 'Display additional deployment info');
+      }, timeouts.DEFAULT_WAIT, 'Display additional deployment info');
     }
   }
 

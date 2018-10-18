@@ -1,7 +1,8 @@
 import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { AppPage } from './app.page';
 import { Button } from '../ui/button';
-import * as support from '../support';
+import * as timeouts from '../support/timeouts';
+import * as logger from '../support/logging';
 
 export class CodebasesPage extends AppPage {
 
@@ -11,18 +12,18 @@ export class CodebasesPage extends AppPage {
 
   public async ready() {
     await browser.wait(until.presenceOf(element(by.tagName('codebases-item-workspaces'))),
-      support.DEFAULT_WAIT, 'Tag <codebases-item-workspaces> is present');
+      timeouts.DEFAULT_WAIT, 'Tag <codebases-item-workspaces> is present');
   }
 
   public async createWorkspace() {
     let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces')), 'Create Codespace...');
-    await createCodebase.clickWhenReady(support.LONGER_WAIT);
+    await createCodebase.clickWhenReady(timeouts.LONGER_WAIT);
     await browser.wait(until.presenceOf(element(this.openButtonLocator)));
   }
 
   public async openWorkspace() {
     let openWorkspace = new Button(element(this.openButtonLocator), 'Open Workspace...');
-    openWorkspace.clickWhenReady(support.LONGER_WAIT);
+    openWorkspace.clickWhenReady(timeouts.LONGER_WAIT);
   }
 
   public async getWorkspaces(): Promise<string[]> {
@@ -33,7 +34,7 @@ export class CodebasesPage extends AppPage {
     for (let finder of elementsFinders) {
       let workspace = await finder.getText();
       workspace = workspace.trim();
-      support.debug('Found workspace: ' + workspace);
+      logger.debug('Found workspace: ' + workspace);
       if (workspace !== this.selectWorkspace) {
         workspaces.push(await workspace);
       }

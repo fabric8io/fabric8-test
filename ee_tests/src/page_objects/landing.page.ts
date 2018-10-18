@@ -2,7 +2,7 @@ import { $, browser } from 'protractor';
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from '../ui/button';
-import * as support from '../support';
+import * as logger from '../support/logging';
 
 export class LandingPage extends BasePage {
 
@@ -11,7 +11,7 @@ export class LandingPage extends BasePage {
 
   constructor(url: string = '') {
     super(url);
-    support.info('OSIO url: ' + browser.params.target.url);
+    logger.info('OSIO url: ' + browser.params.target.url);
   }
 
   async ready() {

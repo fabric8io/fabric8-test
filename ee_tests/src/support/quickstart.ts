@@ -1,7 +1,7 @@
 import { LauncherMission } from './launcher_mission';
 import { LauncherRuntime } from './launcher_runtime';
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as timeouts from '../support/timeouts';
 
 export class Quickstart {
   id: string;
@@ -121,7 +121,7 @@ export class Quickstart {
 
 async function httpBooster() {
   browser.wait(until.presenceOf(
-  element(by.id('_http_booster'))), support.DEFAULT_WAIT, '\_http_booster\' is present');
+  element(by.id('_http_booster'))), timeouts.DEFAULT_WAIT, '\_http_booster\' is present');
   let text = await element(by.id('_http_booster')).getText();
   expect(text).toContain('HTTP Booster', `page contains text`);
 }

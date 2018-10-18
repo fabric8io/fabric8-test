@@ -1,5 +1,5 @@
 import { browser } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
 
 export enum PageOpenMode {
   AlreadyOpened,
@@ -20,7 +20,7 @@ export abstract class BasePage {
 
   async open(mode: PageOpenMode = PageOpenMode.AlreadyOpened): Promise<BasePage> {
 
-    support.debug(`Open page ${this.constructor.name} in ${PageOpenMode[mode]} mode`);
+    logger.debug(`Open page ${this.constructor.name} in ${PageOpenMode[mode]} mode`);
 
     if (mode === PageOpenMode.RefreshBrowser) {
       await this.openInBrowser();
@@ -32,7 +32,7 @@ export abstract class BasePage {
 
     await this.ready();
 
-    support.debug(`Page ${this.constructor.name} opened`);
+    logger.debug(`Page ${this.constructor.name} opened`);
     return this;
   }
 
@@ -45,7 +45,7 @@ export abstract class BasePage {
       throw Error('Trying to open and undefined url');
     }
 
-    support.debug('Page URL: ' + this.url);
+    logger.debug('Page URL: ' + this.url);
     await browser.get(this.url);
   }
 }

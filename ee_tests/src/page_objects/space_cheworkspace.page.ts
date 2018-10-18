@@ -6,7 +6,7 @@ import { $, browser, by, element, ElementFinder } from 'protractor';
 import { AppPage } from './app.page';
 import { Button } from '../ui/button';
 import { TextInput } from '../ui/text_input';
-import { info } from '../support';
+import { info } from '../support/logging';
 import { isUndefined } from 'util';
 
 export class SpaceCheWorkspacePage extends AppPage {

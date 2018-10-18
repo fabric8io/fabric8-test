@@ -1,4 +1,5 @@
-import * as support from './support';
+import * as logger from './support/logging';
+import { screenshotManager } from './support/screenshot_manager';
 import { browser } from 'protractor';
 import { AppPage } from './page_objects/app.page';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
@@ -16,20 +17,20 @@ describe('e2e_logintest', () => {
   let page = new AppPage();
 
   beforeAll(async () => {
-    await support.desktopTestSetup();
+    browser.ignoreSynchronization = true;
   });
 
   beforeEach(async() => {
-    support.screenshotManager.nextTest();
+    screenshotManager.nextTest();
   });
 
   afterEach(async () => {
-    support.info('--- After each ---');
-    await support.screenshotManager.save('afterEach');
+    logger.info('--- After each ---');
+    await screenshotManager.save('afterEach');
   });
 
   it('login', async () => {
-    support.info('--- Login ---');
+    logger.info('--- Login ---');
     await loginInteractions.login();
 
     expect(await page.header.recentItemsDropdown.isPresent()).toBeTruthy('Recent items dropdown is present');
@@ -40,7 +41,7 @@ describe('e2e_logintest', () => {
   });
 
   it('logout', async () => {
-    support.info('--- Logout ---');
+    logger.info('--- Logout ---');
     await accountHomeInteractions.logout();
 
     expect(await page.header.recentItemsDropdown.isPresent()).toBeFalsy('Recent items dropdown is not present');

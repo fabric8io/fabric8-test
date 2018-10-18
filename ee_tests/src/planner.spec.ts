@@ -2,7 +2,9 @@ import { WorkItemCard } from './page_objects/user_profile.page';
 import { PlannerPage } from 'planner-functional-test';
 import { Header } from './page_objects/app/header';
 import { $, browser } from 'protractor';
-import * as support from './support';
+import * as logger from './support/logging';
+import { screenshotManager } from './support/screenshot_manager';
+import { newSpaceName } from './support/space_name';
 import { SpaceSettings } from './page_objects/space_settings.page';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
@@ -12,11 +14,11 @@ describe('Planner EE tests adding Area and Collaborator', () => {
     settingsPage = new SpaceSettings(),
     header = new Header($('f8-app')),
     workItemCard = new WorkItemCard(),
-    spaceName = support.newSpaceName();
+    spaceName = newSpaceName();
 
   beforeAll( async () => {
-    support.info('-------before All-------');
-    await support.desktopTestSetup();
+    logger.info('-------before All-------');
+    browser.ignoreSynchronization = true;
     let loginInteractions = LoginInteractionsFactory.create();
     await loginInteractions.login();
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
@@ -24,15 +26,15 @@ describe('Planner EE tests adding Area and Collaborator', () => {
   });
 
   beforeEach(async() => {
-    support.screenshotManager.nextTest();
+    screenshotManager.nextTest();
   });
 
   afterEach(async () => {
-    await support.screenshotManager.save('afterEach');
+    await screenshotManager.save('afterEach');
   });
 
   it('should Navigate to settings, add New Area and assign it to a workitem ', async () => {
-    support.specTitle('should add child area and Add it to a workitem');
+    logger.specTitle('should add child area and Add it to a workitem');
     let areaName = 'New Area',
       area = '/' + spaceName + '/' + areaName;
     // Navigate to settings, add Area
@@ -60,7 +62,7 @@ describe('Planner EE tests adding Area and Collaborator', () => {
   });
 
   it('should Navigate to collaborators, add a new collaborator and assign it to a workitem ', async () => {
-    support.specTitle('should add collaborator and assign it to a workitem');
+    logger.specTitle('should add collaborator and assign it to a workitem');
     await settingsPage.clickSettings();
     await planner.waitUntilUrlContains('settings');
     await settingsPage.clickCollaboratorsTab();
@@ -87,7 +89,7 @@ describe('Planner EE tests adding Area and Collaborator', () => {
   });
 
   it('should assign a workitem, open profile page, and navigate from my work item to detail page', async() => {
-    support.specTitle('should add collaborator and assign it to a workitem');
+    logger.specTitle('should add collaborator and assign it to a workitem');
     // Create a workitem and self-assign it
     let workitem = {'title': 'My workitem tests from profile page'};
     await planner.clickPlanTab();

@@ -1,5 +1,6 @@
 import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import { SpaceTabPage } from './space_tab.page';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
@@ -15,7 +16,7 @@ export class SpacePipelinePage extends SpaceTabPage {
 
   async getPipelines(): Promise<PipelineDetails[]> {
     await browser.wait(until.presenceOf(element(by.className('pipeline-list'))),
-      support.LONGER_WAIT, 'Element with class name pipeline-list is present');
+      timeouts.LONGER_WAIT, 'Element with class name pipeline-list is present');
 
     let elementsFinders: ElementFinder[] = await element.all(by.className('pipeline-list'));
     let pipelines = await elementsFinders.map(finder => new PipelineDetails(finder));
@@ -34,7 +35,7 @@ export class SpacePipelinePage extends SpaceTabPage {
       'Open In OpenShift Console'
     );
 
-    support.info('Opening OpenShift Console...');
+    logger.info('Opening OpenShift Console...');
     await osoLinksDropdown.clickWhenReady();
     let osoLink = await osoLinksOpenInConsole.getAttribute('href');
     await osoLinksOpenInConsole.clickWhenReady();
@@ -102,12 +103,12 @@ export class PipelineDetails extends BaseElement {
     await inputRequired.clickWhenReady();
 
     let promoteButton = new Button(element(this.promoteLocator), 'Promote button');
-    await promoteButton.clickWhenReady(support.LONGER_WAIT);
+    await promoteButton.clickWhenReady(timeouts.LONGER_WAIT);
 
     await browser.wait(until.stalenessOf(element(this.promoteLocator)),
-      support.DEFAULT_WAIT, 'Staleness of promote button');
+      timeouts.DEFAULT_WAIT, 'Staleness of promote button');
     await browser.wait(until.stalenessOf(element(this.inputRequiredLocator)),
-      support.DEFAULT_WAIT, 'Staleness of input required button');
+      timeouts.DEFAULT_WAIT, 'Staleness of input required button');
   }
 }
 

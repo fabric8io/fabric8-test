@@ -1,4 +1,5 @@
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import {
     DeployedApplication, DeployedApplicationEnvironment, DeploymentStatus,
     Environment, ResourceUsageData, SpaceDeploymentsPage
@@ -85,7 +86,7 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
     }
 
     public async openDeploymentsPage(mode: PageOpenMode) {
-        support.info('Open deployments page');
+        logger.info('Open deployments page');
         if (mode === PageOpenMode.UseMenu) {
             let pipelinesInteractions =
                 PipelinesInteractionsFactory.create(this.strategy, this.spaceName);
@@ -98,19 +99,19 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
     }
 
     public async verifyApplications(count: number): Promise<DeployedApplication[]> {
-        support.info('Verify deployed applications');
+        logger.info('Verify deployed applications');
         let applications = await this.spaceDeploymentsPage.getDeployedApplications();
         expect(applications.length).toBe(count, 'number of deployed applications');
         return Promise.resolve(applications);
     }
 
     public async verifyApplication(application: DeployedApplication, name: string): Promise<void> {
-        support.info('Verify deployed application');
+        logger.info('Verify deployed application');
         expect(application.getName()).toBe(name, 'application name');
     }
 
     public async verifyResourceUsage() {
-        support.info('Verify resources usage');
+        logger.info('Verify resources usage');
         let data = await this.spaceDeploymentsPage.getResourceUsageData();
         expect(data.length).toBe(2, 'there should be stage and prod environment');
         await this.verifyResourceUsageInternal(data);
@@ -131,7 +132,7 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
 class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteractions {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<DeployedApplicationEnvironment[]> {
-        support.info('Verify application\'s environments');
+        logger.info('Verify application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(0, 'number of environments');
         return Promise.resolve(environments);
@@ -155,7 +156,7 @@ class DeploymentsInteractionsReleaseStrategy extends AbstractDeploymentsInteract
 class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleaseStrategy {
 
     public async verifyEnvironments(application: DeployedApplication): Promise<DeployedApplicationEnvironment[]> {
-        support.info('Verify application\'s environments');
+        logger.info('Verify application\'s environments');
         let environments = await application.getEnvironments();
         expect(environments.length).toBe(2, 'number of environments');
         return Promise.resolve(environments);
@@ -175,11 +176,11 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
         status: DeploymentStatus, version: string, podsCount: number): Promise<void> {
         let environmentName = await environment.getEnvironmentName();
 
-        support.info(`Verify application\'s ${environmentName} environment`);
+        logger.info(`Verify application\'s ${environmentName} environment`);
 
         await browser.wait(async () => {
             return await environment.hasRunningPod();
-        }, support.LONGER_WAIT, `Wait for ${environmentName} to have running pod`);
+        }, timeouts.LONGER_WAIT, `Wait for ${environmentName} to have running pod`);
 
         expect(await environment.getDeploymentStatus()).toBe(status,
             `${environmentName} environment status`);
@@ -193,7 +194,7 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
     }
 
     protected async verifyResourceUsageDataInternal(data: ResourceUsageData, environmentName: string) {
-        support.info(`Verify ${environmentName} environment resource usage`);
+        logger.info(`Verify ${environmentName} environment resource usage`);
 
         let stageDataItems = await data.getItems();
         expect(stageDataItems.length).toBe(2, `there should be 2 resource usage data items for ${environmentName}`);

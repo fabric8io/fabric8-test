@@ -1,6 +1,10 @@
 import { browser } from 'protractor';
 
-import * as support from './support';
+import * as logger from './support/logging';
+import * as timeouts from './support/timeouts';
+import { screenshotManager } from './support/screenshot_manager';
+import { windowManager } from './support/window_manager';
+import { newSpaceName } from './support/space_name';
 import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
@@ -24,9 +28,9 @@ describe('e2e_smoketest', () => {
   let spaceName: string;
 
   beforeAll(async () => {
-    support.info('Before all');
-    await support.desktopTestSetup();
-    spaceName = support.newSpaceName();
+    logger.info('Before all');
+    browser.ignoreSynchronization = true;
+    spaceName = newSpaceName();
     strategy = browser.params.release.strategy;
     quickstart = new Quickstart(browser.params.quickstart.name);
 
@@ -34,46 +38,46 @@ describe('e2e_smoketest', () => {
   });
 
   beforeEach(async() => {
-    support.screenshotManager.nextTest();
+    screenshotManager.nextTest();
   });
 
   afterEach(async () => {
-    await support.screenshotManager.save('afterEach');
+    await screenshotManager.save('afterEach');
   });
 
   afterAll(async () => {
-    support.info('After all');
+    logger.info('After all');
     if (browser.params.reset.environment === 'true') {
       try {
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.screenshotManager.save('resetEnvironment');
+        await screenshotManager.save('resetEnvironment');
         throw e;
       }
     }
   });
 
   it('login', async () => {
-    support.specTitle('Login');
+    logger.specTitle('Login');
     let loginInteractions = LoginInteractionsFactory.create();
     await loginInteractions.login();
   });
 
   it('feature_level', async () => {
-    support.specTitle('Check if feature level is set correctly');
+    logger.specTitle('Check if feature level is set correctly');
     let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
   });
 
   it('create_space_new_codebase', async () => {
-    support.specTitle('Create space with new codebase ' + spaceName);
+    logger.specTitle('Create space with new codebase ' + spaceName);
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
     await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
   });
 
   it('run_che', async () => {
-    support.specTitle('Run che workspace ' + quickstart.name);
+    logger.specTitle('Run che workspace ' + quickstart.name);
     try {
       let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
       await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
@@ -82,11 +86,11 @@ describe('e2e_smoketest', () => {
       let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
       let projectInCheTree = new Button(
         spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
-      await projectInCheTree.untilPresent(support.LONGER_WAIT);
+      await projectInCheTree.untilPresent(timeouts.LONGER_WAIT);
       expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
 
       /* Switch back to the OSIO browser window */
-      await support.windowManager.closeCurrentWindow();
+      await windowManager.closeCurrentWindow();
       let workspaces = await codebasesInteractions.getWorkspaces();
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
     } finally {
@@ -95,7 +99,7 @@ describe('e2e_smoketest', () => {
   });
 
   it('pipeline', async () => {
-    support.specTitle('Run pipeline');
+    logger.specTitle('Run pipeline');
     let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
     await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
     let pipelines = await pipelineInteractions.verifyPipelines(1);
@@ -107,7 +111,7 @@ describe('e2e_smoketest', () => {
   });
 
   it('deployments', async () => {
-    support.specTitle('Verify deployments');
+    logger.specTitle('Verify deployments');
     let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
     await deploymentsInteractions.openDeploymentsPage(PageOpenMode.UseMenu);
     let applications = await deploymentsInteractions.verifyApplications(1);
@@ -121,7 +125,7 @@ describe('e2e_smoketest', () => {
   });
 
   it('dashboard', async () => {
-    support.specTitle('Verify dashboard');
+    logger.specTitle('Verify dashboard');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases(spaceName);
@@ -141,7 +145,7 @@ describe('e2e_smoketest', () => {
   });
 
   it('my_workitems', async () => {
-    support.specTitle('Verify my work items');
+    logger.specTitle('Verify my work items');
     let plannerInteractions = PlannerInteractionsFactory.create(strategy, spaceName);
     await plannerInteractions.openPlannerPage();
     await plannerInteractions.createAndAssignWorkItem({title: 'my-work-item'}, 'me');
@@ -154,16 +158,16 @@ describe('e2e_smoketest', () => {
 
 async function runOCScript(project: string, outputFile: string) {
   try {
-    support.info(`Save OC ${project} pod log`);
+    logger.info(`Save OC ${project} pod log`);
     await runner.runScript(
       '.', // working directory
       './oc-get-project-logs.sh', // script
       [browser.params.login.user, browser.params.login.password, project], // params
       `./target/screenshots/${outputFile}.txt`,  // output file
       false,
-      support.LONGER_WAIT
+      timeouts.LONGER_WAIT
     );
   } catch (e) {
-    support.info('Save OC Jenkins pod log failed with error: ' + e);
+    logger.info('Save OC Jenkins pod log failed with error: ' + e);
   }
 }

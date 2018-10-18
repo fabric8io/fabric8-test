@@ -1,6 +1,9 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
 
-import * as support from './support';
+import * as logger from './support/logging';
+import * as timeouts from './support/timeouts';
+import { screenshotManager } from './support/screenshot_manager';
+import { newSpaceName } from './support/space_name';
 import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
@@ -20,50 +23,50 @@ describe('e2e_che_integration', () => {
   let workspace: string;
 
   beforeAll(async () => {
-    support.info('--- Before all ---');
-    await support.desktopTestSetup();
-    spaceName = support.newSpaceName();
+    logger.info('--- Before all ---');
+    browser.ignoreSynchronization = true;
+    spaceName = newSpaceName();
     strategy = browser.params.release.strategy;
     quickstart = new Quickstart(browser.params.quickstart.name);
   });
 
   beforeEach(async() => {
-    support.screenshotManager.nextTest();
+    screenshotManager.nextTest();
   });
 
   afterEach(async () => {
-    support.info('--- After each ---');
-    await support.screenshotManager.save('afterEach');
+    logger.info('--- After each ---');
+    await screenshotManager.save('afterEach');
   });
 
   afterAll(async () => {
-    support.info('--- After all ---');
+    logger.info('--- After all ---');
     if (browser.params.reset.environment === 'true') {
       try {
-        support.info('--- Reset environment ---');
+        logger.info('--- Reset environment ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();
       } catch (e) {
-        await support.screenshotManager.save('resetEnvironment');
+        await screenshotManager.save('resetEnvironment');
         throw e;
       }
     }
   });
 
   it('login', async () => {
-    support.info('--- Login ---');
+    logger.info('--- Login ---');
     let loginInteractions = LoginInteractionsFactory.create();
     await loginInteractions.login();
   });
 
   it('feature_level', async () => {
-    support.info('--- Check if feature level is set correctly ---');
+    logger.info('--- Check if feature level is set correctly ---');
     let featureLevel = await FeatureLevelUtils.getRealFeatureLevel();
     expect(featureLevel).toBe(FeatureLevelUtils.getConfiguredFeatureLevel(), 'feature level');
   });
 
   it('create_workspace', async () => {
-    support.info('--- Create workspace from new codebase in space ' + spaceName + ' ---');
+    logger.info('--- Create workspace from new codebase in space ' + spaceName + ' ---');
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
     await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
 
@@ -77,7 +80,7 @@ describe('e2e_che_integration', () => {
   });
 
   it('pipeline_before_change', async () => {
-    support.info('--- Run pipeline ---');
+    logger.info('--- Run pipeline ---');
     let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
     await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
     let pipelines = await pipelineInteractions.verifyPipelines(1);
@@ -89,7 +92,7 @@ describe('e2e_che_integration', () => {
   });
 
   it('dashboard_before_change', async () => {
-    support.info('--- Verify dashboard ---');
+    logger.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases(spaceName);
@@ -109,14 +112,14 @@ describe('e2e_che_integration', () => {
   });
 
   it('change_codebase', async () => {
-    support.info('--- Run external CHE tests to change codebase ---');
+    logger.info('--- Run external CHE tests to change codebase ---');
 
     let cheInteractions = CheInteractionsFactory.create();
     await cheInteractions.changeCodebase(workspace);
   });
 
   it('pipeline_after_change', async () => {
-    support.info('--- Run pipeline ---');
+    logger.info('--- Run pipeline ---');
     let pipelineInteractions = PipelinesInteractionsFactory.create(strategy, spaceName);
     await pipelineInteractions.openPipelinesPage(PageOpenMode.UseMenu);
     let pipelines = await pipelineInteractions.verifyPipelines(1);
@@ -128,7 +131,7 @@ describe('e2e_che_integration', () => {
   });
 
   it('dashboard-after-change', async () => {
-    support.info('--- Verify dashboard ---');
+    logger.info('--- Verify dashboard ---');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
     await dashboardInteractions.openSpaceDashboardPage(PageOpenMode.UseMenu);
     await dashboardInteractions.verifyCodebases(spaceName);
@@ -151,7 +154,7 @@ describe('e2e_che_integration', () => {
 
 async function httpBooster() {
   browser.wait(until.presenceOf(
-  element(by.id('_http_booster'))), support.DEFAULT_WAIT, '\_http_booster\' is present');
+  element(by.id('_http_booster'))), timeouts.DEFAULT_WAIT, '\_http_booster\' is present');
   let text = await element(by.id('_http_booster')).getText();
   expect(text).toContain('HTTP Booster', `page contains text`);
 }

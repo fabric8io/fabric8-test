@@ -1,5 +1,6 @@
 import { $, browser, by, element, ExpectedConditions as until } from 'protractor';
-import * as support from '../support';
+import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { TextInput } from '../ui/text_input';
@@ -38,8 +39,8 @@ export class AppPage extends BasePage {
   }
 
   async ready() {
-    await browser.wait(until.presenceOf(this.appTag), support.DEFAULT_WAIT, 'App tag is present');
-    await browser.wait(until.presenceOf(this.header), support.DEFAULT_WAIT, 'Header is present');
+    await browser.wait(until.presenceOf(this.appTag), timeouts.DEFAULT_WAIT, 'App tag is present');
+    await browser.wait(until.presenceOf(this.header), timeouts.DEFAULT_WAIT, 'Header is present');
     await this.header.ready();
   }
 
@@ -54,11 +55,11 @@ export class AppPage extends BasePage {
     await this.noThanksButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
-    support.debug('current url:', url);
+    logger.debug('current url:', url);
 
-    support.debug('waiting for the url to contain spacename: ', spaceName);
+    logger.debug('waiting for the url to contain spacename: ', spaceName);
 
-    await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
+    await browser.wait(until.urlContains(spaceName), timeouts.DEFAULT_WAIT, 'URL contains space name');
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();
@@ -76,11 +77,11 @@ export class AppPage extends BasePage {
     await this.cancelCreateAppButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
-    support.debug('current url:', url);
+    logger.debug('current url:', url);
 
-    support.debug('waiting for the url to contain spacename: ', spaceName);
+    logger.debug('waiting for the url to contain spacename: ', spaceName);
 
-    await browser.wait(until.urlContains(spaceName), support.DEFAULT_WAIT, 'URL contains space name');
+    await browser.wait(until.urlContains(spaceName), timeouts.DEFAULT_WAIT, 'URL contains space name');
 
     let spaceDashboard = new SpaceDashboardPage(spaceName);
     await spaceDashboard.open();
@@ -91,23 +92,23 @@ export class AppPage extends BasePage {
   async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
-    support.info('Creating space');
+    logger.info('Creating space');
     await this.newSpaceName.enterText(spaceName);
     await this.createSpaceButton.clickWhenReady();
-    support.info('Space created');
+    logger.info('Space created');
 
-    support.info('Creating application from new codebase');
+    logger.info('Creating application from new codebase');
     let wizard = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Create an Application'))));
     await wizard.newQuickstartProjectByLauncher(templateName, spaceName, strategy);
-    support.info('Application created');
+    logger.info('Application created');
   }
 
   async gotoUserProfile(): Promise<UserProfilePage> {
     await this.ready();
-    support.debug('Select "Profile" menu item');
+    logger.debug('Select "Profile" menu item');
     await this.header.profileDropdown.selectProfile();
-    support.debug('Select "Profile" menu item - OK');
+    logger.debug('Select "Profile" menu item - OK');
 
     let page = new UserProfilePage();
     await page.open();
@@ -116,9 +117,9 @@ export class AppPage extends BasePage {
 
   async gotoUserSettings(): Promise<UserSettingsPage> {
     await this.ready();
-    support.debug('Select "Settings" menu item');
+    logger.debug('Select "Settings" menu item');
     await this.header.profileDropdown.selectSettings();
-    support.debug('Select "Settings" menu item - OK');
+    logger.debug('Select "Settings" menu item - OK');
 
     let page = new UserSettingsPage();
     await page.open();
