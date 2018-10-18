@@ -73,13 +73,13 @@ export interface DeploymentsInteractions {
 
 abstract class AbstractDeploymentsInteractions implements DeploymentsInteractions {
 
-    protected strategy: string;
+    protected strategy: ReleaseStrategy;
 
     protected spaceName: string;
 
     protected spaceDeploymentsPage: SpaceDeploymentsPage;
 
-    public constructor(strategy: string, spaceName: string) {
+    public constructor(strategy: ReleaseStrategy, spaceName: string) {
         this.strategy = strategy;
         this.spaceName = spaceName;
         this.spaceDeploymentsPage = new SpaceDeploymentsPage();
@@ -107,7 +107,7 @@ abstract class AbstractDeploymentsInteractions implements DeploymentsInteraction
 
     public async verifyApplication(application: DeployedApplication, name: string): Promise<void> {
         logger.info('Verify deployed application');
-        expect(application.getName()).toBe(name, 'application name');
+        expect(application.getName(this.strategy)).toBe(name, 'application name');
     }
 
     public async verifyResourceUsage() {
