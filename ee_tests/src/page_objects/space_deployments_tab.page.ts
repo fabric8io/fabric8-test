@@ -2,6 +2,7 @@ import { browser, by, element, ElementFinder, ExpectedConditions as until } from
 import * as timeouts from '../support/timeouts';
 import { AppPage } from './app.page';
 import { BaseElement } from '../ui';
+import { ReleaseStrategy } from '../support/release_strategy';
 
 export class SpaceDeploymentsPage extends AppPage {
 
@@ -35,8 +36,13 @@ export class DeployedApplication extends BaseElement {
     super(finder, 'Deployments');
   }
 
-  async getName(): Promise<string> {
-    let name = await this.element(by.id('deploymentCardApplicationTitle')).getText();
+  async getName(strategy: ReleaseStrategy): Promise<string> {
+    let name;
+    if (strategy === ReleaseStrategy.RELEASE) {
+      name = await this.element(by.className('application-title-empty-state')).getText();
+    } else {
+      name = await this.element(by.id('deploymentCardApplicationTitle')).getText();
+    }
     return Promise.resolve(name.trim());
   }
 
