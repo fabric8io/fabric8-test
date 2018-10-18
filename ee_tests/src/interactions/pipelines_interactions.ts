@@ -245,7 +245,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 await support.screenshotManager.save(`stage-${index}-finished`);
                 return true;
             } else {
-                hook();
+                await hook();
                 await browser.sleep(5000);
                 return false;
             }
