@@ -18,3 +18,5 @@ export PACT_BROKER_URL="${PACT_BROKER_URL:-}"
 
 # A provider base url (default `https://openshift.io`)
 export PACT_PROVIDER_BASE_URL="${PACT_PROVIDER_BASE_URL:-https://openshift.io}"
+
+export PACT_DIR="${PACT_DIR:-pacts}"

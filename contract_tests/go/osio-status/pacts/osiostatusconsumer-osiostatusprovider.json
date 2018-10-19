@@ -8,6 +8,7 @@
   "interactions": [
     {
       "description": "A request to get status",
+      "providerState": "OSIO is up and running",
       "request": {
         "method": "GET",
         "path": "/api/status",

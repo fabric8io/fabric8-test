@@ -1,5 +1,5 @@
-// Package main contains a runnable Consumer Pact test example.
-package main
+// Package osiostatus contains a runnable Consumer Pact test example.
+package osiostatus
 
 import (
 	"fmt"
@@ -45,6 +45,7 @@ func TestOsioStatusConsumer(t *testing.T) {
 	// Set up our expected interactions.
 	pact.
 		AddInteraction().
+		Given("OSIO is up and running").
 		UponReceiving("A request to get status").
 		WithRequest(dsl.Request{
 			Method:  "GET",
