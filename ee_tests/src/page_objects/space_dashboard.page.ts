@@ -5,12 +5,13 @@ import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { SpacePipelinePage } from './space_pipeline_tab.page';
 import * as timeouts from '../support/timeouts';
+import { specContext } from '../support/spec_context';
 
 export class SpaceDashboardPage extends SpaceAppPage {
 
   constructor(spaceName: string) {
     super();
-    this.url = `${browser.params.login.user}/${spaceName}`;
+    this.url = `${specContext.getUser()}/${spaceName}`;
   }
 
   async addToSpace(): Promise<AddToSpaceDialog> {

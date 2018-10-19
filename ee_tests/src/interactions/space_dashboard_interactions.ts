@@ -3,6 +3,7 @@ import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
+import { specContext } from '../support/spec_context';
 import { windowManager } from '../support/window_manager';
 import { screenshotManager } from '../support/screenshot_manager';
 import { DeployedApplicationInfo, Pipeline, SpaceDashboardPage } from '../page_objects/space_dashboard.page';
@@ -22,9 +23,7 @@ export abstract class SpaceDashboardInteractionsFactory {
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            let url: string = browser.params.target.url;
-
-            if (url.includes('prod-preview')) {
+            if (specContext.isProdPreview()) {
                 return new BetaSpaceDashboardInteractions(strategy, spaceName);
             } else {
                 return new ProdBetaSpaceDashboardInteractions(strategy, spaceName);

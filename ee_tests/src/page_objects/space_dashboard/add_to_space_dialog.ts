@@ -6,6 +6,7 @@ import { MultipleSelectionList } from '../../ui/multi_select_list';
 import { SingleSelectionDropdown } from '../../ui/dropdown';
 import { TextInput } from '../../ui/text_input';
 import { debug, info } from '../../support/logging';
+import { specContext } from '../../support/spec_context';
 import { LauncherImportAppPage } from '../launcher_import_app.page';
 import { LauncherSection } from '../launcher_section';
 import { LauncherSetupAppPage} from '../launcher_setup_app.page';
@@ -274,9 +275,7 @@ export class AddToSpaceDialog extends ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
 
-    let url: string = browser.params.target.url;
-
-    if (!url.includes('localhost') && !url.includes('prod-prev')) {
+    if (specContext.isProduction()) {
       await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
     } else {
       await setupApplicationPage.returnToDashboardButton.clickWhenReady();
