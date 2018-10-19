@@ -19,6 +19,7 @@ describe('Planner EE tests adding Area and Collaborator', () => {
   beforeAll( async () => {
     logger.info('-------before All-------');
     browser.ignoreSynchronization = true;
+    browser.driver.manage().window().setSize(1920, 1080);
     let loginInteractions = LoginInteractionsFactory.create();
     await loginInteractions.login();
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();

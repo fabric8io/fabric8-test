@@ -18,6 +18,7 @@ describe('e2e_logintest', () => {
 
   beforeAll(async () => {
     browser.ignoreSynchronization = true;
+    browser.driver.manage().window().setSize(1920, 1080);
   });
 
   beforeEach(async() => {

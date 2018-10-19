@@ -25,6 +25,7 @@ describe('e2e_che_integration', () => {
   beforeAll(async () => {
     logger.info('--- Before all ---');
     browser.ignoreSynchronization = true;
+    browser.driver.manage().window().setSize(1920, 1080);
     spaceName = newSpaceName();
     strategy = browser.params.release.strategy;
     quickstart = new Quickstart(browser.params.quickstart.name);
