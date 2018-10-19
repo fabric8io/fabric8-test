@@ -1,4 +1,5 @@
 import { browser, by, element } from 'protractor';
+import { specContext } from '../support/spec_context';
 import { LandingPage } from '../page_objects/landing.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import { Button } from '../ui';
@@ -9,8 +10,7 @@ export abstract class LoginInteractionsFactory {
 
   public static create(): LoginInteractions {
 
-    let url: string = browser.params.target.url;
-    if (url.includes('localhost')) {
+    if (specContext.isLocalhost()) {
       return new LocalLoginInteractions();
     }
 
@@ -28,8 +28,8 @@ export interface LoginInteractions {
 export class LoginInteractionsImpl implements LoginInteractions {
 
   async login(): Promise<void> {
-    let username = browser.params.login.user;
-    let password = browser.params.login.password;
+    let username = specContext.getUser();
+    let password = specContext.getPassword();
 
     let page = new LandingPage();
     await page.open();
@@ -49,9 +49,9 @@ export class LoginInteractionsImpl implements LoginInteractions {
 export class LocalLoginInteractions implements LoginInteractions {
 
   async login(): Promise<void> {
-    await browser.get(browser.params.target.url);
-    let username = browser.params.login.user;
-    let password = browser.params.login.password;
+    await browser.get(specContext.getOsioUrl());
+    let username = specContext.getUser();
+    let password = specContext.getPassword();
 
     await new Button(element(by.cssContainingText('button', 'Log In')), 'Log In').clickWhenReady();
     await new LoginPage().login(username, password);

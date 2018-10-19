@@ -2,6 +2,7 @@ import { browser } from 'protractor';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import * as runner from  '../support/script_runner';
+import { specContext } from '../support/spec_context';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
 
@@ -33,10 +34,9 @@ export class CheInteractionsImpl extends AbstractCheInteractions {
     private async runCheTests(workspace: string): Promise<void> {
         let location = browser.params.che.local.repo;
         let script = './cico/run_EE_suite.sh';
-        let osio: string =  browser.params.target.url;
-        osio = osio.replace('https://', '');
-        let username = browser.params.login.user;
-        let password = browser.params.login.password;
+        let osio = specContext.getOsioUrl();
+        let username = specContext.getUser();
+        let password = specContext.getPassword();
         let outputDir = './target/screenshots/che-tests.txt';
         // tslint:disable-next-line:max-line-length
         let token = await this.getToken();

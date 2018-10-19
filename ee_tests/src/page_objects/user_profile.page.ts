@@ -1,6 +1,7 @@
 import { $, browser, by,  element, ExpectedConditions as until } from 'protractor';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
+import { specContext } from '../support/spec_context';
 import { BaseElement, Clickable } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { ModalDialog } from '../ui/modal_dialog';
@@ -50,7 +51,7 @@ export class CleanupUserEnvPage extends AppPage {
 
   constructor() {
     super();
-    this.url = `${browser.params.login.user}/_cleanup`;
+    this.url = `${specContext.getUser()}/_cleanup`;
   }
 
   async ready() {

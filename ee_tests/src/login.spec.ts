@@ -2,6 +2,7 @@ import * as logger from './support/logging';
 import { screenshotManager } from './support/screenshot_manager';
 import { browser } from 'protractor';
 import { AppPage } from './page_objects/app.page';
+import { specContext } from './support/spec_context';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 
@@ -36,7 +37,7 @@ describe('e2e_logintest', () => {
 
     expect(await page.header.recentItemsDropdown.isPresent()).toBeTruthy('Recent items dropdown is present');
     expect(await page.header.recentItemsDropdown.getText()).
-      toBe(browser.params.login.user, 'Recent items dropdown title is username');
+      toBe(specContext.getUser(), 'Recent items dropdown title is username');
 
     expect(await loginInteractions.isLoginButtonPresent()).toBeFalsy('Login button is not present');
   });

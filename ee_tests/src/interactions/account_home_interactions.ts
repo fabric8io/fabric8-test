@@ -1,4 +1,3 @@
-import { browser } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { AccountHomePage } from '../page_objects/account_home.page';
@@ -7,6 +6,7 @@ import { CleanupUserEnvPage } from '../page_objects/user_profile.page';
 import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { AppPage } from '../page_objects/app.page';
 import * as logger from '../support/logging';
+import { specContext } from '../support/spec_context';
 import { LandingPage } from '../..';
 
 export abstract class AccountHomeInteractionsFactory {
@@ -17,9 +17,7 @@ export abstract class AccountHomeInteractionsFactory {
             return new NewAccountHomeInteractions(new AccountHomePage());
         }
 
-        let url: string = browser.params.target.url;
-
-        if (url.includes('localhost')) {
+        if (specContext.isLocalhost()) {
             return new LocalOldAccountHomeInteractions(new MainDashboardPage());
         } else {
             return new OldAccountHomeInteractions(new MainDashboardPage());
@@ -75,7 +73,7 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         logger.info('Reset environment');
         let cleanupEnvPage = new CleanupUserEnvPage();
         cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
-        await cleanupEnvPage.cleanup(browser.params.login.user);
+        await cleanupEnvPage.cleanup(specContext.getUser());
     }
 
     public async getToken(): Promise<string> {

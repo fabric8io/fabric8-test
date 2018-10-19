@@ -5,6 +5,7 @@ import * as timeouts from './support/timeouts';
 import { screenshotManager } from './support/screenshot_manager';
 import { windowManager } from './support/window_manager';
 import { newSpaceName } from './support/space_name';
+import { specContext } from './support/spec_context';
 import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
 import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
@@ -163,7 +164,7 @@ async function runOCScript(project: string, outputFile: string) {
     await runner.runScript(
       '.', // working directory
       './oc-get-project-logs.sh', // script
-      [browser.params.login.user, browser.params.login.password, project], // params
+      [specContext.getUser(), specContext.getPassword(), project], // params
       `./target/screenshots/${outputFile}.txt`,  // output file
       false,
       timeouts.LONGER_WAIT

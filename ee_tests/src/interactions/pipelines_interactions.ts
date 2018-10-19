@@ -1,6 +1,7 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
+import { specContext } from '../support/spec_context';
 import { windowManager } from '../support/window_manager';
 import { screenshotManager } from '../support/screenshot_manager';
 import { BuildStageStatus, BuildStageStatusUtils, BuildStatus, BuildStatusUtils } from '../support/build_status';
@@ -156,7 +157,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await runner.runScript(
                 '.', // working directory
                 './oc-get-project-logs.sh', // script
-                [browser.params.login.user, browser.params.login.password, 'jenkins'], // params
+                [specContext.getUser(), specContext.getPassword(), 'jenkins'], // params
                 './target/screenshots/oc-jenkins-logs.txt',  // output file
                 false,
                 timeouts.LONGER_WAIT
@@ -267,9 +268,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     private async showJenkinsLogDirectly() {
         try {
             logger.info('Navigate to Jenkins log directly by URL');
-            let osioURL: string = browser.params.target.url.replace('https://', '');
-            let jenkinsURL = 'https://jenkins.' + osioURL;
-            await windowManager.createNewWindow(jenkinsURL);
+            await windowManager.createNewWindow(specContext.getJenkinsUrl());
             await screenshotManager.save('jenkins-direct-log');
         } catch (e) {
             // do not propagate the error because it would shadow previous errors
