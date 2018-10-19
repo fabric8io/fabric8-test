@@ -285,11 +285,12 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await pipeline.viewBuildInOS();
         await windowManager.switchToNewWindow();
 
-        await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))));
+        await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))),
+            timeouts.DEFAULT_WAIT, 'OSO console does not contain Status');
         let status = await element(by.xpath('//h3[text()="Status"]/../dl[1]/dd[1]/span[1]')).getText();
-        expect(status).toBe('Complete');
-
         await screenshotManager.save('os-pipeline');
+
+        expect(status).toBe('Complete');
     }
 }
 
