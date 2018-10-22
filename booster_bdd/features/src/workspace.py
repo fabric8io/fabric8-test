@@ -21,7 +21,7 @@ class Workspace:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
@@ -57,7 +57,7 @@ class Workspace:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
@@ -97,7 +97,7 @@ class Workspace:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
         try:
@@ -123,7 +123,7 @@ class Workspace:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
         try:
@@ -151,7 +151,7 @@ class Workspace:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 

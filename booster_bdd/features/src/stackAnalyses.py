@@ -21,7 +21,7 @@ class StackAnalyses(object):
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
@@ -73,7 +73,7 @@ class StackAnalyses(object):
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
@@ -99,7 +99,7 @@ class StackAnalyses(object):
         authHeader = 'Bearer {}'.format(theToken)
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 

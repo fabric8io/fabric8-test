@@ -27,7 +27,7 @@ class ImportBooster(object):
         # Import the booster
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
         data = {'gitRepository': gitRepo,
@@ -67,7 +67,7 @@ class ImportBooster(object):
         authHeader = 'Bearer {}'.format(theToken)
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
