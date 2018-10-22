@@ -18,7 +18,9 @@ class Run(object):
 
         oso_token = os.environ.get('OSO_TOKEN')
         temp = 'Bearer ' + oso_token
-        headers = {'Authorization': temp}
+        headers = {'Authorization': temp,
+                   'X-App': 'OSIO',
+                   'X-Git-Provider': 'GitHub'}
 
         # Generate a request to find the routes
         urlString = '{}/oapi/v1/namespaces/{}-run/routes'.format(clusterAddress, osoUsername)

@@ -24,7 +24,9 @@ class Pipeline(object):
         # Find the running build pipeline, verify state transitions:
         #   New -> Running -> Promote -> Complete
 
-        self.headers = {'Authorization': self.authHeader}
+        self.headers = {'Authorization': self.authHeader,
+                        'X-App': 'OSIO',
+                        'X-Git-Provider': 'GitHub'}
         self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
         print('Pipeline URL = {}'.format(self.urlString))
 
@@ -97,7 +99,9 @@ class Pipeline(object):
         githubRepo = helpers.getGithubRepo()
 
         theToken = helpers.get_user_tokens().split(";")[0]
-        headers = {"Authorization": "Bearer {}".format(theToken)}
+        headers = {"Authorization": "Bearer {}".format(theToken),
+                   'X-App': 'OSIO',
+                   'X-Git-Provider': 'GitHub'}
 
         promoteUrl = "{}/api/openshift/services/jenkins/{}-jenkins/job/{}/job/{}/job/{}".format(
             forgeApi,

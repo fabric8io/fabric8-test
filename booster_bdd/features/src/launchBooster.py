@@ -28,7 +28,7 @@ class LaunchBooster(object):
         # Launch the booster
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
         data = {'emptyGitRepository': blankBooster,  # true for blank booster
@@ -77,7 +77,7 @@ class LaunchBooster(object):
         authHeader = 'Bearer {}'.format(theToken)
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 

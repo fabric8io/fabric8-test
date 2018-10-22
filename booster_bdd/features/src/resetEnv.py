@@ -8,7 +8,7 @@ class ResetEnvironment:
         serverAddress = os.getenv("WIT_API")
         osioUsername = os.getenv("OSIO_USERNAME")
         headers = {'Accept': 'application/json',
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
         r = requests.get(
@@ -40,7 +40,7 @@ class ResetEnvironment:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
 
@@ -73,7 +73,7 @@ class ResetEnvironment:
 
         headers = {'Accept': 'application/json',
                    'Authorization': authHeader,
-                   'X-App': 'osio',
+                   'X-App': 'OSIO',
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/json'}
         r = requests.delete(
