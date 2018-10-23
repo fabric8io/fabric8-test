@@ -292,19 +292,15 @@ class UserScenario(TaskSet):
                 target_element.click()
                 self._wait_for_clickable_link(
                     driver,
-                    "Create space"
+                    "Create Space"
                 )
                 self._wait_for_clickable_link(
                     driver,
-                    "My spaces"
+                    "Spaces"
                 )
                 self._wait_for_clickable_link(
                     driver,
-                    "View all spaces"
-                )
-                self._wait_for_clickable_link(
-                    driver,
-                    "Account home"
+                    "Home"
                 )
                 target_element = self._wait_for_clickable_element(
                     driver,
