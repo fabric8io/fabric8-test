@@ -89,7 +89,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
 
     public async verifyPipelineInfo(pipeline: PipelineDetails,
         applicationName: string, gitRepositoryName: string, buildNumber: number): Promise<void> {
-            logger.info('Verify pipeline build info');
+        logger.info('Verify pipeline build info');
 
         expect(await pipeline.getApplicationName()).toBe(applicationName, 'application name');
         expect(await pipeline.getBuildNumber()).toBe(buildNumber, 'build number ' +
@@ -134,9 +134,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await this.showJenkinsLogDirectly();
             verifyJenkinsLogError = e;
         } finally {
-            if (windowManager.getWindowCount() > 1) {
-                await windowManager.closeCurrentWindow();
-            }
+            await windowManager.closeAllWindows();
         }
 
         // check OSO pipeline
@@ -149,9 +147,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await screenshotManager.save('os-pipeline-failed');
             osoPipelineError = e;
         } finally {
-            if (windowManager.getWindowCount() > 1) {
-                await windowManager.closeCurrentWindow();
-            }
+            await windowManager.closeAllWindows();
         }
 
         // save OC logs
@@ -273,7 +269,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             logger.info('Navigate to Jenkins log directly by URL');
             let osioURL: string = browser.params.target.url.replace('https://', '');
             let jenkinsURL = 'https://jenkins.' + osioURL;
-            await browser.get(jenkinsURL);
+            await windowManager.createNewWindow(jenkinsURL);
             await screenshotManager.save('jenkins-direct-log');
         } catch (e) {
             // do not propagate the error because it would shadow previous errors
