@@ -274,7 +274,13 @@ export class AddToSpaceDialog extends ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
 
-    await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
+    let url: string = browser.params.target.url;
+
+    if (!url.includes('localhost') && !url.includes('prod-prev')) {
+      await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
+    } else {
+      await setupApplicationPage.returnToDashboardButton.clickWhenReady();
+    }
   }
 
   async importProjectByLauncher(appName: string, repoName: string, strategy: string) {

@@ -11,6 +11,11 @@ export class LauncherSetupAppPage extends BaseElement {
     'View New Application'
   );
 
+  returnToDashboardButton = new Button(
+    this.element(by.cssContainingText('button', 'Return to your dashboard')),
+    'Return to your dashboard'
+  );
+
   constructor(element: ElementFinder) {
     super(element, 'Set Up Application');
   }
