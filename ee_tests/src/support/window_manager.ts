@@ -32,6 +32,15 @@ export class WindowManager {
     await this.checkWindowCount();
   }
 
+  // close all but main window, main window is managed by Protractor
+  async closeAllWindows() {
+    await logger.debug('Closing all but main window');
+    while (this.windowCount > 1) {
+      await this.switchToLastWindow();
+      await this.closeCurrentWindow();
+    }
+  }
+
   async switchToWindow(expectedWindowCount: number, windowIndex: number) {
     await logger.debug('Waiting for the specified number or windows to be present: ' + this.windowCount);
     await browser.wait(this.windowCountCondition(expectedWindowCount),
@@ -49,6 +58,13 @@ export class WindowManager {
     if (this.windowCount !== handles.length) {
       throw `Unexpected window count. Expected: ${this.windowCount}, real: ${handles.length}`;
     }
+  }
+
+  async createNewWindow(url: string) {
+    logger.debug('Open a new browser tab');
+    await browser.executeScript('window.open()');
+    await windowManager.switchToNewWindow();
+    await browser.get(url);
   }
 
   windowCountCondition(count: number) {
