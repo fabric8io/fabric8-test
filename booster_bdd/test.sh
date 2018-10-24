@@ -4,8 +4,11 @@
 
 set +x
 
+echo "Clean temp dir"
+rm -rvf tempDir
+
 echo "Create temp dir"
-mkdir tempDir
+mkdir -p tempDir
 
 echo "cd to temp dir"
 cd tempDir
@@ -29,16 +32,15 @@ echo "create the effective pom"
 mvn help:effective-pom -f epom.xml -Doutput=pom.xml
 
 echo "set the git username and password"
-git config --global user.name $3
-git config --global user.password $4
+git config user.name $3
+git config user.email ""
+git config commit.gpgsign false
 
 echo "commit the effective-pom to the master branch"
 git commit -a -m "add effective pom" 
 
 echo "push the updates to master"
-git push -f      
+git push -f
 
 echo "cd back to the starting dir"
 cd ../..
-
-
