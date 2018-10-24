@@ -17,9 +17,9 @@ class ScreenshotManager {
   }
 
   async save(name = 'screenshot') {
-    await this.writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
     await this.writePageSource(this.path + '/' + this.getFormattedCounters() + '-' + name + '.html');
     await this.writeBrowserLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.log');
+    await this.writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
     this.screenshotCounter++;
   }
 
