@@ -15,7 +15,7 @@ class StackAnalyses(object):
         print('Getting Stack Analyses report ID.....')
 
         githubUsername = os.getenv("GITHUB_USERNAME")
-        githubPassword = os.getenv("OSIO_PASSWORD")
+        githubPassword = os.getenv("GITHUB_PASSWORD")
 
         theToken = helpers.get_user_tokens().split(";")[0]
         authHeader = 'Bearer {}'.format(theToken)
@@ -44,12 +44,17 @@ class StackAnalyses(object):
         gitRepo = spaceName + "-" + projectName
         print ('the gitRepo name is: {}'.format(gitRepo))
 
-        cloneUrl = codebaseUrl.replace('https://github.com/', 'git@github.com:')
-        print ('the cloneUrl = {}'.format(cloneUrl))
+        cloneUrl = codebaseUrl.replace(
+            'https://github.com/',
+            'https://{}:{}@github.com/'.format(
+                githubUsername, githubPassword
+            )
+        )
+        # print('the cloneUrl = {}'.format(cloneUrl))
 
         # Invoke shell script to create and upload to master effective pom
         try:
-            testOutput = subprocess.check_output(['./test.sh', cloneUrl, gitRepo, githubUsername, githubPassword])
+            testOutput = subprocess.check_output(['./test.sh', cloneUrl, gitRepo, githubUsername])
             print ('Output = {}'.format(testOutput))
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
