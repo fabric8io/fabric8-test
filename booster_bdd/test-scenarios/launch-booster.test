@@ -6,3 +6,4 @@
 ../features/verifyStage.feature
 ../features/verifyRun.feature
 ../features/createWorkspace.feature
+../features/stackAnalyses.feature
