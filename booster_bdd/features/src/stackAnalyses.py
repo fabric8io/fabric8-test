@@ -3,9 +3,10 @@ import features.src.support.helpers as helpers
 import os
 import time
 import subprocess
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin
 
 boosterLaunched = False
+
 
 class StackAnalyses(object):
 
@@ -63,7 +64,7 @@ class StackAnalyses(object):
         #    'source': 'osio',
         #    'github_ref': 13
         #}
-        filePath = './tempDir/' + gitRepo
+        filePathList = './tempDir/' + gitRepo
         payload = {
             #'filePath': filePathList,
             #'manifest': manifestList
