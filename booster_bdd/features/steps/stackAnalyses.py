@@ -21,3 +21,4 @@ def then_receive_stack_json(context):
     stackAnalysesKey = helpers.getStackReportKey()
     reportText = context.sa.getStackReport(stackAnalysesKey)
     reportText | should_not.be_none().desc("Obtained Stack Analyses Report")
+    reportText | should_not.contain_the_substring("error").desc("Stack Analyses Report contains 'error'")
