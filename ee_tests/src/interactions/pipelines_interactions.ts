@@ -277,15 +277,21 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
     }
 
     private async checkOSPipeline(pipeline: PipelineDetails): Promise<void> {
-        await pipeline.viewBuildInOS();
-        await windowManager.switchToNewWindow();
+        try {
+            await pipeline.viewBuildInOS();
+            await windowManager.switchToNewWindow();
 
-        await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))),
-            timeouts.DEFAULT_WAIT, 'OSO console does not contain Status');
-        let status = await element(by.xpath('//h3[text()="Status"]/../dl[1]/dd[1]/span[1]')).getText();
-        await screenshotManager.save('os-pipeline');
+            await browser.wait(until.presenceOf(element(by.cssContainingText('h3', 'Status'))),
+                timeouts.DEFAULT_WAIT, 'OSO console does not contain Status');
+            let status = await element(by.xpath('//h3[text()="Status"]/../dl[1]/dd[1]/span[1]')).getText();
+            expect(status).toBe('Complete');
 
-        expect(status).toBe('Complete');
+            await screenshotManager.save('os-pipeline');
+        } catch (e) {
+            logger.info('Check OpenShift pipeline failed with error. ' + e);
+            await screenshotManager.save('os-pipeline-failed-1');
+            throw e;
+        }
     }
 }
 
