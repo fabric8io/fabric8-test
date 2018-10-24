@@ -43,6 +43,7 @@ class ScreenshotManager {
   }
 
   private async writeScreenshot(filename: string) {
+    logger.debug('Saving screenshot');
     let png = await browser.takeScreenshot();
     let stream = createWriteStream(filename);
     stream.write(new Buffer(png, 'base64'));
@@ -51,6 +52,7 @@ class ScreenshotManager {
   }
 
   private async writePageSource(filename: string) {
+    logger.debug('Saving page source');
     let txt = await browser.getPageSource();
     let stream = createWriteStream(filename);
     stream.write(new Buffer(txt));
@@ -59,6 +61,7 @@ class ScreenshotManager {
   }
 
   private async writeBrowserLog(filename: string) {
+    logger.debug('Saving browser logs');
     let logs: logging.Entry[] = await browser.manage().logs().get('browser');
     let stream = createWriteStream(filename);
 
