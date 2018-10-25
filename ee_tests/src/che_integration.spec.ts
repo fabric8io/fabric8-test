@@ -14,6 +14,7 @@ import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 import { BuildStatus } from './support/build_status';
 import { CheInteractionsFactory } from './interactions/che_interactions';
+import { specContext } from './support/spec_context';
 
 describe('e2e_che_integration', () => {
 
@@ -27,8 +28,8 @@ describe('e2e_che_integration', () => {
     browser.ignoreSynchronization = true;
     browser.driver.manage().window().setSize(1920, 1080);
     spaceName = newSpaceName();
-    strategy = browser.params.release.strategy;
-    quickstart = new Quickstart(browser.params.quickstart.name);
+    strategy = specContext.getReleaseStrategy();
+    quickstart = specContext.getQuickstart();
   });
 
   beforeEach(async() => {
@@ -42,7 +43,7 @@ describe('e2e_che_integration', () => {
 
   afterAll(async () => {
     logger.info('--- After all ---');
-    if (browser.params.reset.environment === 'true') {
+    if (specContext.isEnvironmentResetEnabled()) {
       try {
         logger.info('--- Reset environment ---');
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();

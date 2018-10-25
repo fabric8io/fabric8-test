@@ -173,7 +173,7 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         }, timeouts.DEFAULT_WAIT, 'Codebases are loaded');
         expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
-        let githubName = browser.params.github.username;
+        let githubName = specContext.getGitHubUser();
         let codebases = await codebasesCard.getCodebases();
         expect(codebases.length).toBe(1, 'number of codebases');
         expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + repoName);
