@@ -257,7 +257,7 @@ export class AddToSpaceDialog extends ModalDialog {
     // await ghPasswd.sendKeys(browser.params.github.password);
     // await ghPasswd.submit();
     // END: Workaround for the Github login
-    await launcher.selectGithubOrganization(browser.params.github.username);
+    await launcher.selectGithubOrganization(specContext.getGitHubUser());
     await launcher.ghRepositoryText.clear();
     await launcher.ghRepositoryText.sendKeys(name);
     await launcher.gitProviderContinueButton.clickWhenReady();
@@ -291,7 +291,7 @@ export class AddToSpaceDialog extends ModalDialog {
     let launcher: LauncherSection = await dialog.selectImportExistingApplication();
     await launcher.ready();
 
-    await launcher.selectGithubOrganization(browser.params.github.username);
+    await launcher.selectGithubOrganization(specContext.getGitHubUser());
     await launcher.ghRepositoryText.clickWhenReady();
     await launcher.ghRepositoryText.sendKeys(repoName);
     await launcher.gitProviderImportContinueButton.clickWhenReady();

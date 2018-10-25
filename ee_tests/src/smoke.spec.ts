@@ -33,8 +33,8 @@ describe('e2e_smoketest', () => {
     browser.ignoreSynchronization = true;
     browser.driver.manage().window().setSize(1920, 1080);
     spaceName = newSpaceName();
-    strategy = browser.params.release.strategy;
-    quickstart = new Quickstart(browser.params.quickstart.name);
+    strategy = specContext.getReleaseStrategy();
+    quickstart = specContext.getQuickstart();
 
     await runOCScript('jenkins', 'oc-jenkins-logs-before-all');
   });
@@ -49,7 +49,7 @@ describe('e2e_smoketest', () => {
 
   afterAll(async () => {
     logger.info('After all');
-    if (browser.params.reset.environment === 'true') {
+    if (specContext.isEnvironmentResetEnabled()) {
       try {
         let accountHomeInteractions = AccountHomeInteractionsFactory.create();
         await accountHomeInteractions.resetEnvironment();

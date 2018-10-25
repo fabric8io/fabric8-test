@@ -97,7 +97,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             '(could be caused by https://github.com/openshiftio/openshift.io/issues/3742, ' +
             'check screenshots pipeline-info.png and os-pipeline.png, build numbers should be the same)');
 
-        let githubName = browser.params.github.username;
+        let githubName = specContext.getGitHubUser();
         expect(await pipeline.getRepository()).
             toBe('https://github.com/' + githubName + '/' + gitRepositoryName + '.git', 'repository');
 
