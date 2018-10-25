@@ -19,6 +19,7 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       xorg-x11-utils \
       xorg-x11-fonts-Type1 \
       xorg-x11-fonts-misc \
+      ImageMagick \
       https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.12.0-1nodesource.x86_64.rpm \
       https://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-sender-3.0.22-1.el7.x86_64.rpm
 
