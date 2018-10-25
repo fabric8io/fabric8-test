@@ -290,6 +290,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
             await screenshotManager.save('os-pipeline');
         } catch (e) {
             logger.error('Check OpenShift pipeline failed with error. ' + e);
+            await screenshotManager.save('os-pipeline-failed');
         }
     }
 }
