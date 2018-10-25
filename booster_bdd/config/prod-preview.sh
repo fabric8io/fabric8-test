@@ -19,7 +19,10 @@ export WIT_API="${WIT_API:-https://api.prod-preview.openshift.io}"
 export AUTH_API="${AUTH_API:-https://auth.prod-preview.openshift.io}"
 
 ## URI of the Openshift.io's Che server
-export CHE_API="${CHE_API:-https://che.openshift.io}"
+export CHE_API="${CHE_API:-https://che.prod-preview.openshift.io}"
+
+## URI of the Openshift.io's Stack Analyses server
+export ANALYSES_API="${ANALYSES_API:-https://recommender.api.prod-preview.openshift.io}"
 
 ## github repo URL (for use in creating Che workspace)
 export GIT_REPO_URL="${GIT_REPO:-https://github.com/che-samples/console-java-simple.git}"
@@ -39,7 +42,7 @@ if [ -z "$OSO_CLUSTER_ADDRESS" ]; then
 	export OSO_CLUSTER_ADDRESS
 fi
 
-if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; then
+if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ] || [ -z "$GITHUB_PASSWORD" ]; then
 	## Login to OSO to get OSO username and token
 	oc login "$OSO_CLUSTER_ADDRESS" -u "$OSIO_USERNAME" -p "$OSIO_PASSWORD"
 	if [ $? -gt 0 ]; then
@@ -66,6 +69,15 @@ if [ -z "$OSO_USERNAME" ] || [ -z "$OSO_TOKEN" ] || [ -z "$GITHUB_USERNAME" ]; t
 		## Github username
 		GITHUB_USERNAME=$(oc get secrets/cd-github -o yaml | grep username | sed -e 's,.*username: \(.*\),\1,g' | base64 --decode)
 		export GITHUB_USERNAME
+	fi
+
+	if [ -z "$GITHUB_PASSWORD" ]; then
+		## Make sure you are on the main project
+		oc project "$OSO_USERNAME"
+
+		## Github password
+		GITHUB_PASSWORD=$(oc get secrets/cd-github -o yaml | grep password | sed -e 's,.*password: \(.*\),\1,g' | base64 --decode)
+		export GITHUB_PASSWORD
 	fi
 fi
 

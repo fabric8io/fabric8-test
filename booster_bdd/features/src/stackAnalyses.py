@@ -10,8 +10,8 @@ boosterLaunched = False
 
 class StackAnalyses(object):
 
-    # Obtain the key to use to access the stack analyses information 
-    def getReportKey (self, codebaseUrl):
+    # Obtain the key to use to access the stack analyses information
+    def getReportKey(self, codebaseUrl):
         print('Getting Stack Analyses report ID.....')
 
         githubUsername = os.getenv("GITHUB_USERNAME")
@@ -20,8 +20,7 @@ class StackAnalyses(object):
         theToken = helpers.get_user_tokens().split(";")[0]
         authHeader = 'Bearer {}'.format(theToken)
 
-        # TODO - Convert to environment variables
-        _url = 'https://recommender.api.openshift.io'
+        _url = os.getenv("ANALYSES_API")
         _endpoint = '/api/v1/stack-analyses'
 
         headers = {'Accept': 'application/json',
@@ -30,19 +29,19 @@ class StackAnalyses(object):
                    'X-Git-Provider': 'GitHub',
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
-        print ('the target URL is:' + codebaseUrl)
+        print('the target URL is:' + codebaseUrl)
 
         # Remove the ".git" suffix from the URL
         shortenedUrl = codebaseUrl
 
         if shortenedUrl.endswith(".git"):
             shortenedUrl = codebaseUrl[:-4]
-        print ('the shortened URL is: {}'.format(shortenedUrl))
+        print('the shortened URL is: {}'.format(shortenedUrl))
 
         spaceName = helpers.getSpaceName()
         projectName = os.getenv("PROJECT_NAME")
         gitRepo = spaceName + "-" + projectName
-        print ('the gitRepo name is: {}'.format(gitRepo))
+        print('the gitRepo name is: {}'.format(gitRepo))
 
         cloneUrl = codebaseUrl.replace(
             'https://github.com/',
@@ -50,51 +49,51 @@ class StackAnalyses(object):
                 githubUsername, githubPassword
             )
         )
-        # print('the cloneUrl = {}'.format(cloneUrl))
+        #print('the cloneUrl = {}'.format(cloneUrl))
 
         # Invoke shell script to create and upload to master effective pom
         try:
             testOutput = subprocess.check_output(['./test.sh', cloneUrl, gitRepo, githubUsername])
-            print ('Output = {}'.format(testOutput))
+            print('Output = {}'.format(testOutput))
         except Exception as e:
             print('Unexpected subprocess exception: {}'.format(e))
 
-        print ('the shortened URL is: {}'.format(shortenedUrl))
+        print('the shortened URL is: {}'.format(shortenedUrl))
 
         # TODO - The call is failing to all repos other than booster repos
         #shortenedUrl = 'https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-rest-http'
 
-        #payload = {
+        # payload = {
         #    'github_url': shortenedUrl,
         #    'source': 'osio',
         #    'github_ref': 13
-        #}
+        # }
         filePathList = './tempDir/' + gitRepo
         payload = {
-            #'filePath': filePathList,
-            #'manifest': manifestList
-            'filePath[]' : filePathList,
-            'manifest[]' : 'pom.xml'
+            # 'filePath': filePathList,
+            # 'manifest': manifestList
+            'filePath': [filePathList],
+            'manifest': ['pom.xml']
         }
 
         try:
             r = requests.post(urljoin(_url, _endpoint),
-                        headers=headers, data=payload)
+                              headers=headers, data=payload)
 
-            print ('response text = {}'.format(r.text))
+            print('response text = {}'.format(r.text))
             respJson = r.json()
             helpers.printToJson('Obtain the stack analyses key', r)
             theID = respJson["id"]
-            print ('Stack analyses key  {}'.format(theID))
+            print('Stack analyses key  {}'.format(theID))
             return theID
 
         except Exception as e:
             print('Unexpected stack analyses key: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
 
-
     # Given a stack analyses key value - obtain the report
-    def getStackReport (self, reportKey):
+
+    def getStackReport(self, reportKey):
 
         print('Getting Stack Analyses report.....')
 
@@ -113,7 +112,7 @@ class StackAnalyses(object):
 
         try:
             r = requests.get(urljoin(_url, _endpoint + '/' + reportKey), headers=headers)
-            print (r.text)
+            print(r.text)
             helpers.printToJson('Obtain the stack analyses report', r)
             return r.text
 
@@ -121,9 +120,8 @@ class StackAnalyses(object):
             print('Unexpected stack analyses report: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
 
-
-
     # Obtain the URL of a code base's github repo - assuming only 1 codebase
+
     def getCodebaseUrl(self, maxAttempts=10):
         serverUrl = os.getenv("SERVER_ADDRESS")
         spaceId = helpers.getSpaceID()
@@ -147,4 +145,3 @@ class StackAnalyses(object):
             data = responseJson['data'][0]['attributes']['url']
             time.sleep(5)
         return data
-        
