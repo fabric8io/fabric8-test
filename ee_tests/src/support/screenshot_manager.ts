@@ -2,6 +2,8 @@ import { sync as mkdirp } from 'mkdirp';
 import { browser, logging } from 'protractor';
 import { createWriteStream } from 'fs';
 import * as logger from '../support/logging';
+import * as runner from '../support/script_runner';
+import * as timeouts from '../support/timeouts';
 
 class ScreenshotManager {
 
@@ -17,10 +19,16 @@ class ScreenshotManager {
   }
 
   async save(name = 'screenshot') {
-    await this.writePageSource(this.path + '/' + this.getFormattedCounters() + '-' + name + '.html');
-    await this.writeBrowserLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.log');
-    await this.writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
-    this.screenshotCounter++;
+    try {
+      await this.writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
+      await this.writePageSource(this.path + '/' + this.getFormattedCounters() + '-' + name + '.html');
+      await this.writeBrowserLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.log');
+    } catch (e) {
+      logger.error('Saving screenshot, page or browser logs failed with error: ' + e);
+      await this.desktopScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '-desktop.png');
+    } finally {
+      this.screenshotCounter++;
+    }
   }
 
   async saveUnformatted(name = 'screenshot') {
@@ -75,6 +83,23 @@ class ScreenshotManager {
 
     stream.end();
     logger.debug(`Saved browser logs to: ${filename}`);
+  }
+
+  private async desktopScreenshot(fileName: string) {
+    try {
+      logger.debug(`Save desktop screenshot`);
+      await runner.runScript(
+        '.', // working directory
+        './take-screenshot.sh', // script
+        [fileName], // params
+        `./target/screenshots/desktopScreenshot.txt`,  // output file
+        false,
+        timeouts.LONGER_WAIT
+      );
+      logger.debug(`Save desktop screenshot saved`);
+    } catch (e) {
+      logger.error('Save desktop screenshot failed with error: ' + e);
+    }
   }
 }
 
