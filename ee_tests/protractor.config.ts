@@ -23,10 +23,6 @@ let consoleReporter = new SpecReporter({
 // To use video capturing reporter you need to have ffmpeg installed
 let useVideoReporter = false;
 
-let videoReporter = new VideoReporter({
-  baseDirectory: 'target/videos'
-});
-
 // Full protractor configuration file reference could be found here:
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 let conf: Config = {
@@ -84,6 +80,9 @@ let conf: Config = {
   onPrepare: function () {
     jasmine.getEnv().addReporter(consoleReporter);
     if (useVideoReporter) {
+      let videoReporter = new VideoReporter({
+        baseDirectory: 'target/videos'
+      });
       jasmine.getEnv().addReporter(videoReporter);
     }
 
