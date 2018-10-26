@@ -51,6 +51,10 @@ class ScreenshotManager {
   }
 
   private async writeScreenshot(filename: string) {
+    return Promise.race([this.writeScreenshotPromise(filename), this.createTimeoutPromise()]);
+  }
+
+  private async writeScreenshotPromise(filename: string) {
     logger.debug('Saving screenshot');
     let png = await browser.takeScreenshot();
     let stream = createWriteStream(filename);
@@ -60,6 +64,10 @@ class ScreenshotManager {
   }
 
   private async writePageSource(filename: string) {
+    return Promise.race([this.writePageSourcePromise(filename), this.createTimeoutPromise()]);
+  }
+
+  private async writePageSourcePromise(filename: string) {
     logger.debug('Saving page source');
     let txt = await browser.getPageSource();
     let stream = createWriteStream(filename);
@@ -69,6 +77,10 @@ class ScreenshotManager {
   }
 
   private async writeBrowserLog(filename: string) {
+    return Promise.race([this.writeBrowserLogPromise(filename), this.createTimeoutPromise()]);
+  }
+
+  private async writeBrowserLogPromise(filename: string) {
     logger.debug('Saving browser logs');
     let logs: logging.Entry[] = await browser.manage().logs().get('browser');
     let stream = createWriteStream(filename);
@@ -100,6 +112,14 @@ class ScreenshotManager {
     } catch (e) {
       logger.error('Save desktop screenshot failed with error: ' + e);
     }
+  }
+
+  private createTimeoutPromise(): Promise<any> {
+    return new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+          reject(`Saving resources exited after timeout of ${timeouts.DEFAULT_WAIT / 1000}s`);
+      }, timeouts.DEFAULT_WAIT);
+    });
   }
 }
 
