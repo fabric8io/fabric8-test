@@ -12,6 +12,9 @@ import (
 
 // AuthAPIStatus defines contract of /api/status endpoint
 func AuthAPIStatus(t *testing.T, pact *dsl.Pact) {
+
+	fmt.Printf("Invoking AuthAPIStatus now\n")
+
 	// Pass in test case
 	var test = func() error {
 		u := fmt.Sprintf("http://localhost:%d/api/status", pact.Server.Port)
