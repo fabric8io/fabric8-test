@@ -76,6 +76,9 @@ var userID = os.Getenv("OSIO_USER_ID")
 
 // AuthAPIUserByNameConsumer defines contract of /api/users?filter[username]=<user_name> endpoint
 func AuthAPIUserByNameConsumer(t *testing.T, pact *dsl.Pact) {
+
+	fmt.Printf("Invoking AuthAPIUserByNameConsumer test interaction now\n")
+
 	// Pass in test case
 	var test = func() error {
 		url := fmt.Sprintf("http://localhost:%d/api/users?filter[username]=%s", pact.Server.Port, userName)
@@ -123,6 +126,9 @@ func AuthAPIUserByNameConsumer(t *testing.T, pact *dsl.Pact) {
 
 // AuthAPIUserByIDConsumer defines contract of /api/users/<user_id> endpoint
 func AuthAPIUserByIDConsumer(t *testing.T, pact *dsl.Pact) {
+
+	fmt.Printf("Invoking AuthAPIUserByIDConsumer test interaction now\n")
+
 	// Pass in test case
 	var test = func() error {
 		url := fmt.Sprintf("http://localhost:%d/api/users/%s", pact.Server.Port, userID)
@@ -168,6 +174,8 @@ func AuthAPIUserByIDConsumer(t *testing.T, pact *dsl.Pact) {
 // AuthAPIUserByToken defines contract of /api/user endpoint with valid auth token
 // passed as 'Authorization: Bearer ...' header
 func AuthAPIUserByToken(t *testing.T, pact *dsl.Pact) {
+
+	fmt.Printf("Invoking AuthAPIUserByToken test interaction now\n")
 
 	var userToken = os.Getenv("OSIO_USER_AUTH_TOKEN")
 
@@ -220,6 +228,8 @@ func AuthAPIUserByToken(t *testing.T, pact *dsl.Pact) {
 // AuthAPIUserInvalidToken defines contract of /api/user endpoint with invalid auth token
 func AuthAPIUserInvalidToken(t *testing.T, pact *dsl.Pact) {
 
+	fmt.Printf("Invoking AuthAPIUserInvalidToken test interaction now\n")
+
 	// Base64 encoded '{"alg":"RS256","kid":"1aA2bBc3CDDdEEefff7gGHH_ii9jJjkkkLl2mmm4NNO","typ":"JWT"}somerandombytes'
 	var invalidToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFhQTJiQmMzQ0REZEVFZWZmZjdnR0hIX2lpOWpKamtra0xsMm1tbTROTk8iLCJ0eXAiOiJKV1QifXNvbWVyYW5kb21ieXRlcw"
 
@@ -271,6 +281,8 @@ func AuthAPIUserInvalidToken(t *testing.T, pact *dsl.Pact) {
 
 // AuthAPIUserNoToken defines contract of /api/user endpoint with invalid auth token
 func AuthAPIUserNoToken(t *testing.T, pact *dsl.Pact) {
+
+	fmt.Printf("Invoking AuthAPIUserNoToken test interaction now\n")
 
 	// Pass in test case
 	var test = func() error {
