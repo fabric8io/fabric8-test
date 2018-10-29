@@ -19,6 +19,12 @@ export class WindowManager {
   }
 
   async switchToNewWindow() {
+    // TODO temporary workaround for a Chrome bug
+    // when Protractor clicks on a link that opens in new tab, page doesn't load
+    // user sees only blank tab, e.g. when opening OpenShift console or app in stage env
+    // https://github.com/fabric8io/fabric8-test/issues/1115
+    await browser.sleep(2000);
+
     this.windowCount++;
     await this.switchToWindow(this.windowCount, this.windowCount - 1);
     await this.checkWindowCount();
