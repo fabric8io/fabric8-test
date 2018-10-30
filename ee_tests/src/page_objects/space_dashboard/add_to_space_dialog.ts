@@ -49,7 +49,6 @@ export class QuickStartWizard extends Wizard {
   // we worry about proj
   projectNameInput = new TextInput(this.projectInfoStep.$('#named'));
 
-  // tslint:disable:max-line-length
   release = new Button(element(by.xpath('.//*[@value=\'Release\']')));
   releaseAndStage = new Button(element(by.xpath('.//*[@value=\'Release and Stage\']')));
   releaseStageApproveAndPromote = new Button(element(by.xpath('.//*[@value=\'Release, Stage, Approve and Promote\']')));
