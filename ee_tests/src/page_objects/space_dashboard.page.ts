@@ -180,8 +180,8 @@ export class PipelinesCard extends SpaceDashboardPageCard {
   }
 
   public async getPipelines(): Promise<Pipeline[]> {
-    // tslint:disable-next-line:max-line-length
-    let elementsFinders: ElementFinder[] = await this.element(by.id('spacehome-pipelines-list')).all(by.className('list-group-item'));
+    let elementsFinders: ElementFinder[] =
+      await this.element(by.id('spacehome-pipelines-list')).all(by.className('list-group-item'));
     let pipelines = await elementsFinders.map(finder => new Pipeline(finder));
     return Promise.resolve(pipelines);
   }

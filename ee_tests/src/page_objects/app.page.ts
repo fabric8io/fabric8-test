@@ -88,7 +88,6 @@ export class AppPage extends BasePage {
     return spaceDashboard;
   }
 
-  // tslint:disable-next-line:max-line-length
   async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 

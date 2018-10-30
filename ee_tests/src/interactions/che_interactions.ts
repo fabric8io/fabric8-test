@@ -38,7 +38,6 @@ export class CheInteractionsImpl extends AbstractCheInteractions {
         let username = specContext.getUser();
         let password = specContext.getPassword();
         let outputDir = './target/screenshots/che-tests.txt';
-        // tslint:disable-next-line:max-line-length
         let token = await this.getToken();
 
         await runner.runScript(
