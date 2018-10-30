@@ -274,12 +274,7 @@ export class AddToSpaceDialog extends ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
-
-    if (specContext.isProduction()) {
-      await setupApplicationPage.viewNewApplicationButton.clickWhenReady();
-    } else {
-      await setupApplicationPage.returnToDashboardButton.clickWhenReady();
-    }
+    await setupApplicationPage.returnToDashboardButton.clickWhenReady();
   }
 
   async importProjectByLauncher(appName: string, repoName: string, strategy: string) {
