@@ -25,11 +25,12 @@ func TestAuthAPIConsumer(t *testing.T) {
 
 	// Create Pact connecting to local Daemon
 	pact := &dsl.Pact{
-		Consumer: pactConsumer,
-		Provider: pactProvider,
-		PactDir:  pactDir,
-		Host:     "localhost",
-		LogLevel: "INFO",
+		Consumer:          pactConsumer,
+		Provider:          pactProvider,
+		PactDir:           pactDir,
+		Host:              "localhost",
+		LogLevel:          "INFO",
+		PactFileWriteMode: "overwrite",
 	}
 	defer pact.Teardown()
 
@@ -42,6 +43,9 @@ func TestAuthAPIConsumer(t *testing.T) {
 	// Negative tests
 	AuthAPIUserInvalidToken(t, pact)
 	AuthAPIUserNoToken(t, pact)
+
+	fmt.Printf("All tests done, writting a pact to %s directory.\n", pactDir)
+	pact.WritePact()
 
 	fmt.Printf("Publishing pact to a broker %s\n", pactBrokerURL)
 
