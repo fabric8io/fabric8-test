@@ -20,8 +20,9 @@ if [ -z "$PACT_BROKER_PASSWORD" ]; then
     fi
 fi
 
-# A provider base url (default `https://openshift.io`)
-export PACT_PROVIDER_BASE_URL="${PACT_PROVIDER_BASE_URL:-https://auth.openshift.io}"
+# A provider base url (default `http://localhost:8089`, which is supposed to be a local instance
+# of fabric8-auth service running in developer mode)
+export PACT_PROVIDER_BASE_URL="${PACT_PROVIDER_BASE_URL:-http://localhost:8089}"
 
 # Pact Consumer
 export PACT_CONSUMER="${PACT_CONSUMER:-Fabric8AuthConsumer}"
@@ -29,11 +30,11 @@ export PACT_CONSUMER="${PACT_CONSUMER:-Fabric8AuthConsumer}"
 # Pact Provider
 export PACT_PROVIDER="${PACT_PROVIDER:-Fabric8AuthService}"
 
-# OSIO username
-export OSIO_USERNAME="${OSIO_USERNAME:-}"
+# OSIO user auth token
+export OSIO_USER_AUTH_TOKEN=$(curl -L --silent -XGET $PACT_PROVIDER_BASE_URL/api/token/generate | jq '.[0].token.access_token' | tr -d '"')
 
 # OSIO user ID
-export OSIO_USER_ID="${OSIO_USER_ID:-}"
+export OSIO_USER_ID="${OSIO_USER_ID:-$(curl -L --silent -XGET -H "Authorization: Bearer $OSIO_USER_AUTH_TOKEN" "$PACT_PROVIDER_BASE_URL/api/user" | jq ".data.id" | tr -d '"')}"
 
-# OSIO user auth token
-export OSIO_USER_AUTH_TOKEN="${OSIO_USER_AUTH_TOKEN:-}"
+# OSIO username
+export OSIO_USERNAME="${OSIO_USERNAME:-$(curl -L --silent -XGET -H "Authorization: Bearer $OSIO_USER_AUTH_TOKEN" "$PACT_PROVIDER_BASE_URL/api/user" | jq ".data.attributes.username" | tr -d '"')}"
