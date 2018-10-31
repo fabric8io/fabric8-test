@@ -26,9 +26,19 @@ export class CodebasesPage extends AppPage {
     openWorkspace.clickWhenReady(timeouts.LONGER_WAIT);
   }
 
+  public async getSelectedWorkspace(): Promise<string> {
+    let elementsFinders: ElementFinder[] = await this.getWorkspacesFinders();
+
+    for (let finder of elementsFinders) {
+      if (await finder.isSelected()) {
+        return finder.getText();
+      }
+    }
+    throw 'No workspace selected';
+  }
+
   public async getWorkspaces(): Promise<string[]> {
-    let elementsFinders: ElementFinder[] = await element(by.tagName('codebases-item-workspaces')).
-      all(by.css('select > option'));
+    let elementsFinders: ElementFinder[] = await this.getWorkspacesFinders();
 
     let workspaces = new Array<string>();
     for (let finder of elementsFinders) {
@@ -41,5 +51,10 @@ export class CodebasesPage extends AppPage {
     }
 
     return Promise.resolve(workspaces);
+  }
+
+  private async getWorkspacesFinders(): Promise<ElementFinder[]> {
+    return element(by.tagName('codebases-item-workspaces')).
+      all(by.css('select > option'));
   }
 }

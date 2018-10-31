@@ -15,11 +15,13 @@ export interface CodebasesInteractions {
 
     openCodebasesPage(mode: PageOpenMode): void;
 
-    createWorkspace(): void;
+    createWorkspace(): Promise<string>;
 
-    createAndOpenWorkspace(): void;
+    createAndOpenWorkspace(): Promise<string>;
 
     getWorkspaces(): Promise<string[]>;
+
+    getSelectedWorkspace(): Promise<string>;
 }
 
 abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
@@ -36,9 +38,9 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
         this.page = new CodebasesPage();
     }
 
-    public async abstract createWorkspace(): Promise<void>;
+    public async abstract createWorkspace(): Promise<string>;
 
-    public async abstract createAndOpenWorkspace(): Promise<void>;
+    public async abstract createAndOpenWorkspace(): Promise<string>;
 
     public async openCodebasesPage(mode: PageOpenMode): Promise<void> {
         logger.info('Open codebases page');
@@ -55,18 +57,24 @@ abstract class AbstractCodebasesInteractions implements CodebasesInteractions {
     public async getWorkspaces(): Promise<string[]> {
         return this.page.getWorkspaces();
     }
+
+    public async getSelectedWorkspace(): Promise<string> {
+        return this.page.getSelectedWorkspace();
+    }
 }
 
 class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
 
-    public async createWorkspace(): Promise<void> {
+    public async createWorkspace(): Promise<string> {
         logger.info('Create and open workspace');
         await this.page.createWorkspace();
+        return this.page.getSelectedWorkspace();
     }
 
-    public async createAndOpenWorkspace(): Promise<void> {
-        await this.createWorkspace();
+    public async createAndOpenWorkspace(): Promise<string> {
+        let workspacePromise = this.createWorkspace();
         await this.page.openWorkspace();
         await windowManager.switchToNewWindow();
+        return workspacePromise;
     }
 }

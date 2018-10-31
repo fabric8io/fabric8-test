@@ -3,32 +3,72 @@ import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import * as runner from  '../support/script_runner';
 import { specContext } from '../support/spec_context';
+import { screenshotManager } from '../support/screenshot_manager';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
+import { windowManager } from '../support/window_manager';
+import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
 
 export abstract class CheInteractionsFactory {
 
-    public static create(): CheInteractions {
+    public static create(workspace: string): CheInteractions {
 
-        return new CheInteractionsImpl();
+        return new CheInteractionsImpl(workspace);
     }
 }
 
 export interface CheInteractions {
 
-    changeCodebase(workspace: string): void;
+    openChePage(mode: PageOpenMode): void;
+
+    /**
+     * Changes the code in GitHub using Che external tests
+     */
+    changeCodebase(): void;
+
+    verifyProjects(...projects: string[]): void;
+
+    closeChePage(): void;
 }
 
-export abstract class AbstractCheInteractions implements CheInteractions {
+export class CheInteractionsImpl implements CheInteractions {
 
-    public async abstract changeCodebase(workspace: string): Promise<void>;
-}
+    private che: SpaceCheWorkspacePage;
 
-export class CheInteractionsImpl extends AbstractCheInteractions {
+    constructor(private workspace: string) {
+        this.che = new SpaceCheWorkspacePage(workspace);
+    }
 
-    public async changeCodebase(workspace: string): Promise<void> {
-        await this.runCheTests(workspace);
+    public async openChePage(mode: PageOpenMode): Promise<void> {
+        logger.info('Open Che');
+        await this.che.open(mode);
+    }
+
+    public async changeCodebase(): Promise<void> {
+        logger.info('Change the codebase');
+        await this.runCheTests(this.workspace);
         logger.info('Script finished');
+    }
+
+    public async verifyProjects(...expectedProjects: string[]): Promise<void> {
+        logger.info('Verify projects in Che');
+        await browser.wait(
+            async () => (await this.che.getProjects()).length === expectedProjects.length,
+            timeouts.DEFAULT_WAIT,
+            'Number of projects in che'
+        );
+
+        let cheProjects = await this.che.getProjects();
+        expect(cheProjects.length).toBe(expectedProjects.length, 'Number of projects in che');
+        for (let i = 0; i < expectedProjects.length; i++) {
+            expect(cheProjects[i]).toBe(expectedProjects[i], 'Project name');
+        }
+    }
+
+    public async closeChePage(): Promise<void> {
+        logger.info('Close Che');
+        await screenshotManager.save('che');
+        return windowManager.closeCurrentWindow();
     }
 
     private async runCheTests(workspace: string): Promise<void> {
