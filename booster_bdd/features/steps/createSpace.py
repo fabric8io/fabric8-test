@@ -14,4 +14,4 @@ def when_input_space_name(_context):
 @then(u'I should see a new space created')
 def then_space_created(_context):
     spaceID = helpers.getSpaceID()
-    spaceID | should_not.be_none().desc("Created space ID")
+    spaceID | should_not.be_none().desc("Space created. Space ID is set.")

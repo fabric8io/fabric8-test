@@ -22,7 +22,7 @@ def when_check_pipeline(_context):
 
 @then(u'I should see the newly created build in a "New" state')
 def then_new_state(_context):
-    pl.buildStatus(30, 5, 'New') | should.be_true.desc("Build failed to get to New state")
+    pl.buildStatus(30, 5, 'New') | should.be_true.desc("Build is in New state")
 
 
 @then(u'I should see the build in a "Running" state')
@@ -35,22 +35,22 @@ def then_running_state(_context):
 def then_promote_state(_context):
     pl.buildStatus(30, 30, 'Running',
                    'openshift.io/jenkins-pending-input-actions-json'
-                   ) | should.be_true.desc("Build failed to get ready to be promoted.")
+                   ) | should.be_true.desc("Build is ready to be promoted.")
 
 
 @given(u'The build is ready to be promoted to "Run" stage')
 def given_ready_promoted(_context):
     pl.buildStatus(30, 30, 'Running',
                    'openshift.io/jenkins-pending-input-actions-json'
-                   ) | should.be_true.desc("Build failed to get ready to be promoted.")
+                   ) | should.be_true.desc("Build is ready to be promoted.")
 
 
 @when(u'I promote the build to "Run" stage')
 def when_promote_to_run(_context):
-    pl.promoteBuild() | should.be_true.desc("Build failed to promote to Run stage.")
+    pl.promoteBuild() | should.be_true.desc("Build is promoted to Run stage.")
 
 
 @then(u'I should see the build completed')
 def then_build_completed(_context):
-    pl.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build failed to complete.")
+    pl.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build is complete.")
     pipeline.pipelineVerified = True

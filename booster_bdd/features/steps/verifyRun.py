@@ -6,7 +6,7 @@ from pyshould import should
 
 @given(u'I have verified a booster\'s pipeline has had its deployment to stage verified')
 def given_stage_deployed(_context):
-    stage.stageDeployed | should.be_true.desc("Stage deployed and verified.")
+    stage.stageDeployed | should.be_true.desc("Application is reachable in the Stage stage.")
     print('Attempting to use query for Pipeline deployed to Run...')
     global run
     run = Run()
@@ -22,4 +22,4 @@ def when_query_pipeline(_context):
 @then(u'I should see the deployed app running on run')
 def then_run_deployed(_context):
     global result
-    result | should.equal('Success').desc("Application is not reachable in the Run stage.")
+    result | should.equal('Success').desc("Application is reachable in the Run stage.")

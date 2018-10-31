@@ -18,5 +18,5 @@ def when_reset_environment(context):
 def then_clean_environment(context):
     """Check that environment has been reset."""
     len(context.resetEnv.getSpaces()) | should.equal(0).described_as(
-        "Number of spaces after environment reset."
+        "Number of spaces after environment reset is 0."
     )

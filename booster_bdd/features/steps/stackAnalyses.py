@@ -12,7 +12,7 @@ def when_send_manifest(context):
     codebaseUrl = sa.getCodebaseUrl()
     stackAnalysesKey = sa.getReportKey(codebaseUrl)
     helpers.setStackReportKey(stackAnalysesKey)
-    stackAnalysesKey | should_not.be_none().desc("Obtained Stack Analyses key")
+    stackAnalysesKey | should_not.be_none().desc("Stack Analyses key obtained.")
     context.sa = sa
 
 
@@ -20,5 +20,6 @@ def when_send_manifest(context):
 def then_receive_stack_json(context):
     stackAnalysesKey = helpers.getStackReportKey()
     reportText = context.sa.getStackReport(stackAnalysesKey)
-    reportText | should_not.be_none().desc("Obtained Stack Analyses Report")
-    reportText | should_not.contain_the_substring("error").desc("Stack Analyses Report contains 'error'")
+    reportText | should_not.be_none().desc("Stack Analyses Report obtained.")
+    reportText | should_not.contain_the_substring("error") \
+        .desc("Stack Analyses Report contains 'error'")

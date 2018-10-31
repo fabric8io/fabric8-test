@@ -103,7 +103,7 @@ def getStackReportKey():
 
 def setStackReportKey(theKey):
     global stackReportKey
-    stackReportKey = theKey    
+    stackReportKey = theKey
 
 
 def getSpaceName():

@@ -15,7 +15,7 @@ def when_create_workspace(_context):
 @then(u'I should see the newly created workspace')
 def then_workspace_created(_context):
     workspaceID = helpers.getWorkspaceID()
-    workspaceID | should_not.be_none().desc("Created workspace ID")
+    workspaceID | should_not.be_none().desc("Workspace is created. Workspace ID is set.")
 
 
 @then(u'I should see the workspace started')
@@ -23,7 +23,7 @@ def then_workspace_started(_context):
     workspaceID = helpers.getWorkspaceID()
     workspace = Workspace()
     workspaceStatus = workspace.workspaceStatus(workspaceID, 10, "RUNNING")
-    workspaceStatus | should.be_true().desc("Started workspace")
+    workspaceStatus | should.be_true().desc("Workspace is started and running.")
 
 
 @then(u'I should see the workspace stopped')
@@ -32,7 +32,7 @@ def then_workspace_stopped(_context):
     workspace = Workspace()
     workspace.workspaceStop(workspaceID)
     workspaceStatus = workspace.workspaceStatus(workspaceID, 10, "STOPPED")
-    workspaceStatus | should.be_true().desc("Stopped workspace")
+    workspaceStatus | should.be_true().desc("Workspace is stopped.")
 
 
 @then(u'I should see the workspace deleted')
@@ -41,4 +41,4 @@ def then_workspace_deleted(_context):
     workspace = Workspace()
     workspace.workspaceDelete(workspaceID)
     workspaceDeleteStatus = workspace.workspaceDeleteStatus(workspaceID)
-    workspaceDeleteStatus | should.be_true().desc("Deleted workspace")
+    workspaceDeleteStatus | should.be_true().desc("Workspace was deleted.")
