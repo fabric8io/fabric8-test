@@ -49,7 +49,7 @@ class StackAnalyses(object):
                 githubUsername, githubPassword
             )
         )
-        #print('the cloneUrl = {}'.format(cloneUrl))
+        # print('the cloneUrl = {}'.format(cloneUrl))
 
         # Invoke shell script to create and upload to master effective pom
         try:
@@ -61,7 +61,7 @@ class StackAnalyses(object):
         print('the shortened URL is: {}'.format(shortenedUrl))
 
         # TODO - The call is failing to all repos other than booster repos
-        #shortenedUrl = 'https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-rest-http'
+        # shortenedUrl = 'https://github.com/wildfly-swarm-openshiftio-boosters/wfswarm-rest-http'
 
         # payload = {
         #    'github_url': shortenedUrl,

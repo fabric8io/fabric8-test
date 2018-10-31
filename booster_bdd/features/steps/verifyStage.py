@@ -8,8 +8,8 @@ from pyshould import should
 
 @given(u'I have verified a booster\'s pipeline has completed')
 def given_pipeline_completed(context):
-    """Precondition that the pipeline has been verified."""
-    pipeline.pipelineVerified | should.be_true.desc("Pipeline verified")
+    """Precondition that the pipeline has been complete and verified."""
+    pipeline.pipelineVerified | should.be_true.desc("Pipeline is complete and verified.")
     print('Attempting to use query for Pipeline deployed to Stage...')
     context.stage = Stage()
 
@@ -26,4 +26,4 @@ def when_query_pipeline(context):
 def then_app_running_stage(context):
     """Check that the app is deployed and running on stage."""
     result = context.result
-    result | should.equal('Success').desc("Application is not reachable in the Stage stage.")
+    result | should.equal('Success').desc("Application is reachable in the Stage stage.")

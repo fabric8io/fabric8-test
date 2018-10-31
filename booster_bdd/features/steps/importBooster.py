@@ -11,7 +11,7 @@ from pyshould import should, should_not
 def given_space_created(_context):
     global spaceID
     spaceID = helpers.getSpaceID()
-    spaceID | should_not.be_none().desc("Space ID")
+    spaceID | should_not.be_none().desc("Space ID exists.")
 
     global ib
     ib = ImportBooster()
@@ -20,11 +20,11 @@ def given_space_created(_context):
 @when(u'I input a name of the GitHub repository with a booster')
 def when_input_github_repo(_context):
     helpers.setGithubRepo(os.getenv('GIT_REPO'))
-    importBooster.boosterImported | should.be_false.desc("Booster not imported, yet.")
+    importBooster.boosterImported | should.be_false.desc("Booster is not imported, yet.")
     result = ib.importGithubRepo(helpers.getGithubRepo())
     print('Result = {}'.format(result))
 
 
 @then(u'I should see the booster imported')
 def then_booster_imported(_context):
-    importBooster.boosterImported | should.be_true.desc("A GitHub repository imported.")
+    importBooster.boosterImported | should.be_true.desc("A GitHub repository is imported.")

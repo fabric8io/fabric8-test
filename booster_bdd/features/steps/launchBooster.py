@@ -27,7 +27,7 @@ def when_input_booster(_context):
     pipeline = os.getenv('PIPELINE')
     blankBooster = os.getenv('BLANK_BOOSTER')
 
-    launchBooster.boosterLaunched | should.be_false.desc("Booster not created, yet.")
+    launchBooster.boosterLaunched | should.be_false.desc("Booster is not created, yet.")
     result = lb.launch(projectName, mission, runtime, version, pipeline, blankBooster)
     print('Result = {}'.format(result))
 
@@ -35,4 +35,4 @@ def when_input_booster(_context):
 @then(u'I should see the booster created within {seconds} seconds')
 def then_booster_created(_context, seconds):
     lb.checkCodebases(seconds)
-    launchBooster.boosterLaunched | should.be_true.desc("Booster created.")
+    launchBooster.boosterLaunched | should.be_true.desc("Booster is created.")
