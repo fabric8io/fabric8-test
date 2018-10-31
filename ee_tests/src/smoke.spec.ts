@@ -3,7 +3,6 @@ import { browser } from 'protractor';
 import * as logger from './support/logging';
 import * as timeouts from './support/timeouts';
 import { screenshotManager } from './support/screenshot_manager';
-import { windowManager } from './support/window_manager';
 import { newSpaceName } from './support/space_name';
 import { specContext } from './support/spec_context';
 import { FeatureLevelUtils } from './support/feature_level';
@@ -13,14 +12,13 @@ import { LoginInteractionsFactory } from './interactions/login_interactions';
 import { PipelinesInteractionsFactory } from './interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
 import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
-import { SpaceCheWorkspacePage } from './page_objects/space_cheworkspace.page';
-import { Button } from './ui/button';
 import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 import { BuildStatus } from './support/build_status';
 import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
 import * as runner from  './support/script_runner';
 import { PlannerInteractionsFactory } from './interactions/planner_interactions';
+import { CheInteractionsFactory } from './interactions/che_interactions';
 
 describe('e2e_smoketest', () => {
 
@@ -91,18 +89,17 @@ describe('e2e_smoketest', () => {
     try {
       let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
       await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
-      await codebasesInteractions.createAndOpenWorkspace();
+      let workspace = await codebasesInteractions.createAndOpenWorkspace();
 
-      let spaceCheWorkSpacePage = new SpaceCheWorkspacePage();
-      let projectInCheTree = new Button(
-        spaceCheWorkSpacePage.recentProjectRootByName(spaceName), 'Project in Che Tree');
-      await projectInCheTree.untilPresent(timeouts.LONGER_WAIT);
-      expect(await spaceCheWorkSpacePage.recentProjectRootByName(spaceName).getText()).toContain(spaceName);
+      let cheInteractions = CheInteractionsFactory.create(workspace);
+      await cheInteractions.openChePage(PageOpenMode.AlreadyOpened);
+      await cheInteractions.verifyProjects(spaceName);
 
-      /* Switch back to the OSIO browser window */
-      await windowManager.closeCurrentWindow();
+      await cheInteractions.closeChePage();
+
       let workspaces = await codebasesInteractions.getWorkspaces();
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
+      logger.debug('Selected workspace: ' + await codebasesInteractions.getSelectedWorkspace());
     } finally {
       await runOCScript('che', 'oc-che-logs');
     }

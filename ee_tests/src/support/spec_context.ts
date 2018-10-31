@@ -21,6 +21,10 @@ class SpecContext {
         return 'https://jenkins.' + this.getOsioUrl();
     }
 
+    getCheUrl(): string {
+        return 'https://che.' + this.getOsioUrl() + '/' + this.getUser();
+    }
+
     isLocalhost(): boolean {
         return this.getOsioUrl().includes('localhost');
     }

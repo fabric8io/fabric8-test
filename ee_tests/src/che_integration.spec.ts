@@ -116,8 +116,8 @@ describe('e2e_che_integration', () => {
   it('change_codebase', async () => {
     logger.info('--- Run external CHE tests to change codebase ---');
 
-    let cheInteractions = CheInteractionsFactory.create();
-    await cheInteractions.changeCodebase(workspace);
+    let cheInteractions = CheInteractionsFactory.create(workspace);
+    await cheInteractions.changeCodebase();
   });
 
   it('pipeline_after_change', async () => {
