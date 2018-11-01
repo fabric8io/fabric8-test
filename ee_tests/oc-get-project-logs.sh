@@ -37,8 +37,8 @@ echo "oc get all"
 oc get all
 
 echo ---------- Get events ---------------
-echo "oc get ev"
-oc get ev
+echo "oc get events --sort-by='.lastTimestamp'"
+oc get events --sort-by='.lastTimestamp'
 
 if [ "$3" == "jenkins" ]
 then
