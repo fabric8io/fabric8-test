@@ -11,7 +11,8 @@ export PACT_DIR="${PACT_DIR:-$(pwd)/pacts}"
 export PACT_VERSION="${PACT_VERSION:-1.0.0}"
 
 # A Pact broker to store and share pact files.
-export PACT_BROKER_URL="${PACT_BROKER_URL:-http://pact-broker-pact-broker.193b.starter-ca-central-1.openshiftapps.com}"
+#export PACT_BROKER_URL="${PACT_BROKER_URL:-http://pact-broker-pact-broker.193b.starter-ca-central-1.openshiftapps.com}"
+export PACT_BROKER_URL="${PACT_BROKER_URL:-htto://localhost:8090}"
 
 export PACT_BROKER_USERNAME="${PACT_BROKER_USERNAME:-pact_broker}"
 if [ -z "$PACT_BROKER_PASSWORD" ]; then
@@ -30,11 +31,12 @@ export PACT_CONSUMER="${PACT_CONSUMER:-Fabric8AuthConsumer}"
 # Pact Provider
 export PACT_PROVIDER="${PACT_PROVIDER:-Fabric8AuthService}"
 
-# OSIO user auth token
-export OSIO_USER_AUTH_TOKEN=$(curl -L --silent -XGET $PACT_PROVIDER_BASE_URL/api/token/generate | jq '.[0].token.access_token' | tr -d '"')
-
-# OSIO user ID
-export OSIO_USER_ID="${OSIO_USER_ID:-$(curl -L --silent -XGET -H "Authorization: Bearer $OSIO_USER_AUTH_TOKEN" "$PACT_PROVIDER_BASE_URL/api/user" | jq ".data.id" | tr -d '"')}"
-
 # OSIO username
-export OSIO_USERNAME="${OSIO_USERNAME:-$(curl -L --silent -XGET -H "Authorization: Bearer $OSIO_USER_AUTH_TOKEN" "$PACT_PROVIDER_BASE_URL/api/user" | jq ".data.attributes.username" | tr -d '"')}"
+export OSIO_USERNAME="${OSIO_USERNAME:-}"
+
+# OSIO password
+export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
+
+# Auth service account client credentials
+export AUTH_SERVICE_CLIENT_ID="${AUTH_SERVICE_CLIENT_ID:-f867ec72-3171-4b8f-8eec-90a32eab6e0b}"
+export AUTH_SERVICE_CLIENT_SECRET="${AUTH_SERVICE_CLIENT_SECRET:-secret}"
