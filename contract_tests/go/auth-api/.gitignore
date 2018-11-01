@@ -3,4 +3,4 @@ log
 logs
 pacts
 
-.pact-broker-password
+.pact-broker-password*

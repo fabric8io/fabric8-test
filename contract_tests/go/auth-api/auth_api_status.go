@@ -1,4 +1,3 @@
-// Package main contains a runnable Consumer Pact test example.
 package main
 
 import (
@@ -13,7 +12,7 @@ import (
 // AuthAPIStatus defines contract of /api/status endpoint
 func AuthAPIStatus(t *testing.T, pact *dsl.Pact) {
 
-	fmt.Printf("Invoking AuthAPIStatus now\n")
+	log.Printf("Invoking AuthAPIStatus now\n")
 
 	// Pass in test case
 	var test = func() error {
@@ -32,14 +31,6 @@ func AuthAPIStatus(t *testing.T, pact *dsl.Pact) {
 		return err
 	}
 
-	type STATUS struct {
-		buildTime           string `json:"buildTime" pact:"example=2018-10-05T10:03:04Z"`
-		commit              string `json:"commit" pact:"example=0f9921980549b2baeb43f6f16cbe794f430f498c"`
-		configurationStatus string `json:"configurationStatus" pact:"example=OK"`
-		databaseStatus      string `json:"databaseStatus" pact:"example=OK"`
-		startTime           string `json:"startTime" pact:"example=2018-10-09T15:04:50Z"`
-	}
-
 	// Set up our expected interactions.
 	pact.
 		AddInteraction().
@@ -53,7 +44,7 @@ func AuthAPIStatus(t *testing.T, pact *dsl.Pact) {
 		WillRespondWith(dsl.Response{
 			Status:  200,
 			Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/vnd.status+json")},
-			Body:    dsl.Match(STATUS{}),
+			Body:    dsl.Match(APIStatus{}),
 		})
 
 	// Verify

@@ -1,8 +1,8 @@
-// Package main contains a runnable Consumer Pact test example.
 package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"testing"
@@ -14,6 +14,8 @@ import (
 // TestAuthAPIConsumer runs all user related tests
 func TestAuthAPIConsumer(t *testing.T) {
 
+	log.SetOutput(os.Stdout)
+
 	var pactDir = os.Getenv("PACT_DIR")
 	var pactConsumer = os.Getenv("PACT_CONSUMER")
 	var pactProvider = os.Getenv("PACT_PROVIDER")
@@ -23,31 +25,34 @@ func TestAuthAPIConsumer(t *testing.T) {
 	var pactBrokerUsername = os.Getenv("PACT_BROKER_USERNAME")
 	var pactBrokerPassword = os.Getenv("PACT_BROKER_PASSWORD")
 
+	//var userName = os.Getenv("OSIO_USERNAME")
+
 	// Create Pact connecting to local Daemon
 	pact := &dsl.Pact{
-		Consumer:          pactConsumer,
-		Provider:          pactProvider,
-		PactDir:           pactDir,
-		Host:              "localhost",
-		LogLevel:          "INFO",
-		PactFileWriteMode: "overwrite",
+		Consumer:             pactConsumer,
+		Provider:             pactProvider,
+		PactDir:              pactDir,
+		Host:                 "localhost",
+		LogLevel:             "INFO",
+		PactFileWriteMode:    "overwrite",
+		SpecificationVersion: 2,
 	}
 	defer pact.Teardown()
 
 	// Test interactions
 	AuthAPIStatus(t, pact)
-	AuthAPIUserByNameConsumer(t, pact)
-	AuthAPIUserByIDConsumer(t, pact)
-	AuthAPIUserByToken(t, pact)
+	AuthAPIUserByName(t, pact, TestUserName)
+	AuthAPIUserByID(t, pact, TestUserID)
+	AuthAPIUserByToken(t, pact, TestJWSToken)
 
 	// Negative tests
-	AuthAPIUserInvalidToken(t, pact)
+	AuthAPIUserInvalidToken(t, pact, TestInvalidJWSToken)
 	AuthAPIUserNoToken(t, pact)
 
-	fmt.Printf("All tests done, writting a pact to %s directory.\n", pactDir)
+	log.Printf("All tests done, writting a pact to %s directory.\n", pactDir)
 	pact.WritePact()
 
-	fmt.Printf("Publishing pact to a broker %s\n", pactBrokerURL)
+	log.Printf("Publishing pact to a broker %s\n", pactBrokerURL)
 
 	p := dsl.Publisher{}
 	err := p.Publish(types.PublishRequest{
@@ -60,6 +65,6 @@ func TestAuthAPIConsumer(t *testing.T) {
 	})
 
 	if err != nil {
-		fmt.Printf("Unable to publish pact to a broker %s:\n%q\n", pactBrokerURL, err)
+		log.Fatalf("Unable to publish pact to a broker %s:\n%q\n", pactBrokerURL, err)
 	}
 }
