@@ -12,6 +12,7 @@ import { LauncherSection } from '../launcher_section';
 import { LauncherSetupAppPage} from '../launcher_setup_app.page';
 import { Quickstart } from '../../support/quickstart';
 import { LauncherReleaseStrategy } from '../../support/launcher_release_strategy';
+import { screenshotManager } from '../../support/screenshot_manager';
 
 export class Wizard extends BaseElement {
 
@@ -273,6 +274,8 @@ export class AddToSpaceDialog extends ModalDialog {
     await setupApplicationPage.newProjectBoosterOkIcon('Setting up your build pipeline').untilDisplayed();
     await setupApplicationPage.newProjectBoosterOkIcon('Configuring to trigger builds on Git pushes')
       .untilDisplayed();
+
+    screenshotManager.save('launcher');
     await setupApplicationPage.returnToDashboardButton.clickWhenReady();
   }
 
