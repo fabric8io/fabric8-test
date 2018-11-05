@@ -27,6 +27,7 @@ describe('e2e_smoketest', () => {
   let quickstart: Quickstart;
   let strategy: string;
   let spaceName: string;
+  let error: any;
 
   beforeAll(async () => {
     logger.info('Before all');
@@ -75,7 +76,14 @@ describe('e2e_smoketest', () => {
   it('create_space_new_codebase', async () => {
     logger.specTitle('Create space with new codebase ' + spaceName);
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
+    // TODO https://github.com/fabric8io/fabric8-test/issues/1130
+    try {
+      await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
+    } catch (e) {
+      logger.error('Error occured during creating an application and verifying codebases');
+      logger.error(e);
+      error = e;
+    }
   });
 
   it('run_che', async () => {
@@ -144,6 +152,11 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.verifyDeployedApplicationRun(
         deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyWorkItems();
+
+    // TODO https://github.com/fabric8io/fabric8-test/issues/1130
+    if (error !== undefined) {
+      throw error;
+    }
   });
 
   it('my_workitems', async () => {
