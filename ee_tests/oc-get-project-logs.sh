@@ -51,7 +51,8 @@ then
   oc get -o yaml dc/jenkins
 
   echo ---------- Get jenkins pod logs ----------------
-  POD_NAMES=`oc get pods --field-selector=status.phase=Running -o name | grep -m1 jenkins`
+  echo "oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins"
+  POD_NAMES=`oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins`
 
   if [[ -z "$POD_NAMES" ]]; then
     echo "No running jenkins pods"
@@ -59,6 +60,16 @@ then
     echo "oc logs" $POD_NAMES
     oc logs $POD_NAMES
   fi
+fi
+
+echo ---------- Get build name ----------------
+echo "oc get builds -n $1 | awk '{print \$1}' | tail -1"
+buildName=$(oc get builds -n $1 | awk '{print $1}' | tail -1)
+
+if [ ! -z $buildName ]; then
+  echo ---------- Get build $buildName ---------------
+  echo "oc get build/$buildName -n $1 -o yaml"
+  oc get build/$buildName -n $1 -o yaml
 fi
 
 echo ---------- Script finished -------------------------
