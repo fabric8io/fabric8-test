@@ -1,58 +1,48 @@
 import { TextInput } from '../ui/text_input';
-import { $, browser, by, element } from 'protractor';
+import { browser, by, element, ElementFinder, until } from 'protractor';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
-import * as logger from '../support/logging';
+import * as timeouts from '../support/timeouts';
 
 export class CreateApplicationPage {
 
-    private createNewApplicationCard = new BaseElement(
-        element(by.xpath('//*[contains(text(),\'Create a new codebase\')]' +
-            '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
-        'Create a new codebase'
-    );
-
-    private importExistingApplicationCard = new BaseElement(
-        element(by.xpath('//*[contains(text(),\'Import an existing codebase\')]' +
-            '/ancestor::*[contains(@class,\'code-imports--step_content\')]')),
-        'Import an existing codebase'
-    );
-
-    private continueButton = new Button(
-        element(by.xpath('//*[not(@disabled) and contains(text(),\'Continue\')]')),
-        'Continue'
-    );
-
     async setProjectName(name: string) {
-        let projectName = new TextInput($('#projectName'), 'Application Name');
-        logger.debug('ready');
+        let projectName = new TextInput(element(by.id('projectName')), 'Project Name');
         await projectName.ready();
-        logger.debug('clear');
         await projectName.clear();
-        logger.debug('sentKeys');
         await projectName.sendKeys(name);
     }
 
     async selectCreateCodebase(): Promise<void> {
-        logger.debug('click create');
-        await this.createNewApplicationCard.clickWhenReady();
+        let createNewApplicationCard = new BaseElement(element(by.css('input[value="createapp"]')),
+            'Create a new codebase'
+        );
+        await createNewApplicationCard.clickWhenReady();
         // https://github.com/fabric8io/fabric8-test/issues/714
         await browser.sleep(5000);
     }
 
     async selectImportCodebase(): Promise<void> {
-        await this.importExistingApplicationCard.clickWhenReady();
+        let importExistingApplicationCard = new BaseElement(
+            element(by.css('input[value="importapp"]')),
+            'Import an existing codebase'
+        );
+        await importExistingApplicationCard.clickWhenReady();
     }
 
     async clickContinue(): Promise<void> {
-        await this.continueButton.clickWhenReady();
+        let continueButton = new Button(element(by.id('cancelImportsButton')), 'Continue');
+        await continueButton.clickWhenReady();
     }
 }
 
 export class SelectMissionAndRuntimePage {
+
+    private sectionElement = element(by.tagName('f8launcher-missionruntime-createapp-step'));
+
     async selectMission(name: string) {
         let selection = new Button(
-            element(by.xpath('//div[@class=\'list-group-item-heading\'][contains(text(),\'' + name + '\')]')),
+            this.sectionElement.element(by.cssContainingText('div[class="list-group-item-heading"]', name)),
             'Select Mission'
         );
         await selection.clickWhenReady();
@@ -60,116 +50,214 @@ export class SelectMissionAndRuntimePage {
 
     async selectRuntime(name: string) {
         let selection = new Button(
-            element(by.xpath('//div[@class=\'list-group-item-heading\'][contains(text(),\'' + name + '\')]')),
+            this.sectionElement.element(by.cssContainingText('div[class="list-group-item-heading"]', name)),
             'Select Runtime'
         );
         await selection.clickWhenReady();
     }
 
     async clickContinue(): Promise<void> {
-        let missionRuntimeContinueButton = new Button(
-            element(by.xpath('//f8launcher-missionruntime-createapp-step' +
-                '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
+        let continueButton = new Button(
+            this.sectionElement.element(by.className('f8launcher-continue')).element(by.tagName('button')),
             'Mission&Runtime Continue'
         );
-        await missionRuntimeContinueButton.clickWhenReady();
+        await continueButton.clickWhenReady();
     }
 }
 
 export class SelectPipelinePage {
 
+    private sectionElement = element(by.tagName('f8launcher-releasestrategy-createapp-step'));
+
     async selectPipeline(name: string) {
-        let selection = new Button(
-            element(by.xpath(
-                '//*[contains(@class,\'f8launcher-section-release-strategy\')]' +
-                '//*[contains(@class,\'list-view-pf-description\')]' +
-                '//span[last()]//*[@class=\'f8launcher-pipeline-stages--name\'][contains(text(),\'' + name + '\')]'
-            )),
-            'Select Pipeline'
-        );
-        await selection.clickWhenReady();
+        let pipelines: ElementFinder[] = await this.sectionElement.all(by.className('list-view-pf-description'));
+        for (let pipeline of pipelines) {
+            let stages: ElementFinder[] = await pipeline.all(by.className('f8launcher-pipeline-stages--name'));
+            let lastStage = stages[stages.length - 1];
+            if (await lastStage.getText() === name) {
+                await lastStage.click();
+            }
+        }
     }
 
     async clickContinue(): Promise<void> {
-        let releaseStrategyContinueButton = new Button(
-            element(by.xpath('//f8launcher-releasestrategy-createapp-step' +
-                '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
+        let continueButton = new Button(
+            this.sectionElement.element(by.className('f8launcher-continue')).element(by.tagName('button')),
             'Pipeline Continue'
         );
-        await releaseStrategyContinueButton.clickWhenReady();
+        await continueButton.clickWhenReady();
     }
 }
 
 export class AuthorizeGitPage {
-    private ghOrgSelect = new Button(
-        $('#ghOrg'),
-        'Select GitHub Organization'
-    );
 
-    private ghRepositoryText = new TextInput(
-        $('#ghRepo'),
-        'GitHub Repository'
-    );
+    private sectionElement = element(by.tagName('f8launcher-gitprovider-createapp-step'));
 
-    async selectGitHubOrganization(name: string) {
-        await this.ghOrgSelect.clickWhenReady();
-        await this.ghOrgItem(name).clickWhenReady();
+    async selectLocation(name: string) {
+        let locationCombo = new Button(this.sectionElement.element(by.id('ghOrg')), 'GitHub Organization Combo');
+        await locationCombo.clickWhenReady();
+
+        let locationComboItem =
+            new Button(locationCombo.element(by.cssContainingText('option', name)), 'GitHub Organization');
+        await locationComboItem.clickWhenReady();
     }
 
     async selectRepository(name: string): Promise<void> {
-        await this.ghRepositoryText.ready();
-        await this.ghRepositoryText.clear();
-        await this.ghRepositoryText.sendKeys(name);
-    }
-
-    ghOrgItem(name: string): Button {
-        return new Button(
-            this.ghOrgSelect.element(by.xpath('./option[contains(text(),\'' + name + '\')]')),
-            'GitHub Organization'
-        );
+        let ghRepositoryText = new TextInput(element(by.id('ghRepo')), 'GitHub Repository');
+        await ghRepositoryText.ready();
+        await ghRepositoryText.clear();
+        await ghRepositoryText.sendKeys(name);
     }
 
     async clickContinue(): Promise<void> {
-        let gitProviderContinueButton = new Button(
-            element(by.xpath('//f8launcher-gitprovider-createapp-step' +
-                '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
+        let continueButton = new Button(
+            this.sectionElement.element(by.className('f8launcher-continue')).element(by.tagName('button')),
             'Git Provider Continue'
         );
-        await gitProviderContinueButton.clickWhenReady();
+
+        await continueButton.clickWhenReady();
     }
 }
 
 export class SummaryPage {
 
+    private sectionElement = element(by.tagName('f8launcher-projectsummary-createapp-step'));
+
+    async getMission(): Promise<string> {
+        return this.getSiblingElement('h2', 'Mission', '../..', 'div > b').getText();
+    }
+
+    async getRuntime(): Promise<string> {
+        return this.getSiblingElement('h2', 'Runtime', '../..', 'div > b').getText();
+    }
+
+    async getPipeline(): Promise<string> {
+        let stages = await this.sectionElement.all(by.className('f8launcher-pipeline-stages--name'));
+        return stages[stages.length - 1].getText();
+    }
+
+    async getApplicationName(): Promise<string> {
+        return this.getLabeledInputValue('Application Name');
+    }
+
+    async getVersion(): Promise<string> {
+        return this.getLabeledInputValue('Version');
+    }
+
+    async getGitHubUserName(): Promise<string> {
+        return this.getLabeledValue('Username');
+    }
+
+    async getLocation(): Promise<string> {
+        return this.getLabeledValue('Location');
+    }
+
+    async getRepository(): Promise<string> {
+        return this.getLabeledValue('Repository');
+    }
+
     async clickSetuUp(): Promise<void> {
-        let setUpApplicationButton = new Button(
-            element(
-                by.xpath('//*[contains(@class,\'btn\')][contains(text(),\'Set Up Application\')]')),
-            'Set Up Application'
-        );
-        await setUpApplicationButton.clickWhenReady();
+        return this.clickProjectSumamryButton('Set Up Application');
     }
 
     async clickImport(): Promise<void> {
-        let releaseStrategyImportContinueButton = new Button(
-            element(by.xpath('//f8launcher-releasestrategy-importapp-step' +
-                '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
-            'Pipeline Continue'
+        return this.clickProjectSumamryButton('Import Application');
+    }
+
+    private async getLabeledInputValue(label: string): Promise<string> {
+        return this.getLabeledElement(label, 'div > input').getAttribute('value');
+    }
+
+    private async getLabeledValue(label: string): Promise<string> {
+        return this.getLabeledElement(label, 'div > span').getText();
+    }
+
+    private getLabeledElement(label: string, elementCSS: string): ElementFinder {
+        return this.getSiblingElement('label', label, '..', elementCSS);
+    }
+
+    private getSiblingElement(
+            selectedTag: string,
+            selectedValue: string,
+            parentXPath: string,
+            siblingCSS: string): ElementFinder {
+        let selectedElement = this.sectionElement.element(by.cssContainingText(selectedTag, selectedValue));
+        let parentElement = selectedElement.element(by.xpath(parentXPath));
+        return parentElement.element(by.css(siblingCSS));
+    }
+
+    private async clickProjectSumamryButton(description: string): Promise<void> {
+        let projectSummaryButton = new Button(
+            this.sectionElement.element(by.id('ProjectSummary')).element(by.tagName('button')),
+            description
         );
-        await releaseStrategyImportContinueButton.clickWhenReady();
+        await projectSummaryButton.clickWhenReady();
+        await browser.wait(until.stalenessOf(projectSummaryButton), timeouts.DEFAULT_WAIT, 'Staleness of button');
+    }
+}
+
+export enum SetupStatus {
+    OK = 'OK',
+    FAILED = 'FAILED',
+    IN_PROGRESS = 'IN_PROGRESS'
+}
+
+class SetupStatusUtils {
+
+    static getStatusfromClassAttribute(classAttribute: string): SetupStatus {
+        let classes = classAttribute.split(' ');
+
+        if (classes.lastIndexOf('pficon-in-progress') > 0) {
+            return SetupStatus.IN_PROGRESS;
+        } else if (classes.lastIndexOf('pficon-ok') > 0) {
+            return SetupStatus.OK;
+        } else if (classes.lastIndexOf('pficon-error-circle-o') > 0) { // error state on page level
+            return SetupStatus.FAILED;
+        } else if (classes.lastIndexOf('pficon-paused') > 0) { // error state on step level
+            return SetupStatus.FAILED;
+        } else {
+            throw 'Unknow result page status';
+        }
+    }
+}
+
+export class SetupStep {
+
+    constructor(private finder: ElementFinder) {
+    }
+
+    async getTitle(): Promise<string> {
+        return this.finder.element(by.className('list-pf-main-content')).getText();
+    }
+
+    async getStatus(): Promise<SetupStatus> {
+        let classAttribute = await this.finder.element(by.tagName('span')).getAttribute('class');
+        let status = SetupStatusUtils.getStatusfromClassAttribute(classAttribute);
+        return Promise.resolve(status);
     }
 }
 
 export class ResultsPage {
 
-    newProjectBoosterOkIcon(name: string): BaseElement {
-        return new BaseElement(
-            element(by.xpath('//f8launcher-projectprogress-createapp-nextstep' +
-                '//*[contains(text(),\'' + name + '\')]' +
-                '//ancestor::*[contains(@class,\'pfng-list-content\')]' +
-                '//*[contains(@class,\'pficon-ok\')]')),
-            'OK Icon (' + name + ')'
-        );
+    private sectionElement = element(by.tagName('f8launcher-projectprogress-createapp-nextstep'));
+
+    async getSetupStatus(): Promise<SetupStatus> {
+        let statusElement = this.sectionElement.
+            element(by.className('card-pf-title-project-progress')).element(by.tagName('i'));
+        let classAttributeValue = await statusElement.getAttribute('class');
+        let status = SetupStatusUtils.getStatusfromClassAttribute(classAttributeValue);
+        return Promise.resolve(status);
+    }
+
+    async getSetupSteps(): Promise<SetupStep[]> {
+        let finders: ElementFinder[] = await this.sectionElement.all(by.className('list-pf-item'));
+        let steps: SetupStep[] = [];
+
+        for (let finder of finders) {
+            steps.push(new SetupStep(finder));
+        }
+
+        return Promise.resolve(steps);
     }
 
     async clickReturnToDashboard() {
