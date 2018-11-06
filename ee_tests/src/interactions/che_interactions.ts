@@ -54,7 +54,7 @@ export class CheInteractionsImpl implements CheInteractions {
         logger.info('Verify projects in Che');
         await browser.wait(
             async () => (await this.che.getProjects()).length === expectedProjects.length,
-            timeouts.DEFAULT_WAIT,
+            timeouts.LONGER_WAIT,
             'Number of projects in che'
         );
 
