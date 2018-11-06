@@ -166,17 +166,22 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
     }
 
     public async verifyCodebases(repoName: string): Promise<void> {
-        logger.info('Verify codebase ' + repoName);
-        let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
-        await browser.wait(async function () {
-            return (await codebasesCard.getCount()) === 1;
-        }, timeouts.DEFAULT_WAIT, 'Codebases are loaded');
-        expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
+        try {
+            logger.info('Verify codebase ' + repoName);
+            let codebasesCard = await this.spaceDashboardPage.getCodebaseCard();
+            await browser.wait(async function () {
+                return (await codebasesCard.getCount()) === 1;
+            }, timeouts.DEFAULT_WAIT, 'Codebases are loaded');
+            expect(await codebasesCard.getCount()).toBe(1, 'number of codebases on page');
 
-        let githubName = specContext.getGitHubUser();
-        let codebases = await codebasesCard.getCodebases();
-        expect(codebases.length).toBe(1, 'number of codebases');
-        expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + repoName);
+            let githubName = specContext.getGitHubUser();
+            let codebases = await codebasesCard.getCodebases();
+            expect(codebases.length).toBe(1, 'number of codebases');
+            expect(codebases[0]).toBe('https://github.com/' + githubName + '/' + repoName);
+        } catch (e) {
+            logger.error('Verify codebases failed ', e);
+            throw 'Verify codebases failed';
+        }
     }
 
     public async verifyPipelines(count: number): Promise<Pipeline[]> {
