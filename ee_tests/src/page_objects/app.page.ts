@@ -97,9 +97,9 @@ export class AppPage extends BasePage {
     logger.info('Space created');
 
     logger.info('Creating application from new codebase');
-    let wizard = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Create an Application'))));
-    await wizard.newQuickstartProjectByLauncher(templateName, spaceName, strategy);
+    let launcherInteractions = LauncherInteractionsFactory.create();
+    await launcherInteractions.createApplication(spaceName, new Quickstart(templateName), strategy);
     logger.info('Application created');
   }
 
@@ -135,4 +135,5 @@ export class AppPage extends BasePage {
 // UserProfilePage that inherts AppPage is created
 import { UserProfilePage } from './user_profile.page';
 import { UserSettingsPage } from './user_settings.page'; import { SpaceDashboardPage } from './space_dashboard.page';
-import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
+import { LauncherInteractionsFactory } from '../interactions/launcher_interactions';
+import { Quickstart } from '../support/quickstart';

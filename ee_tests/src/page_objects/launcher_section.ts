@@ -1,45 +1,16 @@
-import { by, By, ElementFinder } from 'protractor';
+import { by, ElementFinder } from 'protractor';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
-import { TextInput } from '../ui/text_input';
-import { LauncherImportAppPage } from './launcher_import_app.page';
-import { LauncherSetupAppPage } from './launcher_setup_app.page';
 
 export class LauncherSection extends BaseElement {
   nav = new BaseElement(this.$('.f8launcher-container_nav'));
   content = new BaseElement(this.$('.f8launcher-container_main'));
-  // optional
-  // footer = new BaseElement(this.content.$('.modal-footer'));
-
-  missionRuntimeContinueButton = new Button(
-    this.element(by.xpath('//f8launcher-missionruntime-createapp-step' +
-      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
-    'Mission&Runtime Continue'
-  );
-
-  releaseStrategyContinueButton = new Button(
-    this.element(by.xpath('//f8launcher-releasestrategy-createapp-step' +
-      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
-    'Pipeline Continue'
-  );
-
-  releaseStrategyImportContinueButton = new Button(
-    this.element(by.xpath('//f8launcher-releasestrategy-importapp-step' +
-      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
-    'Pipeline Continue'
-  );
 
   loginAndAuthorizeButton = new Button(
     this.element(by.xpath('//f8launcher-gitprovider-createapp-step' +
       '//*[contains(@class,\'f8launcher-authorize-account\')]')),
     'Log In & Authorize Account'
-  );
-
-  gitProviderContinueButton = new Button(
-    this.element(by.xpath('//f8launcher-gitprovider-createapp-step' +
-      '//*[@class=\'f8launcher-continue\']//*[contains(@class,\'btn\')]')),
-    'Git Provider Continue'
   );
 
   gitProviderImportContinueButton = new Button(
@@ -58,22 +29,6 @@ export class LauncherSection extends BaseElement {
     'Confirm Cancel Button'
   );
 
-  ghOrgSelect = new Button(
-    this.$('#ghOrg'),
-    'Select Github Organization'
-  );
-
-  ghRepositoryText = new TextInput(
-    this.$('#ghRepo'),
-    'Github Repository'
-  );
-
-  setUpApplicationButton = new Button(
-    this.element(
-      by.xpath('//*[contains(@class,\'btn\')][contains(text(),\'Set Up Application\')]')),
-    'Set Up Application'
-  );
-
   importApplicationButton = new Button(
     this.element(
       by.xpath('//*[contains(@class,\'btn\')][contains(text(),\'Import Application\')]')),
@@ -82,13 +37,6 @@ export class LauncherSection extends BaseElement {
 
   constructor(element: ElementFinder) {
     super(element, 'Ngx Launcher');
-  }
-
-  ghOrgItem(name: string): Button {
-    return new Button(
-      this.ghOrgSelect.element(by.xpath('./option[contains(text(),\'' + name + '\')]')),
-      'GitHub Organization'
-    );
   }
 
   pipelineCheckbox(index: number): Checkbox {
@@ -132,52 +80,5 @@ export class LauncherSection extends BaseElement {
     await this.ready();
     this.info('Opened');
     return this;
-  }
-
-  async selectRuntime(name: string) {
-    let selection = new Button(
-      this.element(by.xpath('//div[@class=\'list-group-item-heading\'][contains(text(),\'' + name + '\')]')),
-      'Select Runtime'
-    );
-    await selection.clickWhenReady();
-    this.info('Selected runtime: ' + name);
-  }
-
-  async selectMission(name: string) {
-    let selection = new Button(
-      this.element(By.xpath('//div[@class=\'list-group-item-heading\'][contains(text(),\'' + name + '\')]')),
-      'Select Mission'
-    );
-    await selection.clickWhenReady();
-    this.info('Selected mission: ' + name);
-  }
-
-  async selectPipeline(name: string) {
-    let selection = new Button(
-      this.element(by.xpath(
-        '//*[contains(@class,\'f8launcher-section-release-strategy\')]' +
-        '//*[contains(@class,\'list-view-pf-description\')]' +
-        '//span[last()]//*[@class=\'f8launcher-pipeline-stages--name\'][contains(text(),\'' + name + '\')]'
-      )),
-      'Select Pipeline'
-    );
-    await selection.clickWhenReady();
-    this.info('Selected pipeline: ' + name);
-  }
-
-  async selectGithubOrganization(name: string) {
-    await this.ghOrgSelect.clickWhenReady();
-    await this.ghOrgItem(name).clickWhenReady();
-    this.info('Selected GH Organization: ' + name);
-  }
-
-  async setUpApplication(): Promise<LauncherSetupAppPage> {
-    await this.setUpApplicationButton.clickWhenReady();
-    return new LauncherSetupAppPage(this.element(by.xpath('//f8launcher-projectprogress-createapp-nextstep')));
-  }
-
-  async importApplication(): Promise<LauncherImportAppPage> {
-    await this.importApplicationButton.clickWhenReady();
-    return new LauncherImportAppPage(this.element(by.xpath('//f8launcher-projectprogress-importapp-nextstep')));
   }
 }

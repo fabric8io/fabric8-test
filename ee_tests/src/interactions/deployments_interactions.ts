@@ -7,7 +7,7 @@ import {
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { MainDashboardPage } from '../page_objects/main_dashboard.page';
-import { PageOpenMode } from '../..';
+import { PageOpenMode } from '../page_objects/base.page';
 import { PipelinesInteractionsFactory } from './pipelines_interactions';
 import { browser } from 'protractor';
 
