@@ -10,6 +10,8 @@ import { DeployedApplicationInfo, Pipeline, SpaceDashboardPage } from '../page_o
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
+import { LauncherInteractionsFactory } from './launcher_interactions';
+import { Quickstart } from '../support/quickstart';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
@@ -44,7 +46,7 @@ export interface SpaceDashboardInteractions {
 
     openPlannerPage(): void;
 
-    createQuickstart(name: string, strategy: string): void;
+    createQuickstart(name: string, quickstart: Quickstart, strategy: string): void;
 
     importRepo(appName: string, repoName: string, strategy: string): void;
 
@@ -86,7 +88,7 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
 
     public abstract async openPlannerPage(): Promise<void>;
 
-    public abstract async createQuickstart(name: string, strategy: string): Promise<void>;
+    public abstract async createQuickstart(name: string, quickstart: Quickstart, strategy: string): Promise<void>;
 
     public abstract async importRepo(appName: string, repoName: string, strategy: string): Promise<void>;
 
@@ -153,16 +155,20 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         // planner is not yet released
     }
 
-    public async createQuickstart(name: string, strategy: string): Promise<void> {
+    public async createQuickstart(name: string, quickstart: Quickstart, strategy: string): Promise<void> {
         logger.info(`Create booster ${name} with strategy ${strategy}`);
-        let wizard = await this.spaceDashboardPage.addToSpace();
-        await wizard.newQuickstartProjectByLauncher(name, this.spaceName, strategy);
+        await this.spaceDashboardPage.addToSpace();
+
+        let launcherInteractions = LauncherInteractionsFactory.create();
+        await launcherInteractions.createApplication(name, quickstart, strategy);
     }
 
     public async importRepo(appName: string, repoName: string, strategy: string): Promise<void> {
         logger.info(`Import existing repository ${repoName} with strategy ${strategy}`);
-        let wizard = await this.spaceDashboardPage.addToSpace();
-        await wizard.importProjectByLauncher(appName, repoName, strategy);
+        await this.spaceDashboardPage.addToSpace();
+
+        let launcherInteractions = LauncherInteractionsFactory.create();
+        await launcherInteractions.importApplication(appName, repoName, strategy);
     }
 
     public async verifyCodebases(repoName: string): Promise<void> {

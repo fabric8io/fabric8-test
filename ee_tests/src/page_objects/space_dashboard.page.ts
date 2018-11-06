@@ -1,6 +1,5 @@
 import { $, browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { SpaceAppPage } from './space_app.page';
-import { AddToSpaceDialog } from './space_dashboard/add_to_space_dialog';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import { SpacePipelinePage } from './space_pipeline_tab.page';
@@ -14,12 +13,9 @@ export class SpaceDashboardPage extends SpaceAppPage {
     this.url = `${specContext.getUser()}/${spaceName}`;
   }
 
-  async addToSpace(): Promise<AddToSpaceDialog> {
+  async addToSpace(): Promise<void> {
     let addToSpaceButton = new Button($('#spacehome-pipelines-add-button'), 'Add to Space');
     await addToSpaceButton.clickWhenReady();
-
-    let wizard = new AddToSpaceDialog($('body > modal-container > div.modal-dialog'));
-    return wizard;
   }
 
   async getCodebaseCard(): Promise<CodebaseCard> {

@@ -7,7 +7,7 @@ import { SpaceDashboardInteractions, SpaceDashboardInteractionsFactory } from '.
 import { AppPage } from '../page_objects/app.page';
 import * as logger from '../support/logging';
 import { specContext } from '../support/spec_context';
-import { LandingPage } from '../..';
+import { LandingPage } from '../page_objects/landing.page';
 
 export abstract class AccountHomeInteractionsFactory {
 

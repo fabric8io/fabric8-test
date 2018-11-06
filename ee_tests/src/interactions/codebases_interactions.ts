@@ -2,7 +2,7 @@ import * as logger from '../support/logging';
 import { windowManager } from '../support/window_manager';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
-import { PageOpenMode } from '../..';
+import { PageOpenMode } from '../page_objects/base.page';
 
 export abstract class CodebasesInteractionsFactory {
 
