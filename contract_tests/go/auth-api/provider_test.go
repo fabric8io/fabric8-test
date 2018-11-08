@@ -13,6 +13,7 @@ import (
 
 	"github.com/pact-foundation/pact-go/dsl"
 	"github.com/pact-foundation/pact-go/types"
+	"github.com/pmacik/loginusers-go/config"
 	"github.com/pmacik/loginusers-go/loginusers"
 )
 
@@ -55,8 +56,10 @@ func TestAuthAPIProvider(t *testing.T) {
 		log.Fatalf("Error returning user")
 	}
 
+	loginUsersConfig := config.DefaultConfig()
+	loginUsersConfig.Auth.ServerAddress = pactProviderBaseURL
 	// Login user to get tokens
-	userTokens, err := loginusers.LoginUsersOAuth2(pactProviderBaseURL, userName, userPassword)
+	userTokens, err := loginusers.OAuth2(userName, userPassword, loginUsersConfig)
 	if err != nil {
 		log.Fatalf("Unable to login user: %s", err)
 		return
