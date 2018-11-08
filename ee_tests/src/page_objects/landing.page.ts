@@ -2,8 +2,6 @@ import { $ } from 'protractor';
 import { BasePage, PageOpenMode } from './base.page';
 import { LoginPage } from './login.page';
 import { Button } from '../ui/button';
-import * as logger from '../support/logging';
-import { specContext } from '../support/spec_context';
 
 export class LandingPage extends BasePage {
 
@@ -12,7 +10,6 @@ export class LandingPage extends BasePage {
 
   constructor(url: string = '') {
     super(url);
-    logger.info('OSIO url: ' + specContext.getOsioUrl());
   }
 
   async ready() {

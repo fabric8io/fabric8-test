@@ -1,6 +1,7 @@
 import { browser } from 'protractor';
 import { ReleaseStrategy } from './release_strategy';
 import { Quickstart } from './quickstart';
+import * as logger from './logging';
 
 class SpecContext {
 
@@ -69,6 +70,16 @@ class SpecContext {
 
     getGitHubUser(): string {
         return browser.params.github.username;
+    }
+
+    print(): void {
+        logger.info('User: ' + this.getUser());
+        logger.info('Password: ' + this.getPassword().replace(/./g, '*'));
+        logger.info('URL: ' + this.getOsioUrl());
+        logger.info('Release strategy: ' + this.getReleaseStrategy());
+        logger.info('Quickstart: ' + this.getQuickstart().name);
+        logger.info('GitHub user: ' + this.getGitHubUser());
+        logger.info('Environment reset enabled: ' + this.isEnvironmentResetEnabled());
     }
 }
 
