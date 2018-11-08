@@ -31,6 +31,7 @@ describe('e2e_smoketest', () => {
     logger.info('Before all');
     browser.ignoreSynchronization = true;
     browser.driver.manage().window().setSize(1920, 1080);
+    specContext.print();
     spaceName = newSpaceName();
     strategy = specContext.getReleaseStrategy();
     quickstart = specContext.getQuickstart();
