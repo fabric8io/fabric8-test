@@ -117,6 +117,12 @@ In the second terminal start the local Pact broker instance (will run at `http:/
 ./support/start-local-pact-broker.sh
 ```
 
+Create a Pact broker password file.
+
+```shell
+echo "changeme!!!" >> .pact-broker-password
+```
+
 Run the consumer side - expectations - and record a pact file. The pact file is published to the local Pact broker.
 
 ```shell
