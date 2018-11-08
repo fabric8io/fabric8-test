@@ -124,7 +124,7 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         expect(await summaryPage.getLocation()).toBe(specContext.getGitHubUser(), 'GitHub location');
         expect(await summaryPage.getRepository()).toBe(name, 'GitHub repository');
         await screenshotManager.save('launcher-summary');
-        await summaryPage.clickSetuUp();
+        await summaryPage.clickSetUp();
     }
 
     private async resultPageStep(): Promise<void> {
