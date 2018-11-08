@@ -11,18 +11,28 @@ function remove_container {
     fi
 }
 
+function archive_artifacts {
+    chmod 600 ../artifacts.key
+    chown root:root ../artifacts.key
+    rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+    echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+}
+
 function start_fabric8_ui {
     export UI_CONTAINER_NAME="ui-$JOB_NAME"
     remove_container "$UI_CONTAINER_NAME"
+    DIR="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
+    START_UI_LOG="$ARTIFACTS_DIR/start_fabric8_ui.log"
 
-    docker build -t "$UI_CONTAINER_NAME" -f ../../fabric8-ui/Dockerfile.builder ../../fabric8-ui
+    docker build -t "$UI_CONTAINER_NAME" -f "$DIR/../../fabric8-ui/Dockerfile.builder" \
+        "$DIR/../../fabric8-ui" | tee -a "$START_UI_LOG"
 
-    docker run --detach=true --name="$UI_CONTAINER_NAME" -t \
-        -v $(pwd)/dist:/dist:Z -P --network="host" "$UI_CONTAINER_NAME"
+    docker run --detach=true --name="$UI_CONTAINER_NAME" -t --network="host" \
+        -v $(pwd)/dist:/dist:Z -P  "$UI_CONTAINER_NAME" | tee -a "$START_UI_LOG"
 
-    docker exec "$UI_CONTAINER_NAME" npm install
+    docker exec "$UI_CONTAINER_NAME" npm install | tee -a "$START_UI_LOG"
 
-    docker exec "$UI_CONTAINER_NAME" /bin/bash -c "HOST=0.0.0.0 npm start" &
+    docker exec "$UI_CONTAINER_NAME" /bin/bash -c "HOST=0.0.0.0 npm start" | tee -a "$START_UI_LOG" &
 
     # Wait for fabric8-ui to compile all modules and start the server
     i=1
@@ -31,6 +41,9 @@ function start_fabric8_ui {
         if [ ! $? -eq 0 ]; then
             if [ $i -eq 5 ]; then
                 echo "Fabric8 UI did not start in more than 5 minutes"
+                archive_artifacts
+                echo "See http://artifacts.ci.centos.org/devtools/e2e/$START_UI_LOG for why Fabric8 UI did not start"
+                remove_container "$UI_CONTAINER_NAME"
                 return 5
             fi
             sleep 60
@@ -41,18 +54,8 @@ function start_fabric8_ui {
     done
 }
 
-function archive_artifacts {
-    chmod 600 ../artifacts.key
-    chown root:root ../artifacts.key
-    rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
-    echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
-}
-
 # Do not reveal secrets
 set +x
-
-# Do not exit on failure so that artifacts can be archived
-set +e
 
 # Source environment variables of the jenkins slave
 # that might interest this worker.
@@ -97,13 +100,11 @@ service docker start
 cp /tmp/jenkins-env .
 
 if [ ! -z $1 ]; then
-    start_fabric8_ui | tee "$ARTIFACTS_DIR/start_fabric8_ui.log"
-    if [ ! $? -eq 0 ]; then
-        archive_artifacts
-        remove_container "$UI_CONTAINER_NAME"
-        exit 5
-    fi
+    start_fabric8_ui
 fi
+
+# Do not exit on failure so that artifacts can be archived
+set +e
 
 TEST_IMAGE="fabric8-test"
 REPOSITORY="fabric8io"
