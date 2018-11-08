@@ -156,12 +156,12 @@ export class SummaryPage {
         return this.getLabeledValue('Repository');
     }
 
-    async clickSetuUp(): Promise<void> {
-        return this.clickProjectSumamryButton('Set Up Application');
+    async clickSetUp(): Promise<void> {
+        await this.clickProjectSummaryButton('Set Up Application');
     }
 
     async clickImport(): Promise<void> {
-        return this.clickProjectSumamryButton('Import Application');
+        await this.clickProjectSummaryButton('Import Application');
     }
 
     private async getLabeledInputValue(label: string): Promise<string> {
@@ -186,7 +186,7 @@ export class SummaryPage {
         return parentElement.element(by.css(siblingCSS));
     }
 
-    private async clickProjectSumamryButton(description: string): Promise<void> {
+    private async clickProjectSummaryButton(description: string): Promise<void> {
         let projectSummaryButton = new Button(
             this.sectionElement.element(by.id('ProjectSummary')).element(by.tagName('button')),
             description
