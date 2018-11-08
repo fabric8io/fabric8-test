@@ -1,5 +1,5 @@
 import { AppPage } from './app.page';
-import { SpaceHeader } from './app/spaceHeader';
+import { SpaceHeader } from './app/space_header';
 
 export abstract class SpaceAppPage extends AppPage {
 
