@@ -44,7 +44,7 @@ function start_fabric8_ui {
                 archive_artifacts
                 echo "See http://artifacts.ci.centos.org/devtools/e2e/$START_UI_LOG for why Fabric8 UI did not start"
                 remove_container "$UI_CONTAINER_NAME"
-                return 5
+                exit 5
             fi
             sleep 60
             ((i++))
