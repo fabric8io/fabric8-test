@@ -70,7 +70,7 @@ describe('e2e_che_integration', () => {
   it('create_workspace', async () => {
     logger.info('--- Create workspace from new codebase in space ' + spaceName + ' ---');
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
+    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart, strategy);
 
     let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
     await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
