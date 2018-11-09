@@ -102,10 +102,10 @@ export class AnalyticsCard extends BaseElement {
   async ready() {
     await super.ready();
     await browser.wait(until.stalenessOf(this.element(by.cssContainingText('h3', 'No results found'))),
-      timeouts.DEFAULT_WAIT, 'Staleness of element with text "No results found" (meaning that the analytics report ' +
-      'on space dashboard was not generated, could be caused by ' +
-      'https://github.com/openshiftio/openshift.io/issues/4399 or ' +
-      'https://github.com/openshiftio/openshift.io/issues/3744)');
+      timeouts.DEFAULT_WAIT, 'Staleness of element with text "No results found" which means that the analytics ' +
+      'report on space dashboard was not generated, could be caused by overloaded analytics service ' +
+      '(SLA 30 minutes) or by missing annotation "fabric8.io/bayesian.analysisUrl" ' +
+      '(check oc-jenkins-logs.txt)');
     await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
       timeouts.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner (meaning that the ' +
       'analytics report on space dashboard is still loading)');
