@@ -8,6 +8,7 @@ import { AppPage } from '../page_objects/app.page';
 import * as logger from '../support/logging';
 import { specContext } from '../support/spec_context';
 import { LandingPage } from '../page_objects/landing.page';
+import { Quickstart } from '../support/quickstart';
 
 export abstract class AccountHomeInteractionsFactory {
 
@@ -31,7 +32,7 @@ export interface AccountHomeInteractions {
 
     createSpace(name: string): void;
 
-    createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): void;
+    createSpaceWithNewCodebase(spaceName: string, quickstart: Quickstart, strategy: string): void;
 
     resetEnvironment(): void;
 
@@ -59,9 +60,11 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         await this.appPage.createNewSpaceByLauncher(name);
     }
 
-    public async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string): Promise<void> {
-        logger.info(`Create space ${spaceName} from booster ${templateName} with release strategy ${strategy}`);
-        await this.appPage.createSpaceWithNewCodebase(spaceName, templateName, strategy);
+    public async createSpaceWithNewCodebase(spaceName: string, quickstart: Quickstart,
+        strategy: string): Promise<void> {
+
+        logger.info(`Create space ${spaceName} from booster ${quickstart.name} with release strategy ${strategy}`);
+        await this.appPage.createSpaceWithNewCodebase(spaceName, quickstart, strategy);
 
         let spaceDashboardInteractions: SpaceDashboardInteractions =
             SpaceDashboardInteractionsFactory.create(strategy, spaceName);

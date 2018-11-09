@@ -88,7 +88,7 @@ export class AppPage extends BasePage {
     return spaceDashboard;
   }
 
-  async createSpaceWithNewCodebase(spaceName: string, templateName: string, strategy: string) {
+  async createSpaceWithNewCodebase(spaceName: string, quickstart: Quickstart, strategy: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
     logger.info('Creating space');
@@ -99,7 +99,7 @@ export class AppPage extends BasePage {
     logger.info('Creating application from new codebase');
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Create an Application'))));
     let launcherInteractions = LauncherInteractionsFactory.create();
-    await launcherInteractions.createApplication(spaceName, new Quickstart(templateName), strategy);
+    await launcherInteractions.createApplication(spaceName, quickstart, strategy);
     logger.info('Application created');
   }
 

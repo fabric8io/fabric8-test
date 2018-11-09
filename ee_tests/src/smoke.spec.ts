@@ -74,7 +74,7 @@ describe('e2e_smoketest', () => {
   it('create_space_new_codebase', async () => {
     logger.specTitle('Create space with new codebase ' + spaceName);
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart.name, strategy);
+    await accountHomeInteractions.createSpaceWithNewCodebase(spaceName, quickstart, strategy);
   });
 
   it('run_che', async () => {
