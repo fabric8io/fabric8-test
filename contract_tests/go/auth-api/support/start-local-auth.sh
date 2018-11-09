@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 export GOPATH="$(pwd)/local-gopath"
 mkdir -p "$GOPATH"
 
