@@ -2,5 +2,6 @@ config/config.sh
 log
 logs
 pacts
+local-gopath
 
 .pact-broker-password*

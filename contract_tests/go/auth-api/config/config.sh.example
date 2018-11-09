@@ -12,7 +12,7 @@ export PACT_VERSION="${PACT_VERSION:-1.0.0}"
 
 # A Pact broker to store and share pact files.
 #export PACT_BROKER_URL="${PACT_BROKER_URL:-http://pact-broker-pact-broker.193b.starter-ca-central-1.openshiftapps.com}"
-export PACT_BROKER_URL="${PACT_BROKER_URL:-htto://localhost:8090}"
+export PACT_BROKER_URL="${PACT_BROKER_URL:-http://localhost:8090}"
 
 export PACT_BROKER_USERNAME="${PACT_BROKER_USERNAME:-pact_broker}"
 if [ -z "$PACT_BROKER_PASSWORD" ]; then
