@@ -42,7 +42,7 @@ function start_fabric8_ui {
             if [ $i -eq 5 ]; then
                 echo "Fabric8 UI did not start in more than 5 minutes"
                 archive_artifacts
-                echo "See http://artifacts.ci.centos.org/devtools/e2e/$START_UI_LOG for why Fabric8 UI did not start"
+                echo "See http://artifacts.ci.centos.org/devtools/$START_UI_LOG for why Fabric8 UI did not start"
                 remove_container "$UI_CONTAINER_NAME"
                 exit 5
             fi
