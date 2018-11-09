@@ -216,8 +216,8 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await browser.wait(async function () {
             return (await pipeline.getStages()).length > 0;
         }, timeouts.LONGER_WAIT, 'Stages did not start (meaning that Jenkins was probably unidled but the job ' +
-        'did not start, could be caused by https://github.com/openshiftio/openshift.io/issues/4020, ' +
-            'check pipeline-failed.png and jenkins-log-failed.png)');
+        'did not start). Check jenkins pod (if it exists, how long it exists, its state) ' +
+        'and events in oc-jenkins-logs.txt.');
     }
 
     protected async waitForStageToFinish(
@@ -259,9 +259,8 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await pipeline.viewLog();
         await windowManager.switchToNewWindow();
         await browser.wait(until.presenceOf(element(by.cssContainingText('pre', 'Finished:'))),
-            timeouts.LONG_WAIT, 'Jenkins log does not indicate finished job (could be caused by ' +
-            'https://github.com/openshiftio/openshift.io/issues/4180, ' +
-            'check screnshot jenkins-log-failed.png)');
+            timeouts.LONG_WAIT, 'Jenkins log does not indicate finished job ' +
+            '(check screnshot jenkins-log-failed.png)');
         await screenshotManager.save('jenkins-log');
     }
 
