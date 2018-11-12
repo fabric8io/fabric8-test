@@ -16,7 +16,7 @@ import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 import { BuildStatus } from './support/build_status';
 import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
-import * as runner from  './support/script_runner';
+import * as runner from './support/script_runner';
 import { PlannerInteractionsFactory } from './interactions/planner_interactions';
 import { CheInteractionsFactory } from './interactions/che_interactions';
 
@@ -94,7 +94,9 @@ describe('e2e_smoketest', () => {
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
       logger.debug('Selected workspace: ' + await codebasesInteractions.getSelectedWorkspace());
     } finally {
-      await runOCScript('che', 'oc-che-logs');
+      let accountHomeInteractions = AccountHomeInteractionsFactory.create();
+      await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
+      await runOCScript('che', 'oc-che-logs', await accountHomeInteractions.getToken());
     }
   });
 
@@ -140,7 +142,7 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.verifyDeployedApplicationStage(
       deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyDeployedApplicationRun(
-        deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
+      deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyWorkItems();
   });
 
@@ -156,13 +158,13 @@ describe('e2e_smoketest', () => {
   });
 });
 
-async function runOCScript(project: string, outputFile: string) {
+async function runOCScript(project: string, outputFile: string, token = '') {
   try {
     logger.info(`Save OC ${project} pod log`);
     await runner.runScript(
       '.', // working directory
       './oc-get-project-logs.sh', // script
-      [specContext.getUser(), specContext.getPassword(), project], // params
+      [specContext.getUser(), specContext.getPassword(), project, token], // params
       `./target/screenshots/${outputFile}.txt`,  // output file
       false,
       timeouts.LONGER_WAIT
