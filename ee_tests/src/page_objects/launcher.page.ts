@@ -3,6 +3,7 @@ import { browser, by, element, ElementFinder, until } from 'protractor';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import * as timeouts from '../support/timeouts';
+import { specContext } from '../support/spec_context';
 
 export class CreateApplicationPage {
 
@@ -38,11 +39,12 @@ export class CreateApplicationPage {
 
 export class SelectMissionAndRuntimePage {
 
-    private sectionElement = element(by.tagName('f8launcher-missionruntime-createapp-step'));
+    private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-missionruntime-step')) :
+        element(by.tagName('f8launcher-missionruntime-createapp-step'));
 
     async selectMission(name: string) {
         let selection = new Button(
-            this.sectionElement.element(by.cssContainingText('div[class="list-group-item-heading"]', name)),
+            this.sectionElement.element(by.cssContainingText('div.list-group-item-heading', name)),
             'Select Mission'
         );
         await selection.clickWhenReady();
@@ -50,7 +52,7 @@ export class SelectMissionAndRuntimePage {
 
     async selectRuntime(name: string) {
         let selection = new Button(
-            this.sectionElement.element(by.cssContainingText('div[class="list-group-item-heading"]', name)),
+            this.sectionElement.element(by.cssContainingText('div.list-group-item-heading', name)),
             'Select Runtime'
         );
         await selection.clickWhenReady();
@@ -58,7 +60,7 @@ export class SelectMissionAndRuntimePage {
 
     async clickContinue(): Promise<void> {
         let continueButton = new Button(
-            this.sectionElement.element(by.className('f8launcher-continue')).element(by.tagName('button')),
+            this.sectionElement.element(by.css('.f8launcher-continue button')),
             'Mission&Runtime Continue'
         );
         await continueButton.clickWhenReady();
@@ -67,7 +69,8 @@ export class SelectMissionAndRuntimePage {
 
 export class SelectPipelinePage {
 
-    private sectionElement = element(by.tagName('f8launcher-releasestrategy-createapp-step'));
+    private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-releasestrategy-step')) :
+        element(by.tagName('f8launcher-releasestrategy-createapp-step'));
 
     async selectPipeline(name: string) {
         let pipelines: ElementFinder[] = await this.sectionElement.all(by.className('list-view-pf-description'));
@@ -91,7 +94,8 @@ export class SelectPipelinePage {
 
 export class AuthorizeGitPage {
 
-    private sectionElement = element(by.tagName('f8launcher-gitprovider-createapp-step'));
+    private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-gitprovider-step')) :
+        element(by.tagName('f8launcher-gitprovider-createapp-step'));
 
     async selectLocation(name: string) {
         let locationCombo = new Button(this.sectionElement.element(by.id('ghOrg')), 'GitHub Organization Combo');
@@ -121,7 +125,8 @@ export class AuthorizeGitPage {
 
 export class SummaryPage {
 
-    private sectionElement = element(by.tagName('f8launcher-projectsummary-createapp-step'));
+    private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-projectsummary-step')) :
+        element(by.tagName('f8launcher-projectsummary-createapp-step'));
 
     async getMission(): Promise<string> {
         return this.getSiblingElement('h2', 'Mission', '../..', 'div > b').getText();
@@ -177,10 +182,10 @@ export class SummaryPage {
     }
 
     private getSiblingElement(
-            selectedTag: string,
-            selectedValue: string,
-            parentXPath: string,
-            siblingCSS: string): ElementFinder {
+        selectedTag: string,
+        selectedValue: string,
+        parentXPath: string,
+        siblingCSS: string): ElementFinder {
         let selectedElement = this.sectionElement.element(by.cssContainingText(selectedTag, selectedValue));
         let parentElement = selectedElement.element(by.xpath(parentXPath));
         return parentElement.element(by.css(siblingCSS));
@@ -188,8 +193,7 @@ export class SummaryPage {
 
     private async clickProjectSummaryButton(description: string): Promise<void> {
         let projectSummaryButton = new Button(
-            this.sectionElement.element(by.id('ProjectSummary')).element(by.tagName('button')),
-            description
+            this.sectionElement.element(by.css('#ProjectSummary button')), description
         );
         await projectSummaryButton.clickWhenReady();
         await browser.wait(until.stalenessOf(projectSummaryButton), timeouts.DEFAULT_WAIT, 'Staleness of button');
@@ -239,11 +243,10 @@ export class SetupStep {
 
 export class ResultsPage {
 
-    private sectionElement = element(by.tagName('f8launcher-projectprogress-createapp-nextstep'));
+    private sectionElement = element(by.tagName('f8launcher-projectprogress-nextstep'));
 
     async getSetupStatus(): Promise<SetupStatus> {
-        let statusElement = this.sectionElement.
-            element(by.className('card-pf-title-project-progress')).element(by.tagName('i'));
+        let statusElement = this.sectionElement.element(by.css('.card-pf-title-project-progress i'));
         let classAttributeValue = await statusElement.getAttribute('class');
         let status = SetupStatusUtils.getStatusfromClassAttribute(classAttributeValue);
         return Promise.resolve(status);
@@ -261,9 +264,10 @@ export class ResultsPage {
     }
 
     async clickReturnToDashboard() {
+        const label = specContext.isProdPreview() ? 'Return to your Dashboard' : 'Return to your dashboard';
+
         let returnToDashboardButton = new Button(
-            element(by.cssContainingText('button', 'Return to your dashboard')),
-            'Return to your dashboard'
+            element(by.cssContainingText('button', label)), label
         );
         await returnToDashboardButton.clickWhenReady();
     }
