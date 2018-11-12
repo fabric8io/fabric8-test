@@ -3,7 +3,8 @@
 # Script for retrieving information from Openshift using oc commands                   #
 # $1 - username                                                                        #
 # $2 - password                                                                        #
-# $3 - project suffex (e.g. che, jenkins)                                              #
+# $3 - project suffix (e.g. che, jenkins)                                              #
+# $4 - JWT token                                                                       #
 ########################################################################################
 
 # stop the script when any command fails
@@ -13,8 +14,10 @@ echo ---------- Get cluster for user --------------------
 
 if [[ $1 = *"preview"* ]]; then
   API_SERVER_URL="https://api.prod-preview.openshift.io"
+  CHE_SERVER_URL="https://che.prod-preview.openshift.io"
 else
   API_SERVER_URL="https://api.openshift.io"
+  CHE_SERVER_URL="https://che.openshift.io"
 fi
 
 OC_CLUSTER_URL=$(curl -s -X GET --header 'Accept: application/json' "$API_SERVER_URL/api/users?filter\\[username\\]=$1" | jq '.data[0].attributes.cluster')
@@ -40,8 +43,7 @@ echo ---------- Get events ---------------
 echo "oc get events --sort-by='.lastTimestamp'"
 oc get events --sort-by='.lastTimestamp'
 
-if [ "$3" == "jenkins" ]
-then
+if [ "$3" == "jenkins" ]; then
   echo ---------- Jenkins version -------------------------
   echo "oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.version deploymentconfigs"
   oc get -o custom-columns=NAME:.metadata.name,LABELS_VERSION:.metadata.labels.version deploymentconfigs
@@ -60,6 +62,17 @@ then
     echo "oc logs" $POD_NAMES
     oc logs $POD_NAMES
   fi
+fi
+
+if [ "$3" == "che" ] && [ ! -z "$4" ]; then
+  echo ---------- Get the list of workspaces ----------
+  echo "\$(curl -s -X GET --header 'Accept: application/json' --header 'Authorization: Bearer <token>' \
+    $CHE_SERVER_URL/api/workspace?maxItems=1000)"
+  RESPONSE=$(curl -s -X GET --header "Accept: application/json" --header "Authorization: Bearer $4" \
+    "$CHE_SERVER_URL/api/workspace?maxItems=1000")
+  echo "Number of existing workspaces: $(echo $RESPONSE | jq '. | length')"
+  echo "List of existing workspaces:"
+  echo $RESPONSE | jq '.[] | {workspace_name: .config.name, project_name: .config.projects[].name}'
 fi
 
 echo ---------- Get build name ----------------
