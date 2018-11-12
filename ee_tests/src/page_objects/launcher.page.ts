@@ -1,5 +1,5 @@
 import { TextInput } from '../ui/text_input';
-import { browser, by, element, ElementFinder, until } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import * as timeouts from '../support/timeouts';
