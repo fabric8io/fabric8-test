@@ -243,7 +243,8 @@ export class SetupStep {
 
 export class ResultsPage {
 
-    private sectionElement = element(by.tagName('f8launcher-projectprogress-nextstep'));
+    private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-projectprogress-nextstep')) :
+    element(by.tagName('f8launcher-projectprogress-createapp-nextstep'));
 
     async getSetupStatus(): Promise<SetupStatus> {
         let statusElement = this.sectionElement.element(by.css('.card-pf-title-project-progress i'));
