@@ -93,7 +93,7 @@ func TestAuthAPIProvider(t *testing.T) {
 
 	pactContent := string(responseBody)
 	//log.Printf("Pact taken from broker:\n%s\n", pactContent)
-	pactContent = strings.Replace(pactContent, TestUserName, user.Data.Attributes.Username, -1)
+	pactContent = strings.Replace(pactContent, TestUserName, userName, -1)
 	pactContent = strings.Replace(pactContent, TestUserID, user.Data.ID, -1)
 	pactContent = strings.Replace(pactContent, TestJWSToken, userTokens.AccessToken, -1)
 	//log.Printf("Pact filtered:\n%s\n", pactContent)
