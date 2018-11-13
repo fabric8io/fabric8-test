@@ -30,6 +30,7 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         strategy = specContext.getReleaseStrategy().toString()): Promise<void> {
 
         logger.info('Create new application with name ' + name);
+        await screenshotManager.save('create-app');
         await this.createApplicationStep(name, true);
 
         logger.info(`Select mission ${quickstart.mission.name} and runtime ${quickstart.runtime.name}`);
