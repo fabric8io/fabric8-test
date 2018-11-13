@@ -196,7 +196,8 @@ export class SummaryPage {
             this.sectionElement.element(by.css('#ProjectSummary button')), description
         );
         await projectSummaryButton.clickWhenReady();
-        await browser.wait(until.stalenessOf(projectSummaryButton), timeouts.DEFAULT_WAIT, 'Staleness of button');
+        await browser.wait(until.invisibilityOf(projectSummaryButton), timeouts.DEFAULT_WAIT,
+            'Project summary button is still visible');
     }
 }
 
@@ -244,11 +245,13 @@ export class SetupStep {
 export class ResultsPage {
 
     private sectionElement = specContext.isProdPreview() ? element(by.tagName('f8launcher-projectprogress-nextstep')) :
-    element(by.tagName('f8launcher-projectprogress-createapp-nextstep'));
+        element(by.tagName('f8launcher-projectprogress-createapp-nextstep'));
 
     async getSetupStatus(): Promise<SetupStatus> {
-        let statusElement = this.sectionElement.element(by.css('.card-pf-title-project-progress i'));
-        let classAttributeValue = await statusElement.getAttribute('class');
+        let statusElementWrapper = this.sectionElement.element(by.css('.card-pf-title-project-progress'));
+        await browser.wait(until.visibilityOf(
+            statusElementWrapper), timeouts.DEFAULT_WAIT, 'Progress element is not visible');
+        let classAttributeValue = await statusElementWrapper.element(by.tagName('i')).getAttribute('class');
         let status = SetupStatusUtils.getStatusfromClassAttribute(classAttributeValue);
         return Promise.resolve(status);
     }
