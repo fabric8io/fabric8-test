@@ -111,6 +111,15 @@ In one terminal start the local auth service instance (the tested provider) (wil
 ./support/start-local-auth.sh
 ```
 
+> NOTE: It is possible that you encounter `too many open files` error.
+>       To solve it, you can increase the limits in your system by running the following.
+> ```bash
+> sudo echo "* hard nofile 999999" >> /etc/security/limits.conf
+> sudo echo "* soft nofile 999999" >> /etc/security/limits.conf
+> sudo echo "fs.inotify.max_user_watches=65536" >> /etc/sysctl.conf
+> sudo echo "fs.inotify.max_user_instances=2048" >> /etc/sysctl.conf
+> ```
+
 In the second terminal start the local Pact broker instance (will run at `http://localhost:8090`)
 
 ```shell
