@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  auth_db:
+    image: registry.centos.org/postgresql/postgresql:9.6
+    healthcheck:
+      test: psql postgres --command "select 1" -U postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRESQL_ADMIN_PASSWORD: mysecretpassword
+    networks:
+      - default
+
+  auth_app:
+    image: fabric8-services/fabric8-auth:latest
+    command: -config /usr/local/auth/etc/config.yaml
+    environment:
+      AUTH_POSTGRES_HOST: auth_db
+      AUTH_POSTGRES_PORT: 5432
+      AUTH_DEVELOPER_MODE_ENABLED: "true"
+    ports:
+      - "8089:8089"
+    networks:
+      - default
+    depends_on:
+      - auth_db
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
