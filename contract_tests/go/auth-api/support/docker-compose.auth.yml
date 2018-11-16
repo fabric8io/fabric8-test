@@ -6,14 +6,14 @@ services:
     healthcheck:
       test: psql postgres --command "select 1" -U postgres
     ports:
-      - "5434:5432"
+      - "5433:5432"
     environment:
       POSTGRESQL_ADMIN_PASSWORD: mysecretpassword
     networks:
       - default
 
   auth_app:
-    image: fabric8-services/fabric8-auth:latest
+    image: quay.io/openshiftio/fabric8-services-fabric8-auth:latest
     command: -config /usr/local/auth/etc/config.yaml
     environment:
       AUTH_POSTGRES_HOST: auth_db

@@ -6,7 +6,7 @@ services:
     healthcheck:
       test: psql postgres --command "select 1" -U postgres
     ports:
-      - "5433:5432"
+      - "5435:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
