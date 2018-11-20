@@ -19,6 +19,7 @@ import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
 import * as runner from './support/script_runner';
 import { PlannerInteractionsFactory } from './interactions/planner_interactions';
 import { CheInteractionsFactory } from './interactions/che_interactions';
+import { windowManager } from './support/window_manager';
 
 describe('e2e_smoketest', () => {
 
@@ -94,6 +95,7 @@ describe('e2e_smoketest', () => {
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
       logger.debug('Selected workspace: ' + await codebasesInteractions.getSelectedWorkspace());
     } finally {
+      await windowManager.closeAllWindows();
       let accountHomeInteractions = AccountHomeInteractionsFactory.create();
       await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
       await runOCScript('che', 'oc-che-logs', await accountHomeInteractions.getToken());
