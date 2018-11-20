@@ -131,7 +131,15 @@ class LauncherInteractionsImpl implements LauncherInteractions {
     private async resultPageStep(): Promise<void> {
         let resultPage = new ResultsPage();
         await browser.wait(
-            async () => await resultPage.getSetupStatus() !== SetupStatus.IN_PROGRESS,
+            async () => {
+                try {
+                    let isInProgress = (await resultPage.getSetupStatus()) === SetupStatus.IN_PROGRESS;
+                    return !isInProgress;
+                } catch (e) {
+                    logger.debug('Retrieving of result page status failed, retrying' + e);
+                    return false;
+                }
+            },
             timeouts.LONGER_WAIT,
             'Setup is finished');
 
