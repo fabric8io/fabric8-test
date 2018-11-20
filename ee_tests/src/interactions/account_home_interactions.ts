@@ -75,7 +75,7 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
     public async resetEnvironment(): Promise<void> {
         logger.info('Reset environment');
         let cleanupEnvPage = new CleanupUserEnvPage();
-        cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
+        await cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(specContext.getUser());
     }
 
