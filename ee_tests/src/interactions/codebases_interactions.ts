@@ -72,9 +72,9 @@ class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
     }
 
     public async createAndOpenWorkspace(): Promise<string> {
-        let workspacePromise = this.createWorkspace();
+        let workspace = await this.createWorkspace();
         await this.page.openWorkspace();
         await windowManager.switchToNewWindow();
-        return workspacePromise;
+        return Promise.resolve(workspace);
     }
 }
