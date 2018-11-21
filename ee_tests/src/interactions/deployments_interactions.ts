@@ -200,16 +200,16 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
         expect(stageDataItems.length).toBe(2, `there should be 2 resource usage data items for ${environmentName}`);
 
         let cpu = stageDataItems[0];
-        expect(cpu.getActualValue()).
+        expect(await cpu.getActualValue()).
             toBeGreaterThan(0, `the cpu usage data should be > 0 for ${environmentName}`);
-        expect(cpu.getActualValue()).
+        expect(await cpu.getActualValue()).
             toBeLessThanOrEqual(cpu.getMaximumValue(),
                 `the cpu usage data should to be <= to maximum for ${environmentName}`);
 
         let memory = stageDataItems[1];
-        expect(memory.getActualValue()).
+        expect(await memory.getActualValue()).
             toBeGreaterThan(0, `the memory usage data should be > 0 for ${environmentName}`);
-        expect(memory.getActualValue()).
+        expect(await memory.getActualValue()).
             toBeLessThanOrEqual(memory.getMaximumValue(),
                 `the memory usage data should to be <= to maximum for ${environmentName}`);
     }
