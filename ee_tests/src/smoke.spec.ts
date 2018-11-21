@@ -143,6 +143,9 @@ describe('e2e_smoketest', () => {
     await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
     await dashboardInteractions.verifyDeployedApplicationStage(
       deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
+
+    deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
+    deployedApplication = deployedApplications[0];
     await dashboardInteractions.verifyDeployedApplicationRun(
       deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
     await dashboardInteractions.verifyWorkItems();

@@ -188,7 +188,7 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         logger.info('Verify pipeline build stages');
 
         let stages = await pipeline.getStages();
-        this.verifyBuildStagesInternal(stages);
+        await this.verifyBuildStagesInternal(stages);
     }
 
     protected abstract async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void>;
@@ -310,6 +310,7 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
     }
 
     protected async verifyBuildStage(stages: PipelineStage[], index: number, name: string) {
+        logger.info(`Verify stage ${name}`);
         expect(await stages[index].getName()).toBe(name, 'stage name');
         expect(await stages[index].getStatus()).toBe(BuildStageStatus.SUCCESS, 'stage status');
     }

@@ -23,15 +23,15 @@ export class ProfileDropdown extends Dropdown {
   }
 
   async selectProfile() {
-    super.select('Profile');
+    await super.select('Profile');
   }
 
   async selectSettings() {
-    super.select('Settings');
+    await super.select('Settings');
   }
 
   async selectLogOut() {
-    super.select('Log Out');
+    await super.select('Log Out');
   }
 }
 
@@ -42,10 +42,10 @@ export class RecentItemsDropdown extends Dropdown {
   }
 
   async selectAccountHome() {
-    super.select('Home');
+    await super.select('Home');
   }
 
   async selectCreateSpace() {
-    super.select('Create Space');
+    await super.select('Create Space');
   }
 }
