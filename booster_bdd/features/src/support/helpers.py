@@ -403,3 +403,7 @@ def delete_space(spaceid=None):
         url = constants.launch_detail.create_url(api)
         r = req.delete(url, headers=constants.request_detail.headers_default)
         return r
+
+
+def report_dir():
+    return os.getenv("REPORT_DIR")
