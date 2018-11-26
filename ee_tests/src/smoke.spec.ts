@@ -94,8 +94,10 @@ describe('e2e_smoketest', () => {
       let workspaces = await codebasesInteractions.getWorkspaces();
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
       logger.debug('Selected workspace: ' + await codebasesInteractions.getSelectedWorkspace());
-    } finally {
+    } catch (e) {
+      await screenshotManager.save('che-failed');
       await windowManager.closeAllWindows();
+    } finally {
       let accountHomeInteractions = AccountHomeInteractionsFactory.create();
       await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
       await runOCScript('che', 'oc-che-logs', await accountHomeInteractions.getToken());
