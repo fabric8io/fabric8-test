@@ -46,8 +46,6 @@ fi
 
 # Assign default values if not defined in Jenkins job
 
-export ARTIFACTS_DIR=bdd/${JOB_NAME}/${BUILD_NUMBER}
-
 # Endpoints
 ## Main URI
 export SERVER_ADDRESS="${SERVER_ADDRESS:-https://openshift.io}"
@@ -108,91 +106,98 @@ export ZABBIX_HOST="${ZABBIX_HOST:-qa_openshift.io}"
 
 export ZABBIX_METRIC_PREFIX="${ZABBIX_METRIC_PREFIX:-booster-bdd.$SCENARIO}"
 
-# If report dir did exist, remove artifacts from previous run
-rm -rf "$REPORT_DIR"
-mkdir -p "$REPORT_DIR"
-
-# We need to disable selinux for now
-/usr/sbin/setenforce 0
-yum -y install docker 
-service docker start
-
-export CONTAINER_NAME="fabric8-booster-test"
-
-# Shutdown container if running
-if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
-    docker rm -f "$CONTAINER_NAME"
-fi
-
-# Build builder image
-cp /tmp/jenkins-env .
-docker build -t $CONTAINER_NAME:latest -f Dockerfile.builder .
-
-# Run and setup Docker image
-docker run -it --shm-size=256m --detach=true --name="$CONTAINER_NAME" --cap-add=SYS_ADMIN \
-          -e SCENARIO \
-          -e SERVER_ADDRESS \
-          -e FORGE_API \
-          -e WIT_API \
-          -e AUTH_API \
-          -e OSIO_USERNAME \
-          -e OSIO_PASSWORD \
-          -e OSIO_DANGER_ZONE \
-          -e PIPELINE \
-          -e BOOSTER_MISSION \
-          -e BOOSTER_RUNTIME \
-          -e BLANK_BOOSTER \
-          -e GIT_REPO \
-          -e PROJECT_NAME \
-          -e AUTH_CLIENT_ID \
-          -e REPORT_DIR \
-          -e UI_HEADLESS \
-          -e ZABBIX_SERVER \
-          -e ZABBIX_HOST \
-          -e ZABBIX_METRIC_PREFIX \
-          -t -v /etc/localtime:/etc/localtime:ro "$CONTAINER_NAME:latest" /bin/bash
-
-# Start Xvfb
-docker exec "$CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
-
-# Exec booster tests
+export ARTIFACTS_DIR="bdd/${JOB_NAME}/${BUILD_NUMBER}"
 mkdir -p "$ARTIFACTS_DIR"
-docker exec "$CONTAINER_NAME" ./run.sh 2>&1 | tee "$ARTIFACTS_DIR/test.log"
 
-if [ "${ZABBIX_ENABLED,,}" = true ] ; then
-    docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
-fi
+export TEST_LOG="$ARTIFACTS_DIR/test.log"
 
-# Test results to archive
-docker cp "$CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR"
+echo "Running the test while redirecting the output to $TEST_LOG ..."
+
+{ ## output only to $TEST_LOG
+  # If report dir did exist, remove artifacts from previous run
+  rm -rf "$REPORT_DIR"
+  mkdir -p "$REPORT_DIR"
+
+  # We need to disable selinux for now
+  /usr/sbin/setenforce 0
+  yum -y install docker 
+  service docker start
+
+  export CONTAINER_NAME="fabric8-booster-test"
+
+  # Shutdown container if running
+  if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
+      docker rm -f "$CONTAINER_NAME"
+  fi
+
+  # Build builder image
+  cp /tmp/jenkins-env .
+  docker build -t $CONTAINER_NAME:latest -f Dockerfile.builder .
+
+  # Run and setup Docker image
+  docker run -it --shm-size=256m --detach=true --name="$CONTAINER_NAME" --cap-add=SYS_ADMIN \
+            -e SCENARIO \
+            -e SERVER_ADDRESS \
+            -e FORGE_API \
+            -e WIT_API \
+            -e AUTH_API \
+            -e OSIO_USERNAME \
+            -e OSIO_PASSWORD \
+            -e OSIO_DANGER_ZONE \
+            -e PIPELINE \
+            -e BOOSTER_MISSION \
+            -e BOOSTER_RUNTIME \
+            -e BLANK_BOOSTER \
+            -e GIT_REPO \
+            -e PROJECT_NAME \
+            -e AUTH_CLIENT_ID \
+            -e REPORT_DIR \
+            -e UI_HEADLESS \
+            -e ZABBIX_SERVER \
+            -e ZABBIX_HOST \
+            -e ZABBIX_METRIC_PREFIX \
+            -t -v /etc/localtime:/etc/localtime:ro "$CONTAINER_NAME:latest" /bin/bash
+
+  # Start Xvfb
+  docker exec "$CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
+
+  # Exec booster tests
+  docker exec "$CONTAINER_NAME" ./run.sh
+
+  if [ "${ZABBIX_ENABLED,,}" = true ] ; then
+      docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
+  fi
+
+  # Test results to archive
+  docker cp "$CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR"
+
+  # Shutdown container if running
+  if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
+      docker rm -f "$CONTAINER_NAME"
+  fi
+}>>"$TEST_LOG" 2>&1
 
 # Archive the test results
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
 rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+ARTIFACTS_UPLOAD_EXIT_CODE=$?
 
 echo "-----------------------------------------------------------------------------------------------------------------------"
 echo "-----------------------------------------------------------------------------------------------------------------------"
 
-if [ $? -eq 0 ]; then
+if [ $ARTIFACTS_UPLOAD_EXIT_CODE -eq 0 ]; then
   echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
   echo "Test results (Allure report) can be found at http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR/allure-report"
 else
   echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 fi
-echo "-----------------------------------------------------------------------------------------------------------------------"
-echo "-----------------------------------------------------------------------------------------------------------------------"
 
-# Shutdown container if running
-if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
-    docker rm -f "$CONTAINER_NAME"
-fi
+echo "-----------------------------------------------------------------------------------------------------------------------"
+echo "-----------------------------------------------------------------------------------------------------------------------"
 
 # We do want to see that zero specs have failed
-grep " features passed, 0 failed," "$ARTIFACTS_DIR/test.log"
+grep " features passed, 0 failed," "$TEST_LOG"
 export RTN_CODE=$?
 
 exit $RTN_CODE
-
-
-
