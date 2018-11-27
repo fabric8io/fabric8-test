@@ -7,6 +7,8 @@
 # $4 - JWT token 
 ########################################################################################
 
+export STRINGTOREMOVE="@redhat.com"
+
 export OC_USERNAME="$1"
 export OC_PASSWORD="$2"
 export OC_PROJECT_SUFFIX="$3"
@@ -32,6 +34,9 @@ echo "Using cluster $OC_CLUSTER_URL"
 
 echo ---------- Login -----------------------------------
 oc login -u $OC_USERNAME -p $OC_PASSWORD "$OC_CLUSTER_URL"
+
+# In the event that the login username includes a redhat.com email suffix
+export OC_USERNAME="${1//$STRINGTOREMOVE/}"
 
 echo ---------- Change to $OC_USERNAME-$OC_PROJECT_SUFFIX project ---------------
 echo "oc project" $OC_USERNAME-$OC_PROJECT_SUFFIX
