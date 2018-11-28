@@ -108,6 +108,7 @@ export ZABBIX_METRIC_PREFIX="${ZABBIX_METRIC_PREFIX:-booster-bdd.$SCENARIO}"
 
 export ARTIFACTS_DIR="bdd/${JOB_NAME}/${BUILD_NUMBER}"
 mkdir -p "$ARTIFACTS_DIR"
+ln -sfn "${BUILD_NUMBER}" "bdd/${JOB_NAME}/latest"
 
 export TEST_LOG="$ARTIFACTS_DIR/test.log"
 
