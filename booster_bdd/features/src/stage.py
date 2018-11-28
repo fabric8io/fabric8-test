@@ -56,7 +56,7 @@ class Stage(object):
         result = r.text
         helpers.printToJson('Promote to Stage response', r)
         global stageDeployed
-        if re.search('Using the greeting service', result):
+        if re.search("(Try|Using) the greeting service", result):
             stageDeployed = True
             return 'Success'
         else:
