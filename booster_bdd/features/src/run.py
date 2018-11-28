@@ -53,7 +53,7 @@ class Run(object):
 
         result = r.text
         helpers.printToJson('Promote to Run response', r)
-        if re.search('Using the greeting service', result):
+        if re.search('(Try|Using) the greeting service', result):
             return 'Success'
         else:
             return 'Fail'
