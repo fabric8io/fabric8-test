@@ -48,7 +48,7 @@ export class Quickstart {
         this.junitTestCount = '2';
         this.testFileName = 'LocalTest.java';
         this.sourceFileName = 'GreetingProperties.java';
-        this.deployedPageTestCallback = dummy;
+        this.deployedPageTestCallback = httpBooster;
         break;
       }
       case 'SpringBootHealth': {
