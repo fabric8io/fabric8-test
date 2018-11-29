@@ -13,7 +13,7 @@ export class MainDashboardPage extends AppPage {
   }
 
   async ready() {
-    super.ready();
+    await super.ready();
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'Recent Spaces'))),
       timeouts.DEFAULT_WAIT, 'Recent Spaces is present');
     await browser.wait(until.presenceOf(element(by.cssContainingText('div', 'My Work Items'))),

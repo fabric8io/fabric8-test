@@ -30,7 +30,7 @@ describe('e2e_smoketest', () => {
   beforeAll(async () => {
     logger.info('Before all');
     browser.ignoreSynchronization = true;
-    browser.driver.manage().window().setSize(1920, 1080);
+    await browser.driver.manage().window().setSize(1920, 1080);
     specContext.print();
     spaceName = newSpaceName();
     strategy = specContext.getReleaseStrategy();

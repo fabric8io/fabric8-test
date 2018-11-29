@@ -20,6 +20,6 @@ export abstract class SpaceTabPage extends SpaceAppPage {
   }
 
   async selectDeployments() {
-    this.deploymentsOption.clickWhenReady();
+    await this.deploymentsOption.clickWhenReady();
   }
 }
