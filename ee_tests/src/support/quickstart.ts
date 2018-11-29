@@ -120,7 +120,7 @@ export class Quickstart {
 }
 
 async function httpBooster() {
-  browser.wait(until.presenceOf(
+  await browser.wait(until.presenceOf(
   element(by.id('_http_booster'))), timeouts.DEFAULT_WAIT, '\_http_booster\' is present');
   let text = await element(by.id('_http_booster')).getText();
   expect(text).toContain('HTTP Booster', `page contains text`);

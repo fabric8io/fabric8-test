@@ -23,7 +23,7 @@ export class CodebasesPage extends AppPage {
 
   public async openWorkspace() {
     let openWorkspace = new Button(element(this.openButtonLocator), 'Open Workspace...');
-    openWorkspace.clickWhenReady(timeouts.LONGER_WAIT);
+    await openWorkspace.clickWhenReady(timeouts.LONGER_WAIT);
   }
 
   public async getSelectedWorkspace(): Promise<string> {

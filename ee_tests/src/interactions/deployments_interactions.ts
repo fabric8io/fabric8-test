@@ -164,7 +164,7 @@ class DeploymentsInteractionsStageStrategy extends DeploymentsInteractionsReleas
 
     public async verifyStageEnvironment(environments: DeployedApplicationEnvironment[],
         status: DeploymentStatus, version: string, podsCount: number): Promise<void> {
-        this.verifyEnvironment(environments[Environment.STAGE], status, version, podsCount);
+        await this.verifyEnvironment(environments[Environment.STAGE], status, version, podsCount);
     }
 
     public async verifyRunEnvironment(environments: DeployedApplicationEnvironment[],
@@ -219,12 +219,12 @@ class DeploymentsInteractionsRunStrategy extends DeploymentsInteractionsStageStr
 
     public async verifyStageEnvironment(environments: DeployedApplicationEnvironment[],
         status: DeploymentStatus, version: string, podsCount: number): Promise<void> {
-        this.verifyEnvironment(environments[Environment.STAGE], status, version, podsCount);
+        await this.verifyEnvironment(environments[Environment.STAGE], status, version, podsCount);
     }
 
     public async verifyRunEnvironment(environments: DeployedApplicationEnvironment[],
         status: DeploymentStatus, version: string, podsCount: number): Promise<void> {
-        this.verifyEnvironment(environments[Environment.RUN], status, version, podsCount);
+        await this.verifyEnvironment(environments[Environment.RUN], status, version, podsCount);
     }
 
     protected async verifyResourceUsageInternal(data: ResourceUsageData[]) {
