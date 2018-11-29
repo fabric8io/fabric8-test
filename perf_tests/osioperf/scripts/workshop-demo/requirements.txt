@@ -1,0 +1,4 @@
+selenium==3.141.0
+pyshould==0.7.1
+locust
+grip

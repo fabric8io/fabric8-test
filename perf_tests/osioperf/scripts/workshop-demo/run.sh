@@ -13,12 +13,12 @@ source $COMMON/config/_setenv.sh
 echo " Wait for the server to become available"
 ./_wait-for-server.sh
 if [ $? -gt 0 ]; then
-   exit 1
+    exit 1
 fi
 
 echo " Prepare locustfile template"
-./_prepare-locustfile.sh $JOB_BASE_NAME.py
- 
+./_prepare-locustfile.sh workshop-demo.py
+
 rm -rvf $LOG_DIR;
 
 $COMMON/_execute.sh
