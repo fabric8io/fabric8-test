@@ -177,6 +177,9 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
   if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
       docker rm -f "$CONTAINER_NAME"
   fi
+
+  # Generate 'latest' pages
+  echo "<html><head><meta http-equiv=\"refresh\" content=\"0;url=$BUILD_URL\"/></head></html>" > "$ARTIFACTS_DIR/latestJenkinsBuild.html"
 }>>"$TEST_LOG" 2>&1
 
 # Archive the test results
