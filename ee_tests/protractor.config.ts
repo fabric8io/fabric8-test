@@ -59,6 +59,7 @@ let conf: Config = {
     local: ['src/local/*.js'],
     logintest: ['src/login.spec.js'],
     planner : ['src/planner.spec.js'],
+    launcher : ['src/launcher-import.spec.js'],
     smoketest: ['src/smoke.spec.js']
   },
 
