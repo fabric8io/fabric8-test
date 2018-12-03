@@ -108,7 +108,8 @@ export ZABBIX_METRIC_PREFIX="${ZABBIX_METRIC_PREFIX:-booster-bdd.$SCENARIO}"
 
 export ARTIFACTS_DIR="bdd/${JOB_NAME}/${BUILD_NUMBER}"
 mkdir -p "$ARTIFACTS_DIR"
-ln -sfn "${BUILD_NUMBER}" "bdd/${JOB_NAME}/latest"
+LATEST_LINK_PATH="bdd/${JOB_NAME}/latest"
+ln -sfn "$BUILD_NUMBER" "$LATEST_LINK_PATH"
 
 export TEST_LOG="$ARTIFACTS_DIR/test.log"
 
@@ -181,11 +182,11 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
 # Archive the test results
 chmod 600 ../artifacts.key
 chown root:root ../artifacts.key
-rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" "$LATEST_LINK_PATH" devtools@artifacts.ci.centos.org::devtools/
 ARTIFACTS_UPLOAD_EXIT_CODE=$?
 
-echo "-----------------------------------------------------------------------------------------------------------------------"
-echo "-----------------------------------------------------------------------------------------------------------------------"
+echo
+echo
 
 if [ $ARTIFACTS_UPLOAD_EXIT_CODE -eq 0 ]; then
   echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
@@ -194,8 +195,8 @@ else
   echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 fi
 
-echo "-----------------------------------------------------------------------------------------------------------------------"
-echo "-----------------------------------------------------------------------------------------------------------------------"
+echo
+echo
 
 # We do want to see that zero specs have failed
 grep " features passed, 0 failed," "$TEST_LOG"
