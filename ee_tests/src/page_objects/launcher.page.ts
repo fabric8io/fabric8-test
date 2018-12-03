@@ -31,7 +31,7 @@ export class CreateApplicationPage {
     }
 
     async clickContinue(): Promise<void> {
-        let continueButton = new Button(element(by.id('cancelImportsButton')), 'Continue');
+        let continueButton = new Button(element(by.id('cancelImportsButton')), 'Next');
         // https://github.com/fabric8io/fabric8-test/issues/1192
         await browser.sleep(5000);
         await continueButton.clickWhenReady();
