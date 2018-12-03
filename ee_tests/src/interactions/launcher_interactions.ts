@@ -55,8 +55,8 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         repository: string,
         strategy = specContext.getReleaseStrategy().toString()): Promise<void> {
 
-        logger.info('Import existing application with name ' + name);
-        await this.createApplicationStep(name, false);
+        logger.info('Import existing application with name ' + repository);
+        await this.createApplicationStep(repository, false);
 
         logger.info('Authorize GitHub and set repository name ' + name);
         await this.authorizeGitHubStep(name);
