@@ -47,7 +47,7 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         await this.summaryPageStep(name, quickstart, pipeline);
 
         logger.info('Check create application results');
-        await this.resultPageStep();
+        await this.resultPageStep(6);
     }
 
     async importApplication(
@@ -66,15 +66,10 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         await this.selectPipelineStep(pipeline);
 
         logger.info('Check import application summary');
-        let summaryPage = new SummaryPage();
-        await summaryPage.clickImport();
+        await this.summaryImportPageSetup(name, repository, pipeline);
 
         logger.info('Check import application results');
-        let resultPage = new ResultsPage();
-
-        await screenshotManager.save('launcher');
-
-        await resultPage.clickReturnToDashboard();
+        await this.resultPageStep(5);
     }
 
     private async createApplicationStep(name: string, createNew: boolean): Promise<void> {
@@ -128,7 +123,7 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         await summaryPage.clickSetUp();
     }
 
-    private async resultPageStep(): Promise<void> {
+    private async resultPageStep(setupStep: number): Promise<void> {
         let resultPage = new ResultsPage();
         await browser.wait(
             async () => {
@@ -146,7 +141,7 @@ class LauncherInteractionsImpl implements LauncherInteractions {
         expect(await resultPage.getSetupStatus()).toBe(SetupStatus.OK, 'Results summary OK');
 
         let setupSteps = await resultPage.getSetupSteps();
-        expect(setupSteps.length).toBe(6);
+        expect(setupSteps.length).toBe(setupStep);
         for (let step of setupSteps) {
             let title = await step.getTitle();
             let status = await step.getStatus();
@@ -156,5 +151,22 @@ class LauncherInteractionsImpl implements LauncherInteractions {
 
         await screenshotManager.save('launcher-results');
         await resultPage.clickReturnToDashboard();
+    }
+
+    private async summaryImportPageSetup(
+        name: string,
+        repository: string,
+        pipeline: LauncherReleaseStrategy): Promise<void> {
+
+        let summaryPage = new SummaryPage();
+
+        expect(await summaryPage.getPipeline()).toBe(pipeline.name, 'Pipeline');
+        expect(await summaryPage.getApplicationName()).toBe(repository, 'Application name');
+        expect(await summaryPage.getVersion()).toBe('1.0.0', 'Version');
+        expect(await summaryPage.getGitHubUserName()).toBe(specContext.getGitHubUser(), 'User name');
+        expect(await summaryPage.getLocation()).toBe(specContext.getGitHubUser(), 'GitHub location');
+        expect(await summaryPage.getRepository()).toBe(name, 'GitHub repository');
+        await screenshotManager.save('launcher-summary');
+        await summaryPage.clickImport();
     }
 }
