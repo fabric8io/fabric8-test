@@ -1,13 +1,10 @@
 import { TextInput } from '../ui/text_input';
-import { $, browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions as until } from 'protractor';
 import { BaseElement } from '../ui/base.element';
 import { Button } from '../ui/button';
 import * as timeouts from '../support/timeouts';
 
 export class CreateApplicationPage {
-
-    newSpaceName = new TextInput($('#add-space-overlay-name'), 'Name of Space');
-    createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
 
     async setProjectName(name: string) {
         let projectName = new TextInput(element(by.id('projectName')), 'Project Name');
@@ -35,6 +32,7 @@ export class CreateApplicationPage {
 
     async clickContinue(): Promise<void> {
         let continueButton = new Button(element(by.id('cancelImportsButton')), 'Continue');
+        // https://github.com/fabric8io/fabric8-test/issues/1192
         await browser.sleep(5000);
         await continueButton.clickWhenReady();
         await browser.wait(until.stalenessOf(element(by.tagName('bs-modal-backdrop'))));
