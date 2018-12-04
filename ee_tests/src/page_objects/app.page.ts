@@ -88,6 +88,17 @@ export class AppPage extends BasePage {
     return spaceDashboard;
   }
 
+  /* Helper function to create a new OSIO space for import flow*/
+  async createNewSpaceWithExistingCodebase(spaceName: string): Promise<any> {
+    await this.header.recentItemsDropdown.selectCreateSpace();
+
+    // TODO: create a new BaseFragment for the model Dialog
+    await this.newSpaceName.enterText(spaceName);
+
+    await this.createSpaceButton.clickWhenReady();
+    logger.info('Space Created');
+  }
+
   async createSpaceWithNewCodebase(spaceName: string, quickstart: Quickstart, strategy: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 

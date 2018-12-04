@@ -72,6 +72,10 @@ class SpecContext {
         return browser.params.github.username;
     }
 
+    getGitHubRepo(): string {
+        return browser.params.github.repo;
+    }
+
     print(): void {
         logger.info('User: ' + this.getUser());
         logger.info('Password: ' + this.getPassword().replace(/./g, '*'));
