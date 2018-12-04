@@ -63,14 +63,16 @@ if [ "$OC_PROJECT_SUFFIX" == "jenkins" ]; then
   oc get -o yaml dc/jenkins
 
   echo ---------- Get jenkins pod logs ----------------
-  echo "oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins"
-  POD_NAMES=`oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins`
+  echo "oc get pods | grep jenkins | awk '{print \$1}'"
+  POD_NAMES=$(oc get pods | grep jenkins | awk '{print $1}')
 
   if [[ -z "$POD_NAMES" ]]; then
     echo "No running jenkins pods"
   else
-    echo "oc logs" $POD_NAMES
-    oc logs $POD_NAMES
+    for POD_NAME in $POD_NAMES; do
+        echo "---- Pod '$POD_NAME': ----"
+        oc logs $POD_NAME
+    done
   fi
 fi
 
@@ -85,10 +87,17 @@ if [ "$OC_PROJECT_SUFFIX" == "che" ] && [ ! -z "$OC_JWT_TOKEN" ]; then
   echo $RESPONSE | jq '.[] | {workspace_name: .config.name, project_name: .config.projects[].name}'
 
   echo ---------- Get Che pod logs ----------
-  for POD_NAME in $(oc get pods | grep workspace | awk '{print $1}'); do
-    echo "---- Pod '$POD_NAME': ----"
-    oc logs $POD_NAME
-  done
+  echo "oc get pods | grep workspace | awk '{print \$1}'"
+  POD_NAMES=$(oc get pods | grep workspace | awk '{print $1}')
+
+  if [[ -z "$POD_NAMES" ]]; then
+    echo "No running che pods"
+  else
+    for POD_NAME in $POD_NAMES; do
+        echo "---- Pod '$POD_NAME': ----"
+        oc logs $POD_NAME
+    done
+  fi
 fi
 
 echo ---------- Get build name ----------------
