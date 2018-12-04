@@ -12,9 +12,10 @@ function remove_container {
 }
 
 function archive_artifacts {
-    chmod 600 ../artifacts.key
-    chown root:root ../artifacts.key
-    rsync --password-file=../artifacts.key -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+    ARTIFACTS_KEY="../../config/artifacts.key"
+    chmod 600 "$ARTIFACTS_KEY"
+    chown root:root "$ARTIFACTS_KEY"
+    rsync --password-file="$ARTIFACTS_KEY" -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
     echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 }
 
@@ -60,11 +61,11 @@ set +x
 
 # Source environment variables of the jenkins slave
 # that might interest this worker.
-if [ -e "../jenkins-env" ]; then
+if [ -e "../../config/jenkins-env" ]; then
   grep -E "(JENKINS_URL|GIT_BRANCH|GIT_COMMIT|JOB_NAME|BUILD_NUMBER|ghprbSourceBranch|\
   |ghprbActualCommit|BUILD_URL|ghprbPullId|RESET_ENVIRONMENT|\
   |OSIO_CLUSTER|OSIO_USERNAME|OSIO_PASSWORD|TEST_SUITE|OSIO_URL|GITHUB_USERNAME|GITHUB_REPO|\
-  |QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" ../jenkins-env \
+  |QUICKSTART_NAME|RELEASE_STRATEGY|FEATURE_LEVEL|ZABBIX_ENABLED)=" ../../config/jenkins-env \
   | sed 's/^/export /g' \
   > /tmp/jenkins-env
   source /tmp/jenkins-env
