@@ -62,6 +62,13 @@ export abstract class SpaceDashboardPageCard extends BaseElement {
     super(finder, name);
   }
 
+  async ready() {
+    await super.ready();
+    await browser.wait(until.stalenessOf(this.element(by.tagName('fabric8-loading-widget'))),
+      timeouts.DEFAULT_WAIT, 'Staleness of element with tag name fabric8-loading-widget (meaning that ' +
+      'the card on space dashboard is still loading)');
+  }
+
   public async abstract getCount(): Promise<number>;
 
   protected async getCountByID(elementID: string, elementDescription: string): Promise<number> {
@@ -106,25 +113,24 @@ export class AnalyticsCard extends BaseElement {
       'report on space dashboard was not generated, could be caused by overloaded analytics service ' +
       '(SLA 30 minutes) or by missing annotation "fabric8.io/bayesian.analysisUrl" ' +
       '(check oc-jenkins-logs.txt)');
-    await browser.wait(until.stalenessOf(this.element(by.className('pre-loader-spinner'))),
-      timeouts.DEFAULT_WAIT, 'Staleness of element with class name pre-loader-spinner (meaning that the ' +
-      'analytics report on space dashboard is still loading)');
   }
 
   public async getTotalDependenciesCount(): Promise<number> {
-    await this.ready();
+    await browser.wait(until.presenceOf(this.element(by.cssContainingText('b', 'Total:'))));
     let text = await this.element(by.cssContainingText('b', 'Total:')).getText();
     let count = this.string2Number(text, 'total dependencies');
     return Promise.resolve(count);
   }
 
   public async getAnalyzedDependenciesCount(): Promise<number> {
+    await browser.wait(until.presenceOf(this.element(by.cssContainingText('b', 'Analyzed:'))));
     let text = await this.element(by.cssContainingText('b', 'Analyzed:')).getText();
     let count = this.string2Number(text, 'analyzed dependencies');
     return Promise.resolve(count);
   }
 
   public async getUnknownDependenciesCount(): Promise<number> {
+    await browser.wait(until.presenceOf(this.element(by.cssContainingText('b', 'Unknown:'))));
     let text = await this.element(by.cssContainingText('b', 'Unknown:')).getText();
     let count = this.string2Number(text, 'unknown dependencies');
     return Promise.resolve(count);
@@ -217,8 +223,6 @@ export class DeploymentsCard extends SpaceDashboardPageCard {
   }
 
   public async getApplications(): Promise<DeployedApplicationInfo[]> {
-    await browser.wait(until.stalenessOf(element(by.cssContainingText('div', 'Loading'))),
-      timeouts.DEFAULT_WAIT, 'Staleness of Loading text');
     await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))),
       timeouts.DEFAULT_WAIT, 'Element with id spacehome-environments-list is present');
     let elementsFinders: ElementFinder[] =
