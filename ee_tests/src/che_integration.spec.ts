@@ -89,6 +89,7 @@ describe('e2e_che_integration', () => {
     await pipelineInteractions.waitToFinish(pipeline);
     await pipelineInteractions.verifyBuildResult(pipeline, BuildStatus.COMPLETE);
     await pipelineInteractions.verifyBuildStages(pipeline);
+    await pipelineInteractions.verifyDeployedApplication(pipeline, quickstart.deployedPageTestCallback);
   });
 
   it('dashboard_before_change', async () => {
@@ -119,6 +120,7 @@ describe('e2e_che_integration', () => {
     await pipelineInteractions.waitToFinish(pipeline);
     await pipelineInteractions.verifyBuildResult(pipeline, BuildStatus.COMPLETE);
     await pipelineInteractions.verifyBuildStages(pipeline);
+    await pipelineInteractions.verifyDeployedApplication(pipeline, quickstart.deployedPageTestCallback);
   });
 
   it('dashboard-after-change', async () => {

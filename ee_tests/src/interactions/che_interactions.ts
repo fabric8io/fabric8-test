@@ -4,10 +4,10 @@ import * as timeouts from '../support/timeouts';
 import * as runner from '../support/script_runner';
 import { specContext } from '../support/spec_context';
 import { screenshotManager } from '../support/screenshot_manager';
-import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
 import { windowManager } from '../support/window_manager';
 import { SpaceCheWorkspacePage } from '../page_objects/space_cheworkspace.page';
+import { AccountHomeInteractionsFactory } from './account_home_interactions';
 
 export abstract class CheInteractionsFactory {
 
@@ -72,26 +72,23 @@ export class CheInteractionsImpl implements CheInteractions {
     }
 
     private async runCheTests(workspace: string): Promise<void> {
-        let location = browser.params.che.local.repo;
-        let script = './cico/run_EE_suite.sh';
-        let osio = specContext.getOsioUrl();
         let username = specContext.getUser();
         let password = specContext.getPassword();
+        let email = await this.getEmail();
         let outputDir = './target/screenshots/che-tests.txt';
-        let token = await this.getToken();
 
         await runner.runScript(
-            location,
-            script,
-            [osio, username, password, workspace, token],
+            '.',
+            './run-che.sh',
+            [username, password, email, workspace],
             outputDir,
             true,
             timeouts.LONGEST_WAIT);
     }
 
-    private async getToken(): Promise<string> {
-        let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-        await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
-        return accountHomeInteractions.getToken();
+    private async getEmail(): Promise<string> {
+        let homeInteractions = AccountHomeInteractionsFactory.create();
+        await homeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
+        return homeInteractions.getEmail();
     }
 }
