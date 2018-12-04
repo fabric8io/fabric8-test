@@ -83,6 +83,12 @@ if [ "$OC_PROJECT_SUFFIX" == "che" ] && [ ! -z "$OC_JWT_TOKEN" ]; then
   echo "Number of existing workspaces: $(echo $RESPONSE | jq '. | length')"
   echo "List of existing workspaces:"
   echo $RESPONSE | jq '.[] | {workspace_name: .config.name, project_name: .config.projects[].name}'
+
+  echo ---------- Get Che pod logs ----------
+  for POD_NAME in $(oc get pods | grep workspace | awk '{print $1}'); do
+    echo "---- Pod '$POD_NAME': ----"
+    oc logs $POD_NAME
+  done
 fi
 
 echo ---------- Get build name ----------------
