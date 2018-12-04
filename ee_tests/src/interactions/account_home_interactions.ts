@@ -40,6 +40,8 @@ export interface AccountHomeInteractions {
 
     getToken(): Promise<string>;
 
+    getEmail(): Promise<string>;
+
     logout(): Promise<void>;
 
     openSpaceDashboard(name: string): void;
@@ -84,6 +86,12 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
         let cleanupEnvPage = new CleanupUserEnvPage();
         await cleanupEnvPage.open(PageOpenMode.RefreshBrowser);
         await cleanupEnvPage.cleanup(specContext.getUser());
+    }
+
+    public async getEmail(): Promise<string> {
+        let userProfile = await this.appPage.gotoUserProfile();
+        let editProfile = await userProfile.gotoEditProfile();
+        return editProfile.getEmail();
     }
 
     public async getToken(): Promise<string> {

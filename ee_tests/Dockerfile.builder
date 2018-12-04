@@ -12,6 +12,7 @@ RUN yum --setopt tsflags='nodocs' -y update && \
       epel-release \
       wget \
       gtk3 \
+      docker \
       xorg-x11-xauth \
       xorg-x11-server-Xvfb \
       xorg-x11-fonts-75dpi \

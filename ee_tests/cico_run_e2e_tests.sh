@@ -128,6 +128,7 @@ docker run --shm-size=256m --detach=true --name="$TEST_CONTAINER_NAME" --cap-add
           -e ZABBIX_PORT -e ZABBIX_SERVER \
           --network="host" -t -v "$(pwd)/dist:/dist:Z" \
           -v /etc/localtime:/etc/localtime:ro \
+          -v /var/run/docker.sock:/var/run/docker.sock \
           -v "$PWD/jenkins-env:/opt/fabric8-test/jenkins-env" "$REGISTRY/$REPOSITORY/$TEST_IMAGE:latest"
 
 # Start Xvfb
@@ -158,6 +159,14 @@ docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/screenshots/." "$ARTIFA
 if [ "$ZABBIX_ENABLED" = true ] ; then
     docker exec "$TEST_CONTAINER_NAME" ls -l ./target/zabbix
     docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/zabbix/." "$ARTIFACTS_DIR"
+fi
+
+if [[ "$TEST_SUITE" = "che" ]]; then
+    docker exec "$TEST_CONTAINER_NAME" ls -l ./target/artifacts
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/failsafe-reports/." "$ARTIFACTS_DIR"
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/screenshots/." "$ARTIFACTS_DIR"
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/functional-tests.log" "$ARTIFACTS_DIR"
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/che-starter.log" "$ARTIFACTS_DIR"
 fi
 
 archive_artifacts

@@ -112,6 +112,10 @@ export class EditUserProfilePage extends AppPage {
     return page;
   }
 
+  async getEmail(): Promise<string> {
+    return element(by.id('email')).getAttribute('value');
+  }
+
   async getToken(): Promise<string> {
     return element(by.className('token-heading')).getText();
   }
