@@ -178,8 +178,8 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
       docker rm -f "$CONTAINER_NAME"
   fi
 
-  # Generate 'latest' pages
-  echo "<html><head><meta http-equiv=\"refresh\" content=\"0;url=$BUILD_URL\"/></head></html>" > "$ARTIFACTS_DIR/latestJenkinsBuild.html"
+  # Generate 'link' pages
+  echo "<html><head><meta http-equiv=\"refresh\" content=\"0;url=$BUILD_URL\"/></head></html>" > "$ARTIFACTS_DIR/jenkinsBuild.html"
 }>>"$TEST_LOG" 2>&1
 
 # Archive the test results
