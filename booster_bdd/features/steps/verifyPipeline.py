@@ -1,5 +1,8 @@
+import traceback
+
 from behave import given, when, then
 from features.src.pipeline import Pipeline
+from features.src.support import helpers
 from features.src import pipeline
 from features.src import importBooster
 from features.src import launchBooster
@@ -52,5 +55,10 @@ def when_promote_to_run(_context):
 
 @then(u'I should see the build completed')
 def then_build_completed(_context):
-    pl.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build is complete.")
-    pipeline.pipelineVerified = True
+    try:
+        pl.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build is complete.")
+        pipeline.pipelineVerified = True
+    except AssertionError:
+        traceback.print_exc()
+    finally:
+        helpers.gather_pod_logs(_context, "jenkins")
