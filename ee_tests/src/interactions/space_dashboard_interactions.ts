@@ -288,6 +288,11 @@ class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions 
 
     public async verifyWorkItems(...items: string[]): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
+
+        await browser.wait( async () => {
+            return await workItemsCard.getCount() === items.length;
+        }, timeouts.DEFAULT_WAIT, 'Number of workitems on card');
+
         expect(await workItemsCard.getCount()).toBe(items.length, 'Number of workitems on card');
 
         let workItems = await workItemsCard.getWorkItems();
