@@ -1,3 +1,5 @@
+import traceback
+
 from behave import when, then
 from features.src.support import helpers
 from features.src.workspace import Workspace
@@ -23,7 +25,12 @@ def then_workspace_started(_context):
     workspaceID = helpers.getWorkspaceID()
     workspace = Workspace()
     workspaceStatus = workspace.workspaceStatus(workspaceID, 10, "RUNNING")
-    workspaceStatus | should.be_true().desc("Workspace is started and running.")
+    try:
+        workspaceStatus | should.be_true().desc("Workspace is started and running.")
+    except AssertionError:
+        traceback.print_exc()
+    finally:
+        helpers.gather_pod_logs(_context, "che")
 
 
 @then(u'I should see the workspace stopped')

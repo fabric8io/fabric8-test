@@ -9,6 +9,8 @@ from functools import reduce
 from features.src.support import constants
 from features.src.support.loginusers_oauth2 import LoginUsersOauth2, user_tokens
 
+from subprocess import check_output, CalledProcessError, STDOUT
+
 count = 1
 spaceID = ''
 spaceName = ''
@@ -407,3 +409,26 @@ def delete_space(spaceid=None):
 
 def report_dir():
     return os.getenv("REPORT_DIR")
+
+
+def gather_pod_logs(_context, project):
+    """Gather project logs."""
+    if is_user_logged_in():
+        try:
+            print("Gathering project logs.")
+            output = check_output(["./oc-get-project-logs.sh",
+                                          _context.username,
+                                          _context.password,
+                                          project,
+                                          get_user_tokens().split(";")[0]
+                                          ],
+                                         stderr=STDOUT)
+            save_output_to_file(output.decode("utf-8"),
+                                "{}/project-logs-{}.log".format(report_dir(), project))
+        except CalledProcessError as e:
+            print("Error executing: {}".format(e))
+
+
+def save_output_to_file(output, fileName):
+    f = open(fileName, "w")
+    f.write(output)
