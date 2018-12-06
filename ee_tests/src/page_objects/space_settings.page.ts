@@ -13,7 +13,7 @@ export class SpaceSettings extends AppPage {
     'Areas Tab');
   addAreasButton = new Button($("[tooltip='Add Areas']"), 'Add Areas Button');
   createAreaDialog = new BaseElement($('create-area-dialog'), 'create area dialog');
-  areaInputField = new TextInput(this.createAreaDialog.$('#name'), 'Are input field');
+  areaInputField = new TextInput(this.createAreaDialog.$('#name'), 'Area input field');
   cancelButton = new Button (this.createAreaDialog.$('.btn.btn-default'), 'cancel button');
   createButton = new Button (this.createAreaDialog.$('.btn.btn-primary'), 'create button');
   showAreasChildren = new Clickable($('.toggle-children'), 'show Areas children');
@@ -59,7 +59,6 @@ export class SpaceSettings extends AppPage {
     await this.createAreaDialog.untilDisplayed();
     await this.areaInputField.enterText(areaName);
     await this.createButton.clickWhenReady();
-    await this.createButton.untilTextIsPresent('Create');
     await this.createAreaDialog.untilHidden();
     await this.modalFade.untilHidden();
     logger.info('done - add areas');
