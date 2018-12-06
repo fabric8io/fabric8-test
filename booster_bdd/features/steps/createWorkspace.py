@@ -27,8 +27,6 @@ def then_workspace_started(_context):
     workspaceStatus = workspace.workspaceStatus(workspaceID, 10, "RUNNING")
     try:
         workspaceStatus | should.be_true().desc("Workspace is started and running.")
-    except AssertionError:
-        traceback.print_exc()
     finally:
         helpers.gather_pod_logs(_context, "che")
 

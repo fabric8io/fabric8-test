@@ -58,7 +58,5 @@ def then_build_completed(_context):
     try:
         pl.buildStatus(30, 10, 'Complete') | should.be_true.desc("Build is complete.")
         pipeline.pipelineVerified = True
-    except AssertionError:
-        traceback.print_exc()
     finally:
         helpers.gather_pod_logs(_context, "jenkins")
