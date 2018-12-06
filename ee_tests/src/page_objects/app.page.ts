@@ -70,7 +70,8 @@ export class AppPage extends BasePage {
   async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
-    // TODO: create a new BaseFragment for the model Dialog
+    // https://github.com/fabric8io/fabric8-test/issues/1201
+    await browser.sleep(5000);
     await this.newSpaceName.enterText(spaceName);
 
     await this.createSpaceButton.clickWhenReady();
@@ -92,6 +93,8 @@ export class AppPage extends BasePage {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
     logger.info('Creating space');
+    // https://github.com/fabric8io/fabric8-test/issues/1201
+    await browser.sleep(5000);
     await this.newSpaceName.enterText(spaceName);
     await this.createSpaceButton.clickWhenReady();
     logger.info('Space created');
