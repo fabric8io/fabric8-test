@@ -38,27 +38,16 @@ class CleanupConfirmationModal extends ModalDialog {
 
 export class CleanupUserEnvPage extends AppPage {
 
-  eraseEnvButton = this.innerElement(
-    Button, '#overview button',
-    'Erase My OpenShift.io Environment'
-  );
-
-  alertBox = new BaseElement($('#overview div.alert'), 'Alert Box');
-  dashboardButton = new Button(element (by.xpath('.//button[contains(text(),\'Take me to my Dashboard\')]')),
-  'Take me to my Dashboard button');
-
-  private readonly CLEANUP_SUCCESSFUL_MESSAGE: string = 'Your OpenShift.io environment has been erased!';
+  name: string;
 
   constructor() {
     super();
     this.url = `${specContext.getUser()}/_cleanup`;
-  }
-
-  async ready() {
-    await super.ready();
-    logger.debug('checking if erase button is there');
-    await this.eraseEnvButton.untilClickable();
-    logger.debug('checking if erase button is there - OK');
+    if (specContext.isProduction()) {
+      this.name = 'OpenShift.io';
+    } else {
+      this.name = 'CodeReady Toolchain';
+    }
   }
 
   /* An intermittent error is resulting in some user enviroment resets failing
@@ -76,7 +65,14 @@ export class CleanupUserEnvPage extends AppPage {
   }
 
   async cleanupSupport (username: string) {
-    await this.eraseEnvButton.clickWhenReady();
+    let eraseEnvButton = this.innerElement(
+      Button, '#overview button',
+      `Erase My ${this.name} Environment`
+    );
+    let alertBox = new BaseElement($('#overview div.alert'), 'Alert Box');
+    const CLEANUP_SUCCESSFUL_MESSAGE: string = `Your ${this.name} environment has been erased!`;
+
+    await eraseEnvButton.clickWhenReady();
     let confirmationElement =  this.innerElement(BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
     await confirmationBox.ready();
@@ -84,12 +80,12 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmationInput.enterText(username);
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
-    await browser.wait(until.presenceOf(this.alertBox),
+    await browser.wait(until.presenceOf(alertBox),
     timeouts.LONG_WAIT, 'Alert box is present');
-    let alertText = await this.alertBox.getText();
+    let alertText = await alertBox.getText();
 
     logger.info('Alert text: ' + alertText);
-    if (alertText.includes(this.CLEANUP_SUCCESSFUL_MESSAGE)) {
+    if (alertText.includes(CLEANUP_SUCCESSFUL_MESSAGE)) {
       logger.info('Reset successfull');
     } else {
       logger.info('Reset failed');
