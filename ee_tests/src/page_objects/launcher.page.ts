@@ -33,6 +33,7 @@ export class CreateApplicationPage {
     async clickContinue(): Promise<void> {
         let continueButton = new Button(element(by.id('cancelImportsButton')), 'Continue');
         await continueButton.clickWhenReady();
+        await browser.wait(until.stalenessOf(element(by.tagName('bs-modal-backdrop'))));
     }
 }
 
