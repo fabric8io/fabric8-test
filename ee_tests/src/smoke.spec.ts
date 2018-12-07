@@ -80,6 +80,7 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     logger.specTitle('Run che workspace ' + quickstart.name);
+    let error: any;
     try {
       let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
       await codebasesInteractions.openCodebasesPage(PageOpenMode.UseMenu);
@@ -95,12 +96,17 @@ describe('e2e_smoketest', () => {
       expect(workspaces.length).toBe(1, 'Number of Che workspaces on Codebases page');
       logger.debug('Selected workspace: ' + await codebasesInteractions.getSelectedWorkspace());
     } catch (e) {
+      error = e;
       await screenshotManager.save('che-failed');
       await windowManager.closeAllWindows();
     } finally {
       let accountHomeInteractions = AccountHomeInteractionsFactory.create();
       await accountHomeInteractions.openAccountHomePage(PageOpenMode.UseMenu);
       await runOCScript('che', 'oc-che-logs', await accountHomeInteractions.getToken());
+    }
+
+    if (error !== undefined) {
+      throw error;
     }
   });
 
