@@ -96,6 +96,10 @@ if [ "$OC_PROJECT_SUFFIX" == "che" ] && [ ! -z "$OC_JWT_TOKEN" ]; then
     for POD_NAME in $POD_NAMES; do
         echo "---- Pod '$POD_NAME': ----"
         oc logs $POD_NAME
+        echo "Bootstrapper Log:"
+        oc exec $POD_NAME -- cat /workspace_logs/bootstrapper/bootstrapper.log
+        echo "ws-agent Log:"
+        oc exec $POD_NAME -- cat /workspace_logs/ws-agent/logs/catalina.log
     done
   fi
 fi
