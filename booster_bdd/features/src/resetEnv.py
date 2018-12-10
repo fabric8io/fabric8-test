@@ -2,6 +2,8 @@ import requests
 import features.src.support.helpers as helpers
 import os
 
+from pyshould import should
+
 
 class ResetEnvironment:
     def getSpaces(self):
@@ -35,6 +37,7 @@ class ResetEnvironment:
         print('Number of spaces before removing: {}'.format(len(spacesIDs)))
 
         serverAddress = os.getenv("WIT_API")
+        cheAddress = os.getenv("CHE_API")
 
         authHeader = 'Bearer {}'.format(theToken)
 
@@ -46,12 +49,44 @@ class ResetEnvironment:
 
         # delete spaces
         for spaceID in spacesIDs:
+            print('Looking for codebases of space: {}'.format(spaceID))
+            r = requests.get(
+                '{}/api/spaces/{}/codebases'.format(serverAddress, spaceID),
+                headers=headers
+            )
+            r.status_code | should.be(200).desc("Status code for response to get space codebases is 200.")
+            codebases = r.json()["data"]
+            if codebases is not None:
+                for cb in codebases:
+                    cbID = cb["id"]
+                    print('Looking for workspaces of codebase: {}'.format(cbID))
+                    r = requests.get(
+                        '{}/api/codebases/{}/workspaces'.format(serverAddress, cbID),
+                        headers=headers
+                    )
+                    r.status_code | should.be(200).desc("Status code for response to get codebase workspaces is 200.")
+                    workspaces = r.json()["data"]
+                    if workspaces is not None:
+                        for ws in workspaces:
+                            wsID = ws["attributes"]["id"]
+                            wsName = ws["attributes"]["name"]
+                            print('Deleting workspace: {} ({})'.format(wsID, wsName))
+                            r = requests.delete(
+                                '{}/api/workspace/{}'.format(cheAddress, wsID),
+                                headers=headers
+                            )
+                            r.status_code | should.be(204).desc("Status code for response to delete workspace is 204.")
+                    else:
+                        print("No workspaces found.")
+            else:
+                print("No codebases found.")
+
             print('Deleting space {}'.format(spaceID))
             r = requests.delete(
                 '{}/api/spaces/{}'.format(serverAddress, spaceID),
                 headers=headers
             )
-            assert r.status_code == 200
+            r.status_code | should.be(200).desc("Status code for response to delete space is 200.")
 
             if r.status_code != 200:
                 print(
