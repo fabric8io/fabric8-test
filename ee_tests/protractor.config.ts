@@ -60,7 +60,10 @@ let conf: Config = {
     logintest: ['src/login.spec.js'],
     planner : ['src/planner.spec.js'],
     launcher : ['src/launcher-import.spec.js'],
-    smoketest: ['src/smoke.spec.js']
+    smoketest: ['src/smoke.spec.js'],
+
+    // util suits used e.g for cleanup of resources when active token is needed
+    che_cleanup: ['src/utils/clean_workspaces.util.js']
   },
 
   // see: https://github.com/angular/protractor/blob/master/docs/timeouts.md
