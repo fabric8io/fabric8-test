@@ -54,7 +54,8 @@ class ResetEnvironment:
                 '{}/api/spaces/{}/codebases'.format(serverAddress, spaceID),
                 headers=headers
             )
-            r.status_code | should.be(200).desc("Status code for response to get space codebases is 200.")
+            r.status_code | should.be(200).desc(
+                "Status code for response to get space codebases is 200.")
             codebases = r.json()["data"]
             if codebases is not None:
                 for cb in codebases:
@@ -64,7 +65,8 @@ class ResetEnvironment:
                         '{}/api/codebases/{}/workspaces'.format(serverAddress, cbID),
                         headers=headers
                     )
-                    r.status_code | should.be(200).desc("Status code for response to get codebase workspaces is 200.")
+                    r.status_code | should.be(200).desc(
+                        "Status code for response to get codebase workspaces is 200.")
                     workspaces = r.json()["data"]
                     if workspaces is not None:
                         for ws in workspaces:
@@ -75,7 +77,8 @@ class ResetEnvironment:
                                 '{}/api/workspace/{}'.format(cheAddress, wsID),
                                 headers=headers
                             )
-                            r.status_code | should.be(204).desc("Status code for response to delete workspace is 204.")
+                            r.status_code | should.be(204).desc(
+                                "Status code for response to delete workspace is 204.")
                     else:
                         print("No workspaces found.")
             else:
