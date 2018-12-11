@@ -417,12 +417,12 @@ def gather_pod_logs(_context, project):
         try:
             print("Gathering project logs.")
             output = check_output(["./oc-get-project-logs.sh",
-                                          _context.username,
-                                          _context.password,
-                                          project,
-                                          get_user_tokens().split(";")[0]
-                                          ],
-                                         stderr=STDOUT)
+                                   _context.username,
+                                   _context.password,
+                                   project,
+                                   get_user_tokens().split(";")[0]
+                                   ],
+                                  stderr=STDOUT)
             save_output_to_file(output.decode("utf-8"),
                                 "{}/project-logs-{}.log".format(report_dir(), project))
         except CalledProcessError as e:

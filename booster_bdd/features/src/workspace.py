@@ -1,12 +1,14 @@
 import time
 import requests
 from features.src.support import helpers
+from pyshould import should
 import os
 import json
 
 start_time = time.time()
 
 cheApiAddress = os.getenv("CHE_API")
+apiAddress = os.getenv("WIT_API")
 githubRepoUrl = os.getenv("GIT_REPO_URL")
 
 
@@ -139,8 +141,63 @@ class Workspace:
             print('Unexpected workspace delete status found: {}'.format(e))
             print('Raw text of request/response: [{}]'.format(r.text))
 
-    def createWorkspace(self, workspaceName):
+    # This creates a space the same way the OSIO UI does.
+    def createWorkspaceForSpace(self, spaceID):
+        print('Creating workspace.....')
 
+        theToken = helpers.get_user_tokens().split(";")[0]
+        authHeader = 'Bearer {}'.format(theToken)
+
+        headers = {'Accept': 'application/json',
+                   'Authorization': authHeader,
+                   'X-App': 'OSIO',
+                   'X-Git-Provider': 'GitHub',
+                   'Content-Type': 'application/json'}
+
+        print('Looking for codebases of space: {}'.format(spaceID))
+        r = requests.get(
+            '{}/api/spaces/{}/codebases'.format(apiAddress, spaceID),
+            headers=headers
+        )
+        r.status_code | should.be(200).desc(
+            "Status code for response to get space codebases is 200.")
+        cbId = r.json()["data"][0]["id"]
+
+        try:
+            r = requests.post(
+               '{}/api/codebases/{}/create'.format(apiAddress, cbId),
+               data="",
+               headers=headers
+            )
+            respJson = r.json()
+            # print (respJson)
+            workspaceLink = respJson["links"]["open"]
+            print('Workspace created at {}'.format(workspaceLink))
+            print('Looking for workspaces of codebase: {}'.format(cbId))
+            r = requests.get(
+                '{}/api/codebases/{}/workspaces'.format(apiAddress, cbId),
+                headers=headers
+            )
+            r.status_code | should.be(200).desc(
+                "Status code for response to get codebase workspaces is 200.")
+            ws = r.json()["data"][0]
+            wsId = ws["attributes"]["id"]
+            wsName = ws["attributes"]["name"]
+            print("Workspace ID (name): {} ({})".format(wsId, wsName))
+            print("Starting workspace")
+            r = requests.post(
+               '{}/api/workspace/{}/runtime?environment=default'.format(cheApiAddress, wsId),
+               data='{}',
+               headers=headers
+            )
+            print('Starting workspace response: [{}]'.format(r.text))
+            return wsId
+        except Exception as e:
+            print('Unexpected error found: {}'.format(e))
+            return None
+
+    # This creates a che workspace independent without assigning it to osio space
+    def createWorkspace(self, workspaceName):
         # Tokens are stored in a form of "<access_token>;<refresh_token>(;<username>)"
         theToken = helpers.get_user_tokens().split(";")[0]
         print('Creating space now.....')

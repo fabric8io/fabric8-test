@@ -8,9 +8,9 @@ from pyshould import should_not, should
 
 @when(u'I create the workspace')
 def when_create_workspace(_context):
-    spaceName = helpers.getSpaceName()
+    spaceID = helpers.getSpaceID()
     workspace = Workspace()
-    workspaceID = workspace.createWorkspace(spaceName)
+    workspaceID = workspace.createWorkspaceForSpace(spaceID)
     helpers.setWorkspaceID(workspaceID)
 
 
