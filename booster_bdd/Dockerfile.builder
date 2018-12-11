@@ -45,12 +45,12 @@ RUN yum install -y -d1 --setopt tsflags='nodocs' jq google-chrome-stable
 # && yum -y  -d1 --setopt tsflags='nodocs' install ffmpeg
 
 # Provide oc client to tests Clean up the test user account's resources in OpenShift Online
-RUN wget https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
+RUN wget -q -O oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.10.0-0.50.0/linux/oc.tar.gz &&\
     tar -xf oc.tar.gz && mv oc /usr/bin/oc
 
 # Install allure
 RUN yum install -y -d1 --setopt tsflags='nodocs' java-1.8.0-openjdk-headless
-RUN wget -O allure.tgz https://bintray.com/qameta/generic/download_file?file_path=io%2Fqameta%2Fallure%2Fallure%2F2.7.0%2Fallure-2.7.0.tgz \
+RUN wget -q -O allure.tgz https://bintray.com/qameta/generic/download_file?file_path=io%2Fqameta%2Fallure%2Fallure%2F2.7.0%2Fallure-2.7.0.tgz \
     && tar -xf allure.tgz \
     && rm -f allure.tgz \
     && ln -s $(readlink -f $(find | grep 'bin/allure$')) /usr/local/bin/allure \
