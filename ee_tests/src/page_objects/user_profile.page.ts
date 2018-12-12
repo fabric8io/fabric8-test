@@ -1,4 +1,4 @@
-import { $, browser, by,  element, ExpectedConditions as until } from 'protractor';
+import { $, browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import { specContext } from '../support/spec_context';
@@ -43,11 +43,7 @@ export class CleanupUserEnvPage extends AppPage {
   constructor() {
     super();
     this.url = `${specContext.getUser()}/_cleanup`;
-    if (specContext.isProduction()) {
-      this.name = 'OpenShift.io';
-    } else {
-      this.name = 'CodeReady Toolchain';
-    }
+    this.name = 'CodeReady Toolchain';
   }
 
   /* An intermittent error is resulting in some user enviroment resets failing
@@ -64,7 +60,7 @@ export class CleanupUserEnvPage extends AppPage {
     }
   }
 
-  async cleanupSupport (username: string) {
+  async cleanupSupport(username: string) {
     let eraseEnvButton = this.innerElement(
       Button, '#overview button',
       `Erase My ${this.name} Environment`
@@ -73,7 +69,7 @@ export class CleanupUserEnvPage extends AppPage {
     const CLEANUP_SUCCESSFUL_MESSAGE: string = `Your ${this.name} environment has been erased!`;
 
     await eraseEnvButton.clickWhenReady();
-    let confirmationElement =  this.innerElement(BaseElement, 'modal', '');
+    let confirmationElement = this.innerElement(BaseElement, 'modal', '');
     let confirmationBox = new CleanupConfirmationModal(confirmationElement);
     await confirmationBox.ready();
     await confirmationBox.confirmationInput.clear();
@@ -81,7 +77,7 @@ export class CleanupUserEnvPage extends AppPage {
     await confirmationBox.confirmEraseButton.clickWhenReady();
 
     await browser.wait(until.presenceOf(alertBox),
-    timeouts.LONG_WAIT, 'Alert box is present');
+      timeouts.LONG_WAIT, 'Alert box is present');
     let alertText = await alertBox.getText();
 
     logger.info('Alert text: ' + alertText);
@@ -127,7 +123,7 @@ export class UserProfilePage extends AppPage {
     let editProfileButton = new Button(element(by.cssContainingText('button', 'Edit Profile')), 'Edit Profile');
     await editProfileButton.clickWhenReady();
 
-    let page =  new EditUserProfilePage();
+    let page = new EditUserProfilePage();
     await page.open();
     return page;
   }
@@ -138,8 +134,8 @@ export class WorkItemCard extends AppPage {
 
   async clickWorkItemTitle(title: string) {
     let workitem = new Clickable(element(by.xpath(
-        "//span[contains(@class,'work-item-title')]//a[text()=' " + title + " ']")));
-  await workitem.clickWhenReady();
+      "//span[contains(@class,'work-item-title')]//a[text()=' " + title + " ']")));
+    await workitem.clickWhenReady();
   }
 
 }
