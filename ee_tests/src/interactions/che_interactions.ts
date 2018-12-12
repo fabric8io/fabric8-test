@@ -1,7 +1,7 @@
 import { browser } from 'protractor';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
-import * as runner from  '../support/script_runner';
+import * as runner from '../support/script_runner';
 import { specContext } from '../support/spec_context';
 import { screenshotManager } from '../support/screenshot_manager';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
@@ -55,11 +55,11 @@ export class CheInteractionsImpl implements CheInteractions {
         await browser.wait(
             async () => (await this.che.getProjects()).length === expectedProjects.length,
             timeouts.LONGER_WAIT,
-            'Number of projects in che'
+            `Wrong number of projects in Che (expected ${expectedProjects.length}). It could mean that ` +
+            `Che workspace failed to start, check che-failed.png and che-failed.png.`
         );
 
         let cheProjects = await this.che.getProjects();
-        expect(cheProjects.length).toBe(expectedProjects.length, 'Number of projects in che');
         for (let i = 0; i < expectedProjects.length; i++) {
             expect(cheProjects[i]).toBe(expectedProjects[i], 'Project name');
         }
