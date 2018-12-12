@@ -56,7 +56,7 @@ export class CheInteractionsImpl implements CheInteractions {
             async () => (await this.che.getProjects()).length === expectedProjects.length,
             timeouts.LONGER_WAIT,
             `Wrong number of projects in Che (expected ${expectedProjects.length}). It could mean that ` +
-            `Che workspace failed to start, check che-failed.png and che-failed.png.`
+            `Che workspace failed to start, check che-failed.png and oc-che-logs.txt.`
         );
 
         let cheProjects = await this.che.getProjects();

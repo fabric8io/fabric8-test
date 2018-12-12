@@ -207,8 +207,9 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
                 await browser.sleep(5000);
                 return false;
             }
-        }, timeouts.LONGER_WAIT, 'View log link is not present (e.g when Jenkins was not unidled, could be ' +
-            'caused by https://github.com/openshiftio/openshift.io/issues/4215, check jenkins-direct-log.png)');
+        }, timeouts.LONGER_WAIT, 'View log link is not present (e.g when Jenkins was not unidled). It could be ' +
+            'caused by https://github.com/openshiftio/openshift.io/issues/4598, check jenkins-direct-log.png ' +
+            'and events in oc-jenkins-logs.txt.');
     }
 
     protected async waitForStagesToStart(pipeline: PipelineDetails): Promise<void> {
