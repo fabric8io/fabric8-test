@@ -25,7 +25,7 @@ export abstract class SpaceDashboardInteractionsFactory {
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            if (specContext.isProdPreview()) {
+            if (specContext.isLocalhost() || specContext.isProdPreview()) {
                 return new BetaSpaceDashboardInteractions(strategy, spaceName);
             } else {
                 return new ProdBetaSpaceDashboardInteractions(strategy, spaceName);
