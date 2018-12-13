@@ -52,6 +52,10 @@ if [ "$3" == "jenkins" ]; then
   echo "oc get -o yaml dc/jenkins"
   oc get -o yaml dc/jenkins
 
+  echo ---------- Jenkins PVCs ---------------
+  echo "oc get pvc"
+  oc get pvc
+
   echo ---------- Get jenkins pod logs ----------------
   echo "oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins"
   POD_NAMES=`oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins`
