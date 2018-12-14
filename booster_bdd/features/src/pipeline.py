@@ -76,7 +76,9 @@ class Pipeline(object):
                     break
                 else:
                     if actualBuildStatus in ('Failed', 'Aborted'):
-                        print('Build is in status {} - Fail fast triggered...')
+                        print('Actual build status is {} - Fail fast triggered...'
+                              .format(actualBuildStatus)
+                              )
                         return False
                     print('Expected build status not found, retrying - expected: "{}" actual: "{}" '
                           .format(expectedBuildStatus, actualBuildStatus)
