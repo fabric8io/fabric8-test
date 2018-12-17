@@ -25,11 +25,7 @@ export abstract class SpaceDashboardInteractionsFactory {
         }
 
         if (FeatureLevelUtils.isBeta()) {
-            if (specContext.isLocalhost() || specContext.isProdPreview()) {
-                return new BetaSpaceDashboardInteractions(strategy, spaceName);
-            } else {
-                return new ProdBetaSpaceDashboardInteractions(strategy, spaceName);
-            }
+            return new BetaSpaceDashboardInteractions(strategy, spaceName);
         }
 
         return new ReleasedSpaceDashboardInteractions(strategy, spaceName);
@@ -289,7 +285,7 @@ class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions 
     public async verifyWorkItems(...items: string[]): Promise<void> {
         let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
 
-        await browser.wait( async () => {
+        await browser.wait(async () => {
             return await workItemsCard.getCount() === items.length;
         }, timeouts.DEFAULT_WAIT, 'Number of workitems on card');
 
@@ -307,16 +303,5 @@ class BetaSpaceDashboardInteractions extends ReleasedSpaceDashboardInteractions 
         await this.spaceDashboardPage.getWorkItemsCard().then(async function (card) {
             await card.openPlanner();
         });
-    }
-}
-
-class ProdBetaSpaceDashboardInteractions extends BetaSpaceDashboardInteractions {
-
-    public async verifyWorkItems(...items: string[]): Promise<void> {
-        let workItemsCard = await this.spaceDashboardPage.getWorkItemsCard();
-        expect(await workItemsCard.getCount()).toBe(0, 'Number of workitems on card');
-
-        let workItems = await workItemsCard.getWorkItems();
-        expect(workItems.length).toBe(0, 'Number of work items');
     }
 }
