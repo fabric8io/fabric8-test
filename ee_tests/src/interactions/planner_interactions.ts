@@ -2,7 +2,6 @@ import { browser } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as logger from '../support/logging';
-import { specContext } from '../support/spec_context';
 import { PlannerPage } from 'planner-functional-test';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { WorkItem } from 'planner-functional-test/dist/ui/planner';
@@ -11,7 +10,7 @@ export abstract class PlannerInteractionsFactory {
 
     public static create(strategy: string, spaceName: string): PlannerInteractions {
 
-        if (specContext.isProduction() || FeatureLevelUtils.isReleased()) {
+        if (FeatureLevelUtils.isReleased()) {
             return <PlannerInteractions>{
                 openPlannerPage(): void { },
                 createAndAssignWorkItem(workItem: WorkItem, asignee: string): void { }
