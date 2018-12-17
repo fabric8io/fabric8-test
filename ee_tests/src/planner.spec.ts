@@ -23,7 +23,7 @@ describe('Planner EE tests adding Area and Collaborator', () => {
     let loginInteractions = LoginInteractionsFactory.create();
     await loginInteractions.login();
     let accountHomeInteractions = AccountHomeInteractionsFactory.create();
-    await accountHomeInteractions.createSpace(spaceName);
+    await accountHomeInteractions.createEmptySpace(spaceName);
   });
 
   beforeEach(async() => {

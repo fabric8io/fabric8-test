@@ -1,10 +1,12 @@
 import { $, browser, by, element, ExpectedConditions as until } from 'protractor';
+import { LauncherInteractionsFactory } from '../interactions/launcher_interactions';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
-import { BaseElement } from '../ui/base.element';
+import { Quickstart } from '../support/quickstart';
+
 import { Button } from '../ui/button';
 import { TextInput } from '../ui/text_input';
-
+import { BaseElement } from '../ui/base.element';
 import { BasePage } from './base.page';
 import { Header } from './app/header';
 
@@ -16,13 +18,7 @@ export class AppPage extends BasePage {
   /* Dialog to create new space and project */
   private newSpaceName = new TextInput($('#add-space-overlay-name'), 'Name of Space');
   private createSpaceButton = new Button($('#createSpaceButton'), 'Create Space');
-
-  private noThanksButton = new Button($('#noThanksButton'), 'No Thanks ...');
-  private cancelCreateAppButton = new Button(
-    element(by.xpath('//*[contains(@class,\'f8launcher-container_close\')]' +
-      '//*[contains(@class,\'pficon-close\')]')),
-    'Cancel'
-  );
+  private createSpaceAndExitButton = new Button($('#createSpaceAndExitButton'), 'Create Space and Exit');
 
   /**
    * Returns an instance of the BaseElement that can be found using
@@ -45,37 +41,14 @@ export class AppPage extends BasePage {
   }
 
   /* Helper function to create a new OSIO space */
-  async createNewSpace(spaceName: string): Promise<SpaceDashboardPage> {
-    await this.header.recentItemsDropdown.selectCreateSpace();
-
-    // TODO: create a new BaseFragment for the model Dialog
-    await this.newSpaceName.enterText(spaceName);
-
-    await this.createSpaceButton.clickWhenReady();
-    await this.noThanksButton.clickWhenReady();
-
-    let url = await browser.getCurrentUrl();
-    logger.debug('current url:', url);
-
-    logger.debug('waiting for the url to contain spacename: ', spaceName);
-
-    await browser.wait(until.urlContains(spaceName), timeouts.DEFAULT_WAIT, 'URL contains space name');
-
-    let spaceDashboard = new SpaceDashboardPage(spaceName);
-    await spaceDashboard.open();
-    return spaceDashboard;
-  }
-
-  /* Helper function to create a new OSIO space */
-  async createNewSpaceByLauncher(spaceName: string): Promise<SpaceDashboardPage> {
+  async createNewEmptySpace(spaceName: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
     // https://github.com/fabric8io/fabric8-test/issues/1201
     await browser.sleep(5000);
     await this.newSpaceName.enterText(spaceName);
 
-    await this.createSpaceButton.clickWhenReady();
-    await this.cancelCreateAppButton.clickWhenReady();
+    await this.createSpaceAndExitButton.clickWhenReady();
 
     let url = await browser.getCurrentUrl();
     logger.debug('current url:', url);
@@ -83,14 +56,11 @@ export class AppPage extends BasePage {
     logger.debug('waiting for the url to contain spacename: ', spaceName);
 
     await browser.wait(until.urlContains(spaceName), timeouts.DEFAULT_WAIT, 'URL contains space name');
-
-    let spaceDashboard = new SpaceDashboardPage(spaceName);
-    await spaceDashboard.open();
-    return spaceDashboard;
+    logger.info('Space Created');
   }
 
   /* Helper function to create a new OSIO space for import flow*/
-  async createNewSpaceWithExistingCodebase(spaceName: string): Promise<any> {
+  async createNewSpaceWithExistingCodebase(spaceName: string) {
     await this.header.recentItemsDropdown.selectCreateSpace();
 
     // TODO: create a new BaseFragment for the model Dialog
@@ -148,6 +118,4 @@ export class AppPage extends BasePage {
 // NOTE: imported here otherwise AppPage will not be defined when
 // UserProfilePage that inherts AppPage is created
 import { UserProfilePage } from './user_profile.page';
-import { UserSettingsPage } from './user_settings.page'; import { SpaceDashboardPage } from './space_dashboard.page';
-import { LauncherInteractionsFactory } from '../interactions/launcher_interactions';
-import { Quickstart } from '../support/quickstart';
+import { UserSettingsPage } from './user_settings.page';

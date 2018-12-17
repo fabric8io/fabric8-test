@@ -30,7 +30,7 @@ export interface AccountHomeInteractions {
 
     openAccountHomePage(mode: PageOpenMode): void;
 
-    createSpace(name: string): void;
+    createEmptySpace(name: string): void;
 
     createSpaceWithExistingCodebase(name: string): void;
 
@@ -57,9 +57,9 @@ abstract class AbstractSpaceDashboardInteractions implements AccountHomeInteract
 
     public async abstract openSpaceDashboard(name: string): Promise<void>;
 
-    public async createSpace(name: string): Promise<void> {
+    public async createEmptySpace(name: string): Promise<void> {
         logger.info('Create space ' + name);
-        await this.appPage.createNewSpaceByLauncher(name);
+        await this.appPage.createNewEmptySpace(name);
     }
 
     public async createSpaceWithExistingCodebase(name: string): Promise<void> {
