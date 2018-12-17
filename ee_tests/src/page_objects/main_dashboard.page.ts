@@ -1,7 +1,7 @@
 import { browser, by, element, ExpectedConditions as until } from 'protractor';
 import * as timeouts from '../support/timeouts';
 import { AppPage } from './app.page';
-import { SpaceDashboardPage } from './space_dashboard.page';
+import { OldSpaceDashboardPage } from './old_space_dashboard.page';
 
 /**
  * Page object for the 'old' implementation of account home
@@ -26,12 +26,12 @@ export class MainDashboardPage extends AppPage {
     await this.header.recentItemsDropdown.selectAccountHome();
   }
 
-  async openSpace(spaceName: string): Promise<SpaceDashboardPage> {
+  async openSpace(spaceName: string): Promise<OldSpaceDashboardPage> {
     await browser.wait(until.presenceOf(element(by.className('f8-home-space-list-result'))),
       timeouts.DEFAULT_WAIT, 'Tag with f8-home-space-list-result class name is present');
     await element(by.className('f8-home-space-list-result')).element(by.cssContainingText('a', spaceName)).click();
 
-    let spaceDashboard = new SpaceDashboardPage(spaceName);
+    let spaceDashboard = new OldSpaceDashboardPage(spaceName);
     await spaceDashboard.open();
     return Promise.resolve(spaceDashboard);
   }
