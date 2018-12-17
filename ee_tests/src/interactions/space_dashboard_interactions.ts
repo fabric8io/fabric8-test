@@ -6,7 +6,7 @@ import * as timeouts from '../support/timeouts';
 import { specContext } from '../support/spec_context';
 import { windowManager } from '../support/window_manager';
 import { screenshotManager } from '../support/screenshot_manager';
-import { DeployedApplicationInfo, Pipeline, SpaceDashboardPage } from '../page_objects/space_dashboard.page';
+import { DeployedApplicationInfo, OldSpaceDashboardPage, Pipeline } from '../page_objects/old_space_dashboard.page';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
@@ -116,14 +116,14 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
 
 class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteractions {
 
-    protected spaceDashboardPage: SpaceDashboardPage;
+    protected spaceDashboardPage: OldSpaceDashboardPage;
 
     protected strategy: string;
 
     constructor(strategy: string, spaceName: string) {
         super(spaceName);
         this.strategy = strategy;
-        this.spaceDashboardPage = new SpaceDashboardPage(spaceName);
+        this.spaceDashboardPage = new OldSpaceDashboardPage(spaceName);
     }
 
     public async openSpaceDashboardPage(mode: PageOpenMode): Promise<void> {

@@ -6,7 +6,7 @@ import { SpacePipelinePage } from './space_pipeline_tab.page';
 import * as timeouts from '../support/timeouts';
 import { specContext } from '../support/spec_context';
 
-export class SpaceDashboardPage extends SpaceAppPage {
+export class OldSpaceDashboardPage extends SpaceAppPage {
 
   constructor(spaceName: string) {
     super();
