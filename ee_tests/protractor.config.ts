@@ -73,10 +73,14 @@ let conf: Config = {
       'args': [
         // '--headless', '--disable-gpu',
         '--no-sandbox', 'disable-popup-blocking=true'
-      ]
+      ],
+      'perfLoggingPrefs': {
+        'enableNetwork': true
+      }
     },
     'loggingPrefs': {
-      browser: 'ALL'
+      browser: 'ALL',
+      performance: 'ALL'
     }
   },
 
