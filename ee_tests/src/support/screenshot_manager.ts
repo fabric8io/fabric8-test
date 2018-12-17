@@ -23,6 +23,7 @@ class ScreenshotManager {
       await this.writeScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '.png');
       await this.writePageSource(this.path + '/' + this.getFormattedCounters() + '-' + name + '.html');
       await this.writeBrowserLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.log');
+      await this.writeNetworkLog(this.path + '/' + this.getFormattedCounters() + '-' + name + '.perf.log');
     } catch (e) {
       logger.error('Saving screenshot, page or browser logs failed with error: ' + e);
       await this.desktopScreenshot(this.path + '/' + this.getFormattedCounters() + '-' + name + '-desktop.png');
@@ -80,6 +81,10 @@ class ScreenshotManager {
     return Promise.race([this.writeBrowserLogPromise(filename), this.createTimeoutPromise()]);
   }
 
+  private async writeNetworkLog(filename: string) {
+    return Promise.race([this.writeNetworkLogPromise(filename), this.createTimeoutPromise()]);
+  }
+
   private async writeBrowserLogPromise(filename: string) {
     logger.debug('Saving browser logs');
     let logs: logging.Entry[] = await browser.manage().logs().get('browser');
@@ -95,6 +100,55 @@ class ScreenshotManager {
 
     stream.end();
     logger.debug(`Saved browser logs to: ${filename}`);
+  }
+
+  private async writeNetworkLogPromise(filename: string) {
+    logger.debug('Saving network logs');
+    let logs: logging.Entry[] = await browser.manage().logs().get('performance');
+    let stream = createWriteStream(filename);
+
+    logs.forEach((entry) => {
+      let formattedMessage = this.getFormattedMessage(entry);
+
+      if (formattedMessage !== undefined) {
+        stream.write(formattedMessage + '\n');
+      }
+    });
+
+    stream.end();
+    logger.debug(`Saved network logs to: ${filename}`);
+  }
+
+  private getFormattedMessage(entry: logging.Entry): string | undefined {
+    let message = JSON.parse(entry.message).message;
+    let formattedMessage = `[${logger.formatTimestamp(entry.timestamp)}]   req_id:${message.params.requestId}   `;
+
+    switch (message.method) {
+      case 'Network.requestWillBeSent': {
+        formattedMessage += `[REQUEST]    ${message.params.request.method}   ${message.params.request.url}`;
+        break;
+      }
+      case 'Network.responseReceived': {
+        let response = message.params.response;
+        formattedMessage += `[RESPONSE]   ${response.status}   ${response.statusText}   ${response.url}`;
+        break;
+      }
+      case 'Network.webSocketCreated': {
+        formattedMessage += `[WEBSOCKET_CREATED]    ${message.params.url}`;
+        break;
+      }
+      case 'Network.webSocketFrameSent': {
+        formattedMessage += `[WEBSOCKET_REQUEST]    ${message.params.response.payloadData}`;
+        break;
+      }
+      case 'Network.webSocketFrameReceived': {
+        formattedMessage += `[WEBSOCKET_RESPONSE]   ${message.params.response.payloadData}`;
+        break;
+      }
+      default : return undefined;
+    }
+
+    return formattedMessage;
   }
 
   private async desktopScreenshot(fileName: string) {
