@@ -19,7 +19,6 @@ validate_config() {
   # be gone in the future.
   export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
   export GITHUB_REPO=${GITHUB_REPO:-}
-  export NGX_LAUNCHER_ENABLED=${NGX_LAUNCHER_ENABLED:-false}
   export ZABBIX_ENABLED=${ZABBIX_ENABLED:-false}
   export ZABBIX_HOST=${ZABBIX_HOST:-}
   export ZABBIX_METRIC_PREFIX=${ZABBIX_METRIC_PREFIX:-}
@@ -86,7 +85,6 @@ main() {
     --params.target.url="$OSIO_URL" \
     --params.quickstart.name="$QUICKSTART_NAME" \
     --params.release.strategy="$RELEASE_STRATEGY" \
-    --params.ngx_launcher.enabled="$NGX_LAUNCHER_ENABLED" \
     --params.reset.environment="$RESET_ENVIRONMENT" \
     --params.feature.level="$FEATURE_LEVEL" \
     --params.che.local.repo="$CHE_LOCAL_REPOSITORY" \
