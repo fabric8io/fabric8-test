@@ -134,4 +134,8 @@ export class PipelineStage extends BaseElement {
     }
     return Promise.resolve(text);
   }
+
+  public async openApplication(): Promise<void> {
+    return this.element(by.css('a.external-service')).click();
+  }
 }
