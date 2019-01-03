@@ -108,8 +108,14 @@ export class AnalyticsCard extends BaseElement {
 
   async ready() {
     await super.ready();
-    await browser.wait(until.stalenessOf(this.element(by.cssContainingText('h3', 'No results found'))),
-      timeouts.DEFAULT_WAIT, 'Staleness of element with text "No results found" which means that the analytics ' +
+    await browser.wait(
+      until.stalenessOf(this.element(by.className('pre-loader'))),
+      timeouts.DEFAULT_WAIT,
+      'Staleness of the circle progress bar');
+    await browser.wait(
+      until.stalenessOf(this.element(by.cssContainingText('h3', 'Analysis for your stack is in progress...'))),
+      timeouts.LONGER_WAIT,
+      'Staleness of element with text "Analysis for your stack is in progress..." which means that the analytics ' +
       'report on space dashboard was not generated, could be caused by overloaded analytics service ' +
       '(SLA 30 minutes) or by missing annotation "fabric8.io/bayesian.analysisUrl" ' +
       '(check oc-jenkins-logs.txt)');
