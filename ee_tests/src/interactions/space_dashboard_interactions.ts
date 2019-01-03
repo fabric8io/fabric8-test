@@ -1,17 +1,17 @@
-import { browser, by, element, ExpectedConditions as until } from 'protractor';
+import { browser, by, element } from 'protractor';
 import { FeatureLevelUtils } from '../support/feature_level';
 import { PageOpenMode } from '../page_objects/base.page';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import { specContext } from '../support/spec_context';
-import { windowManager } from '../support/window_manager';
-import { screenshotManager } from '../support/screenshot_manager';
 import { DeployedApplicationInfo, OldSpaceDashboardPage, Pipeline } from '../page_objects/old_space_dashboard.page';
 import { BuildStatus } from '../support/build_status';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { LauncherInteractionsFactory } from './launcher_interactions';
 import { Quickstart } from '../support/quickstart';
+import { DeployedApplicationInteractionsFactory } from './deployed_application_interactions';
+import { Environment } from '../support/environments';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
@@ -224,7 +224,8 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
             expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
             await application.openStageLink();
-            await this.verifyLink(testCallback, 'stage');
+            await DeployedApplicationInteractionsFactory.
+                create(Environment.STAGE).verifyDeployedApplication(testCallback);
         }
     }
 
@@ -234,7 +235,8 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         if (ReleaseStrategy.RUN === this.strategy) {
             expect(await application.getRunVersion()).toBe(version, 'deployed application run version');
             await application.openRunLink();
-            await this.verifyLink(testCallback, 'run');
+            await DeployedApplicationInteractionsFactory.
+                create(Environment.RUN).verifyDeployedApplication(testCallback);
         }
     }
 
@@ -257,26 +259,6 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         await element.all(by.id('spacehome-my-workitems-badge')).then(function (i) {
             expect(i.length).toBe(0);
         });
-    }
-
-    private async verifyLink(testCallback: () => void, environment: string) {
-        logger.info('Verify link on ' + environment + ' environment');
-        await windowManager.switchToNewWindow();
-        await browser.wait(until.urlContains(environment), timeouts.DEFAULT_WAIT, `url contains ${environment}`);
-
-        await browser.wait(async () => {
-            await browser.refresh();
-            return ! await element(by.cssContainingText('h1', 'Application is not available')).isPresent();
-        }, timeouts.LONGER_WAIT, 'Application takes more than 10 minutes to start');
-
-        await screenshotManager.save(environment);
-
-        let currentURL = await browser.getCurrentUrl();
-        expect(currentURL).toContain(environment, `${environment} environment url`);
-
-        await testCallback();
-
-        await windowManager.closeCurrentWindow();
     }
 }
 

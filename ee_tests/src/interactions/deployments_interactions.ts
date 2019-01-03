@@ -2,7 +2,7 @@ import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import {
     DeployedApplication, DeployedApplicationEnvironment, DeploymentStatus,
-    Environment, ResourceUsageData, SpaceDeploymentsPage
+    ResourceUsageData, SpaceDeploymentsPage
 } from '../page_objects/space_deployments_tab.page';
 import { ReleaseStrategy } from '../support/release_strategy';
 import { FeatureLevelUtils } from '../support/feature_level';
@@ -10,6 +10,7 @@ import { MainDashboardPage } from '../page_objects/main_dashboard.page';
 import { PageOpenMode } from '../page_objects/base.page';
 import { PipelinesInteractionsFactory } from './pipelines_interactions';
 import { browser } from 'protractor';
+import { Environment } from '../support/environments';
 
 export abstract class DeploymentsInteractionsFactory {
 

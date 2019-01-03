@@ -25,11 +25,6 @@ export class SpaceDeploymentsPage extends AppPage {
   }
 }
 
-export enum Environment {
-  STAGE = 0,
-  RUN = 1
-}
-
 export class DeployedApplication extends BaseElement {
 
   constructor(finder: ElementFinder) {

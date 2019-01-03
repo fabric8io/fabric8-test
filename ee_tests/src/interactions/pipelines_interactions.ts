@@ -10,6 +10,8 @@ import { ReleaseStrategy } from '../support/release_strategy';
 import { PageOpenMode } from '../page_objects/base.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import * as runner from '../support/script_runner';
+import { DeployedApplicationInteractionsFactory } from './deployed_application_interactions';
+import { Environment } from '../support/environments';
 
 export abstract class PipelinesInteractionsFactory {
 
@@ -45,6 +47,8 @@ export interface PipelinesInteractions {
     verifyBuildResult(pipeline: PipelineDetails, expectedStatus: BuildStatus): void;
 
     verifyBuildStages(pipeline: PipelineDetails): void;
+
+    verifyDeployedApplication(pipeline: PipelineDetails, testCallback: () => void): void;
 }
 
 abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
@@ -191,9 +195,17 @@ abstract class AbstractPipelinesInteractions implements PipelinesInteractions {
         await this.verifyBuildStagesInternal(stages);
     }
 
+    public async verifyDeployedApplication(pipeline: PipelineDetails, testCallback: () => void): Promise<void> {
+        let stages = await pipeline.getStages();
+        return this.verifyDeployedApplicationInternal(stages, testCallback);
+    }
+
     protected abstract async waitForStagesToFinish(pipeline: PipelineDetails): Promise<void>;
 
     protected abstract async verifyBuildStagesInternal(stages: PipelineStage[]): Promise<void>;
+
+    protected abstract async verifyDeployedApplicationInternal(
+        stages: PipelineStage[], testCallback: () => void): Promise<void>;
 
     protected async waitForLogLink(pipeline: PipelineDetails): Promise<void> {
         logger.info('Wait for View log link');
@@ -315,6 +327,10 @@ class PipelinesInteractionsReleaseStrategy extends AbstractPipelinesInteractions
         expect(await stages[index].getName()).toBe(name, 'stage name');
         expect(await stages[index].getStatus()).toBe(BuildStageStatus.SUCCESS, 'stage status');
     }
+
+    protected async verifyDeployedApplicationInternal(stage: PipelineStage[], testCallback: () => void): Promise<void> {
+         // nothing is deployed
+    }
 }
 
 class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStrategy {
@@ -332,6 +348,19 @@ class PipelinesInteractionsStageStrategy extends PipelinesInteractionsReleaseStr
 
     protected async verifyRolloutStage(stages: PipelineStage[]) {
         await super.verifyBuildStage(stages, 1, 'Rollout to Stage');
+    }
+
+    protected async verifyDeployedApplicationInternal(
+        stages: PipelineStage[], testCallback: () => void): Promise<void> {
+
+        await this.verifyStageDeployedApplication(stages[1], testCallback);
+   }
+
+    protected async verifyStageDeployedApplication(stage: PipelineStage, testCallback: () => void): Promise<void> {
+        logger.info('Open application on stage');
+        await stage.openApplication();
+        await DeployedApplicationInteractionsFactory.create(Environment.STAGE).
+            verifyDeployedApplication(testCallback);
     }
 }
 
@@ -358,5 +387,19 @@ class PipelinesInteractionsRunStrategy extends PipelinesInteractionsStageStrateg
         await this.verifyRolloutStage(stages);
         await this.verifyBuildStage(stages, 2, 'Approve');
         await this.verifyBuildStage(stages, 3, 'Rollout to Run');
+    }
+
+    protected async verifyDeployedApplicationInternal(
+        stages: PipelineStage[], testCallback: () => void): Promise<void> {
+
+        await this.verifyStageDeployedApplication(stages[1], testCallback);
+        await this.verifyRunDeployedApplication(stages[3], testCallback);
+   }
+
+    protected async verifyRunDeployedApplication(stage: PipelineStage, testCallback: () => void): Promise<void> {
+        logger.info('Open application on run');
+        await stage.openApplication();
+        await DeployedApplicationInteractionsFactory.create(Environment.RUN).
+            verifyDeployedApplication(testCallback);
     }
 }
