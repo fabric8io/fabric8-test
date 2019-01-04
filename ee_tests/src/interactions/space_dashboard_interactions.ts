@@ -4,14 +4,11 @@ import { PageOpenMode } from '../page_objects/base.page';
 import * as logger from '../support/logging';
 import * as timeouts from '../support/timeouts';
 import { specContext } from '../support/spec_context';
-import { DeployedApplicationInfo, OldSpaceDashboardPage, Pipeline } from '../page_objects/old_space_dashboard.page';
+import { OldSpaceDashboardPage, Pipeline } from '../page_objects/old_space_dashboard.page';
 import { BuildStatus } from '../support/build_status';
-import { ReleaseStrategy } from '../support/release_strategy';
 import { AccountHomeInteractionsFactory } from './account_home_interactions';
 import { LauncherInteractionsFactory } from './launcher_interactions';
 import { Quickstart } from '../support/quickstart';
-import { DeployedApplicationInteractionsFactory } from './deployed_application_interactions';
-import { Environment } from '../support/environments';
 
 export abstract class SpaceDashboardInteractionsFactory {
 
@@ -53,16 +50,6 @@ export interface SpaceDashboardInteractions {
     verifyPipeline(
         pipeline: Pipeline, application: string, buildNumber: number, buildStatus: BuildStatus): void;
 
-    verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]>;
-
-    verifyDeployedApplication(application: DeployedApplicationInfo, name: string): void;
-
-    verifyDeployedApplicationStage(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): void;
-
-    verifyDeployedApplicationRun(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): void;
-
     verifyAnalytics(): void;
 
     verifyWorkItems(...items: string[]): void;
@@ -94,16 +81,6 @@ abstract class AbstractSpaceDashboardInteractions implements SpaceDashboardInter
 
     public abstract async verifyPipeline(
         pipeline: Pipeline, application: string, buildNumber: number, buildStatus: BuildStatus): Promise<void>;
-
-    public abstract async verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]>;
-
-    public abstract async verifyDeployedApplication(application: DeployedApplicationInfo, name: string): Promise<void>;
-
-    public abstract async verifyDeployedApplicationStage(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void>;
-
-    public abstract async verifyDeployedApplicationRun(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void>;
 
     public abstract async verifyAnalytics(): Promise<void>;
 
@@ -202,42 +179,6 @@ class ReleasedSpaceDashboardInteractions extends AbstractSpaceDashboardInteracti
         expect(pipeline.getApplication()).toBe(application, 'application name on pipeline');
         expect(pipeline.getStatus()).toBe(buildStatus, 'build status');
         expect(pipeline.getBuildNumber()).toBe(buildNumber, 'build number');
-    }
-
-    public async verifyDeployedApplications(count: number): Promise<DeployedApplicationInfo[]> {
-        logger.info('Verify deployed applications');
-        let deploymentsCard = await this.spaceDashboardPage.getDeploymentsCard();
-
-        let applications = await deploymentsCard.getApplications();
-        expect(applications.length).toBe(count, 'number of applications');
-        return Promise.resolve(applications);
-    }
-
-    public async verifyDeployedApplication(application: DeployedApplicationInfo, name: string): Promise<void> {
-        logger.info('Verify deployed application ' + await application.getName());
-        expect(await application.getName()).toBe(name, 'deployed application name');
-    }
-
-    public async verifyDeployedApplicationStage(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
-        logger.info('Verify deployed application ' + await application.getName() + ' on stage');
-        if (ReleaseStrategy.STAGE === this.strategy || ReleaseStrategy.RUN === this.strategy) {
-            expect(await application.getStageVersion()).toBe(version, 'deployed application stage version');
-            await application.openStageLink();
-            await DeployedApplicationInteractionsFactory.
-                create(Environment.STAGE).verifyDeployedApplication(testCallback);
-        }
-    }
-
-    public async verifyDeployedApplicationRun(
-        application: DeployedApplicationInfo, version: string, testCallback: () => void): Promise<void> {
-        logger.info('Verify deployed application ' + await application.getName() + ' on run');
-        if (ReleaseStrategy.RUN === this.strategy) {
-            expect(await application.getRunVersion()).toBe(version, 'deployed application run version');
-            await application.openRunLink();
-            await DeployedApplicationInteractionsFactory.
-                create(Environment.RUN).verifyDeployedApplication(testCallback);
-        }
     }
 
     public async verifyAnalytics(): Promise<void> {
