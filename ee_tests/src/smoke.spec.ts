@@ -7,7 +7,6 @@ import { newSpaceName } from './support/space_name';
 import { specContext } from './support/spec_context';
 import { FeatureLevelUtils } from './support/feature_level';
 import { Quickstart } from './support/quickstart';
-import { DeploymentsInteractions, DeploymentsInteractionsFactory } from './interactions/deployments_interactions';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
 import { PipelinesInteractionsFactory } from './interactions/pipelines_interactions';
 import { SpaceDashboardInteractionsFactory } from './interactions/space_dashboard_interactions';
@@ -15,7 +14,6 @@ import { AccountHomeInteractionsFactory } from './interactions/account_home_inte
 import { PageOpenMode } from './page_objects/base.page';
 import { CodebasesInteractionsFactory } from './interactions/codebases_interactions';
 import { BuildStatus } from './support/build_status';
-import { DeploymentStatus } from './page_objects/space_deployments_tab.page';
 import * as runner from './support/script_runner';
 import { PlannerInteractionsFactory } from './interactions/planner_interactions';
 import { CheInteractionsFactory } from './interactions/che_interactions';
@@ -123,20 +121,6 @@ describe('e2e_smoketest', () => {
     await pipelineInteractions.verifyDeployedApplication(pipeline, quickstart.deployedPageTestCallback);
   });
 
-  it('deployments', async () => {
-    logger.specTitle('Verify deployments');
-    let deploymentsInteractions: DeploymentsInteractions = DeploymentsInteractionsFactory.create(strategy, spaceName);
-    await deploymentsInteractions.openDeploymentsPage(PageOpenMode.UseMenu);
-    let applications = await deploymentsInteractions.verifyApplications(1);
-    let application = applications[0];
-    await deploymentsInteractions.verifyApplication(application, spaceName);
-
-    let environments = await deploymentsInteractions.verifyEnvironments(application);
-    await deploymentsInteractions.verifyStageEnvironment(environments, DeploymentStatus.OK, '1.0.1', 1);
-    await deploymentsInteractions.verifyRunEnvironment(environments, DeploymentStatus.OK, '1.0.1', 1);
-    await deploymentsInteractions.verifyResourceUsage();
-  });
-
   it('dashboard', async () => {
     logger.specTitle('Verify dashboard');
     let dashboardInteractions = SpaceDashboardInteractionsFactory.create(strategy, spaceName);
@@ -146,18 +130,6 @@ describe('e2e_smoketest', () => {
 
     let pipelines = await dashboardInteractions.verifyPipelines(1);
     await dashboardInteractions.verifyPipeline(pipelines[0], spaceName, 1, BuildStatus.COMPLETE);
-
-    let deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
-    let deployedApplication = deployedApplications[0];
-    await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
-    await dashboardInteractions.verifyDeployedApplicationStage(
-      deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
-
-    deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
-    deployedApplication = deployedApplications[0];
-    await dashboardInteractions.verifyDeployedApplicationRun(
-      deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
-    await dashboardInteractions.verifyWorkItems();
   });
 
   it('my_workitems', async () => {

@@ -1,7 +1,5 @@
-import { browser, by, element, ExpectedConditions as until } from 'protractor';
-
+import { browser } from 'protractor';
 import * as logger from './support/logging';
-import * as timeouts from './support/timeouts';
 import { screenshotManager } from './support/screenshot_manager';
 import { newSpaceName } from './support/space_name';
 import { FeatureLevelUtils } from './support/feature_level';
@@ -102,15 +100,6 @@ describe('e2e_che_integration', () => {
 
     let pipelines = await dashboardInteractions.verifyPipelines(1);
     await dashboardInteractions.verifyPipeline(pipelines[0], spaceName, 1, BuildStatus.COMPLETE);
-
-    let deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
-    let deployedApplication = deployedApplications[0];
-    await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
-    await dashboardInteractions.verifyDeployedApplicationStage(
-      deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
-    await dashboardInteractions.verifyDeployedApplicationRun(
-        deployedApplication, '1.0.1', quickstart.deployedPageTestCallback);
-    await dashboardInteractions.verifyWorkItems();
   });
 
   it('change_codebase', async () => {
@@ -141,22 +130,6 @@ describe('e2e_che_integration', () => {
 
     let pipelines = await dashboardInteractions.verifyPipelines(1);
     await dashboardInteractions.verifyPipeline(pipelines[0], spaceName, 2, BuildStatus.COMPLETE);
-
-    let deployedApplications = await dashboardInteractions.verifyDeployedApplications(1);
-    let deployedApplication = deployedApplications[0];
-    await dashboardInteractions.verifyDeployedApplication(deployedApplication, spaceName);
-    await dashboardInteractions.verifyDeployedApplicationStage(
-      deployedApplication, '1.0.2', httpBooster);
-    await dashboardInteractions.verifyDeployedApplicationRun(
-        deployedApplication, '1.0.2', httpBooster);
-    await dashboardInteractions.verifyWorkItems();
   });
 
 });
-
-async function httpBooster() {
-  await browser.wait(until.presenceOf(
-  element(by.id('_http_booster'))), timeouts.DEFAULT_WAIT, '\_http_booster\' is present');
-  let text = await element(by.id('_http_booster')).getText();
-  expect(text).toContain('HTTP Booster', `page contains text`);
-}

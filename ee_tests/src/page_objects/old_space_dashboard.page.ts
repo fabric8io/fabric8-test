@@ -47,13 +47,6 @@ export class OldSpaceDashboardPage extends SpaceAppPage {
 
     return new PipelinesCard(pipelinesWidget);
   }
-
-  async getDeploymentsCard(): Promise<DeploymentsCard> {
-    let deploymentsWidget = new BaseElement(element(by.tagName('fabric8-environment-widget')), 'Deployments widget');
-    await deploymentsWidget.ready();
-
-    return new DeploymentsCard(deploymentsWidget);
-  }
 }
 
 export abstract class SpaceDashboardPageCard extends BaseElement {
@@ -215,62 +208,5 @@ export class Pipeline extends BaseElement {
     let text = await this.element(by.className('f8-card__pipeline-column-build')).getText();
     let count = this.string2Number(text, 'build number');
     return Promise.resolve(count);
-  }
-}
-
-export class DeploymentsCard extends SpaceDashboardPageCard {
-
-  constructor(finder: ElementFinder) {
-    super(finder, 'Deployments');
-  }
-
-  public async getCount(): Promise<number> {
-    return this.getCountByID('spacehome-environments-badge', 'deployments');
-  }
-
-  public async getApplications(): Promise<DeployedApplicationInfo[]> {
-    await browser.wait(until.presenceOf(element(by.id('spacehome-environments-list'))),
-      timeouts.DEFAULT_WAIT, 'Element with id spacehome-environments-list is present');
-    let elementsFinders: ElementFinder[] =
-      await this.element(by.id('spacehome-environments-list')).all(by.tagName('li'));
-    let applications = await elementsFinders.map(finder => new DeployedApplicationInfo(finder));
-    return Promise.all(applications);
-  }
-}
-
-// tslint:enable:max-line-length
-
-export class DeployedApplicationInfo extends BaseElement {
-
-  private stageLink = new BaseElement(this.element(by.cssContainingText('a', 'stage')), 'Stage link');
-
-  private runLink = new BaseElement(this.element(by.cssContainingText('a', 'run')), 'Run link');
-
-  constructor(finder: ElementFinder) {
-    super(finder, 'Deployed application');
-  }
-
-  public async getName(): Promise<string> {
-    return this.element(by.tagName('h5')).getText();
-  }
-
-  public async getStageVersion(): Promise<string> {
-    let text = await this.stageLink.getText();
-    text = text.split('-')[1].trim();
-    return Promise.resolve(text);
-  }
-
-  public async getRunVersion(): Promise<string> {
-    let text = await this.runLink.getText();
-    text = text.split('-')[1].trim();
-    return Promise.resolve(text);
-  }
-
-  public async openStageLink() {
-    await this.stageLink.clickWhenReady();
-  }
-
-  public async openRunLink() {
-    await this.runLink.clickWhenReady();
   }
 }
