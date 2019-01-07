@@ -66,6 +66,16 @@ if [ "$3" == "jenkins" ]; then
     echo "oc logs" $POD_NAMES
     oc logs $POD_NAMES
   fi
+
+  echo ---------- Get build name ----------------
+  echo "oc get builds -n $1 | awk '{print \$1}' | tail -1"
+  buildName=$(oc get builds -n $1 | awk '{print $1}' | tail -1)
+
+  if [ ! -z $buildName ]; then
+    echo ---------- Get build $buildName ---------------
+    echo "oc get build/$buildName -n $1 -o yaml"
+    oc get build/$buildName -n $1 -o yaml
+  fi
 fi
 
 if [ "$3" == "che" ] && [ ! -z "$4" ]; then
@@ -77,16 +87,6 @@ if [ "$3" == "che" ] && [ ! -z "$4" ]; then
   echo "Number of existing workspaces: $(echo $RESPONSE | jq '. | length')"
   echo "List of existing workspaces:"
   echo $RESPONSE | jq '.[] | {workspace_name: .config.name, project_name: .config.projects[].name}'
-fi
-
-echo ---------- Get build name ----------------
-echo "oc get builds -n $1 | awk '{print \$1}' | tail -1"
-buildName=$(oc get builds -n $1 | awk '{print $1}' | tail -1)
-
-if [ ! -z $buildName ]; then
-  echo ---------- Get build $buildName ---------------
-  echo "oc get build/$buildName -n $1 -o yaml"
-  oc get build/$buildName -n $1 -o yaml
 fi
 
 echo ---------- Script finished -------------------------
