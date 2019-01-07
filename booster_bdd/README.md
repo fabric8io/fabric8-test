@@ -1,5 +1,18 @@
 # BDD tests for the OSIO boosters
 
+## Current Build Status
+
+| Last build        | Description           |
+| ------------- |:-------------:|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x/) | Periodic BDD test for ConfigMap, Vert.x Booster, 2a cluster|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs/) | Periodic BDD test for REST HTTP, Node.js Booster, 2a cluster|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x/) | Periodic BDD test for REST HTTP, Vert.x Booster, 2a cluster|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail/) | Periodic BDD test for REST HTTP, Thorntail Booster, 2a cluster|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot/) | Periodic BDD test for ConfigMap, Spring Boot Booster, 2a cluster|
+| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot/) | Periodic BDD test for REST HTTP, Sprint Boot Booster, 2a cluster|
+
+## Overview
+
 These tests are intended to provide end-to-end test coverage to support the contribution of new boosters and changes to existing boosters. The tests are implemented in Python, are built with the Behave (https://github.com/behave/behave) test framework, and follow the Behavior Driven Development (BDD) model.
 
 DANGER-ZONE: Running these tests will reset your OpenShift.io user environment if `OSIO_DANGER_ZONE` environmental variable is set to `true`. This will result in your spaces, projects, etc. being deleted in OpenShift.io - To avoid resetting your user environment, make sure the `OSIO_DANGER_ZONE` environmental variable is not set to `true` (default is `false`, see the configuration). The test scenario files are contained in the "test-scenario" directory.
