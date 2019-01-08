@@ -1,15 +1,20 @@
 # BDD tests for the OSIO boosters
 
-## Current Build Status
+## Current Build Status (2a cluster)
 
-| Last build        | Description           |
-| ------------- |:-------------:|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x/) | Periodic BDD test for ConfigMap, Vert.x Booster, 2a cluster|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs/) | Periodic BDD test for REST HTTP, Node.js Booster, 2a cluster|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x/) | Periodic BDD test for REST HTTP, Vert.x Booster, 2a cluster|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail/) | Periodic BDD test for REST HTTP, Thorntail Booster, 2a cluster|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot/) | Periodic BDD test for ConfigMap, Spring Boot Booster, 2a cluster|
-| [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot/) | Periodic BDD test for REST HTTP, Sprint Boot Booster, 2a cluster|
+### BDD tests for creating a new application (`launch-booster`)
+
+| | Vert.x | Spring Boot | Thorntail | Node.js | Go |
+| :------------- | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| REST HTTP | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-vert.x/) | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-spring-boot/) | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-thorntail/) | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-rest-http-nodejs/) | - |
+| ConfigMap | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-vert.x/) |  [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot)](https://ci.centos.org/view/Devtools/job/devtools-bdd-test-booster-openshift.io-us-east-2a-configmap-spring-boot/) | - | - | - |
+| Health Check | - | - | - | - | - |
+| CRUD | - | - | - | - | - |
+
+### BDD tests for importing an existing application (`import-repo`)
+| | Maven | Node.js | Go |
+| :------------- | :-------------: | :-------------: | :-------------: |
+| Import project | [![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-bdd-test-booster-import-maven-openshift.io-us-east-2a/)](https://ci.centos.org/job/devtools-bdd-test-booster-import-maven-openshift.io-us-east-2a/) | - | - |
 
 ## Overview
 
