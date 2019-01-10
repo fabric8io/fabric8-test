@@ -1,4 +1,5 @@
 import time
+import types
 import requests
 import features.src.support.helpers as helpers
 import re
@@ -19,6 +20,7 @@ class Pipeline(object):
         self.osoToken = os.environ.get('OSO_TOKEN')
         self.osoUrl = os.environ.get('OSO_CLUSTER_ADDRESS')
         self.authHeader = 'Bearer {}'.format(self.osoToken)
+        self.projectName = os.environ.get('PROJECT_NAME')
 
         ###############################################
         # Find the running build pipeline, verify state transitions:
@@ -30,12 +32,14 @@ class Pipeline(object):
         self.urlString = '{}/oapi/v1/namespaces/{}/builds'.format(self.osoUrl, self.osoUsername)
         print('Pipeline URL = {}'.format(self.urlString))
 
-    def buildStatus(self, sleepTimer, maxTries, expectedBuildStatus,
+    def buildStatus(self, sleepTimer, maxTries, expectedBuildStatuses,
                     expectedAnnotation=None):
         """
         Function to query builds, wait/retry for expected build status
         """
-        print('Look for build, expected build status: {}'.format(expectedBuildStatus))
+        print('Look for build, expected build status - one of {}'.format(expectedBuildStatuses))
+        if isinstance(expectedBuildStatuses, str):
+            expectedBuildStatuses = [expectedBuildStatuses]
 
         counter = 0
         requestFailed = True
@@ -43,51 +47,59 @@ class Pipeline(object):
         while (requestFailed and (counter < maxTries)):
             counter = counter + 1
 
-            try:
-                print('Making request to check for the build status...')
-                r = requests.get(self.urlString, headers=self.headers)
+            print('Making request to check for the build status...')
+            r = requests.get(self.urlString, headers=self.headers)
 
-                helpers.printToJson('Build status response', r)
+            helpers.printToJson('Build status response', r)
 
-                respJson = r.json()
-                actualBuildStatus = respJson['items'][0]['status']['phase']
+            respJson = r.json()
+            currentBuild = None
+            for item in respJson['items']:
+                if re.search('{}-\\d+'.format(self.projectName), item['metadata']['name']):
+                    currentBuild = item
 
-                expectedAnnotationFound = False
-                if expectedAnnotation is not None:
-                    expectedAnnotationFound = (
-                        expectedAnnotation in respJson['items'][0]['metadata']['annotations']
-                    )
+            if currentBuild is None:
+                print('Attempt {} failed - current build not found - retrying...'.format(counter))
+                time.sleep(sleepTimer)
+                continue
 
-                if re.search(expectedBuildStatus, actualBuildStatus):
-                    print('Expected build status {} found'.format(expectedBuildStatus))
-                    if expectedAnnotation is not None:
-                        if expectedAnnotationFound:
-                            print('Expected annotation "{}" found'.format(expectedAnnotation))
-                            requestFailed = False
-                            break
-                        else:
-                            print(
-                                'Expected annotation "{}" not found, retrying...'
-                                .format(expectedAnnotation)
-                            )
-                            time.sleep(sleepTimer)
-                            continue
-                    requestFailed = False
+            actualBuildStatus = currentBuild['status']['phase']
+
+            expectedAnnotationFound = False
+            if expectedAnnotation is not None:
+                expectedAnnotationFound = (
+                    expectedAnnotation in currentBuild['metadata']['annotations']
+                )
+            ebsFound = None
+            for ebs in expectedBuildStatuses:
+                if re.search(ebs, actualBuildStatus):
+                    ebsFound = ebs
                     break
-                else:
-                    if actualBuildStatus in ('Failed', 'Aborted'):
-                        print('Actual build status is {} - Fail fast triggered...'
-                              .format(actualBuildStatus)
-                              )
-                        return False
-                    print('Expected build status not found, retrying - expected: "{}" actual: "{}" '
-                          .format(expectedBuildStatus, actualBuildStatus)
+            if ebsFound is not None:
+                print('Expected build status {} found'.format(ebsFound))
+                if expectedAnnotation is not None:
+                    if expectedAnnotationFound:
+                        print('Expected annotation "{}" found'.format(expectedAnnotation))
+                        requestFailed = False
+                        break
+                    else:
+                        print(
+                            'Expected annotation "{}" not found, retrying...'
+                            .format(expectedAnnotation)
+                        )
+                        time.sleep(sleepTimer)
+                        continue
+                requestFailed = False
+                break
+            else:
+                if actualBuildStatus in ('Failed', 'Aborted'):
+                    print('Actual build status is {} - Fail fast triggered...'
+                          .format(actualBuildStatus)
                           )
-                    time.sleep(sleepTimer)
-
-            except IndexError as e:
-                print('Unexpected error found: {}'.format(e))
-                print('attempt {} failed - retrying...'.format(counter))
+                    return False
+                print('Expected build status not found, retrying - expected: "{}" actual: "{}" '
+                      .format(expectedBuildStatuses, actualBuildStatus)
+                      )
                 time.sleep(sleepTimer)
 
         # print('The value of requestFailed = {}'.format(requestFailed))
