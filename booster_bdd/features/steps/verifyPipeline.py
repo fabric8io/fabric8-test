@@ -45,7 +45,7 @@ def then_running_state(_context):
 @then(u'I should see the build ready to be promoted to "Run" stage')
 def then_promote_state(_context):
     try:
-        pl.buildStatus(30, 30, 'Running',
+        pl.buildStatus(30, 30, ['Running', 'Complete'],
                        'openshift.io/jenkins-pending-input-actions-json'
                        ) | should.be_true.desc("Build is ready to be promoted.")
     except AssertionError as e:
@@ -56,7 +56,7 @@ def then_promote_state(_context):
 @given(u'The build is ready to be promoted to "Run" stage')
 def given_ready_promoted(_context):
     try:
-        pl.buildStatus(30, 30, 'Running',
+        pl.buildStatus(30, 30, ['Running', 'Complete'],
                        'openshift.io/jenkins-pending-input-actions-json'
                        ) | should.be_true.desc("Build is ready to be promoted.")
     except AssertionError as e:
