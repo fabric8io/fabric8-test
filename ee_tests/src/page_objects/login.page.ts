@@ -9,20 +9,27 @@ export class LoginPage extends BasePage {
 
   passwordInput = new TextInput($('#password'), 'password');
 
+  nextButton = new Button($('#login-show-step2'), 'Next');
+
   loginButton = new Button($('#kc-login'), 'Login');
 
   async ready() {
     await Promise.all([
       browser.wait(until.presenceOf(this.usernameInput)),
-      browser.wait(until.presenceOf(this.passwordInput)),
-      browser.wait(until.presenceOf(this.loginButton)),
+      browser.wait(until.presenceOf(this.nextButton)),
     ]);
   }
 
   async login(username: string, password: string): Promise<void> {
     await this.usernameInput.enterText(username);
+    await this.nextButton.clickWhenReady();
+
+    await Promise.all([
+      browser.wait(until.presenceOf(this.passwordInput)),
+      browser.wait(until.presenceOf(this.loginButton)),
+    ]);
+
     await this.passwordInput.enterText(password);
-    await browser.executeScript('arguments[0].scrollIntoView();', this.loginButton.getWebElement());
     await this.loginButton.clickWhenReady();
   }
 }
