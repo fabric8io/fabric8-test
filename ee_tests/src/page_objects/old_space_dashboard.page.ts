@@ -65,6 +65,7 @@ export abstract class SpaceDashboardPageCard extends BaseElement {
   public async abstract getCount(): Promise<number>;
 
   protected async getCountByID(elementID: string, elementDescription: string): Promise<number> {
+    await browser.wait(until.presenceOf(this.element(by.id(elementID))));
     let text = await this.element(by.id(elementID)).getText();
     let count = this.string2Number(text, 'Unexpected ' + elementDescription + ' count text');
     return Promise.resolve(count);
