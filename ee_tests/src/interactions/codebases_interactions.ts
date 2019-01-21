@@ -3,7 +3,6 @@ import { windowManager } from '../support/window_manager';
 import { CodebasesPage } from '../page_objects/space_codebases.page';
 import { SpaceDashboardInteractionsFactory } from './space_dashboard_interactions';
 import { PageOpenMode } from '../page_objects/base.page';
-import { browser } from 'protractor';
 
 export abstract class CodebasesInteractionsFactory {
 
@@ -71,12 +70,11 @@ class CodebasesInteractionsImpl extends AbstractCodebasesInteractions {
         try {
             logger.debug('Create workspace');
             await this.page.createWorkspace();
-            logger.debug('Create workspace was successfull');
+            logger.debug('Create workspace was successful');
         } catch (e) {
-            logger.debug('Create workspace failed, trying again after refresh');
-            await browser.refresh();
+            logger.debug('Create workspace failed, trying again');
             await this.page.createWorkspace();
-            logger.debug('Create workspace was successfull');
+            logger.debug('Create workspace was successful');
         }
         return this.page.getSelectedWorkspace();
     }
