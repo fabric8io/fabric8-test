@@ -86,7 +86,7 @@ if [ "$3" == "che" ] && [ ! -z "$4" ]; then
     "$CHE_SERVER_URL/api/workspace?maxItems=1000")
   echo "Number of existing workspaces: $(echo $RESPONSE | jq '. | length')"
   echo "List of existing workspaces:"
-  echo $RESPONSE | jq '.[] | {workspace_name: .config.name, project_name: .config.projects[].name}'
+  echo $RESPONSE | jq '.[] | .config.name'
 fi
 
 echo ---------- Script finished -------------------------
