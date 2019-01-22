@@ -16,7 +16,7 @@ export class CodebasesPage extends AppPage {
   }
 
   public async createWorkspace() {
-    let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces')), 'Create Codespace...');
+    let createCodebase = new Button(element(by.xpath('.//codebases-item-workspaces/a')), 'Create Codespace...');
     await createCodebase.clickWhenReady(timeouts.LONGER_WAIT);
     await browser.wait(until.presenceOf(element(this.openButtonLocator)));
   }
