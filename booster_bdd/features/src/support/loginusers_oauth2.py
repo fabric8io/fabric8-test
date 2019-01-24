@@ -144,7 +144,7 @@ class LoginUsersOauth2:
                     state
                 )
                 self.driver.get(startUrl)
-                self.wait_for_clickable_element(By.ID, "kc-login")
+                self.wait_for_clickable_element(By.ID, "username")
                 rt = self.tick_timer()
                 self.metrics[metric].append(rt)
                 self.report_success("{}-{}".format(userName, metric), rt)
@@ -169,7 +169,15 @@ class LoginUsersOauth2:
                 self.driver.find_element_by_id(
                     "username"
                 ).send_keys(self.userNames[userIndex])
-                passwd = self.driver.find_element_by_id("password")
+                step2 = self.wait_for_clickable_element(
+                    By.ID,
+                    "login-show-step2"
+                )
+                step2.click()
+                passwd = self.wait_for_clickable_element(
+                    By.ID,
+                    "password"
+                )
                 passwd.send_keys(self.userPasswords[userIndex])
 
                 self.reset_timer()
