@@ -55,6 +55,7 @@ ZABBIX_TIMESTAMP="$(date +%s)"
 export ZABBIX_TIMESTAMP
 
 bash -v -c "$CMD"
+TEST_EXIT_CODE=$?
 
 echo "All tests are done!"
 
@@ -65,3 +66,5 @@ allure generate --clean -o "$REPORT_DIR/allure-report" "$REPORT_DIR"
 if [ -z "$SCENARIO" ]; then
 	rm -rvf "$feature_list"
 fi
+
+exit $TEST_EXIT_CODE
