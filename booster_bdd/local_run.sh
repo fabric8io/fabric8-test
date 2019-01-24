@@ -60,6 +60,7 @@ ZABBIX_TIMESTAMP="$(date +%s)"
 export ZABBIX_TIMESTAMP
 
 bash -v -c "$CMD"
+TEST_EXIT_CODE=$?
 
 echo "All tests are done!"
 
@@ -73,3 +74,5 @@ cat "$REPORT_DIR/zabbix-report.txt"
 if [ -z "$SCENARIO" ]; then
 	rm -rvf "$feature_list"
 fi
+
+exit $TEST_EXIT_CODE
