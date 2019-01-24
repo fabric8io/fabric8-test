@@ -78,6 +78,7 @@ describe('e2e_smoketest', () => {
 
   it('run_che', async () => {
     logger.specTitle('Run che workspace ' + quickstart.name);
+    await runTestRoutesScript();
     let error: any;
     try {
       let codebasesInteractions = CodebasesInteractionsFactory.create(strategy, spaceName);
@@ -157,5 +158,21 @@ async function runOCScript(project: string, outputFile: string, token = '') {
     );
   } catch (e) {
     logger.info('Save OC Jenkins pod log failed with error: ' + e);
+  }
+}
+
+async function runTestRoutesScript() {
+  try {
+    logger.info(`Test routes`);
+    await runner.runScript(
+      './scripts/routes', // working directory
+      './test-routes.sh', // script
+      [specContext.getUser(), specContext.getPassword()], // params
+      `./target/screenshots/test-routes.txt`,  // output file
+      true,
+      timeouts.LONGER_WAIT
+    );
+  } catch (e) {
+    logger.info('Test routes failed with error: ' + e);
   }
 }
