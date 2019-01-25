@@ -15,7 +15,7 @@ function archive_artifacts {
     ARTIFACTS_KEY="../../config/artifacts.key"
     chmod 600 "$ARTIFACTS_KEY"
     chown root:root "$ARTIFACTS_KEY"
-    rsync --password-file="$ARTIFACTS_KEY" -qPHva --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
+    rsync --password-file="$ARTIFACTS_KEY" -qPHvar --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
     echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 }
 
@@ -162,11 +162,14 @@ if [ "$ZABBIX_ENABLED" = true ] ; then
 fi
 
 if [[ "$TEST_SUITE" = "che" ]]; then
+    mkdir -p "$ARTIFACTS_DIR"/che/failsafe
     docker exec "$TEST_CONTAINER_NAME" ls -l ./target/artifacts
-    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/failsafe-reports/." "$ARTIFACTS_DIR"
-    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/screenshots/." "$ARTIFACTS_DIR"
-    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/functional-tests.log" "$ARTIFACTS_DIR"
-    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/che-starter.log" "$ARTIFACTS_DIR"
+    docker exec "$TEST_CONTAINER_NAME" ls -l ./target/artifacts/failsafe-reports
+    docker exec "$TEST_CONTAINER_NAME" ls -l ./target/artifacts/screenshots
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/failsafe-reports/." "$ARTIFACTS_DIR"/che/failsafe
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/artifacts/screenshots/." "$ARTIFACTS_DIR"/che
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/functional-tests.log" "$ARTIFACTS_DIR"/che
+    docker cp "$TEST_CONTAINER_NAME:/opt/fabric8-test/target/che-starter.log" "$ARTIFACTS_DIR"/che
 fi
 
 archive_artifacts
