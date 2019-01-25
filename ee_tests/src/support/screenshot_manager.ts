@@ -91,7 +91,8 @@ class ScreenshotManager {
     let stream = createWriteStream(filename);
 
     logs.forEach((entry) => {
-      const template = `[${logger.formatTimestamp(entry.timestamp)}] ${entry.level.name} ${entry.message}`;
+      let message = this.hideTokens(entry.message);
+      const template = `[${logger.formatTimestamp(entry.timestamp)}] ${entry.level.name} ${message}`;
       if (entry.level.value >= logging.Level.WARNING.value) {
         logger.debug(template);
       }
@@ -125,16 +126,19 @@ class ScreenshotManager {
 
     switch (message.method) {
       case 'Network.requestWillBeSent': {
-        formattedMessage += `[REQUEST]    ${message.params.request.method}   ${message.params.request.url}`;
+        let url = this.hideTokens(message.params.request.url);
+        formattedMessage += `[REQUEST]    ${message.params.request.method}   ${url}`;
         break;
       }
       case 'Network.responseReceived': {
         let response = message.params.response;
-        formattedMessage += `[RESPONSE]   ${response.status}   ${response.statusText}   ${response.url}`;
+        let url = this.hideTokens(response.url);
+        formattedMessage += `[RESPONSE]   ${response.status}   ${response.statusText}   ${url}`;
         break;
       }
       case 'Network.webSocketCreated': {
-        formattedMessage += `[WEBSOCKET_CREATED]    ${message.params.url}`;
+        let url = this.hideTokens(message.params.url);
+        formattedMessage += `[WEBSOCKET_CREATED]    ${url}`;
         break;
       }
       case 'Network.webSocketFrameSent': {
@@ -174,6 +178,11 @@ class ScreenshotManager {
           reject(`Saving resources exited after timeout of ${timeouts.DEFAULT_WAIT / 1000}s`);
       }, timeouts.DEFAULT_WAIT);
     });
+  }
+
+  // hide JWT tokens in URL parameters
+  private hideTokens(input: string): string {
+    return input.replace(/([?&_])(token[a-zA-Z0-9_]*=)[a-zA-Z0-9\._\-%]+/g, '$1$2<hidden>');
   }
 }
 
