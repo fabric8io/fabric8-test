@@ -104,7 +104,7 @@ export class AnalyticsCard extends BaseElement {
     await super.ready();
     await browser.wait(
       until.stalenessOf(this.element(by.className('pre-loader'))),
-      timeouts.DEFAULT_WAIT,
+      timeouts.LONGER_WAIT,
       'Staleness of the circle progress bar');
     await browser.wait(
       until.stalenessOf(this.element(by.cssContainingText('h3', 'Analysis for your stack is in progress...'))),
