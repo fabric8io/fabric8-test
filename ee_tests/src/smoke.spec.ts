@@ -157,7 +157,7 @@ async function runOCScript(project: string, outputFile: string, token = '') {
       timeouts.LONGER_WAIT
     );
   } catch (e) {
-    logger.info('Save OC Jenkins pod log failed with error: ' + e);
+    logger.info(`Save OC ${project} pod log failed with error: ` + e);
   }
 }
 
