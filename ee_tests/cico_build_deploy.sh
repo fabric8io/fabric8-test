@@ -33,7 +33,7 @@ echo 'CICO: Build OK'
 
 # returns something like "Google Chrome 66.0.3359.117" when using Chrome stable
 # returns something like "Google Chrome 67.0.3396.18 beta" when using Chrome beta
-TMP=$(docker run --rm fabric8-test google-chrome --version)
+TMP=$(docker run --rm "$IMAGE" google-chrome --version)
 # convert to array of words
 IFS=" " read -r -a TMP <<< "$TMP"
 
