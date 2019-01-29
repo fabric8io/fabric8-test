@@ -108,11 +108,11 @@ fi
 # Do not exit on failure so that artifacts can be archived
 set +e
 
-TEST_IMAGE="fabric8-test"
-REPOSITORY="fabric8io"
-REGISTRY="registry.devshift.net"
+TEST_IMAGE="fabric8-e2e-tests"
+REPOSITORY="openshiftio"
+REGISTRY="quay.io"
 
-echo "Pull fabric8-test image"
+echo "Pull $TEST_IMAGE image"
 time docker pull "$REGISTRY/$REPOSITORY/$TEST_IMAGE:latest" > "$ARTIFACTS_DIR/docker_pull.log"
 
 # Shutdown container if running
