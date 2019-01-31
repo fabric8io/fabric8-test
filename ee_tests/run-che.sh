@@ -10,9 +10,6 @@
 # stop the script when any command fails
 set -e
 
-# show all commands
-set -x
-
 if [[ $1 = *"preview"* ]]; then
   AUTH_SERVER_URL="https://auth.prod-preview.openshift.io"
   CHE_SERVER_URL="che.prod-preview.openshift.io"

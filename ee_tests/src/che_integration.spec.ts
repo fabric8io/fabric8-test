@@ -27,7 +27,8 @@ describe('e2e_che_integration', () => {
     await browser.driver.manage().window().setSize(1920, 1080);
     spaceName = newSpaceName();
     strategy = specContext.getReleaseStrategy();
-    quickstart = specContext.getQuickstart();
+    // this suite works currently only with vertX quickstart
+    quickstart = new Quickstart('vertxHttp');
   });
 
   beforeEach(async() => {
