@@ -33,8 +33,11 @@ function start_fabric8_ui {
 
     docker exec "$UI_CONTAINER_NAME" npm install | tee -a "$START_UI_LOG"
 
+    docker exec "$UI_CONTAINER_NAME" npm run bootstrap | tee -a "$START_UI_LOG"
+
     docker exec "$UI_CONTAINER_NAME" /bin/bash -c \
-        "source environments/openshift-prod-preview-cluster.sh && HOST=0.0.0.0 npm start" | tee -a "$START_UI_LOG" &
+        "source environments/openshift-prod-preview-cluster.sh && \
+        cd packages/toolchain && HOST=0.0.0.0 npm start" | tee -a "$START_UI_LOG" &
 
     # Wait for fabric8-ui to compile all modules and start the server
     i=1
