@@ -138,7 +138,7 @@ docker run --shm-size=256m --detach=true --name="$TEST_CONTAINER_NAME" --cap-add
 docker exec "$TEST_CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 
 # Exec EE tests
-docker exec "$TEST_CONTAINER_NAME" ./ts-protractor.sh "$TEST_SUITE" | tee "$ARTIFACTS_DIR/protractor.log"
+docker exec "$TEST_CONTAINER_NAME" ./ts-protractor.sh | tee "$ARTIFACTS_DIR/protractor.log"
 
 # Writing to and the grepping results required as webdriver fails
 # intermittently - which results is failure reported even if tests pass

@@ -10,6 +10,8 @@
 # stop the script when any command fails
 set -e
 
+date
+
 echo ---------- Get cluster for user --------------------
 
 if [[ $1 = *"preview"* ]]; then
