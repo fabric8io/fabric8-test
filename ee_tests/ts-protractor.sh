@@ -9,20 +9,20 @@ source "$SCRIPT_DIR/common.inc.sh"
 
 validate_config() {
   local ret=0
+  validate_test_config OSIO_URL "$OSIO_URL" || ret=1
   validate_test_config OSIO_USERNAME "$OSIO_USERNAME" || ret=1
   validate_test_config OSIO_PASSWORD "$OSIO_PASSWORD" || ret=1
-
-  # NOTE: github login is used by the import codebase test
   validate_test_config GITHUB_USERNAME "$GITHUB_USERNAME" || ret=1
-  # github password is used in the ngx launcher e2e test as a workaround for the
-  # git provider requesting 'Log In & Authorize' for the logged in user. That will
-  # be gone in the future.
-  export GITHUB_PASSWORD=${GITHUB_PASSWORD:-}
+  validate_test_config TEST_SUITE "$TEST_SUITE" || ret=1
+  validate_test_config RELEASE_STRATEGY "$RELEASE_STRATEGY" || ret=1
+  validate_test_config QUICKSTART_NAME "$QUICKSTART_NAME" || ret=1
+  validate_test_config FEATURE_LEVEL "$FEATURE_LEVEL" || ret=1
+  validate_test_config RESET_ENVIRONMENT "$RESET_ENVIRONMENT" || ret=1
+  
   export GITHUB_REPO=${GITHUB_REPO:-}
   export ZABBIX_ENABLED=${ZABBIX_ENABLED:-false}
   export ZABBIX_HOST=${ZABBIX_HOST:-}
   export ZABBIX_METRIC_PREFIX=${ZABBIX_METRIC_PREFIX:-}
-  export CHE_LOCAL_REPOSITORY=${CHE_LOCAL_REPOSITORY:-'../../che-functional-tests'}
   return $ret
 }
 
@@ -79,15 +79,12 @@ main() {
     --params.login.user="$OSIO_USERNAME" \
     --params.login.password="$OSIO_PASSWORD" \
     --params.github.username="$GITHUB_USERNAME" \
-    --params.github.password="$GITHUB_PASSWORD" \
     --params.github.repo="$GITHUB_REPO" \
-    --params.oso.username="$OSO_USERNAME" \
     --params.target.url="$OSIO_URL" \
     --params.quickstart.name="$QUICKSTART_NAME" \
     --params.release.strategy="$RELEASE_STRATEGY" \
     --params.reset.environment="$RESET_ENVIRONMENT" \
     --params.feature.level="$FEATURE_LEVEL" \
-    --params.che.local.repo="$CHE_LOCAL_REPOSITORY" \
     --params.zabbix.enabled="$ZABBIX_ENABLED" \
     --params.zabbix.host="$ZABBIX_HOST" \
     --params.zabbix.metric.prefix="$ZABBIX_METRIC_PREFIX"

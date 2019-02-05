@@ -1,25 +1,31 @@
 #!/bin/bash
-# Test config for running e2e tests against remote osio
+####################################################################################
+# E2E tests configuration template. Please copy this file to local.osio.conf.sh    #
+# and fill the necessary values                                                    #
+####################################################################################
+
+# Show debug log messages
 export DEBUG="false"
-# openshift.io credentials
-export OSIO_USERNAME="${OSIO_USERNAME:-}"
-export OSIO_PASSWORD="${OSIO_PASSWORD:-}"
-export OSIO_URL="${OSIO_URL:-https://openshift.io}"
 
-# openshift credentials
-export OSO_USERNAME="${OSO_USERNAME:-$OSIO_USERNAME}"
+# OSIO URL - usually "https://openshift.io", "https://prod-preview.openshift.io" or "http://localhost:3000"
+export OSIO_URL="https://openshift.io"
+# OSIO user name
+export OSIO_USERNAME=""
+# OSIO password
+export OSIO_PASSWORD=""
 
-# github
-export GITHUB_USERNAME="${GITHUB_USERNAME:-}"
-export GITHUB_PASSWORD="${GITHUB_PASSWORD:-}"
-export GITHUB_REPO="${GITHUB_REPO:-testmay-to-be-imported}"
+# GitHub
+export GITHUB_USERNAME=""
+# Used only in launcher integration test suite
+export GITHUB_REPO=""
 
-# test params
-# see protractor.config.ts for valid test suites
-export TEST_SUITE="${TEST_SUITE:-smoketest}"
-export RELEASE_STRATEGY="${RELEASE_STRATEGY:-releaseStageApproveAndPromote}"
-export QUICKSTART_NAME="${QUICKSTART_NAME:-SpringBootHttp}"
-export RESET_ENVIRONMENT="${RESET_ENVIRONMENT:-true}"
+# Test suite - see protractor.config.ts for valid test suites
+export TEST_SUITE="smoketest"
+# Release strategy - src/support/release_strategy.ts for valid values
+export RELEASE_STRATEGY="releaseStageApproveAndPromote"
+# Quickstart (booster) to be used - see src/support/quickstart.ts for valid values
+export QUICKSTART_NAME="SpringBootHttp"
+# Reset the environment after the test suite
+export RESET_ENVIRONMENT="false"
 # Expected user setting for feature levels - internal, experimental, beta, released
-export FEATURE_LEVEL="${FEATURE_LEVEL:-released}"
-export CHE_LOCAL_REPOSITORY="${CHE_LOCAL_REPOSITORY:-../../che-functional-tests}"
+export FEATURE_LEVEL="released"
