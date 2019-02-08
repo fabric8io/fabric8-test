@@ -41,6 +41,14 @@ echo ---------- List all resources ----------------------
 echo "oc get all"
 oc get all
 
+echo ---------- List pvc ----------------------
+echo "oc get pvc"
+oc get pvc
+
+echo ---------- List cm ----------------------
+echo "oc get cm"
+oc get cm
+
 echo ---------- Get events ---------------
 echo "oc get events --sort-by='.lastTimestamp'"
 oc get events --sort-by='.lastTimestamp'
@@ -53,10 +61,6 @@ if [ "$3" == "jenkins" ]; then
   echo ---------- Jenkins deployment config ---------------
   echo "oc get -o yaml dc/jenkins"
   oc get -o yaml dc/jenkins
-
-  echo ---------- Jenkins PVCs ---------------
-  echo "oc get pvc"
-  oc get pvc
 
   echo ---------- Get jenkins pod logs ----------------
   echo "oc get pods --field-selector=status.phase=Running -o name | grep -v 'slave|deploy' | grep -m1 jenkins"
