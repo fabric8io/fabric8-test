@@ -20,4 +20,5 @@ if [ -z "$GITHUB_TOKEN" ]; then
 fi
 set -x
 
-yes | $DIR/local_clean_test_repos.sh
+yes | $DIR/local_clean_test_repos.sh osiotestmachine e2e
+yes | $DIR/local_clean_test_repos.sh osiotestmachine osio-ci
