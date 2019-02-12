@@ -3,7 +3,6 @@ ENV LANG=en_US.utf8
 ENV DISPLAY=:99
 
 WORKDIR /opt/fabric8-test/
-VOLUME /dist
 
 # install dependencies
 COPY google-chrome.repo /etc/yum.repos.d/google-chrome.repo
