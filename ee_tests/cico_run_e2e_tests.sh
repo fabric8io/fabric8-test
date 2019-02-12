@@ -140,20 +140,7 @@ docker exec "$TEST_CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 # Exec EE tests
 docker exec "$TEST_CONTAINER_NAME" ./ts-protractor.sh | tee "$ARTIFACTS_DIR/protractor.log"
 
-# Writing to and the grepping results required as webdriver fails
-# intermittently - which results is failure reported even if tests pass
-
-# We do not want to see any TimeoutError in the log
-# as protractor does not trap these as errors
-grep "TimeoutError" "$ARTIFACTS_DIR/protractor.log"
-ret1=$?
-
-# We do want to see that zero specs have failed
-grep "0 failures" "$ARTIFACTS_DIR/protractor.log"
-ret2=$?
-
-if [ $ret1 -eq 1 ] && [ $ret2 -eq 0 ]; then RTN_CODE=0; else RTN_CODE=1; fi
-### RTN_CODE=$?
+RTN_CODE=$?
 
 # Prepare test results for archiving
 docker exec "$TEST_CONTAINER_NAME" ls -l ./target/screenshots
