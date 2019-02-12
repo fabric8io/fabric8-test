@@ -96,7 +96,7 @@ export ZABBIX_SERVER="zabbix.devshift.net"
 # We need to disable selinux for now, XXX
 /usr/sbin/setenforce 0
 
-mkdir -p "$ARTIFACTS_DIR" dist
+mkdir -p "$ARTIFACTS_DIR"
 
 # Get all the deps in
 time yum -y install docker > "$ARTIFACTS_DIR/yum_install.log"
@@ -129,7 +129,7 @@ docker run --shm-size=256m --detach=true --name="$TEST_CONTAINER_NAME" --cap-add
           -e QUICKSTART_NAME -e RELEASE_STRATEGY -e RESET_ENVIRONMENT -e TEST_SUITE \
           -e ZABBIX_ENABLED -e ZABBIX_HOST -e ZABBIX_METRIC_PREFIX \
           -e ZABBIX_PORT -e ZABBIX_SERVER \
-          --network="host" -t -v "$(pwd)/dist:/dist:Z" \
+          --network="host" -t \
           -v /etc/localtime:/etc/localtime:ro \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v "$PWD/jenkins-env:/opt/fabric8-test/jenkins-env" "$REGISTRY/$REPOSITORY/$TEST_IMAGE:latest"
