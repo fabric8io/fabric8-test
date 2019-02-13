@@ -1,7 +1,7 @@
 {
   "name": "fabric8-ui-tests",
   "version": "0.0.0-development",
-  "description": "End to End tests for fabric8",
+  "description": "End to End tests for Fabric8",
   "keywords": [
     "e2e",
     "fabric8",
@@ -9,19 +9,14 @@
   ],
   "contributors": [
     {
-      "name": "Joshua Wilson",
-      "email": "josh@redhat.com"
+      "name": "Lucia Jelinkova",
+      "email": "ljelinko@redhat.com"
     },
     {
-      "name": "Nimisha",
-      "email": "nmukherj@redhat.com"
-    },
-    {
-      "name": "Sudipta Sen",
-      "email": "sudsen@redhat.com"
+      "name": "Pavol Pitonak",
+      "email": "ppitonak@redhat.com"
     }
   ],
-  "main": "index.js",
   "homepage": "https://github.com/fabric8io/fabric8-test",
   "license": "Apache-2.0",
   "scripts": {
@@ -66,16 +61,5 @@
   "engines": {
     "node": ">= 6.10.3",
     "npm": ">= 3"
-  },
-  "release": {
-    "branch": "master",
-    "verifyConditions": {
-      "path": "./node_modules/@krux/condition-jenkins"
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
