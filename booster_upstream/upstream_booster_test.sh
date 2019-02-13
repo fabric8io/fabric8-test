@@ -6,7 +6,7 @@
 
 display_usage() { 
 	echo "This script requires (4) parameters: OpenShift username, OpenShift password, OpenShift API URL, OpenShift project." 
-	echo -e "\nUsage:\n  upstream_booster_test.sh USERNAME PASSWORD https://api.starter-us-east-2a.openshift.com osio-ci-boost1-preview-stage\n" 
+	echo -e "\nUsage:\n  $0 USERNAME PASSWORD https://api.starter-us-east-2a.openshift.com osio-ci-boost1-preview-stage\n" 
 	} 
 
 # if less than 4 arguments supplied, display usage 
