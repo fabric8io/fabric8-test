@@ -10,7 +10,7 @@ set +x
 
 display_usage() { 
 	echo "This script requires (5) parameters: OS project name, booster name, cluster, reoo name string, OS token." 
-	echo -e "\nUsage:\n  upstream_booster.sh username-stage boosterName https://api.starter-us-east-NNN.openshift.com nodeshift-starters TOKEN\n" 
+	echo -e "\nUsage:\n  $0 username-stage boosterName https://api.starter-us-east-NNN.openshift.com nodeshift-starters TOKEN\n" 
 	} 
 
 # if less than 5 arguments supplied, display usage 
