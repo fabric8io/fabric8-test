@@ -140,7 +140,7 @@ docker exec "$TEST_CONTAINER_NAME" /usr/bin/Xvfb :99 -screen 0 1024x768x24 &
 # Exec EE tests
 docker exec "$TEST_CONTAINER_NAME" ./ts-protractor.sh | tee "$ARTIFACTS_DIR/protractor.log"
 
-RTN_CODE=$?
+RTN_CODE=${PIPESTATUS[0]}
 
 # Prepare test results for archiving
 docker exec "$TEST_CONTAINER_NAME" ls -l ./target/screenshots
