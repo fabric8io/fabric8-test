@@ -16,7 +16,7 @@ function archive_artifacts {
     chmod 600 "$ARTIFACTS_KEY"
     chown root:root "$ARTIFACTS_KEY"
     rsync --password-file="$ARTIFACTS_KEY" -qPHvar --relative "./$ARTIFACTS_DIR" devtools@artifacts.ci.centos.org::devtools/
-    echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
+    echo -e "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR\n"
 }
 
 function start_fabric8_ui {
