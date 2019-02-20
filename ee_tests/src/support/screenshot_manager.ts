@@ -134,6 +134,14 @@ class ScreenshotManager {
         let response = message.params.response;
         let url = this.hideTokens(response.url);
         formattedMessage += `[RESPONSE]   ${response.status}   ${response.statusText}   ${url}`;
+        if (response.status >= 400) {
+          if (response.requestHeaders && response.requestHeaders.Authorization) {
+            response.requestHeaders.Authorization = response.requestHeaders.Authorization.replace(
+            /(Bearer ).+/i, '$1 <hidden>');
+          }
+          formattedMessage += `\nrequest headers:\n${JSON.stringify(response.requestHeaders, null, 2)}`;
+          formattedMessage += `\nresponse headers:\n${JSON.stringify(response.headers, null, 2)}`;
+        }
         break;
       }
       case 'Network.webSocketCreated': {
