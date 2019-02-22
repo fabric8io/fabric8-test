@@ -6,7 +6,6 @@ import * as timeouts from './support/timeouts';
 import * as runner from './support/script_runner';
 import { specContext } from './support/spec_context';
 import { LoginInteractionsFactory } from './interactions/login_interactions';
-import { AccountHomeInteractionsFactory } from './interactions/account_home_interactions';
 
 /**
  * Simple test for log in and log out.
@@ -14,8 +13,6 @@ import { AccountHomeInteractionsFactory } from './interactions/account_home_inte
 describe('e2e_logintest', () => {
 
   let loginInteractions = LoginInteractionsFactory.create();
-
-  let accountHomeInteractions = AccountHomeInteractionsFactory.create();
 
   let page = new AppPage();
 
@@ -43,14 +40,6 @@ describe('e2e_logintest', () => {
       toBe(specContext.getUser(), 'Recent items dropdown title is username');
 
     expect(await loginInteractions.isLoginButtonPresent()).toBeFalsy('Login button is not present');
-  });
-
-  it('logout', async () => {
-    logger.info('--- Logout ---');
-    await accountHomeInteractions.logout();
-
-    expect(await page.header.recentItemsDropdown.isPresent()).toBeFalsy('Recent items dropdown is not present');
-    expect(await loginInteractions.isLoginButtonPresent()).toBeTruthy('Login button is present');
   });
 });
 
