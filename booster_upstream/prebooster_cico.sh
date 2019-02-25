@@ -107,7 +107,7 @@ while [  $RETRY_COUNTER -lt $RETRY_MAX ]; do
     if [ $? = 1 ]
         then
             let RETRY_COUNTER=RETRY_MAX
-            sleep 10
+            sleep 30
     fi
 done
 
@@ -128,6 +128,11 @@ echo "Test results for $BOOSTER_NAME: $RESULT" | tee target/results.txt
 
 # Logout from oc
 echo ""
-echo "====== Create the new app"
+echo "====== Logout from oc"
 oc logout
+
+grep "Success" target/results.txt
+export RTN_CODE=$?
+exit $RTN_CODE
+
 
