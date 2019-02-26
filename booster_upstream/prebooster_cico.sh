@@ -131,8 +131,10 @@ echo ""
 echo "====== Logout from oc"
 oc logout
 
+cat target/results.txt
 grep "Success" target/results.txt
 export RTN_CODE=$?
+echo $RTN_CODE
 exit $RTN_CODE
 
 
