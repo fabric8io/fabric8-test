@@ -107,7 +107,7 @@ while [  $RETRY_COUNTER -lt $RETRY_MAX ]; do
     if [ $? = 1 ]
         then
             let RETRY_COUNTER=RETRY_MAX
-            sleep 30
+            sleep 60
     fi
 done
 
@@ -131,10 +131,8 @@ echo ""
 echo "====== Logout from oc"
 oc logout
 
-cat target/results.txt
 grep "Success" target/results.txt
 export RTN_CODE=$?
-echo $RTN_CODE
 exit $RTN_CODE
 
 
