@@ -119,14 +119,14 @@ RETRY_MAX=30
 # Loop - Waiting for the app to become available at its deployed endpoint
 while [  $RETRY_COUNTER -lt $RETRY_MAX ]; do
     echo "Looking for the deployed app - The counter is $RETRY_COUNTER"
-    sleep 10
+    sleep 30
     let RETRY_COUNTER=RETRY_COUNTER+1 
 
     curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}'` | grep "The application is currently not serving requests at this endpoint." 
     if [ $? = 1 ]
         then
             let RETRY_COUNTER=RETRY_MAX
-            sleep 10
+            sleep 60
     fi
 done
          
