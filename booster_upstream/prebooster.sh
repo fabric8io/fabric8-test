@@ -145,6 +145,21 @@ fi
 
 echo "Test results for $BOOSTER_NAME: $RESULT" | tee results.txt
 
+echo "Print out resorces created for test"
+oc get build
+oc get bc
+oc get dc 
+oc get deploy
+oc get istag
+oc get isimage
+oc get job 
+oc get po 
+oc get rc
+oc get rs 
+oc get statefulsets 
+oc get configmap 
+oc get services 
+oc get routes 
 
 # Logout from oc
 echo ""
