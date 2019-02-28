@@ -99,9 +99,9 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
   # Exec booster tests
   docker exec "$CONTAINER_NAME" ./prebooster_cico.sh
 
-  if [ "${ZABBIX_ENABLED,,}" = true ] ; then
-      docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
-  fi
+#  if [ "${ZABBIX_ENABLED,,}" = true ] ; then
+#      docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
+#  fi
 
   # Test results to archive
   docker cp "$CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR"
@@ -126,7 +126,7 @@ echo
 
 if [ $ARTIFACTS_UPLOAD_EXIT_CODE -eq 0 ]; then
   echo "Artifacts were uploaded to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
-  echo "Test results (Allure report) can be found at http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR/allure-report"
+#  echo "Test results (Allure report) can be found at http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR/allure-report"
 else
   echo "ERROR: Failed to upload artifacts to http://artifacts.ci.centos.org/devtools/$ARTIFACTS_DIR"
 fi
