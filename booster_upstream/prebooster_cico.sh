@@ -106,6 +106,8 @@ while [  $RETRY_COUNTER -lt $RETRY_MAX ]; do
     curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}'` | grep "The application is currently not serving requests at this endpoint." 
     if [ $? = 1 ]
         then
+            echo "Deployed endpoint successfully reached - output = "
+            curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}'`
             let RETRY_COUNTER=RETRY_MAX
             sleep 60
     fi
