@@ -106,8 +106,6 @@ while [  $RETRY_COUNTER -lt $RETRY_MAX ]; do
     curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}'` | grep "The application is currently not serving requests at this endpoint." 
     if [ $? = 1 ]
         then
-            echo "Deployed endpoint successfully reached - output = "
-            curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}'`
             let RETRY_COUNTER=RETRY_MAX
             sleep 60
     fi
@@ -118,7 +116,8 @@ curl -s `oc get routes -o jsonpath='{range .items[*].spec}{""}{.host}{"\n"}{end}
 
 # Compare actual results to expected results
 #diff ${BOOSTER_NAME}_output.txt ${BOOSTER_NAME}_expected_output.txt
-grep "Demonstrates how the Kubernetes/Openshift health checks work" ${BOOSTER_NAME}_output.txt
+cat ${BOOSTER_NAME}_output.txt
+grep "Demonstrates how the Kubernetes" ${BOOSTER_NAME}_output.txt
 
 
 if [ $? = 1 ]
