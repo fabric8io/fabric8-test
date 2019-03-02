@@ -135,9 +135,11 @@ echo
 echo
 
 # We do want to see that zero specs have failed
+
+docker cp $CONTAINER_NAME:target/results.txt results.txt
+cat results.txt
 grep "Success" target/results.txt
 export RTN_CODE=$?
 exit $RTN_CODE
-
 
 
