@@ -147,11 +147,6 @@ oc get routes
 
 # Logout from oc
 echo ""
-echo "====== Create the new app"
-oc logout
-
-# Logout from oc
-echo ""
 echo "====== Logout from oc"
 oc logout
 
