@@ -106,6 +106,11 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
   # Test results to archive
   docker cp "$CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/." "$ARTIFACTS_DIR"
 
+  # We do want to see that zero specs have failed
+  docker cp $CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/results.txt results.txt
+  echo "Results file:"
+  cat results.txt
+
   # Shutdown container if running
   if [ -n "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
       docker rm -f "$CONTAINER_NAME"
@@ -133,13 +138,6 @@ fi
 
 echo
 echo
-
-# We do want to see that zero specs have failed
-
-docker cp $CONTAINER_NAME:/opt/fabric8-test/$REPORT_DIR/results.txt results.txt
-
-echo "Results file:"
-cat results.txt
 
 grep "Success" target/results.txt
 export RTN_CODE=$?
