@@ -165,6 +165,7 @@ echo "Running the test while redirecting the output to $TEST_LOG ..."
 
   # Exec booster tests
   docker exec "$CONTAINER_NAME" ./run.sh
+  testexit=$?
 
   if [ "${ZABBIX_ENABLED,,}" = true ] ; then
       docker exec "$CONTAINER_NAME" zabbix_sender -vv -T -i "./$REPORT_DIR/zabbix-report.txt" -z "$ZABBIX_SERVER"
@@ -203,6 +204,6 @@ echo
 
 # We do want to see that zero specs have failed
 grep " features passed, 0 failed," "$TEST_LOG"
-export RTN_CODE=$?
+export RTN_CODE=$(($? + $testexit))
 
 exit $RTN_CODE
