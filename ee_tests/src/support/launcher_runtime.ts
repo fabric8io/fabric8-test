@@ -7,7 +7,7 @@ export class LauncherRuntime {
 
   id: string;
   name: string;
-  quickstartStartedTerminal: string;
+  BoostedTerminal: string;
 
   constructor(runtime: string) {
     this.id = runtime;
@@ -15,25 +15,25 @@ export class LauncherRuntime {
     switch (runtime) {
       case LauncherRuntime.SPRING_BOOT: {
         this.name = 'Spring Boot';
-        this.quickstartStartedTerminal = 'Setting the server\'s publish address to be';
+        this.BoostedTerminal = 'Setting the server\'s publish address to be';
         break;
       }
       case LauncherRuntime.NODE_JS: {
         this.name = 'Node.js';
         // TODO: implement
-        this.quickstartStartedTerminal = '// TODO: implement';
+        this.BoostedTerminal = '// TODO: implement';
         break;
       }
       case LauncherRuntime.WILDFLY_SWARM: {
         this.name = 'Wildfly Swarm';
         // TODO: implement
-        this.quickstartStartedTerminal = '// TODO: implement';
+        this.BoostedTerminal = '// TODO: implement';
         break;
       }
       case LauncherRuntime.VERTX:
       default: {
         this.name = 'Eclipse Vert.x';
-        this.quickstartStartedTerminal = 'Succeeded in deploying verticle';
+        this.BoostedTerminal = 'Succeeded in deploying verticle';
         break;
       }
     }

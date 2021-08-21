@@ -27,7 +27,7 @@ launcherMission = "@@LAUNCHER_MISSION@@"
 launcherStrategy = "@@LAUNCHER_STRATEGY@@"
 spacePrefix = "@@SPACE_PREFIX@@"
 
-quickstartStartedTerminal = "@@QUICKSTART_STARTED_TERMINAL@@"
+BoostedTerminal = "@@QUICKSTART_STARTED_TERMINAL@@"
 
 githubUsername = os.getenv("GH_USER")
 githubPassword = os.getenv("GH_TOKEN")

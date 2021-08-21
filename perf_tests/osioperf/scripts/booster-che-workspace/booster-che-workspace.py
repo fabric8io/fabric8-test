@@ -29,7 +29,7 @@ launcherMission = "@@LAUNCHER_MISSION@@"
 launcherStrategy = "@@LAUNCHER_STRATEGY@@"
 spacePrefix = "@@SPACE_PREFIX@@"
 
-quickstartStartedTerminal = "@@QUICKSTART_STARTED_TERMINAL@@"
+BoostedTerminal = "@@QUICKSTART_STARTED_TERMINAL@@"
 
 githubUsername = os.getenv("GH_USER")
 githubPassword = os.getenv("GH_TOKEN")
@@ -853,7 +853,7 @@ class UserScenario(TaskSet):
                 target_element = self._wait_for_clickable_element(driver, By.XPATH, ".//*[contains(@class,'GDPEHSMCKHC')][contains(text(),'run')]")
                 target_element.click()
                 WebDriverWait(driver, self.longTimeout).until(
-                    EC.text_to_be_present_in_element((By.XPATH, ".//*[@id='gwt-debug-consolesPanel']"), quickstartStartedTerminal)
+                    EC.text_to_be_present_in_element((By.XPATH, ".//*[@id='gwt-debug-consolesPanel']"), BoostedTerminal)
                 )
                 self._save_snapshot(driver, request_type + "_" + metric + "-screenshot-" + str(time.time()))
                 self._report_success(request_type, metric, self._tick_timer())
